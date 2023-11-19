@@ -7,9 +7,7 @@
 #include "Material.h"
 #include "Sphere.h"
 
-PlanetarySystem::PlanetarySystem()
-{
-}
+PlanetarySystem::PlanetarySystem() = default;
 
 void PlanetarySystem::awake()
 {

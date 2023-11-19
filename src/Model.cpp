@@ -27,7 +27,7 @@ Model::Model(std::shared_ptr<Material> const& material) : Drawable(material)
 void Model::draw() const
 {
 	// TODO: Move this somewhere more appropriate?
-	material->shader->set_vec3("color", material->color);
+	material->shader->set_vec3("objectColor", material->color);
 	for (auto const& mesh : meshes)
 		mesh.draw();
 }

@@ -2,9 +2,10 @@
 
 out vec4 FragColor;
 
-in vec2 TexCoordVertex;
+in vec2 TextureCoordinatesVertex;
 
-uniform vec4 color;
+uniform vec4 objectColor;
+uniform vec4 lightColor;
 
 uniform sampler2D texture_diffuse1;
 uniform sampler2D texture_diffuse2;
@@ -15,5 +16,5 @@ uniform sampler2D texture_specular3;
 
 void main()
 {
-	FragColor = color * texture(texture_diffuse1, TexCoordVertex);
+	FragColor = objectColor * lightColor * texture(texture_diffuse1, TextureCoordinatesVertex);
 }

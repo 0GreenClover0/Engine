@@ -67,6 +67,8 @@ int main(int, char**)
 
     setup_imgui(window->get_glfw_window());
 
+    InternalMeshData::initialize();
+
 	auto constexpr clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
     glEnable(GL_DEPTH_TEST);
