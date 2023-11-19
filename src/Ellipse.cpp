@@ -6,8 +6,8 @@
 Ellipse::Ellipse(float center_x, float center_z, float radius_x, float radius_z, int segment_count, std::shared_ptr<Material> const& material)
  : Model(material), center_x(center_x), center_z(center_z), radius_x(radius_x), radius_z(radius_z), segment_count(segment_count)
 {
-	draw_type = GL_LINE_LOOP;
-	meshes.emplace_back(create_ellipse());
+    draw_type = GL_LINE_LOOP;
+    meshes.emplace_back(create_ellipse());
 }
 
 Mesh Ellipse::create_ellipse() const
@@ -19,7 +19,7 @@ Mesh Ellipse::create_ellipse() const
     float x = 1; // Start at angle = 0 
     float z = 0;
 
-	std::vector<Vertex> vertices;
+    std::vector<Vertex> vertices;
 
     glBegin(GL_LINE_LOOP); 
     for (int i = 0; i < segment_count; ++i) 

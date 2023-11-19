@@ -11,7 +11,7 @@ void initialize()
     cube.vertices.reserve(24);
 
     // TODO: I think something is wrong with texture coordinates, I saw some clipping
-	float constexpr cube_vertices[] = {
+    float constexpr cube_vertices[] = {
         -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,  // A 0
         0.5f, -0.5f, -0.5f,  1.0f, 0.0f,   // B 1
         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,   // C 2
@@ -40,15 +40,15 @@ void initialize()
         0.5f,  0.5f,  0.5f,   0.0f, 1.0f,  // G 23
     };
 
-	for (uint32_t i = 0; i < sizeof(cube_vertices) / sizeof(float); i += 5)
-	{
+    for (uint32_t i = 0; i < sizeof(cube_vertices) / sizeof(float); i += 5)
+    {
         Vertex vertex = {};
         vertex.position = glm::vec3(cube_vertices[i], cube_vertices[i + 1], cube_vertices[i + 2]);
         vertex.texture_coordinates = glm::vec2(cube_vertices[i + 3], cube_vertices[i + 4]);
-		cube.vertices.emplace_back(vertex);
-	}
+        cube.vertices.emplace_back(vertex);
+    }
 
-	uint32_t constexpr cube_indices[] = {
+    uint32_t constexpr cube_indices[] = {
         // Front and back
         0, 3, 2,
         2, 1, 0,
@@ -73,7 +73,7 @@ void initialize()
 
     for (auto const index : cube_indices)
     {
-	    cube.indices.emplace_back(index);
+        cube.indices.emplace_back(index);
     }
 }
 

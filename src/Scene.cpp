@@ -4,19 +4,19 @@
 
 void Scene::add_child(std::shared_ptr<Entity> const& entity)
 {
-	entities.emplace_back(entity);
+    entities.emplace_back(entity);
 }
 
 void Scene::awake()
 {
-	is_during_awake = true;
+    is_during_awake = true;
 
     for (auto const& entity : entities)
     {
-	    for (auto const& component : entity->components)
-	    {
-		    component->awake();
-	    }
+        for (auto const& component : entity->components)
+        {
+            component->awake();
+        }
     }
 
     is_during_awake = false;
@@ -25,14 +25,14 @@ void Scene::awake()
 
 void Scene::start()
 {
-	is_during_start = true;
+    is_during_start = true;
 
     for (auto const& entity : entities)
     {
-	    for (auto const& component : entity->components)
-		{
-			component->start();
-		}
+        for (auto const& component : entity->components)
+        {
+            component->start();
+        }
     }
 
     is_during_start = false;
@@ -41,7 +41,7 @@ void Scene::start()
 
 void Scene::update() const
 {
-	for (auto const& child : entities)
+    for (auto const& child : entities)
     {
         for (auto const& component : child->components)
         {
@@ -52,8 +52,8 @@ void Scene::update() const
         {
             // TODO: Group objects with the same shader together?
             drawable->material->shader->use();
-			drawable->material->shader->set_mat4("model", child->transform->get_model_matrix());
-        	drawable->draw();
+            drawable->material->shader->set_mat4("model", child->transform->get_model_matrix());
+            drawable->draw();
         }
     }
 }

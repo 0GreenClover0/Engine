@@ -4,8 +4,8 @@ layout (triangle_strip, max_vertices = 255) out;
 
 in VS_OUT
 {
-	vec4 GlPosition;
-	vec2 TexCoord;
+    vec4 GlPosition;
+    vec2 TexCoord;
 } gs_in[];
 
 out GS_OUT

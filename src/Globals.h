@@ -9,9 +9,9 @@ inline double delta_time;
 
 struct MeshData
 {
-	std::vector<Vertex> vertices;
-	std::vector<uint32_t> indices;
-	std::vector<Texture> textures;
+    std::vector<Vertex> vertices;
+    std::vector<uint32_t> indices;
+    std::vector<Texture> textures;
 };
 
 namespace InternalMeshData

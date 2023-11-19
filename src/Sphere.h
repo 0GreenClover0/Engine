@@ -5,20 +5,20 @@
 class Sphere final : public Model
 {
 public:
-	Sphere(float radius, uint32_t sectors, uint32_t stacks, std::string texture_path, std::shared_ptr<Material> const& material);
+    Sphere(float radius, uint32_t sectors, uint32_t stacks, std::string texture_path, std::shared_ptr<Material> const& material);
 
-	virtual void prepare() override;
-	virtual void reset() override;
-	virtual void reprepare() override;
+    virtual void prepare() override;
+    virtual void reset() override;
+    virtual void reprepare() override;
 
-	[[nodiscard]] Mesh create_sphere() const;
+    [[nodiscard]] Mesh create_sphere() const;
 
-	uint32_t sector_count;
-	uint32_t stack_count;
+    uint32_t sector_count;
+    uint32_t stack_count;
 
 private:
-	[[nodiscard]] Texture load_texture() const;
+    [[nodiscard]] Texture load_texture() const;
 
-	std::string texture_path;
-	float radius;
+    std::string texture_path;
+    float radius;
 };

@@ -6,7 +6,7 @@
 
 void AstronomicalObject::update()
 {
-	std::shared_ptr<Transform> const planet_transform = this->entity->transform;
+    std::shared_ptr<Transform> const planet_transform = this->entity->transform;
 
     // Move in orbit
     planet_transform->set_local_position(glm::vec3(
@@ -17,7 +17,7 @@ void AstronomicalObject::update()
 
     // Rotate around its own axis
     planet_transform->set_euler_angles(glm::vec3(
-		planet_transform->get_euler_angles().x,
+        planet_transform->get_euler_angles().x,
         planet_transform->get_euler_angles().y + delta_time * this->rotation_speed,
         planet_transform->get_euler_angles().z
     ));

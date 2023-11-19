@@ -8,12 +8,12 @@
 class AstronomicalObject : public Component
 {
 public:
-	float alpha;
-	float speed;
-	float rotation_speed;
-	glm::vec2 orbit;
+    float alpha;
+    float speed;
+    float rotation_speed;
+    glm::vec2 orbit;
 
-	std::weak_ptr<Model> model;
+    std::weak_ptr<Model> model;
 
-	void update() override;
+    void update() override;
 };

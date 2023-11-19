@@ -69,7 +69,7 @@ int main(int, char**)
 
     InternalMeshData::initialize();
 
-	auto constexpr clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+    auto constexpr clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
     glEnable(GL_DEPTH_TEST);
 
@@ -103,17 +103,17 @@ int main(int, char**)
     // Main loop
     while (!glfwWindowShouldClose(window->get_glfw_window()))
     {
-    	double const current_frame = glfwGetTime();
+        double const current_frame = glfwGetTime();
         delta_time = current_frame - last_frame;
         last_frame = current_frame;
 
-	     nb_frames++;
-	     if (current_frame - last_time >= 1.0 )
+         nb_frames++;
+         if (current_frame - last_time >= 1.0 )
          {
-	         frame_per_second = 1000.0 / static_cast<double>(nb_frames);
-	         nb_frames = 0;
-	         last_time += 1.0;
-	     }
+             frame_per_second = 1000.0 / static_cast<double>(nb_frames);
+             nb_frames = 0;
+             last_time += 1.0;
+         }
 
         glfwPollEvents();
 
@@ -124,7 +124,7 @@ int main(int, char**)
 
         ImGui::Begin("Debug", &debug_open);
         ImGui::Checkbox("Polygon mode", &polygon_mode);
-    	ImGui::SliderFloat("Rotation X", &planetary_system_comp->x_rotation, 0.0f, 360.0f);
+        ImGui::SliderFloat("Rotation X", &planetary_system_comp->x_rotation, 0.0f, 360.0f);
         ImGui::SliderFloat("Rotation Y", &planetary_system_comp->y_rotation, 0.0f, 360.0f);
         ImGui::SliderFloat("Level of detail", &detail, 0.03f, 2.0f);
         ImGui::Text("Application average %.3f ms/frame", frame_per_second);
@@ -132,7 +132,7 @@ int main(int, char**)
 
         if (!glm::epsilonEqual(last_detail, detail, 0.01f))
         {
-	        planetary_system_comp->change_detail(detail);
+            planetary_system_comp->change_detail(detail);
             last_detail = detail;
         }
 
@@ -142,7 +142,7 @@ int main(int, char**)
         }
         else
         {
-	        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         }
 
         planetary_system->transform->set_euler_angles(glm::vec3(planetary_system_comp->x_rotation, 0.0f, planetary_system_comp->y_rotation));
@@ -153,9 +153,9 @@ int main(int, char**)
         // Rendering
         ImGui::Render();
 
-    	int display_w, display_h;
-		glfwGetFramebufferSize(window->get_glfw_window(), &display_w, &display_h);
-		glViewport(0, 0, display_w, display_h);
+        int display_w, display_h;
+        glfwGetFramebufferSize(window->get_glfw_window(), &display_w, &display_h);
+        glViewport(0, 0, display_w, display_h);
 
         glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -163,7 +163,7 @@ int main(int, char**)
         // Update camera projection matrix
         camera->projection = glm::perspective(glm::radians(60.0f), static_cast<float>(screen_width) / static_cast<float>(screen_height), 0.1f, 100.0f);
 
-    	main_scene->update();
+        main_scene->update();
 
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
@@ -184,11 +184,11 @@ int main(int, char**)
 
 void setup_imgui(GLFWwindow* glfw_window)
 {
-	// Setup Dear ImGui binding
+    // Setup Dear ImGui binding
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
 
-	// GL 4.3 + GLSL 430
+    // GL 4.3 + GLSL 430
     auto const glsl_version = "#version 430";
     ImGui_ImplGlfw_InitForOpenGL(glfw_window, true);
     ImGui_ImplOpenGL3_Init(glsl_version);
@@ -199,7 +199,7 @@ void setup_imgui(GLFWwindow* glfw_window)
 
 int setup_glad()
 {
-	// Initialize OpenGL loader
+    // Initialize OpenGL loader
     if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)))
     {
         spdlog::error("Failed to initialize OpenGL loader!");
@@ -212,7 +212,7 @@ int setup_glad()
 
 std::shared_ptr<Window> setup_glfw()
 {
-	// Setup window
+    // Setup window
     glfwSetErrorCallback(glfw_error_callback);
     if (!glfwInit())
         return nullptr;
@@ -233,10 +233,10 @@ std::shared_ptr<Window> setup_glfw()
 
 void process_input(GLFWwindow *window)
 {
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
 
-	float const camera_speed = camera_movement_speed * delta_time;
+    float const camera_speed = camera_movement_speed * delta_time;
     if (is_button_pressed(window, GLFW_KEY_W))
         camera->position += camera_speed * camera->front;
 
@@ -252,7 +252,7 @@ void process_input(GLFWwindow *window)
 
 bool is_button_pressed(GLFWwindow *window, int const key)
 {
-	return glfwGetKey(window, key) == GLFW_PRESS;
+    return glfwGetKey(window, key) == GLFW_PRESS;
 }
 
 void glfw_error_callback(int error, char const* description)
@@ -263,13 +263,13 @@ void glfw_error_callback(int error, char const* description)
 void mouse_callback(GLFWwindow* window, double x, double y)
 {
     if (mouse_just_entered)
-	{
-	    last_mouse_position.x = x;
-	    last_mouse_position.y = y;
-	    mouse_just_entered = false;
-	}
+    {
+        last_mouse_position.x = x;
+        last_mouse_position.y = y;
+        mouse_just_entered = false;
+    }
 
-	double x_offset = x - last_mouse_position.x;
+    double x_offset = x - last_mouse_position.x;
     double y_offset = last_mouse_position.y - y;
     last_mouse_position.x = x;
     last_mouse_position.y = y;
@@ -286,35 +286,35 @@ void mouse_callback(GLFWwindow* window, double x, double y)
 
 void focus_callback(GLFWwindow* window, int const focused)
 {
-	if (focused == 0)
+    if (focused == 0)
         mouse_just_entered = true;
 }
 
 unsigned int generate_texture(char const* path)
 {
-	unsigned int texture_id;
+    unsigned int texture_id;
     glGenTextures(1, &texture_id);
     glBindTexture(GL_TEXTURE_2D, texture_id);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     stbi_set_flip_vertically_on_load(true);
 
-	int width, height, channel_count;
+    int width, height, channel_count;
     unsigned char* data = stbi_load(path, &width, &height, &channel_count, 0);
 
     if (data == nullptr)
     {
-		std::cout << "Warning. Failed to load a texutre.";
+        std::cout << "Warning. Failed to load a texutre.";
     }
     else
     {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-		glGenerateMipmap(GL_TEXTURE_2D);
+        glGenerateMipmap(GL_TEXTURE_2D);
     }
 
     stbi_image_free(data);
