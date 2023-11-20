@@ -17,6 +17,7 @@
 #include <glm/gtc/random.hpp>
 
 #include "Camera.h"
+#include "Editor.h"
 #include "Entity.h"
 #include "Globals.h"
 #include "MainScene.h"
@@ -100,6 +101,8 @@ int main(int, char**)
     double frame_per_second = 0.0;
     double last_time = glfwGetTime();
 
+    Engine::Editor editor;
+
     // Main loop
     while (!glfwWindowShouldClose(window->get_glfw_window()))
     {
@@ -129,6 +132,8 @@ int main(int, char**)
         ImGui::SliderFloat("Level of detail", &detail, 0.03f, 2.0f);
         ImGui::Text("Application average %.3f ms/frame", frame_per_second);
         ImGui::End();
+
+        editor.draw_scene_hierarchy();
 
         if (!glm::epsilonEqual(last_detail, detail, 0.01f))
         {
