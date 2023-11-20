@@ -8,8 +8,8 @@
 class Entity : public std::enable_shared_from_this<Entity>
 {
 public:
-    Entity();
-    static std::shared_ptr<Entity> create();
+    Entity(std::string name);
+    static std::shared_ptr<Entity> create(std::string name = "Entity");
 
     template <class T>
     std::shared_ptr<T> add_component()
@@ -49,6 +49,7 @@ public:
         return component;
     }
 
+    std::string name;
     std::shared_ptr<Transform> transform;
     std::vector<std::shared_ptr<Component>> components = {};
     std::vector<std::shared_ptr<Drawable>> drawables = {};
