@@ -1,5 +1,6 @@
 #include "PlanetarySystem.h"
 
+#include <format>
 #include <glm/gtc/random.hpp>
 
 #include "Ellipse.h"
@@ -14,7 +15,7 @@ void PlanetarySystem::awake()
     auto standard_shader = std::make_shared<Shader>("./res/shaders/vertex.vert", "./res/shaders/fragment.frag");
     auto standard_material = std::make_shared<Material>(standard_shader);
 
-    auto const sun = Entity::create();
+    auto const sun = Entity::create("Sun");
     sun->transform->set_parent(entity->transform);
 
     {
@@ -22,7 +23,7 @@ void PlanetarySystem::awake()
         sun->transform->set_local_scale(glm::vec3(0.002f, 0.002f, 0.002f));
     }
 
-    auto const planets_parent = Entity::create();
+    auto const planets_parent = Entity::create("PlanetsParent");
 
     {
         planets_parent->transform->set_parent(sun->transform);
@@ -38,7 +39,7 @@ void PlanetarySystem::awake()
         float planet_scale = 0.04f;
         for (uint32_t i = 1; i <= planet_count; ++i)
         {
-            auto const planet = Entity::create();
+            auto const planet = Entity::create(std::format("Planet{}", i));
             auto planet_comp = planet->add_component<AstronomicalObject>();
 
             custom_sphere_material->color = glm::vec3(glm::linearRand(0.0f, 1.0f), glm::linearRand(0.0f, 1.0f), glm::linearRand(0.0f, 1.0f));
@@ -72,7 +73,7 @@ void PlanetarySystem::awake()
 
         for (uint32_t i = 1; i <= moon_count; ++i)
         {
-            auto const moon = Entity::create();
+            auto const moon = Entity::create(std::format("Moon{}", i));
             auto moon_comp = moon->add_component<AstronomicalObject>();
 
             float const color = glm::linearRand(0.0f, 1.0f);

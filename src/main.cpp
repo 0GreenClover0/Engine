@@ -82,7 +82,7 @@ int main(int, char**)
     auto const main_scene = std::make_shared<Scene>();
     MainScene::set_instance(main_scene);
 
-    auto const planetary_system = Entity::create();
+    auto const planetary_system = Entity::create("PlanetarySystem");
     auto const planetary_system_comp = planetary_system->add_component<PlanetarySystem>();
 
     // Call awake on all entities
