@@ -44,7 +44,7 @@ void PlanetarySystem::awake()
 
             custom_sphere_material->color = glm::vec3(glm::linearRand(0.0f, 1.0f), glm::linearRand(0.0f, 1.0f), glm::linearRand(0.0f, 1.0f));
 
-            auto const sphere = planet->add_component<Sphere>(3.0f, 72, 72, "./res/textures/stone.jpg", custom_sphere_material);
+            auto const sphere = planet->add_component<Sphere>(3.0f, default_sphere_sector_and_stack_count, default_sphere_sector_and_stack_count, "./res/textures/stone.jpg", custom_sphere_material);
 
             planet_comp->alpha = glm::linearRand(0.0f, 360.0f);
             planet_comp->orbit = glm::vec2(orbit);
@@ -79,7 +79,7 @@ void PlanetarySystem::awake()
             float const color = glm::linearRand(0.0f, 1.0f);
             custom_sphere_material->color = glm::vec3(color, color, color);
 
-            auto const sphere = moon->add_component<Sphere>(1.0f, 72, 72, "./res/textures/stone.jpg", custom_sphere_material);
+            auto const sphere = moon->add_component<Sphere>(1.0f, default_sphere_sector_and_stack_count, default_sphere_sector_and_stack_count, "./res/textures/stone.jpg", custom_sphere_material);
 
             moon_comp->alpha = glm::linearRand(0.0f, 360.0f);
             moon_comp->orbit = glm::vec2(glm::linearRand(3.5f, 4.5f), glm::linearRand(3.5f, 4.5f));
