@@ -6,9 +6,13 @@
 #include <glm/fwd.hpp>
 #include <glm/glm.hpp>
 
+class Entity;
+
 class Transform : public std::enable_shared_from_this<Transform>
 {
 public:
+    explicit Transform(std::shared_ptr<Entity> const& entity);
+
     void set_local_position(glm::vec3 const&);
     [[nodiscard]] glm::vec3 get_local_position() const;
 
@@ -32,6 +36,7 @@ public:
 
     std::vector<std::shared_ptr<Transform>> children;
     std::weak_ptr<Transform> parent = {};
+    std::weak_ptr<Entity> entity = {};
 
 protected:
     glm::vec3 m_local_position = { 0.0f, 0.0f, 0.0f };

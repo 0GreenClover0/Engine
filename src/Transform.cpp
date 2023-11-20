@@ -4,6 +4,10 @@
 
 #include "ak.h"
 
+Transform::Transform(std::shared_ptr<Entity> const& entity) : entity(entity)
+{
+}
+
 // Version for no parent
 void Transform::compute_model_matrix()
 {
