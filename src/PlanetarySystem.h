@@ -21,5 +21,9 @@ private:
     std::vector<std::weak_ptr<AstronomicalObject>> planets = {};
     std::vector<std::weak_ptr<AstronomicalObject>> moons = {};
 
-    int default_sphere_sector_and_stack_count = 72;
+    int default_sphere_sector_count = 72;
+    int default_sphere_stack_count = 72;
+
+    int default_sphere_sector_count_geo = 6;
+    int default_sphere_stack_count_geo = 7;
 };

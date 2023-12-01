@@ -40,6 +40,27 @@ Mesh Sphere::create_sphere() const
     std::vector<std::uint32_t> indices;
     std::vector<Texture> textures;
 
+    if (use_geometry_shader)
+    {
+        Vertex temp = {};
+        temp.position = glm::vec3(0.0f, 0.0f, 0.0f);
+        vertices.emplace_back(temp);
+        vertices.emplace_back(temp);
+        vertices.emplace_back(temp);
+
+        indices.push_back(0);
+        indices.push_back(1);
+        indices.push_back(2);
+
+        std::vector<Texture> diffuse_maps = { load_texture() };
+        textures.insert(textures.end(), diffuse_maps.begin(), diffuse_maps.end());
+
+        material->shader->set_float("radiusMultiplier", radius);
+        material->shader->set_int("sector_count", sector_count);
+        material->shader->set_int("stack_count", stack_count);
+        return Mesh::create(vertices, indices, textures, draw_type, material);
+    }
+
     for (uint32_t x = 0; x <= stack_count; ++x)
     {
         for (uint32_t y = 0; y <= sector_count; ++y)

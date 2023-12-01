@@ -110,13 +110,13 @@ int main(int, char**)
         delta_time = current_frame - last_frame;
         last_frame = current_frame;
 
-         nb_frames++;
-         if (current_frame - last_time >= 1.0 )
-         {
-             frame_per_second = 1000.0 / static_cast<double>(nb_frames);
-             nb_frames = 0;
-             last_time += 1.0;
-         }
+        nb_frames++;
+        if (current_frame - last_time >= 1.0 )
+        {
+            frame_per_second = 1000.0 / static_cast<double>(nb_frames);
+            nb_frames = 0;
+            last_time += 1.0;
+        }
 
         glfwPollEvents();
 
@@ -166,7 +166,7 @@ int main(int, char**)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // Update camera projection matrix
-        camera->projection = glm::perspective(glm::radians(60.0f), static_cast<float>(screen_width) / static_cast<float>(screen_height), 0.1f, 100.0f);
+        camera->projection = glm::perspective(glm::radians(60.0f), static_cast<float>(screen_width) / static_cast<float>(screen_height), 0.1f, 100000.0f);
 
         main_scene->update();
 

@@ -8,6 +8,7 @@
 
 class Entity;
 
+// TODO: Make transform a component
 class Transform : public std::enable_shared_from_this<Transform>
 {
 public:

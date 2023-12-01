@@ -32,8 +32,20 @@ void PlanetarySystem::awake()
 
     {
         auto sun_comp = sun->add_component<AstronomicalObject>();
-        auto custom_sphere_shader = std::make_shared<Shader>("./res/shaders/vertex.vert", "./res/shaders/fragment.frag");//std::make_shared<Shader>("./vertex_sphere.vert", "./fragment_sphere.frag", "./geometry.geo");
-        auto custom_sphere_material = std::make_shared<Material>(custom_sphere_shader);
+
+        auto custom_sphere_shader_planet = std::make_shared<Shader>("./res/shaders/vertex.vert", "./res/shaders/fragment.frag");
+        auto custom_sphere_material_planet = std::make_shared<Material>(custom_sphere_shader_planet);
+        auto custom_sphere_shader_moon = std::make_shared<Shader>("./res/shaders/vertex.vert", "./res/shaders/fragment.frag");
+        auto custom_sphere_material_moon = std::make_shared<Material>(custom_sphere_shader_moon);
+
+        if (Sphere::use_geometry_shader)
+        {
+            custom_sphere_shader_planet = std::make_shared<Shader>("./res/shaders/vertex_sphere.vert", "./res/shaders/fragment_sphere.frag", "./res/shaders/geometry.geo");
+            custom_sphere_shader_moon = std::make_shared<Shader>("./res/shaders/vertex_sphere.vert", "./res/shaders/fragment_sphere.frag", "./res/shaders/geometry.geo");
+
+            custom_sphere_material_planet = std::make_shared<Material>(custom_sphere_shader_planet);
+            custom_sphere_material_moon = std::make_shared<Material>(custom_sphere_shader_moon);
+        }
 
         glm::vec2 orbit = glm::vec2(2.5f, 2.5f);
         float planet_scale = 0.04f;
@@ -42,16 +54,23 @@ void PlanetarySystem::awake()
             auto const planet = Entity::create(std::format("Planet{}", i));
             auto planet_comp = planet->add_component<AstronomicalObject>();
 
-            custom_sphere_material->color = glm::vec3(glm::linearRand(0.0f, 1.0f), glm::linearRand(0.0f, 1.0f), glm::linearRand(0.0f, 1.0f));
+            custom_sphere_material_planet->color = glm::vec3(glm::linearRand(0.0f, 1.0f), glm::linearRand(0.0f, 1.0f), glm::linearRand(0.0f, 1.0f));
+            standard_material->color = custom_sphere_material_planet->color;
 
-            auto const sphere = planet->add_component<Sphere>(3.0f, default_sphere_sector_and_stack_count, default_sphere_sector_and_stack_count, "./res/textures/stone.jpg", custom_sphere_material);
+            auto const sphere = planet->add_component<Sphere>(
+                3.0f,
+                Sphere::use_geometry_shader ? default_sphere_sector_count_geo : default_sphere_sector_count,
+                Sphere::use_geometry_shader ? default_sphere_stack_count_geo : default_sphere_stack_count,
+                "./res/textures/stone.jpg",
+                custom_sphere_material_planet
+            );
 
             planet_comp->alpha = glm::linearRand(0.0f, 360.0f);
             planet_comp->orbit = glm::vec2(orbit);
             planet_comp->rotation_speed = glm::linearRand(5.0f, 25.0f);
             planet_comp->model = sphere;
 
-            planets_parent->add_component<class Ellipse>(0.0f, 0.0f, orbit.x, orbit.y, 60, custom_sphere_material);
+            planets_parent->add_component<class Ellipse>(0.0f, 0.0f, orbit.x, orbit.y, 60, standard_material);
 
             planet_comp->speed = i == 1 ? 2.0f : planets.back().lock()->speed * 0.6f;
 
@@ -77,9 +96,16 @@ void PlanetarySystem::awake()
             auto moon_comp = moon->add_component<AstronomicalObject>();
 
             float const color = glm::linearRand(0.0f, 1.0f);
-            custom_sphere_material->color = glm::vec3(color, color, color);
+            custom_sphere_material_moon->color = glm::vec3(color, color, color);
+            standard_material->color = custom_sphere_material_moon->color;
 
-            auto const sphere = moon->add_component<Sphere>(1.0f, default_sphere_sector_and_stack_count, default_sphere_sector_and_stack_count, "./res/textures/stone.jpg", custom_sphere_material);
+            auto const sphere = moon->add_component<Sphere>(
+                1.0f,
+                Sphere::use_geometry_shader ? default_sphere_sector_count_geo : default_sphere_sector_count,
+                Sphere::use_geometry_shader ? default_sphere_stack_count_geo : default_sphere_stack_count,
+                "./res/textures/stone.jpg",
+                custom_sphere_material_moon
+            );
 
             moon_comp->alpha = glm::linearRand(0.0f, 360.0f);
             moon_comp->orbit = glm::vec2(glm::linearRand(3.5f, 4.5f), glm::linearRand(3.5f, 4.5f));
@@ -93,7 +119,7 @@ void PlanetarySystem::awake()
                 moon_comp->orbit.x,
                 moon_comp->orbit.y,
                 40,
-                custom_sphere_material
+                standard_material
             );
 
             moon->transform->set_parent(planets[planets.size() - i].lock()->entity->transform);
@@ -115,16 +141,30 @@ void PlanetarySystem::change_detail(float const detail) const
     for (auto const& planet : planets)
     {
         std::shared_ptr<Sphere> const model = std::static_pointer_cast<Sphere>(planet.lock()->model.lock());
-        model->stack_count = default_sphere_sector_and_stack_count * detail;
-        model->sector_count = default_sphere_sector_and_stack_count * detail;
+        model->stack_count = (Sphere::use_geometry_shader ? default_sphere_stack_count_geo : default_sphere_stack_count) * detail;
+        model->sector_count = (Sphere::use_geometry_shader ? default_sphere_sector_count_geo : default_sphere_sector_count) * detail;
+
+        if (Sphere::use_geometry_shader)
+        {
+            model->stack_count = glm::clamp(static_cast<int>(model->stack_count), 2, 7);
+            model->sector_count = glm::clamp(static_cast<int>(model->sector_count), 1, 6);
+        }
+
         model->reprepare();
     }
 
     for (auto const& moon : moons)
     {
         std::shared_ptr<Sphere> const model = std::static_pointer_cast<Sphere>(moon.lock()->model.lock());
-        model->stack_count = default_sphere_sector_and_stack_count * detail;
-        model->sector_count = default_sphere_sector_and_stack_count * detail;
+        model->stack_count = (Sphere::use_geometry_shader ? default_sphere_stack_count_geo : default_sphere_stack_count) * detail;
+        model->sector_count = (Sphere::use_geometry_shader ? default_sphere_sector_count_geo : default_sphere_sector_count) * detail;
+
+        if (Sphere::use_geometry_shader)
+        {
+            model->stack_count = glm::clamp(static_cast<int>(model->stack_count), 2, 7);
+            model->sector_count = glm::clamp(static_cast<int>(model->sector_count), 1, 6);
+        }
+
         model->reprepare();
     }
 }

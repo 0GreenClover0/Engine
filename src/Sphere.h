@@ -16,6 +16,8 @@ public:
     uint32_t sector_count;
     uint32_t stack_count;
 
+    inline static bool use_geometry_shader = false;
+
 private:
     [[nodiscard]] Texture load_texture() const;
 
