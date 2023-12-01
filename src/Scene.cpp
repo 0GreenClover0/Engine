@@ -11,7 +11,10 @@ void Scene::awake()
 {
     is_during_awake = true;
 
-    for (auto const& entity : entities)
+    // Scene Entities vector might be modified by components, ex. when they create new entities
+    // TODO: Destroying entities is not handled properly. But we don't support any way of destroying an entity anyway, so...
+    auto const entities_copy = entities;
+    for (auto const& entity : entities_copy)
     {
         for (auto const& component : entity->components)
         {
@@ -27,7 +30,10 @@ void Scene::start()
 {
     is_during_start = true;
 
-    for (auto const& entity : entities)
+    // Scene Entities vector might be modified by components, ex. when they create new entities
+    // TODO: Destroying entities is not handled properly. But we don't support any way of destroying an entity anyway, so...
+    auto const entities_copy = entities;
+    for (auto const& entity : entities_copy)
     {
         for (auto const& component : entity->components)
         {
@@ -41,18 +47,21 @@ void Scene::start()
 
 void Scene::update() const
 {
-    for (auto const& child : entities)
+    // Scene Entities vector might be modified by components, ex. when they create new entities
+    // TODO: Destroying entities is not handled properly. But we don't support any way of destroying an entity anyway, so...
+    auto const entities_copy = entities;
+    for (auto const& entity : entities_copy)
     {
-        for (auto const& component : child->components)
+        for (auto const& component : entity->components)
         {
             component->update();
         }
 
-        for (auto const& drawable : child->drawables)
+        for (auto const& drawable : entity->drawables)
         {
             // TODO: Group objects with the same shader together?
             drawable->material->shader->use();
-            drawable->material->shader->set_mat4("model", child->transform->get_model_matrix());
+            drawable->material->shader->set_mat4("model", entity->transform->get_model_matrix());
             drawable->draw();
         }
     }
