@@ -50,6 +50,8 @@ public:
     }
 
     std::string name;
+    std::string guid;
+    size_t hashed_guid;
     std::shared_ptr<Transform> transform;
     std::vector<std::shared_ptr<Component>> components = {};
     std::vector<std::shared_ptr<Drawable>> drawables = {};

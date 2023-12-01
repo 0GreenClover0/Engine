@@ -49,7 +49,7 @@ glm::mat4 const& Transform::get_model_matrix()
 {
     if (m_local_dirty || m_parent_dirty)
     {
-        if (is_uninitialized(parent))
+        if (AK::is_uninitialized(parent))
             compute_model_matrix();
         else
             compute_model_matrix(parent.lock()->get_model_matrix());
