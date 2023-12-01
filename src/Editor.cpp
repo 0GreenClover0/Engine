@@ -10,38 +10,32 @@ namespace Engine
 
 void Editor::draw_scene_hierarchy() const
 {
-	ImGui::Begin("Hierarchy");
-	int current_item = 1;
-	char t = 'a';
+    ImGui::Begin("Hierarchy");
 
-	int tree_index = 0;
-	for (auto const& entity : MainScene::get_instance()->entities)
-	{
-		if (!entity->transform->parent.expired())
-			continue;
+    // Draw every entity without a parent, and draw its children recursively
+    for (auto const& entity : MainScene::get_instance()->entities)
+    {
+        if (!entity->transform->parent.expired())
+            continue;
 
-        draw_entity_recursively(entity->transform, tree_index);
-	}
-	ImGui::End();
+        draw_entity_recursively(entity->transform);
+    }
+    ImGui::End();
 }
 
-void Editor::draw_entity_recursively(std::shared_ptr<Transform> const& transform, int& tree_id) const
+void Editor::draw_entity_recursively(std::shared_ptr<Transform> const& transform) const
 {
-	if (ImGui::TreeNode(reinterpret_cast<void*>(static_cast<intptr_t>(tree_id)), "%s", transform->entity.lock()->name))
+    if (auto const entity = transform->entity.lock(); !ImGui::TreeNode(reinterpret_cast<void*>(static_cast<intptr_t>(entity->hashed_guid)), "%s", entity->name))
     {
-		tree_id++;
-
-		for (auto const& child : transform->children)
-		{
-			draw_entity_recursively(child, tree_id);
-		}
-
-        ImGui::TreePop();
+        return;
     }
-	else
-	{
-		tree_id++;
-	}
+
+    for (auto const& child : transform->children)
+    {
+        draw_entity_recursively(child);
+    }
+
+    ImGui::TreePop();
 }
 
 }
