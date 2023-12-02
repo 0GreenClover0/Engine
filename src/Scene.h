@@ -12,7 +12,7 @@ public:
 
     void awake();
     void start();
-    void update() const;
+    void run_frame() const;
 
     std::vector<std::shared_ptr<Entity>> entities = {};
 

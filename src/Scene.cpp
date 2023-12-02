@@ -1,5 +1,6 @@
 #include "Scene.h"
 
+#include "Camera.h"
 #include "Entity.h"
 
 void Scene::add_child(std::shared_ptr<Entity> const& entity)
@@ -45,11 +46,14 @@ void Scene::start()
     is_after_start = true;
 }
 
-void Scene::update() const
+void Scene::run_frame() const
 {
     // Scene Entities vector might be modified by components, ex. when they create new entities
     // TODO: Destroying entities is not handled properly. But we don't support any way of destroying an entity anyway, so...
     auto const entities_copy = entities;
+
+    // Premultiply projection and view matrices
+    glm::mat4 const projection_view = Camera::get_main_camera()->projection * Camera::get_main_camera()->get_view_matrix();
     for (auto const& entity : entities_copy)
     {
         for (auto const& component : entity->components)
@@ -57,11 +61,12 @@ void Scene::update() const
             component->update();
         }
 
+        glm::mat4 const projection_view_model = projection_view * entity->transform->get_model_matrix();
         for (auto const& drawable : entity->drawables)
         {
             // TODO: Group objects with the same shader together?
             drawable->material->shader->use();
-            drawable->material->shader->set_mat4("model", entity->transform->get_model_matrix());
+            drawable->material->shader->set_mat4("PVM", projection_view_model);
             drawable->draw();
         }
     }

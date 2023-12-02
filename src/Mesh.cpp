@@ -87,9 +87,6 @@ Mesh Mesh::create(std::vector<Vertex> const& vertices, std::vector<std::uint32_t
 
 void Mesh::draw() const
 {
-    // TODO: Do this somewhere globally for each shader instead of setting this each time the shader is used
-    material->shader->set_mat4("view", Camera::get_main_camera()->get_view_matrix());
-    material->shader->set_mat4("projection", Camera::get_main_camera()->projection);
     material->shader->set_vec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
 
     // Bind textures

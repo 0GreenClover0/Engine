@@ -7,13 +7,11 @@ layout (location = 2) in vec2 TextureCoordinatesInput;
 out vec2 TextureCoordinatesVertex;
 out vec3 NormalVertex;
 
-uniform mat4 model;
-uniform mat4 view;
-uniform mat4 projection;
+uniform mat4 PVM;
 
 void main()
 {
-	gl_Position = projection * view * model * vec4(PositionInput, 1.0);
+	gl_Position = PVM * vec4(PositionInput, 1.0);
 	TextureCoordinatesVertex = TextureCoordinatesInput;
 	NormalVertex = NormalInput;
 }

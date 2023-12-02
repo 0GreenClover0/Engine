@@ -10,12 +10,10 @@ out VS_OUT
     vec2 TextureCoordinatesVertex;
 } vs_out;
 
-uniform mat4 model;
-uniform mat4 view;
-uniform mat4 projection;
+uniform mat4 PVM;
 
 void main()
 {
-    vs_out.GlPosition = projection * view * model * vec4(PositionInput, 1.0);
+    vs_out.GlPosition = PVM * vec4(PositionInput, 1.0);
     vs_out.TextureCoordinatesVertex = TextureCoordinatesInput;
 }

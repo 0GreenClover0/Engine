@@ -32,12 +32,12 @@
 #if FORCE_DEDICATED_GPU
 extern "C"
 {
-  __declspec(dllexport) unsigned long NvOptimusEnablement = 0x00000001;
+    __declspec(dllexport) unsigned long NvOptimusEnablement = 0x00000001;
 }
 
 extern "C"
 {
-  __declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1;
+    __declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1;
 }
 #endif
 
@@ -187,7 +187,7 @@ int main(int, char**)
         // Update camera projection matrix
         camera->projection = glm::perspective(glm::radians(60.0f), static_cast<float>(screen_width) / static_cast<float>(screen_height), 0.1f, 100000.0f);
 
-        main_scene->update();
+        main_scene->run_frame();
 
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
