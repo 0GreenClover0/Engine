@@ -191,6 +191,7 @@ int main(int, char**)
         camera->projection = glm::perspective(glm::radians(60.0f), static_cast<float>(screen_width) / static_cast<float>(screen_height), 0.1f, 100000.0f);
 
         main_scene->run_frame();
+        Renderer::get_instance()->render();
 
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
