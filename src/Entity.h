@@ -10,6 +10,7 @@ class Entity : public std::enable_shared_from_this<Entity>
 public:
     Entity(std::string name);
     static std::shared_ptr<Entity> create(std::string name = "Entity");
+    static std::shared_ptr<Entity> create(std::string const& guid, std::string const& name);
 
     template <class T>
     std::shared_ptr<T> add_component()
