@@ -50,6 +50,19 @@ public:
         return component;
     }
 
+    template<typename T>
+    std::shared_ptr<T> get_component()
+    {
+        for (auto const& component : components)
+        {
+            auto comp = std::dynamic_pointer_cast<T>(component);
+            if (comp != nullptr)
+                return comp;
+        }
+
+        return nullptr;
+    }
+
     std::string name;
     std::string guid;
     size_t hashed_guid;
