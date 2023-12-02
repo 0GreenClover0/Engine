@@ -1,6 +1,7 @@
 #include "Drawable.h"
 
 #include "Entity.h"
+#include "Renderer.h"
 
 Drawable::Drawable(std::shared_ptr<Material> const& material)
 {
@@ -10,4 +11,6 @@ Drawable::Drawable(std::shared_ptr<Material> const& material)
 void Drawable::initialize()
 {
     entity->drawables.emplace_back(this);
+
+    Renderer::get_instance()->register_drawable(std::dynamic_pointer_cast<Drawable>(shared_from_this()));
 }
