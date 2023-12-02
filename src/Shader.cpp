@@ -9,16 +9,19 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.inl>
 
-Shader::Shader(char const* vertex_path, char const* fragment_path)
+Shader::Shader(std::string vertex_path, std::string fragment_path) : vertex_path(std::move(vertex_path)), fragment_path(std::move(fragment_path))
 {
+    char const* vertex_path_c_str = this->vertex_path.c_str();
+    char const* fragment_path_c_str = this->fragment_path.c_str();
+
     program_id = glCreateProgram();
 
-    int32_t const vertex_shader_id = attach(vertex_path, GL_VERTEX_SHADER);
+    int32_t const vertex_shader_id = attach(vertex_path_c_str, GL_VERTEX_SHADER);
 
     if (vertex_shader_id == -1)
         return;
 
-    int32_t const fragment_shader_id = attach(fragment_path, GL_FRAGMENT_SHADER);
+    int32_t const fragment_shader_id = attach(fragment_path_c_str, GL_FRAGMENT_SHADER);
 
     if (fragment_shader_id == -1)
         return;
@@ -41,21 +44,26 @@ Shader::Shader(char const* vertex_path, char const* fragment_path)
     glDeleteShader(fragment_shader_id);
 }
 
-Shader::Shader(char const* vertex_path, char const* fragment_path, char const* geometry_path)
+Shader::Shader(std::string vertex_path, std::string fragment_path, std::string geometry_path)
+    : vertex_path(std::move(vertex_path)), fragment_path(std::move(fragment_path)), geometry_path(std::move(geometry_path))
 {
+    char const* vertex_path_c_str = this->vertex_path.c_str();
+    char const* fragment_path_c_str = this->fragment_path.c_str();
+    char const* geometry_path_c_str = this->geometry_path.c_str();
+
     program_id = glCreateProgram();
 
-    int32_t const vertex_shader_id = attach(vertex_path, GL_VERTEX_SHADER);
+    int32_t const vertex_shader_id = attach(vertex_path_c_str, GL_VERTEX_SHADER);
 
     if (vertex_shader_id == -1)
         return;
 
-    int32_t const fragment_shader_id = attach(fragment_path, GL_FRAGMENT_SHADER);
+    int32_t const fragment_shader_id = attach(fragment_path_c_str, GL_FRAGMENT_SHADER);
 
     if (fragment_shader_id == -1)
         return;
 
-    int32_t const geometry_shader_id = attach(geometry_path, GL_GEOMETRY_SHADER);
+    int32_t const geometry_shader_id = attach(geometry_path_c_str, GL_GEOMETRY_SHADER);
 
     if (geometry_shader_id == -1)
         return;

@@ -6,11 +6,11 @@
 class Shader
 {
 public:
-    unsigned int program_id;
+    unsigned int program_id = {};
 
     Shader() = delete;
-    Shader(char const* vertex_path, char const* fragment_path);
-    Shader(char const* vertex_path, char const* fragment_path, char const* geometry_path);
+    Shader(std::string vertex_path, std::string fragment_path);
+    Shader(std::string vertex_path, std::string fragment_path, std::string geometry_path);
 
     void use() const;
     void set_bool(std::string const& name, bool value) const;
@@ -22,4 +22,8 @@ public:
 
 private:
     int32_t attach(char const* path, int type) const;
+
+    std::string vertex_path = {};
+    std::string fragment_path = {};
+    std::string geometry_path = {};
 };
