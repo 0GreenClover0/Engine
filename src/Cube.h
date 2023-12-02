@@ -2,7 +2,7 @@
 
 #include "Model.h"
 
-class Cube : public Model
+class Cube final : public Model
 {
 public:
     Cube(std::string texture_path, std::shared_ptr<Material> const& material);
