@@ -49,4 +49,6 @@ private:
     std::string directory;
     std::string model_path;
     std::vector<Texture> loaded_textures;
+
+    friend class SceneSerializer;
 };

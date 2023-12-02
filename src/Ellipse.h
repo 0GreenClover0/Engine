@@ -15,4 +15,6 @@ private:
     float radius_x;
     float radius_z;
     int segment_count;
+
+    friend class SceneSerializer;
 };

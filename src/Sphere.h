@@ -23,4 +23,6 @@ private:
 
     std::string texture_path;
     float radius;
+
+    friend class SceneSerializer;
 };

@@ -115,7 +115,7 @@ int main(int, char**)
     double frame_per_second = 0.0;
     double last_time = glfwGetTime();
 
-    Engine::Editor editor;
+    Editor::Editor const editor(main_scene);
 
     // Main loop
     while (!glfwWindowShouldClose(window->get_glfw_window()))
@@ -139,12 +139,17 @@ int main(int, char**)
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        ImGui::Begin("Debug", &debug_open);
+        ImGuiWindowFlags window_flags = 0;
+        window_flags |= ImGuiWindowFlags_MenuBar;
+
+        ImGui::Begin("Debug", &debug_open, window_flags);
         ImGui::Checkbox("Polygon mode", &polygon_mode);
         ImGui::SliderFloat("Rotation X", &planetary_system_comp->x_rotation, 0.0f, 360.0f);
         ImGui::SliderFloat("Rotation Y", &planetary_system_comp->y_rotation, 0.0f, 360.0f);
         ImGui::SliderFloat("Level of detail", &detail, 0.03f, 2.0f);
         ImGui::Text("Application average %.3f ms/frame", frame_per_second);
+
+        editor.draw_scene_save();
         ImGui::End();
 
         editor.draw_scene_hierarchy();

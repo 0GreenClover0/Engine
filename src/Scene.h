@@ -20,4 +20,7 @@ public:
     bool is_during_start = false;
     bool is_after_awake = false;
     bool is_after_start = false;
+
+private:
+    friend class SceneSerializer;
 };

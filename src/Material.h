@@ -12,4 +12,6 @@ public:
 
     glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
     std::shared_ptr<Shader> shader;
+
+    friend class SceneSerializer;
 };

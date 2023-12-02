@@ -26,4 +26,6 @@ private:
     std::string vertex_path = {};
     std::string fragment_path = {};
     std::string geometry_path = {};
+
+    friend class SceneSerializer;
 };
