@@ -45,9 +45,9 @@ std::shared_ptr<Shader> SceneSerializer::deserialize_shader(YAML::Node const& no
     auto const geometry_path = node["GeometryPath"].as<std::string>();
 
     if (geometry_path.empty())
-        return std::make_shared<Shader>(vertex_path, fragment_path);
+        return Shader::create(vertex_path, fragment_path);
 
-    return std::make_shared<Shader>(vertex_path, fragment_path, geometry_path);
+    return Shader::create(vertex_path, fragment_path, geometry_path);
 }
 
 std::shared_ptr<Material> SceneSerializer::deserialize_material(YAML::Node const& node) const

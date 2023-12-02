@@ -12,7 +12,7 @@ PlanetarySystem::PlanetarySystem() = default;
 
 void PlanetarySystem::awake()
 {
-    auto standard_shader = std::make_shared<Shader>("./res/shaders/vertex.vert", "./res/shaders/fragment.frag");
+    auto standard_shader = Shader::create("./res/shaders/vertex.vert", "./res/shaders/fragment.frag");
     auto standard_material = std::make_shared<Material>(standard_shader);
 
     auto const sun = Entity::create("Sun");
@@ -33,15 +33,15 @@ void PlanetarySystem::awake()
     {
         auto sun_comp = sun->add_component<AstronomicalObject>();
 
-        auto custom_sphere_shader_planet = std::make_shared<Shader>("./res/shaders/vertex.vert", "./res/shaders/fragment.frag");
+        auto custom_sphere_shader_planet = Shader::create("./res/shaders/vertex.vert", "./res/shaders/fragment.frag");
         auto custom_sphere_material_planet = std::make_shared<Material>(custom_sphere_shader_planet);
-        auto custom_sphere_shader_moon = std::make_shared<Shader>("./res/shaders/vertex.vert", "./res/shaders/fragment.frag");
+        auto custom_sphere_shader_moon = Shader::create("./res/shaders/vertex.vert", "./res/shaders/fragment.frag");
         auto custom_sphere_material_moon = std::make_shared<Material>(custom_sphere_shader_moon);
 
         if (Sphere::use_geometry_shader)
         {
-            custom_sphere_shader_planet = std::make_shared<Shader>("./res/shaders/vertex_sphere.vert", "./res/shaders/fragment_sphere.frag", "./res/shaders/geometry.geo");
-            custom_sphere_shader_moon = std::make_shared<Shader>("./res/shaders/vertex_sphere.vert", "./res/shaders/fragment_sphere.frag", "./res/shaders/geometry.geo");
+            custom_sphere_shader_planet = Shader::create("./res/shaders/vertex_sphere.vert", "./res/shaders/fragment_sphere.frag", "./res/shaders/geometry.geo");
+            custom_sphere_shader_moon = Shader::create("./res/shaders/vertex_sphere.vert", "./res/shaders/fragment_sphere.frag", "./res/shaders/geometry.geo");
 
             custom_sphere_material_planet = std::make_shared<Material>(custom_sphere_shader_planet);
             custom_sphere_material_moon = std::make_shared<Material>(custom_sphere_shader_moon);

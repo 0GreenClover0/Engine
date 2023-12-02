@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <string>
 #include <glm/fwd.hpp>
 
@@ -8,9 +9,10 @@ class Shader
 public:
     unsigned int program_id = {};
 
+    static std::shared_ptr<Shader> create(std::string vertex_path, std::string fragment_path);
+    static std::shared_ptr<Shader> create(std::string vertex_path, std::string fragment_path, std::string geometry_path);
+
     Shader() = delete;
-    Shader(std::string vertex_path, std::string fragment_path);
-    Shader(std::string vertex_path, std::string fragment_path, std::string geometry_path);
 
     void use() const;
     void set_bool(std::string const& name, bool value) const;
@@ -21,6 +23,9 @@ public:
     void set_mat4(std::string const& name, glm::mat4 value) const;
 
 private:
+    Shader(std::string vertex_path, std::string fragment_path);
+    Shader(std::string vertex_path, std::string fragment_path, std::string geometry_path);
+
     int32_t attach(char const* path, int type) const;
 
     std::string vertex_path = {};

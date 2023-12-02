@@ -8,6 +8,22 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.inl>
+#include <utility>
+
+std::shared_ptr<Shader> Shader::create(std::string vertex_path, std::string fragment_path)
+{
+    auto const shader = std::shared_ptr<Shader>(new Shader(std::move(vertex_path), std::move(fragment_path)));
+
+    return shader;
+}
+
+
+std::shared_ptr<Shader> Shader::create(std::string vertex_path, std::string fragment_path, std::string geometry_path)
+{
+    auto const shader = std::shared_ptr<Shader>(new Shader(std::move(vertex_path), std::move(fragment_path), std::move(geometry_path)));
+
+    return shader;
+}
 
 Shader::Shader(std::string vertex_path, std::string fragment_path) : vertex_path(std::move(vertex_path)), fragment_path(std::move(fragment_path))
 {
