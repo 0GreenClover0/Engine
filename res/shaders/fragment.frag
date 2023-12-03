@@ -4,8 +4,19 @@ out vec4 FragColor;
 
 in vec2 TextureCoordinatesVertex;
 
-uniform vec4 objectColor;
-uniform vec4 lightColor;
+struct Material
+{
+    vec3 color;
+};
+
+uniform Material material;
+
+struct Light
+{
+    vec3 diffuse;
+};
+
+uniform Light light;
 
 uniform sampler2D texture_diffuse1;
 uniform sampler2D texture_diffuse2;
@@ -16,5 +27,5 @@ uniform sampler2D texture_specular3;
 
 void main()
 {
-    FragColor = objectColor * lightColor * texture(texture_diffuse1, TextureCoordinatesVertex);
+    FragColor = vec4(material.color, 1.0) * vec4(light.diffuse, 1.0) * texture(texture_diffuse1, TextureCoordinatesVertex);
 }

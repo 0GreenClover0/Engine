@@ -107,9 +107,10 @@ int main(int, char**)
     auto const directional_light = Entity::create("DirectionalLight");
     auto light_shader = Shader::create("./res/shaders/light.vert", "./res/shaders/light.frag");
     auto light_material = std::make_shared<Material>(light_shader);
-    light_material->color = glm::vec4(1.0f, 1.0f, 0.0f, 1.0f);
+    auto const dir_light_comp = directional_light->add_component<DirectionalLight>(DirectionalLight::create());
+    dir_light_comp->diffuse = glm::vec3(1.0f, 1.0f, 0.0f);
+    light_material->color = glm::vec4(dir_light_comp->diffuse.x, dir_light_comp->diffuse.y, dir_light_comp->diffuse.z, 1.0f);
     directional_light->add_component<Cube>(light_material);
-    directional_light->add_component<DirectionalLight>(DirectionalLight::create());
 
     //auto const object = Entity::create("LitObject");
     //auto shader = Shader::create("./res/shaders/standard.vert", "./res/shaders/standard.frag");
@@ -139,6 +140,7 @@ int main(int, char**)
     // Main loop
     while (!glfwWindowShouldClose(window->get_glfw_window()))
     {
+        directional_light->transform->set_local_position(glm::vec3(glm::sin(glfwGetTime()) * 5.0f, 0.0f, glm::cos(glfwGetTime()) * 2.0f));
         double const current_frame = glfwGetTime();
         delta_time = current_frame - last_frame;
         last_frame = current_frame;

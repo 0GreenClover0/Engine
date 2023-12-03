@@ -4,34 +4,50 @@ in vec2 TextureCoordinatesVertex;
 in vec3 FragmentPosition;
 in vec3 NormalVertex;
 
-out vec4 FragColor;
+struct Material
+{
+    vec3 color;
+    vec3 ambient;
+    vec3 specular;
+    float shininess;
+};
 
-uniform vec4 objectColor;
-uniform vec4 lightColor;
-uniform vec3 lightPosition;
+uniform Material material;
+
+struct Light
+{
+    vec3 position;
+
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+};
+
+uniform Light light;
+
 uniform vec3 cameraPosition;
 
 uniform sampler2D texture_diffuse1;
 
-const float ambientStrength = 0.2;
-const float specularStrength = 0.8;
-const int shininess = 32;
+out vec4 FragColor;
 
 void main()
 {
-    vec3 normalNormalized = normalize(NormalVertex);
-    vec3 lightDirectionNormalized = normalize(lightPosition - FragmentPosition);
+    // Ambient
+    vec3 ambient = material.ambient * light.ambient;
 
+    // Diffuse
+    vec3 normalNormalized = normalize(NormalVertex);
+    vec3 lightDirectionNormalized = normalize(light.position - FragmentPosition);
+    float difference = max(dot(normalNormalized, lightDirectionNormalized), 0.0);
+    vec3 diffuse = (difference * material.color) * light.diffuse;
+
+    // Specular
     vec3 viewDirectionNormalized = normalize(cameraPosition - FragmentPosition);
     vec3 reflectDirection = reflect(-lightDirectionNormalized, normalNormalized);
+    float specular = pow(max(dot(viewDirectionNormalized, reflectDirection), 0.0), material.shininess);
+    vec3 specularColor = (specular * material.specular) * light.specular;
 
-    float difference = max(dot(normalNormalized, lightDirectionNormalized), 0.0);
-    vec3 diffuse = difference * lightColor.xyz;
-    vec3 ambient = ambientStrength * lightColor.xyz;
-
-    float specular = pow(max(dot(viewDirectionNormalized, reflectDirection), 0.0), shininess);
-    vec3 specularColor = specularStrength * specular * lightColor.xyz;
-
-    vec3 result = (ambient + diffuse + specularColor) * objectColor.xyz;
+    vec3 result = ambient + diffuse + specularColor;
     FragColor = vec4(result, 1.0) * texture(texture_diffuse1, TextureCoordinatesVertex);
 }

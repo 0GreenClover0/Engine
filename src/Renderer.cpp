@@ -78,17 +78,23 @@ void Renderer::render() const
 
         if (directional_light != nullptr)
         {
-            shader->set_vec3("lightPosition", directional_light->entity->transform->get_local_position());
+            shader->set_vec3("light.position", directional_light->entity->transform->get_local_position());
+            shader->set_vec3("light.ambient", directional_light->ambient);
+            shader->set_vec3("light.diffuse", directional_light->diffuse);
+            shader->set_vec3("light.specular", directional_light->specular);
         }
-
-        shader->set_vec4("lightColor", glm::vec4(1.0f, 1.0f, 0.0f, 1.0f));
         
         for (auto const& drawable : drawables)
         {
             // Could be beneficial to sort drawables per entities as well
             shader->set_mat4("PVM", projection_view * drawable->entity->transform->get_model_matrix());
             shader->set_mat4("model", drawable->entity->transform->get_model_matrix());
-            shader->set_vec4("objectColor", drawable->material->color);
+
+            shader->set_vec3("material.color", glm::vec3(drawable->material->color.x, drawable->material->color.y, drawable->material->color.z));
+            shader->set_vec3("material.ambient", drawable->material->ambient);
+            shader->set_vec3("material.specular", drawable->material->specular);
+            shader->set_float("material.shininess", drawable->material->shininess);
+
             drawable->draw();
         }
     }
