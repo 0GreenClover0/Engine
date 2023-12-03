@@ -9,27 +9,28 @@
 #include "Texture.h"
 #include "Vertex.h"
 
-class Mesh final : public Drawable
+class Mesh
 {
 public:
     Mesh() = delete;
-    ~Mesh() override;
+    ~Mesh();
     Mesh(Mesh&& mesh) noexcept;
 
     static Mesh create(std::vector<Vertex> const& vertices, std::vector<std::uint32_t> const& indices,
-        std::vector<Texture> const& textures, GLenum draw_type, std::shared_ptr<Material> const& material);
+                       std::vector<Texture> const& textures, GLenum draw_type, std::shared_ptr<Material> const& material);
 
-    void draw() const override;
+    void draw() const;
 
     std::vector<Vertex> vertices;
     std::vector<std::uint32_t> indices;
     std::vector<Texture> textures;
 
     GLenum draw_type;
+    std::shared_ptr<Material> material;
 
 protected:
     Mesh(std::vector<Vertex> vertices, std::vector<std::uint32_t> indices, std::vector<Texture> textures, GLenum draw_type, std::shared_ptr<Material> const& material);
-    virtual void setup_mesh();
+    void setup_mesh();
 
 private:
     std::uint32_t VAO = {}, VBO = {}, EBO = {};

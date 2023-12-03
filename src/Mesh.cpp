@@ -12,7 +12,7 @@
 #include "Vertex.h"
 
 Mesh::Mesh(std::vector<Vertex> vertices, std::vector<std::uint32_t> indices, std::vector<Texture> textures, GLenum draw_type, std::shared_ptr<Material> const& material)
-    : Drawable(material), vertices(std::move(vertices)), indices(std::move(indices)), textures(std::move(textures)), draw_type(draw_type)
+    : material(material), vertices(std::move(vertices)), indices(std::move(indices)), textures(std::move(textures)), draw_type(draw_type)
 {
 }
 
