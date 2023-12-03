@@ -14,7 +14,7 @@
 
 std::shared_ptr<Shader> Shader::create(std::string vertex_path, std::string fragment_path)
 {
-    auto const shader = std::shared_ptr<Shader>(new Shader(std::move(vertex_path), std::move(fragment_path)));
+    auto shader = std::shared_ptr<Shader>(new Shader(std::move(vertex_path), std::move(fragment_path)));
 
     Renderer::get_instance()->register_shader(shader);
 
@@ -24,7 +24,7 @@ std::shared_ptr<Shader> Shader::create(std::string vertex_path, std::string frag
 
 std::shared_ptr<Shader> Shader::create(std::string vertex_path, std::string fragment_path, std::string geometry_path)
 {
-    auto const shader = std::shared_ptr<Shader>(new Shader(std::move(vertex_path), std::move(fragment_path), std::move(geometry_path)));
+    auto shader = std::shared_ptr<Shader>(new Shader(std::move(vertex_path), std::move(fragment_path), std::move(geometry_path)));
 
     Renderer::get_instance()->register_shader(shader);
 
