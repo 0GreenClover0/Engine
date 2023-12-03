@@ -106,6 +106,7 @@ Shader::Shader(std::string vertex_path, std::string fragment_path, std::string g
 
     glDeleteShader(vertex_shader_id);
     glDeleteShader(fragment_shader_id);
+    glDeleteShader(geometry_shader_id);
 }
 
 int32_t Shader::attach(char const* path, int const type) const
