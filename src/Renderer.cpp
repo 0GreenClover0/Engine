@@ -21,7 +21,7 @@ void Renderer::register_shader(std::shared_ptr<Shader> const& shader)
 {
     if (!shaders_map.contains(shader))
     {
-        shaders_map.insert(std::make_pair(shader, std::vector<std::shared_ptr<Drawable>> {}));
+        shaders_map.insert(std::make_pair(shader, std::vector<std::weak_ptr<Drawable>> {}));
     }
 }
 
@@ -30,22 +30,11 @@ void Renderer::unregister_shader(std::shared_ptr<Shader> const& shader)
     shaders_map.erase(shader);
 }
 
-void Renderer::register_drawable(std::shared_ptr<Drawable> const& drawable)
+void Renderer::register_drawable(std::weak_ptr<Drawable> const& drawable)
 {
     assert(shaders_map.contains(drawable->material->shader));
 
-    shaders_map[drawable->material->shader].emplace_back(drawable);
-}
-
-void Renderer::unregister_drawable(std::shared_ptr<Drawable> const& drawable)
-{
-    auto& v = shaders_map[drawable->material->shader];
-    if (auto const it = std::ranges::find(v, drawable); it != v.end())
-    {
-        // NOTE: Swap with last and pop to avoid shifting other elements.
-        std::swap(v.at(it - v.begin()), v.at(v.size() - 1));
-        v.pop_back();
-    }
+    shaders_map[drawable.lock()->material->shader].emplace_back(drawable);
 }
 
 void Renderer::register_light(std::shared_ptr<Light> const& light)
@@ -86,15 +75,21 @@ void Renderer::render() const
         
         for (auto const& drawable : drawables)
         {
+            // TODO: Remove null pointers
+            auto const drawable_locked = drawable.lock();
+            if (drawable_locked == nullptr)
+                return;
+
             // Could be beneficial to sort drawables per entities as well
-            shader->set_mat4("PVM", projection_view * drawable->entity->transform->get_model_matrix());
-            shader->set_mat4("model", drawable->entity->transform->get_model_matrix());
+            shader->set_mat4("PVM", projection_view * drawable_locked->entity->transform->get_model_matrix());
+            shader->set_mat4("model", drawable_locked->entity->transform->get_model_matrix());
 
-            shader->set_vec3("material.color", glm::vec3(drawable->material->color.x, drawable->material->color.y, drawable->material->color.z));
-            shader->set_vec3("material.specular", drawable->material->specular);
-            shader->set_float("material.shininess", drawable->material->shininess);
+            shader->set_vec3("material.color", glm::vec3(drawable_locked->material->color.x, drawable_locked->material->color.y, drawable_locked->material->color.z));
+            shader->set_vec3("material.specular", drawable_locked->material->specular);
+            shader->set_float("material.shininess", drawable_locked->material->shininess);
 
-            drawable->draw();
+
+            drawable_locked->draw();
         }
     }
 }

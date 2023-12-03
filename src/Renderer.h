@@ -15,8 +15,7 @@ public:
     void register_shader(std::shared_ptr<Shader> const& shader);
     void unregister_shader(std::shared_ptr<Shader> const& shader);
 
-    void register_drawable(std::shared_ptr<Drawable> const& drawable);
-    void unregister_drawable(std::shared_ptr<Drawable> const& drawable);
+    void register_drawable(std::weak_ptr<Drawable> const& drawable);
 
     void register_light(std::shared_ptr<Light> const& light);
     void unregister_light(std::shared_ptr<Light> const& light);
@@ -41,5 +40,5 @@ private:
     inline static std::shared_ptr<DirectionalLight> directional_light;
 
     std::vector<std::shared_ptr<Light>> lights = {};
-    std::unordered_map<std::shared_ptr<Shader>, std::vector<std::shared_ptr<Drawable>>> shaders_map = {};
+    std::unordered_map<std::shared_ptr<Shader>, std::vector<std::weak_ptr<Drawable>>> shaders_map = {};
 };
