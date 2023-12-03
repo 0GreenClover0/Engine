@@ -33,9 +33,9 @@ void PlanetarySystem::awake()
     {
         auto sun_comp = sun->add_component<AstronomicalObject>();
 
-        auto custom_sphere_shader_planet = Shader::create("./res/shaders/vertex.vert", "./res/shaders/fragment.frag");
+        auto custom_sphere_shader_planet = Shader::create("./res/shaders/standard.vert", "./res/shaders/standard.frag");
         auto custom_sphere_material_planet = std::make_shared<Material>(custom_sphere_shader_planet);
-        auto custom_sphere_shader_moon = Shader::create("./res/shaders/vertex.vert", "./res/shaders/fragment.frag");
+        auto custom_sphere_shader_moon = Shader::create("./res/shaders/standard.vert", "./res/shaders/standard.frag");
         auto custom_sphere_material_moon = std::make_shared<Material>(custom_sphere_shader_moon);
 
         if (Sphere::use_geometry_shader)

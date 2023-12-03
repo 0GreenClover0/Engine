@@ -17,6 +17,7 @@
 #include <glm/gtc/random.hpp>
 
 #include "Camera.h"
+#include "Cube.h"
 #include "Editor.h"
 #include "Entity.h"
 #include "Globals.h"
@@ -102,6 +103,21 @@ int main(int, char**)
 
     auto const planetary_system = Entity::create("PlanetarySystem");
     auto const planetary_system_comp = planetary_system->add_component<PlanetarySystem>();
+
+    auto const directional_light = Entity::create("DirectionalLight");
+    auto light_shader = Shader::create("./res/shaders/light.vert", "./res/shaders/light.frag");
+    auto light_material = std::make_shared<Material>(light_shader);
+    light_material->color = glm::vec4(1.0f, 1.0f, 0.0f, 1.0f);
+    directional_light->add_component<Cube>(light_material);
+    directional_light->add_component<DirectionalLight>(DirectionalLight::create());
+
+    //auto const object = Entity::create("LitObject");
+    //auto shader = Shader::create("./res/shaders/standard.vert", "./res/shaders/standard.frag");
+    //auto object_material = std::make_shared<Material>(shader);
+    //object_material->color = glm::vec4(0.3f, 0.6f, 0.7f, 1.0f);
+    //object->add_component<Cube>(object_material);
+    //object->transform->set_local_position(glm::vec3(5.0f, 0.0f, 0.0f));
+    //object->transform->set_local_scale(glm::vec3(2.0f, 1.0f, 0.5f));
 
     // Call awake on all entities
     main_scene->awake();
