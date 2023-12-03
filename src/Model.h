@@ -22,6 +22,7 @@ public:
     explicit Model(std::string model_path, std::shared_ptr<Material> const& material);
     explicit Model(std::shared_ptr<Material> const& material);
 
+    static std::uint32_t load_texture(char const* path, bool gamma = false);
     virtual void draw() const override;
 
     virtual void prepare();
@@ -40,7 +41,6 @@ protected:
 
 private:
 
-    static std::uint32_t load_texture(char const* path, bool gamma = false);
     void load_model(std::string const& path);
     void proccess_node(aiNode const* node, aiScene const* scene);
     Mesh proccess_mesh(aiMesh const* mesh, aiScene const* scene);

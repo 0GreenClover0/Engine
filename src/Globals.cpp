@@ -81,6 +81,11 @@ void initialize()
     {
         cube.indices.emplace_back(index);
     }
+
+    // Load white texture
+    white_texture.id = Model::load_texture("./res/textures/white.jpg");
+    white_texture.type = aiTextureType_DIFFUSE;
+    white_texture.path = "texture_diffuse";
 }
 
 }

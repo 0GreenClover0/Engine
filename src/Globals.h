@@ -18,6 +18,7 @@ namespace InternalMeshData
 {
 
 inline MeshData cube;
+inline Texture white_texture;
 
 void initialize();
 

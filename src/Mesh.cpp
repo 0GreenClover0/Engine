@@ -6,6 +6,7 @@
 #include <glad/glad.h>
 
 #include "Camera.h"
+#include "Globals.h"
 #include "Shader.h"
 #include "Texture.h"
 #include "Vertex.h"
@@ -106,6 +107,15 @@ void Mesh::draw() const
 
         material->shader->set_int(name + number, i);
         glBindTexture(GL_TEXTURE_2D, textures[i].id);
+    }
+
+    if (textures.empty())
+    {
+        glActiveTexture(GL_TEXTURE0);
+
+        material->shader->set_int("texture_diffuse1", 0);
+
+        glBindTexture(GL_TEXTURE_2D, InternalMeshData::white_texture.id);
     }
 
     // Draw mesh
