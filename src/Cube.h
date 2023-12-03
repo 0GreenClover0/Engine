@@ -5,7 +5,8 @@
 class Cube final : public Model
 {
 public:
-    Cube(std::string texture_path, std::shared_ptr<Material> const& material);
+    explicit Cube(std::shared_ptr<Material> const& material);
+    explicit Cube(std::string texture_path, std::shared_ptr<Material> const& material);
 
     virtual void prepare() override;
     virtual void reset() override;

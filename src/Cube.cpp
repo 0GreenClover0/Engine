@@ -1,6 +1,12 @@
 #include "Cube.h"
 #include "Globals.h"
 
+Cube::Cube(std::shared_ptr<Material> const& material) : Model(material)
+{
+    draw_type = GL_TRIANGLES;
+    Cube::prepare();
+}
+
 Cube::Cube(std::string texture_path, std::shared_ptr<Material> const& material) : Model(material), texture_path(std::move(texture_path))
 {
     draw_type = GL_TRIANGLES;
@@ -29,7 +35,10 @@ Mesh Cube::create_cube() const
     std::vector<uint32_t> const indices = InternalMeshData::cube.indices;
     std::vector<Texture> textures;
 
-    std::vector<Texture> diffuse_maps = { load_texture() };
+    std::vector<Texture> diffuse_maps = {};
+    if (!texture_path.empty())
+        diffuse_maps.emplace_back(load_texture());
+
     textures.insert(textures.end(), diffuse_maps.begin(), diffuse_maps.end());
 
     return Mesh::create(vertices, indices, textures, draw_type, material);
