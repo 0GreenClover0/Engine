@@ -32,6 +32,25 @@ public:
         return component;
     }
 
+    template <class T>
+    std::shared_ptr<T> add_component(std::shared_ptr<T> component)
+    {
+        components.emplace_back(component);
+        component->entity = shared_from_this();
+        component->initialize();
+
+        // TODO: Assumption that this entity belongs to the main scene
+        if (auto const& scene = MainScene::get_instance(); scene->is_after_start)
+        {
+            // TODO: Order of component Awake, Start on components instantiated inside the Awake call below is wrong.
+            //         The new component's Awake and Start will finish before the Start of this component.
+            component->awake();
+            component->start();
+        }
+
+        return component;
+    }
+
     template <class T, typename... TArgs>
     std::shared_ptr<T> add_component(TArgs&&... args)
     {
