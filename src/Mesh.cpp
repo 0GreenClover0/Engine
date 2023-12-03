@@ -11,7 +11,7 @@
 #include "Vertex.h"
 
 Mesh::Mesh(std::vector<Vertex> vertices, std::vector<std::uint32_t> indices, std::vector<Texture> textures, GLenum draw_type, std::shared_ptr<Material> const& material)
-: Drawable(material), vertices(std::move(vertices)), indices(std::move(indices)), textures(std::move(textures)), draw_type(draw_type)
+    : Drawable(material), vertices(std::move(vertices)), indices(std::move(indices)), textures(std::move(textures)), draw_type(draw_type)
 {
 }
 
@@ -28,6 +28,8 @@ void Mesh::setup_mesh()
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(std::uint32_t), indices.data(), GL_STATIC_DRAW);
+
+    // FIXME: Not all shaders have all these attributes
 
     // Vertex positions
     glEnableVertexAttribArray(0);
@@ -87,11 +89,10 @@ Mesh Mesh::create(std::vector<Vertex> const& vertices, std::vector<std::uint32_t
 
 void Mesh::draw() const
 {
-    material->shader->set_vec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
-
     // Bind textures
     std::uint32_t diffuse_number = 1;
     std::uint32_t specular_number = 1;
+
     for (std::uint32_t i = 0; i < textures.size(); ++i)
     {
         glActiveTexture(GL_TEXTURE0 + i);

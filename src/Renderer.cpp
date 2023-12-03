@@ -55,11 +55,14 @@ void Renderer::render() const
     for (const auto& [shader, drawables] : shaders_map)
     {
         shader->use();
+
+        shader->set_vec4("lightColor", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
         
         for (auto const& drawable : drawables)
         {
             // Could be beneficial to sort drawables per entities as well
             shader->set_mat4("PVM", projection_view * drawable->entity->transform->get_model_matrix());
+            shader->set_vec4("objectColor", drawable->material->color);
             drawable->draw();
         }
     }

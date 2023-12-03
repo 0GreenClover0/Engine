@@ -54,7 +54,7 @@ void PlanetarySystem::awake()
             auto const planet = Entity::create(std::format("Planet{}", i));
             auto planet_comp = planet->add_component<AstronomicalObject>();
 
-            custom_sphere_material_planet->color = glm::vec3(glm::linearRand(0.0f, 1.0f), glm::linearRand(0.0f, 1.0f), glm::linearRand(0.0f, 1.0f));
+            custom_sphere_material_planet->color = glm::vec4(glm::linearRand(0.0f, 1.0f), glm::linearRand(0.0f, 1.0f), glm::linearRand(0.0f, 1.0f), 1.0f);
             standard_material->color = custom_sphere_material_planet->color;
 
             auto const sphere = planet->add_component<Sphere>(
@@ -96,7 +96,7 @@ void PlanetarySystem::awake()
             auto moon_comp = moon->add_component<AstronomicalObject>();
 
             float const color = glm::linearRand(0.0f, 1.0f);
-            custom_sphere_material_moon->color = glm::vec3(color, color, color);
+            custom_sphere_material_moon->color = glm::vec4(color, color, color, 1.0f);
             standard_material->color = custom_sphere_material_moon->color;
 
             auto const sphere = moon->add_component<Sphere>(
