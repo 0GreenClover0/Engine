@@ -15,6 +15,10 @@ public:
     glm::vec3 specular = glm::vec3(0.5f, 0.5f, 0.5f);
     float shininess = 32.0f;
 
+    uint32_t sector_count = 5;
+    uint32_t stack_count = 5;
+    float radius_multiplier = 2.0f;
+
     std::shared_ptr<Shader> shader;
 
 private:

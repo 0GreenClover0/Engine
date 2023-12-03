@@ -55,9 +55,10 @@ Mesh Sphere::create_sphere() const
         std::vector<Texture> diffuse_maps = { load_texture() };
         textures.insert(textures.end(), diffuse_maps.begin(), diffuse_maps.end());
 
-        material->shader->set_float("radiusMultiplier", radius);
-        material->shader->set_int("sector_count", sector_count);
-        material->shader->set_int("stack_count", stack_count);
+        material->radius_multiplier = radius;
+        material->sector_count = sector_count;
+        material->stack_count = stack_count;
+
         return Mesh::create(vertices, indices, textures, draw_type, material);
     }
 

@@ -88,6 +88,9 @@ void Renderer::render() const
             shader->set_vec3("material.specular", drawable_locked->material->specular);
             shader->set_float("material.shininess", drawable_locked->material->shininess);
 
+            shader->set_float("radiusMultiplier", drawable_locked->material->radius_multiplier);
+            shader->set_int("sector_count", drawable_locked->material->sector_count);
+            shader->set_int("stack_count", drawable_locked->material->stack_count);
 
             drawable_locked->draw();
         }
