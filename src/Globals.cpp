@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include "Model.h"
+
 namespace InternalMeshData
 {
 
@@ -12,39 +14,43 @@ void initialize()
 
     // TODO: I think something is wrong with texture coordinates, I saw some clipping
     float constexpr cube_vertices[] = {
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,  // A 0
-        0.5f, -0.5f, -0.5f,  1.0f, 0.0f,   // B 1
-        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,   // C 2
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,  // D 3
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,  // E 4
-        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,   // F 5
-        0.5f,  0.5f,  0.5f,  1.0f, 1.0f,   // G 6
-        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,  // H 7
+       -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,  // A 0
+        0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,  // B 1
+        0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,  // C 2
+       -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  1.0f,  // D 3
+
+       -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,  // E 4
+        0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  0.0f,  // F 5
+        0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,  // G 6
+       -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  1.0f,  // H 7
  
-        -0.5f,  0.5f, -0.5f,  0.0f, 0.0f,  // D 8
-        -0.5f, -0.5f, -0.5f,  1.0f, 0.0f,  // A 9
-        -0.5f, -0.5f,  0.5f,  1.0f, 1.0f,  // E 10
-        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,  // H 11
-        0.5f, -0.5f, -0.5f,  0.0f, 0.0f,   // B 12
-        0.5f,  0.5f, -0.5f,  1.0f, 0.0f,   // C 13
-        0.5f,  0.5f,  0.5f,  1.0f, 1.0f,   // G 14
-        0.5f, -0.5f,  0.5f,  0.0f, 1.0f,   // F 15
+       -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  0.0f,  // D 8
+       -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,  // A 9
+       -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  1.0f,  // E 10
+       -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,  // H 11
+
+        0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f,  // B 12
+        0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,  // C 13
+        0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  1.0f,  // G 14
+        0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,  // F 15
  
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,  // A 16
-        0.5f, -0.5f, -0.5f,  1.0f, 0.0f,   // B 17
-        0.5f, -0.5f,  0.5f,  1.0f, 1.0f,   // F 18
-        -0.5f, -0.5f,  0.5f,  0.0f, 1.0f,  // E 19
-        0.5f,  0.5f, -0.5f,   0.0f, 0.0f,  // C 20
-        -0.5f,  0.5f, -0.5f,  1.0f, 0.0f,  // D 21
-        -0.5f,  0.5f,  0.5f,  1.0f, 1.0f,  // H 22
-        0.5f,  0.5f,  0.5f,   0.0f, 1.0f,  // G 23
+       -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  0.0f,  // A 16
+        0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,  // B 17
+        0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  1.0f,  // F 18
+       -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,  // E 19
+
+        0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f,  // C 20
+       -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,  // D 21
+       -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  1.0f,  // H 22
+        0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f,  // G 23
     };
 
-    for (uint32_t i = 0; i < sizeof(cube_vertices) / sizeof(float); i += 5)
+    for (uint32_t i = 0; i < sizeof(cube_vertices) / sizeof(float); i += 8)
     {
         Vertex vertex = {};
         vertex.position = glm::vec3(cube_vertices[i], cube_vertices[i + 1], cube_vertices[i + 2]);
-        vertex.texture_coordinates = glm::vec2(cube_vertices[i + 3], cube_vertices[i + 4]);
+        vertex.normal = glm::vec3(cube_vertices[i + 3], cube_vertices[i + 4], cube_vertices[i + 5]);
+        vertex.texture_coordinates = glm::vec2(cube_vertices[i + 6], cube_vertices[i + 7]);
         cube.vertices.emplace_back(vertex);
     }
 
