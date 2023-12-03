@@ -112,13 +112,13 @@ int main(int, char**)
     light_material->color = glm::vec4(dir_light_comp->diffuse.x, dir_light_comp->diffuse.y, dir_light_comp->diffuse.z, 1.0f);
     directional_light->add_component<Cube>(light_material);
 
-    //auto const object = Entity::create("LitObject");
-    //auto shader = Shader::create("./res/shaders/standard.vert", "./res/shaders/standard.frag");
-    //auto object_material = std::make_shared<Material>(shader);
-    //object_material->color = glm::vec4(0.3f, 0.6f, 0.7f, 1.0f);
-    //object->add_component<Cube>(object_material);
-    //object->transform->set_local_position(glm::vec3(5.0f, 0.0f, 0.0f));
-    //object->transform->set_local_scale(glm::vec3(2.0f, 1.0f, 0.5f));
+    auto const container = Entity::create("Container");
+    auto shader = Shader::create("./res/shaders/standard.vert", "./res/shaders/standard.frag");
+    auto object_material = std::make_shared<Material>(shader);
+    object_material->color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+    container->add_component<Cube>("./res/textures/container.png", object_material);
+    container->transform->set_local_position(glm::vec3(5.0f, 0.0f, 0.0f));
+    container->transform->set_local_scale(glm::vec3(1.0f, 1.0f, 1.0f));
 
     // Call awake on all entities
     main_scene->awake();

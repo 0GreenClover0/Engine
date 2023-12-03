@@ -91,7 +91,6 @@ void Renderer::render() const
             shader->set_mat4("model", drawable->entity->transform->get_model_matrix());
 
             shader->set_vec3("material.color", glm::vec3(drawable->material->color.x, drawable->material->color.y, drawable->material->color.z));
-            shader->set_vec3("material.ambient", drawable->material->ambient);
             shader->set_vec3("material.specular", drawable->material->specular);
             shader->set_float("material.shininess", drawable->material->shininess);
 

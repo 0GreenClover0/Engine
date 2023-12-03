@@ -6,8 +6,8 @@ in vec3 NormalVertex;
 
 struct Material
 {
+    sampler2D texture_diffuse1;
     vec3 color;
-    vec3 ambient;
     vec3 specular;
     float shininess;
 };
@@ -27,27 +27,25 @@ uniform Light light;
 
 uniform vec3 cameraPosition;
 
-uniform sampler2D texture_diffuse1;
-
 out vec4 FragColor;
 
 void main()
 {
     // Ambient
-    vec3 ambient = material.ambient * light.ambient;
+    vec3 ambient = light.ambient * vec3(texture(material.texture_diffuse1, TextureCoordinatesVertex));
 
     // Diffuse
     vec3 normalNormalized = normalize(NormalVertex);
     vec3 lightDirectionNormalized = normalize(light.position - FragmentPosition);
     float difference = max(dot(normalNormalized, lightDirectionNormalized), 0.0);
-    vec3 diffuse = (difference * material.color) * light.diffuse;
+    vec3 diffuse = difference * material.color * light.diffuse * vec3(texture(material.texture_diffuse1, TextureCoordinatesVertex));
 
     // Specular
     vec3 viewDirectionNormalized = normalize(cameraPosition - FragmentPosition);
     vec3 reflectDirection = reflect(-lightDirectionNormalized, normalNormalized);
     float specular = pow(max(dot(viewDirectionNormalized, reflectDirection), 0.0), material.shininess);
-    vec3 specularColor = (specular * material.specular) * light.specular;
+    vec3 specularColor = specular * material.specular * light.specular;
 
     vec3 result = ambient + diffuse + specularColor;
-    FragColor = vec4(result, 1.0) * texture(texture_diffuse1, TextureCoordinatesVertex);
+    FragColor = vec4(result, 1.0);
 }

@@ -10,6 +10,13 @@ in GS_OUT
 struct Material
 {
     vec3 color;
+
+    sampler2D texture_diffuse1;
+    sampler2D texture_diffuse2;
+    sampler2D texture_diffuse3;
+    sampler2D texture_specular1;
+    sampler2D texture_specular2;
+    sampler2D texture_specular3;
 };
 
 uniform Material material;
@@ -21,14 +28,7 @@ struct Light
 
 uniform Light light;
 
-uniform sampler2D texture_diffuse1;
-uniform sampler2D texture_diffuse2;
-uniform sampler2D texture_diffuse3;
-uniform sampler2D texture_specular1;
-uniform sampler2D texture_specular2;
-uniform sampler2D texture_specular3;
-
 void main()
 {
-    FragColor = material.color * light.diffuse * texture(texture_diffuse1, fs_in.TextureCoordinatesGeometry);
+    FragColor = material.color * light.diffuse * texture(material.texture_diffuse1, fs_in.TextureCoordinatesGeometry);
 }

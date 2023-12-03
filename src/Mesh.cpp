@@ -99,7 +99,7 @@ void Mesh::draw() const
         glActiveTexture(GL_TEXTURE0 + i);
 
         std::string number;
-        std::string name = textures[i].type;
+        std::string name = "material." + textures[i].type;
         if (name == "texture_diffuse")
             number = std::to_string(diffuse_number++);
         else if (name == "texture_specular")
@@ -113,7 +113,7 @@ void Mesh::draw() const
     {
         glActiveTexture(GL_TEXTURE0);
 
-        material->shader->set_int("texture_diffuse1", 0);
+        material->shader->set_int("material.texture_diffuse1", 0);
 
         glBindTexture(GL_TEXTURE_2D, InternalMeshData::white_texture.id);
     }
