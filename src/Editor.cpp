@@ -31,7 +31,7 @@ void Editor::draw_scene_hierarchy() const
 
 void Editor::draw_entity_recursively(std::shared_ptr<Transform> const& transform) const
 {
-    if (auto const entity = transform->entity.lock(); !ImGui::TreeNode(reinterpret_cast<void*>(static_cast<intptr_t>(entity->hashed_guid)), "%s", entity->name))
+    if (auto const entity = transform->entity.lock(); !ImGui::TreeNode(reinterpret_cast<void*>(static_cast<intptr_t>(entity->hashed_guid)), "%s", entity->name.c_str()))
     {
         return;
     }
