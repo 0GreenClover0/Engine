@@ -11,7 +11,7 @@ uniform mat4 PVM;
 
 void main()
 {
-	gl_Position = PVM * vec4(PositionInput, 1.0);
-	TextureCoordinatesVertex = TextureCoordinatesInput;
-	NormalVertex = NormalInput;
+    gl_Position = PVM * vec4(PositionInput, 1.0);
+    TextureCoordinatesVertex = TextureCoordinatesInput;
+    NormalVertex = NormalInput;
 }
