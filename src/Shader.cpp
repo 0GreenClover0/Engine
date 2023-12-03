@@ -176,7 +176,7 @@ void Shader::set_float(std::string const& name, float value) const
 
 void Shader::set_vec3(std::string const& name, glm::vec3 value) const
 {
-    glUniform4fv(glGetUniformLocation(program_id, name.c_str()), 1, glm::value_ptr(value));
+    glUniform3fv(glGetUniformLocation(program_id, name.c_str()), 1, glm::value_ptr(value));
 }
 
 void Shader::set_vec4(std::string const& name, glm::vec4 value) const
