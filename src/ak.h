@@ -53,6 +53,17 @@ inline std::string generate_guid()
     return result;
 }
 
+template<typename T>
+void swap_and_erase(std::vector<T>& vector, T element)
+{
+    if (auto const it = std::ranges::find(vector, element); it != vector.end())
+    {
+        // NOTE: Swap with last and pop to avoid shifting other elements.
+        std::swap(vector.at(it - vector.begin()), vector.at(vector.size() - 1));
+        vector.pop_back();
+    }
+}
+
 #pragma endregion
 
 }
