@@ -30,5 +30,5 @@ uniform Light light;
 
 void main()
 {
-    FragColor = material.color * light.diffuse * texture(material.texture_diffuse1, fs_in.TextureCoordinatesGeometry);
+    FragColor = vec4(material.color, 1.0) * vec4(light.diffuse, 1.0) * texture(material.texture_diffuse1, fs_in.TextureCoordinatesGeometry);
 }
