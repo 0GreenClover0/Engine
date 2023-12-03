@@ -1,5 +1,6 @@
 #include "Renderer.h"
 
+#include "AK.h"
 #include "Camera.h"
 #include "Entity.h"
 
@@ -47,6 +48,23 @@ void Renderer::unregister_drawable(std::shared_ptr<Drawable> const& drawable)
     }
 }
 
+void Renderer::register_light(std::shared_ptr<Light> const& light)
+{
+    if (auto const dir_light = std::dynamic_pointer_cast<DirectionalLight>(light))
+    {
+        assert(directional_light == nullptr);
+
+        directional_light = dir_light;
+    }
+
+    lights.emplace_back(light);
+}
+
+void Renderer::unregister_light(std::shared_ptr<Light> const& light)
+{
+    AK::swap_and_erase(lights, light);
+}
+
 void Renderer::render() const
 {
     // Premultiply projection and view matrices
@@ -56,12 +74,20 @@ void Renderer::render() const
     {
         shader->use();
 
-        shader->set_vec4("lightColor", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+        shader->set_vec3("cameraPosition", Camera::get_main_camera()->position);
+
+        if (directional_light != nullptr)
+        {
+            shader->set_vec3("lightPosition", directional_light->entity->transform->get_local_position());
+        }
+
+        shader->set_vec4("lightColor", glm::vec4(1.0f, 1.0f, 0.0f, 1.0f));
         
         for (auto const& drawable : drawables)
         {
             // Could be beneficial to sort drawables per entities as well
             shader->set_mat4("PVM", projection_view * drawable->entity->transform->get_model_matrix());
+            shader->set_mat4("model", drawable->entity->transform->get_model_matrix());
             shader->set_vec4("objectColor", drawable->material->color);
             drawable->draw();
         }
