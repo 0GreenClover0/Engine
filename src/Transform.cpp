@@ -2,7 +2,7 @@
 
 #include <glm/ext/matrix_transform.hpp>
 
-#include "ak.h"
+#include "AK.h"
 
 Transform::Transform(std::shared_ptr<Entity> const& entity) : entity(entity)
 {
@@ -11,7 +11,7 @@ Transform::Transform(std::shared_ptr<Entity> const& entity) : entity(entity)
 // Version for no parent
 void Transform::compute_model_matrix()
 {
-    assert(is_uninitialized(parent));
+    assert(AK::is_uninitialized(parent));
 
     if (!m_local_dirty)
         return;

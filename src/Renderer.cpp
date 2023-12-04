@@ -32,7 +32,7 @@ void Renderer::unregister_shader(std::shared_ptr<Shader> const& shader)
 
 void Renderer::register_drawable(std::weak_ptr<Drawable> const& drawable)
 {
-    assert(shaders_map.contains(drawable->material->shader));
+    assert(shaders_map.contains(drawable.lock()->material->shader));
 
     shaders_map[drawable.lock()->material->shader].emplace_back(drawable);
 }
