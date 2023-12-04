@@ -100,9 +100,9 @@ void Mesh::draw() const
 
         std::string number;
         std::string name = "material." + textures[i].type;
-        if (name == "texture_diffuse")
+        if (textures[i].type == "texture_diffuse")
             number = std::to_string(diffuse_number++);
-        else if (name == "texture_specular")
+        else if (textures[i].type == "texture_specular")
             number = std::to_string(specular_number++);
 
         material->shader->set_int(name + number, i);

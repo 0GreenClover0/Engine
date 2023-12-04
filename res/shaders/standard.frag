@@ -7,8 +7,9 @@ in vec3 NormalVertex;
 struct Material
 {
     sampler2D texture_diffuse1;
+    sampler2D texture_specular1;
     vec3 color;
-    vec3 specular;
+    float specular;
     float shininess;
 };
 
@@ -44,7 +45,7 @@ void main()
     vec3 viewDirectionNormalized = normalize(cameraPosition - FragmentPosition);
     vec3 reflectDirection = reflect(-lightDirectionNormalized, normalNormalized);
     float specular = pow(max(dot(viewDirectionNormalized, reflectDirection), 0.0), material.shininess);
-    vec3 specularColor = specular * material.specular * light.specular;
+    vec3 specularColor = specular * material.specular * light.specular * vec3(texture(material.texture_specular1, TextureCoordinatesVertex));
 
     vec3 result = ambient + diffuse + specularColor;
     FragColor = vec4(result, 1.0);

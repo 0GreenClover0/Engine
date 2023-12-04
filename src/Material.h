@@ -12,7 +12,7 @@ public:
     explicit Material(std::shared_ptr<Shader> shader);
 
     glm::vec4 color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-    glm::vec3 specular = glm::vec3(0.5f, 0.5f, 0.5f);
+    float specular = 1.0f;
     float shininess = 32.0f;
 
     uint32_t sector_count = 5;

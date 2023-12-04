@@ -85,7 +85,7 @@ void Renderer::render() const
             shader->set_mat4("model", drawable_locked->entity->transform->get_model_matrix());
 
             shader->set_vec3("material.color", glm::vec3(drawable_locked->material->color.x, drawable_locked->material->color.y, drawable_locked->material->color.z));
-            shader->set_vec3("material.specular", drawable_locked->material->specular);
+            shader->set_float("material.specular", drawable_locked->material->specular);
             shader->set_float("material.shininess", drawable_locked->material->shininess);
 
             shader->set_float("radiusMultiplier", drawable_locked->material->radius_multiplier);

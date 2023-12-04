@@ -112,7 +112,7 @@ void SceneSerializer::serialize_entity(YAML::Emitter& out, std::shared_ptr<Entit
                 out << YAML::BeginMap; // ModelComponent
                 out << YAML::Key << "ComponentName" << YAML::Value << "CubeComponent";
 
-                out << YAML::Key << "TexturePath" << YAML::Value << cube->texture_path;
+                out << YAML::Key << "TexturePath" << YAML::Value << cube->diffuse_texture_path;
             }
             else
             {

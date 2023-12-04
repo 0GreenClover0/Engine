@@ -116,7 +116,7 @@ int main(int, char**)
     auto shader = Shader::create("./res/shaders/standard.vert", "./res/shaders/standard.frag");
     auto object_material = std::make_shared<Material>(shader);
     object_material->color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-    container->add_component<Cube>("./res/textures/container.png", object_material);
+    container->add_component<Cube>("./res/textures/container.png", "./res/textures/container_specular.png", object_material);
     container->transform->set_local_position(glm::vec3(5.0f, 0.0f, 0.0f));
     container->transform->set_local_scale(glm::vec3(1.0f, 1.0f, 1.0f));
 
