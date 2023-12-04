@@ -104,13 +104,13 @@ int main(int, char**)
     auto const planetary_system = Entity::create("PlanetarySystem");
     auto const planetary_system_comp = planetary_system->add_component<PlanetarySystem>();
 
-    auto const directional_light = Entity::create("DirectionalLight");
+    auto const point_light = Entity::create("PointLight");
     auto light_shader = Shader::create("./res/shaders/light.vert", "./res/shaders/light.frag");
     auto light_material = std::make_shared<Material>(light_shader);
-    auto const dir_light_comp = directional_light->add_component<DirectionalLight>(DirectionalLight::create());
-    dir_light_comp->diffuse = glm::vec3(1.0f, 1.0f, 0.0f);
-    light_material->color = glm::vec4(dir_light_comp->diffuse.x, dir_light_comp->diffuse.y, dir_light_comp->diffuse.z, 1.0f);
-    directional_light->add_component<Cube>(light_material);
+    auto const point_light_comp = point_light->add_component<PointLight>(PointLight::create());
+    point_light_comp->diffuse = glm::vec3(1.0f, 1.0f, 0.0f);
+    light_material->color = glm::vec4(point_light_comp->diffuse.x, point_light_comp->diffuse.y, point_light_comp->diffuse.z, 1.0f);
+    point_light->add_component<Cube>(light_material);
 
     auto const container = Entity::create("Container");
     auto shader = Shader::create("./res/shaders/standard.vert", "./res/shaders/standard.frag");
@@ -140,7 +140,7 @@ int main(int, char**)
     // Main loop
     while (!glfwWindowShouldClose(window->get_glfw_window()))
     {
-        directional_light->transform->set_local_position(glm::vec3(glm::sin(glfwGetTime()) * 5.0f, 0.0f, glm::cos(glfwGetTime()) * 2.0f));
+        point_light->transform->set_local_position(glm::vec3(glm::sin(glfwGetTime()) * 5.0f, 0.0f, glm::cos(glfwGetTime()) * 2.0f));
         double const current_frame = glfwGetTime();
         delta_time = current_frame - last_frame;
         last_frame = current_frame;

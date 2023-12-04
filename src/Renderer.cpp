@@ -39,11 +39,11 @@ void Renderer::register_drawable(std::weak_ptr<Drawable> const& drawable)
 
 void Renderer::register_light(std::shared_ptr<Light> const& light)
 {
-    if (auto const dir_light = std::dynamic_pointer_cast<DirectionalLight>(light))
+    if (auto const potential_point_light = std::dynamic_pointer_cast<PointLight>(light))
     {
-        assert(directional_light == nullptr);
+        assert(point_light == nullptr);
 
-        directional_light = dir_light;
+        point_light = potential_point_light;
     }
 
     lights.emplace_back(light);
@@ -65,12 +65,12 @@ void Renderer::render() const
 
         shader->set_vec3("cameraPosition", Camera::get_main_camera()->position);
 
-        if (directional_light != nullptr)
+        if (point_light != nullptr)
         {
-            shader->set_vec3("light.position", directional_light->entity->transform->get_local_position());
-            shader->set_vec3("light.ambient", directional_light->ambient);
-            shader->set_vec3("light.diffuse", directional_light->diffuse);
-            shader->set_vec3("light.specular", directional_light->specular);
+            shader->set_vec3("light.position", point_light->entity->transform->get_local_position());
+            shader->set_vec3("light.ambient", point_light->ambient);
+            shader->set_vec3("light.diffuse", point_light->diffuse);
+            shader->set_vec3("light.specular", point_light->specular);
         }
         
         for (auto const& drawable : drawables)

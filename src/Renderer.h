@@ -1,7 +1,7 @@
 #pragma once
 #include <unordered_map>
 
-#include "DirectionalLight.h"
+#include "PointLight.h"
 #include "Drawable.h"
 #include "Light.h"
 
@@ -37,7 +37,7 @@ private:
 
     inline static std::shared_ptr<Renderer> instance;
 
-    inline static std::shared_ptr<DirectionalLight> directional_light;
+    inline static std::shared_ptr<PointLight> point_light;
 
     std::vector<std::shared_ptr<Light>> lights = {};
     std::unordered_map<std::shared_ptr<Shader>, std::vector<std::weak_ptr<Drawable>>> shaders_map = {};
