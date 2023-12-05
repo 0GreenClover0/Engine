@@ -45,6 +45,10 @@ void Renderer::register_light(std::shared_ptr<Light> const& light)
     {
         point_lights.emplace_back(potential_point_light);
     }
+    else if (auto const potential_spot_light = std::dynamic_pointer_cast<SpotLight>(light))
+    {
+        spot_lights.emplace_back(potential_spot_light);
+    }
     else if (auto const potential_directional_light = std::dynamic_pointer_cast<DirectionalLight>(light))
     {
         // Don't assert here
@@ -91,6 +95,25 @@ void Renderer::render() const
         }
 
         shader->set_int("pointLightCount", point_lights.size() > max_point_lights ? max_point_lights : point_lights.size());
+
+        for (uint32_t i = 0; i < spot_lights.size(); ++i)
+        {
+            std::string light_element = std::format("spotLights[{}].", i);
+            shader->set_vec3(light_element + "position", spot_lights[i]->entity->transform->get_local_position());
+            shader->set_vec3(light_element + "direction", spot_lights[i]->entity->transform->get_euler_angles());
+
+            shader->set_vec3(light_element + "ambient", spot_lights[i]->ambient);
+            shader->set_vec3(light_element + "diffuse", spot_lights[i]->diffuse);
+            shader->set_vec3(light_element + "specular", spot_lights[i]->specular);
+
+            shader->set_float(light_element + "cutOff", spot_lights[i]->cut_off);
+            shader->set_float(light_element + "outerCutOff", spot_lights[i]->outer_cut_off);
+
+            shader->set_float(light_element + "constant", spot_lights[i]->constant);
+            shader->set_float(light_element + "linear", spot_lights[i]->linear);
+            shader->set_float(light_element + "quadratic", spot_lights[i]->quadratic);
+        }
+
         shader->set_int("spotLightCount", spot_lights.size() > max_spot_lights ? max_spot_lights : spot_lights.size());
 
         bool const directional_light_on = directional_light != nullptr;

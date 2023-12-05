@@ -44,6 +44,27 @@ struct DirectionalLight
 uniform bool directionalLightOn;
 uniform DirectionalLight directionalLight;
 
+struct SpotLight
+{
+    vec3 position;
+    vec3 direction;
+
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+
+    float constant;
+    float linear;
+    float quadratic;
+
+    float cutOff;
+    float outerCutOff;
+};
+
+const int MAX_SPOT_LIGHTS = 4;
+uniform int spotLightCount;
+uniform SpotLight spotLights[MAX_SPOT_LIGHTS];
+
 uniform vec3 cameraPosition;
 
 out vec4 FragColor;
@@ -88,6 +109,34 @@ vec3 CalculatePointLight(PointLight light, vec3 normal, vec3 viewDirection)
     return ambient + diffuse + specular;
 }
 
+vec3 CalculateSpotLight(SpotLight light, vec3 normal, vec3 viewDirection)
+{
+    vec3 lightDirection = normalize(light.position - FragmentPosition);
+
+    // Diffuse
+    float difference = max(dot(normal, lightDirection), 0.0);
+
+    // Specular
+    vec3 reflectDirection = reflect(-lightDirection, normal);
+    float spec = pow(max(dot(viewDirection, reflectDirection), 0.0), material.shininess);
+
+    // Attenuation
+    float distance = length(light.position - FragmentPosition);
+    float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
+
+    // Combine
+    vec3 ambient = attenuation * light.ambient * vec3(texture(material.texture_diffuse1, TextureCoordinatesVertex));
+    vec3 diffuse = attenuation * difference * material.color * light.diffuse * vec3(texture(material.texture_diffuse1, TextureCoordinatesVertex));
+    vec3 specular = attenuation * spec * material.specular * light.specular * vec3(texture(material.texture_specular1, TextureCoordinatesVertex));
+
+    // Spotlight intensity
+    float theta = dot(lightDirection, normalize(-light.direction));
+    float epsilon = light.cutOff - light.outerCutOff;
+    float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0);
+
+    return intensity * (ambient + diffuse + specular);
+}
+
 void main()
 {
     vec3 normal = normalize(NormalVertex);
@@ -105,6 +154,12 @@ void main()
     for (int i = 0; i < pointLightCount; ++i)
     {
         result += CalculatePointLight(pointLights[i], normal, viewDirection);
+    }
+
+    // 3. Spot lights
+    for (int i = 0; i < spotLightCount; ++i)
+    {
+        result += CalculateSpotLight(spotLights[i], normal, viewDirection);
     }
 
     FragColor = vec4(result, 1.0);

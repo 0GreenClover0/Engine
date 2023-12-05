@@ -120,6 +120,14 @@ int main(int, char**)
     directional_light_comp->diffuse = glm::vec4(1.0f, 0.0f, 0.0f, 1.0);
     directional_light->transform->set_euler_angles(glm::vec3(-0.2f, -1.0f, -0.3f));
 
+    auto const spot_light = Entity::create("SpotLight");
+    auto const spot_light_comp = spot_light->add_component<SpotLight>(SpotLight::create());
+    spot_light_comp->diffuse = glm::vec3(0.0f, 0.2f, 1.0f);
+    light_material->color = glm::vec4(spot_light_comp->diffuse.x, spot_light_comp->diffuse.y, spot_light_comp->diffuse.z, 1.0f);
+    spot_light->add_component<Cube>(light_material);
+    spot_light->transform->set_local_position(glm::vec3(2.0f, 0.0f, 0.0f));
+    spot_light->transform->set_euler_angles(glm::vec3(0.0f, 0.0f, -10.866f));
+
     auto const container = Entity::create("Container");
     auto shader = Shader::create("./res/shaders/standard.vert", "./res/shaders/standard.frag");
     auto object_material = std::make_shared<Material>(shader);

@@ -5,6 +5,7 @@
 #include "Drawable.h"
 #include "Light.h"
 #include "PointLight.h"
+#include "SpotLight.h"
 
 class Renderer
 {
@@ -39,6 +40,7 @@ private:
     inline static std::shared_ptr<Renderer> instance;
 
     inline static std::vector<std::shared_ptr<PointLight>> point_lights = {};
+    inline static std::vector<std::shared_ptr<SpotLight>> spot_lights = {};
     inline static std::shared_ptr<DirectionalLight> directional_light = {};
 
     std::vector<std::shared_ptr<Light>> lights = {};
@@ -47,4 +49,5 @@ private:
     // TODO: Retrieve this information from the shader
     // NOTE: This has to be the same value as the variable in a shader to work in all cases.
     int32_t max_point_lights = 4;
+    int32_t max_spot_lights = 4;
 };
