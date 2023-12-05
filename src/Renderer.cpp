@@ -1,5 +1,7 @@
 #include "Renderer.h"
 
+#include <format>
+
 #include "AK.h"
 #include "Camera.h"
 #include "Entity.h"
@@ -41,9 +43,14 @@ void Renderer::register_light(std::shared_ptr<Light> const& light)
 {
     if (auto const potential_point_light = std::dynamic_pointer_cast<PointLight>(light))
     {
-        assert(point_light == nullptr);
+        point_lights.emplace_back(potential_point_light);
+    }
+    else if (auto const potential_directional_light = std::dynamic_pointer_cast<DirectionalLight>(light))
+    {
+        // Don't assert here
+        assert(directional_light == nullptr);
 
-        point_light = potential_point_light;
+        directional_light = potential_directional_light;
     }
 
     lights.emplace_back(light);
@@ -65,12 +72,21 @@ void Renderer::render() const
 
         shader->set_vec3("cameraPosition", Camera::get_main_camera()->position);
 
-        if (point_light != nullptr)
+        for (uint32_t i = 0; i < point_lights.size(); ++i)
         {
-            shader->set_vec3("light.position", point_light->entity->transform->get_local_position());
-            shader->set_vec3("light.ambient", point_light->ambient);
-            shader->set_vec3("light.diffuse", point_light->diffuse);
-            shader->set_vec3("light.specular", point_light->specular);
+            // TODO: Choose the closest lights
+            shader->set_vec3(std::format("pointLights[{}].position", i), point_lights[i]->entity->transform->get_local_position());
+            shader->set_vec3(std::format("pointLights[{}].ambient", i), point_lights[i]->ambient);
+            shader->set_vec3(std::format("pointLights[{}].diffuse", i), point_lights[i]->diffuse);
+            shader->set_vec3(std::format("pointLights[{}].specular", i), point_lights[i]->specular);
+        }
+
+        if (directional_light != nullptr)
+        {
+            shader->set_vec3("directionalLight.direction", directional_light->entity->transform->get_euler_angles());
+            shader->set_vec3("directionalLight.ambient", directional_light->ambient);
+            shader->set_vec3("directionalLight.diffuse", directional_light->diffuse);
+            shader->set_vec3("directionalLight.specular", directional_light->specular);
         }
         
         for (auto const& drawable : drawables)

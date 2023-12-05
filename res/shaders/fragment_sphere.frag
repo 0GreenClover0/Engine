@@ -21,14 +21,15 @@ struct Material
 
 uniform Material material;
 
-struct Light
+struct PointLight
 {
     vec3 diffuse;
 };
 
-uniform Light light;
+const int MAX_POINT_LIGHTS = 1;
+uniform PointLight pointLights[MAX_POINT_LIGHTS];
 
 void main()
 {
-    FragColor = vec4(material.color, 1.0) * vec4(light.diffuse, 1.0) * texture(material.texture_diffuse1, fs_in.TextureCoordinatesGeometry);
+    FragColor = vec4(material.color, 1.0) * vec4(pointLights[0].diffuse, 1.0) * texture(material.texture_diffuse1, fs_in.TextureCoordinatesGeometry);
 }

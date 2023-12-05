@@ -112,6 +112,14 @@ int main(int, char**)
     light_material->color = glm::vec4(point_light_comp->diffuse.x, point_light_comp->diffuse.y, point_light_comp->diffuse.z, 1.0f);
     point_light->add_component<Cube>(light_material);
 
+    auto const directional_light = Entity::create("DirectionalLight");
+    auto const directional_light_comp = directional_light->add_component<DirectionalLight>(DirectionalLight::create());
+    directional_light_comp->diffuse = glm::vec3(1.0f, 0.0f, 0.0f);
+    light_material->color = glm::vec4(directional_light_comp->diffuse.x, directional_light_comp->diffuse.y, directional_light_comp->diffuse.z, 1.0f);
+    directional_light->add_component<Cube>(light_material);
+    directional_light_comp->diffuse = glm::vec4(1.0f, 0.0f, 0.0f, 1.0);
+    directional_light->transform->set_euler_angles(glm::vec3(-0.2f, -1.0f, -0.3f));
+
     auto const container = Entity::create("Container");
     auto shader = Shader::create("./res/shaders/standard.vert", "./res/shaders/standard.frag");
     auto object_material = std::make_shared<Material>(shader);
