@@ -29,6 +29,7 @@ struct PointLight
 };
 
 const int MAX_POINT_LIGHTS = 1;
+uniform int pointLightCount;
 uniform PointLight pointLights[MAX_POINT_LIGHTS];
 
 struct DirectionalLight
@@ -40,6 +41,7 @@ struct DirectionalLight
     vec3 specular;
 };
 
+uniform bool directionalLightOn;
 uniform DirectionalLight directionalLight;
 
 uniform vec3 cameraPosition;
@@ -91,11 +93,16 @@ void main()
     vec3 normal = normalize(NormalVertex);
     vec3 viewDirection = normalize(cameraPosition - FragmentPosition);
 
+    vec3 result = vec3(0.0, 0.0, 0.0);
+
     // 1. Directional lighting
-    vec3 result = CalculateDirectionalLight(directionalLight, normal, viewDirection);
+    if (directionalLightOn)
+    {
+        result += CalculateDirectionalLight(directionalLight, normal, viewDirection);
+    }
 
     // 2. Point lights
-    for (int i = 0; i < MAX_POINT_LIGHTS; ++i)
+    for (int i = 0; i < pointLightCount; ++i)
     {
         result += CalculatePointLight(pointLights[i], normal, viewDirection);
     }

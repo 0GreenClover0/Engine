@@ -43,4 +43,8 @@ private:
 
     std::vector<std::shared_ptr<Light>> lights = {};
     std::unordered_map<std::shared_ptr<Shader>, std::vector<std::weak_ptr<Drawable>>> shaders_map = {};
+
+    // TODO: Retrieve this information from the shader
+    // NOTE: This has to be the same value as the variable in a shader to work in all cases.
+    int32_t max_point_lights = 4;
 };

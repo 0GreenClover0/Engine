@@ -70,14 +70,17 @@ void Renderer::render() const
     {
         shader->use();
 
+        // TODO: Ultimately we would probably want to cache the uniform location instead of retrieving them by name
+
         shader->set_vec3("cameraPosition", Camera::get_main_camera()->position);
 
         // TODO: Choose only the closest lights
+
         for (uint32_t i = 0; i < point_lights.size(); ++i)
         {
-            // TODO: Ultimately we would probably want to cache the uniform location instead of retrieving them by name
             std::string light_element = std::format("pointLights[{}].", i);
             shader->set_vec3(light_element + "position", point_lights[i]->entity->transform->get_local_position());
+
             shader->set_vec3(light_element + "ambient", point_lights[i]->ambient);
             shader->set_vec3(light_element + "diffuse", point_lights[i]->diffuse);
             shader->set_vec3(light_element + "specular", point_lights[i]->specular);
@@ -87,13 +90,20 @@ void Renderer::render() const
             shader->set_float(light_element + "quadratic", point_lights[i]->quadratic);
         }
 
-        if (directional_light != nullptr)
+        shader->set_int("pointLightCount", point_lights.size() > max_point_lights ? max_point_lights : point_lights.size());
+        shader->set_int("spotLightCount", spot_lights.size() > max_spot_lights ? max_spot_lights : spot_lights.size());
+
+        bool const directional_light_on = directional_light != nullptr;
+        if (directional_light_on)
         {
             shader->set_vec3("directionalLight.direction", directional_light->entity->transform->get_euler_angles());
+
             shader->set_vec3("directionalLight.ambient", directional_light->ambient);
             shader->set_vec3("directionalLight.diffuse", directional_light->diffuse);
             shader->set_vec3("directionalLight.specular", directional_light->specular);
         }
+
+        shader->set_bool("directionalLightOn", directional_light_on);
         
         for (auto const& drawable : drawables)
         {
