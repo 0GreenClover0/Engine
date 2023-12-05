@@ -72,13 +72,15 @@ void Renderer::render() const
 
         shader->set_vec3("cameraPosition", Camera::get_main_camera()->position);
 
+        // TODO: Choose only the closest lights
         for (uint32_t i = 0; i < point_lights.size(); ++i)
         {
-            // TODO: Choose the closest lights
-            shader->set_vec3(std::format("pointLights[{}].position", i), point_lights[i]->entity->transform->get_local_position());
-            shader->set_vec3(std::format("pointLights[{}].ambient", i), point_lights[i]->ambient);
-            shader->set_vec3(std::format("pointLights[{}].diffuse", i), point_lights[i]->diffuse);
-            shader->set_vec3(std::format("pointLights[{}].specular", i), point_lights[i]->specular);
+            // TODO: Ultimately we would probably want to cache the uniform location instead of retrieving them by name
+            std::string light_element = std::format("pointLights[{}].", i);
+            shader->set_vec3(light_element + "position", point_lights[i]->entity->transform->get_local_position());
+            shader->set_vec3(light_element + "ambient", point_lights[i]->ambient);
+            shader->set_vec3(light_element + "diffuse", point_lights[i]->diffuse);
+            shader->set_vec3(light_element + "specular", point_lights[i]->specular);
         }
 
         if (directional_light != nullptr)
