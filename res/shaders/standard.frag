@@ -22,6 +22,10 @@ struct PointLight
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
+
+    float constant;
+    float linear;
+    float quadratic;
 };
 
 const int MAX_POINT_LIGHTS = 1;
@@ -71,10 +75,14 @@ vec3 CalculatePointLight(PointLight light, vec3 normal, vec3 viewDirection)
     vec3 reflectDirection = reflect(-lightDirection, normal);
     float spec = pow(max(dot(viewDirection, reflectDirection), 0.0), material.shininess);
 
+    // Attenuation
+    float distance = length(light.position - FragmentPosition);
+    float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
+
     // Combine
-    vec3 ambient = light.ambient * vec3(texture(material.texture_diffuse1, TextureCoordinatesVertex));
-    vec3 diffuse = difference * material.color * light.diffuse * vec3(texture(material.texture_diffuse1, TextureCoordinatesVertex));
-    vec3 specular = spec * material.specular * light.specular * vec3(texture(material.texture_specular1, TextureCoordinatesVertex));
+    vec3 ambient = attenuation * light.ambient * vec3(texture(material.texture_diffuse1, TextureCoordinatesVertex));
+    vec3 diffuse = attenuation * difference * material.color * light.diffuse * vec3(texture(material.texture_diffuse1, TextureCoordinatesVertex));
+    vec3 specular = attenuation * spec * material.specular * light.specular * vec3(texture(material.texture_specular1, TextureCoordinatesVertex));
     return ambient + diffuse + specular;
 }
 

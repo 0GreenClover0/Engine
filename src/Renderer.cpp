@@ -81,6 +81,10 @@ void Renderer::render() const
             shader->set_vec3(light_element + "ambient", point_lights[i]->ambient);
             shader->set_vec3(light_element + "diffuse", point_lights[i]->diffuse);
             shader->set_vec3(light_element + "specular", point_lights[i]->specular);
+
+            shader->set_float(light_element + "constant", point_lights[i]->constant);
+            shader->set_float(light_element + "linear", point_lights[i]->linear);
+            shader->set_float(light_element + "quadratic", point_lights[i]->quadratic);
         }
 
         if (directional_light != nullptr)
