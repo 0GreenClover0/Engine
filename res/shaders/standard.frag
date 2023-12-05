@@ -72,21 +72,24 @@ out vec4 FragColor;
 vec3 diffuse_texture = vec3(0.0, 0.0, 0.0);
 vec3 specular_texture = vec3(0.0, 0.0, 0.0);
 
+vec3 common_diffuse_terms = vec3(0.0, 0.0, 0.0);
+vec3 common_specular_terms = vec3(0.0, 0.0, 0.0);
+
 vec3 CalculateDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDirection)
 {
     vec3 lightDirection = normalize(-light.direction);
 
     // Diffuse
-    float diff = max(dot(normal, lightDirection), 0.0);
+    float difference = max(dot(normal, lightDirection), 0.0);
 
     // Specular
     vec3 reflectDirection = reflect(-lightDirection, normal);
     float spec = pow(max(dot(viewDirection, reflectDirection), 0.0), material.shininess);
 
     // Combine results
-    vec3 ambient = light.ambient  * diffuse_texture;
-    vec3 diffuse = light.diffuse  * diff * diffuse_texture;
-    vec3 specular = light.specular * spec * specular_texture;
+    vec3 ambient = light.ambient * diffuse_texture;
+    vec3 diffuse = difference * light.diffuse * common_diffuse_terms;
+    vec3 specular = spec * light.specular * common_specular_terms;
     return ambient + diffuse + specular;
 }
 
@@ -107,8 +110,8 @@ vec3 CalculatePointLight(PointLight light, vec3 normal, vec3 viewDirection)
 
     // Combine
     vec3 ambient = attenuation * light.ambient * diffuse_texture;
-    vec3 diffuse = attenuation * difference * material.color * light.diffuse * diffuse_texture;
-    vec3 specular = attenuation * spec * material.specular * light.specular * specular_texture;
+    vec3 diffuse = attenuation * difference * light.diffuse * common_diffuse_terms;
+    vec3 specular = attenuation * spec * light.specular * common_specular_terms;
     return ambient + diffuse + specular;
 }
 
@@ -129,8 +132,8 @@ vec3 CalculateSpotLight(SpotLight light, vec3 normal, vec3 viewDirection)
 
     // Combine
     vec3 ambient = attenuation * light.ambient * diffuse_texture;
-    vec3 diffuse = attenuation * difference * material.color * light.diffuse * diffuse_texture;
-    vec3 specular = attenuation * spec * material.specular * light.specular * specular_texture;
+    vec3 diffuse = attenuation * difference * light.diffuse * common_diffuse_terms;
+    vec3 specular = attenuation * spec * light.specular * common_specular_terms;
 
     // Spotlight intensity
     float theta = dot(lightDirection, normalize(-light.direction));
@@ -147,6 +150,9 @@ void main()
 
     diffuse_texture = vec3(texture(material.texture_diffuse1, TextureCoordinatesVertex));
     specular_texture = vec3(texture(material.texture_specular1, TextureCoordinatesVertex));
+
+    common_diffuse_terms = material.color * diffuse_texture;
+    common_specular_terms = material.specular * specular_texture;
 
     vec3 result = vec3(0.0, 0.0, 0.0);
 
