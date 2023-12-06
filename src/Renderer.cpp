@@ -89,7 +89,7 @@ void Renderer::render() const
             // TODO: Remove null pointers
             auto const drawable_locked = drawable.lock();
             if (drawable_locked == nullptr)
-                return;
+                continue;
 
             // Could be beneficial to sort drawables per entities as well
             shader->set_mat4("PVM", projection_view * drawable_locked->entity->transform->get_model_matrix());
