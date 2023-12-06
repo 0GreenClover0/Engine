@@ -26,6 +26,7 @@
 #include "Renderer.h"
 #include "Scene.h"
 #include "Shader.h"
+#include "Skybox.h"
 #include "stb_image.h"
 #include "Window.h"
 
@@ -96,7 +97,7 @@ int main(int, char**)
     camera = std::make_shared<Camera>();
     Camera::set_main_camera(camera);
     camera->position = glm::vec3(0.0f, 5.0f, 10.0f);
-    camera->pitch = -30.0;
+    camera->pitch = -10.0;
     camera->update();
 
     auto const main_scene = std::make_shared<Scene>();
@@ -136,6 +137,30 @@ int main(int, char**)
     container->add_component<Cube>("./res/textures/container.png", "./res/textures/container_specular.png", object_material);
     container->transform->set_local_position(glm::vec3(5.0f, 0.0f, 0.0f));
     container->transform->set_local_scale(glm::vec3(1.0f, 1.0f, 1.0f));
+
+    auto const skybox = Entity::create("Skybox");
+    auto skybox_shader = Shader::create("./res/shaders/skybox.vert", "./res/shaders/skybox.frag");
+    auto skybox_material = std::make_shared<Material>(skybox_shader);
+    //std::vector<std::string> skybox_texture_paths =
+    //{
+    //    "./res/textures/skybox/right.jpg",
+    //    "./res/textures/skybox/left.jpg",
+    //    "./res/textures/skybox/top.jpg",
+    //    "./res/textures/skybox/bottom.jpg",
+    //    "./res/textures/skybox/front.jpg",
+    //    "./res/textures/skybox/back.jpg"
+    //};
+    std::vector<std::string> skybox_texture_paths =
+    {
+        "./res/textures/skybox/storforsen/posx.jpg",
+        "./res/textures/skybox/storforsen/negx.jpg",
+        "./res/textures/skybox/storforsen/posy.jpg",
+        "./res/textures/skybox/storforsen/negy.jpg",
+        "./res/textures/skybox/storforsen/posz.jpg",
+        "./res/textures/skybox/storforsen/negz.jpg"
+    };
+    skybox->add_component<Skybox>(skybox_material, skybox_texture_paths );
+    skybox->transform->set_local_position(glm::vec3(4.0f, 0.0f, 0.0f));
 
     // Call awake on all entities
     main_scene->awake();
