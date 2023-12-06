@@ -311,6 +311,12 @@ void process_input(GLFWwindow *window)
 
     if (is_button_pressed(window, GLFW_KEY_D))
         camera->position += glm::normalize(glm::cross(camera->front, camera->up)) * camera_speed;
+
+    if (is_button_pressed(window, GLFW_KEY_Q))
+        camera->position += camera_speed * camera->up;
+
+    if (is_button_pressed(window, GLFW_KEY_E))
+        camera->position -= camera_speed * camera->up;
 }
 
 bool is_button_pressed(GLFWwindow *window, int const key)
