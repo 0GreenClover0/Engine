@@ -17,6 +17,7 @@
 #include <glm/gtc/random.hpp>
 
 #include "Camera.h"
+#include "CommonEntities.h"
 #include "Cube.h"
 #include "Editor.h"
 #include "Entity.h"
@@ -26,7 +27,6 @@
 #include "Renderer.h"
 #include "Scene.h"
 #include "Shader.h"
-#include "Skybox.h"
 #include "stb_image.h"
 #include "Window.h"
 
@@ -106,27 +106,11 @@ int main(int, char**)
     auto const planetary_system = Entity::create("PlanetarySystem");
     auto const planetary_system_comp = planetary_system->add_component<PlanetarySystem>();
 
-    auto const point_light = Entity::create("PointLight");
-    auto light_shader = Shader::create("./res/shaders/light.vert", "./res/shaders/light.frag");
-    auto light_material = std::make_shared<Material>(light_shader);
-    auto const point_light_comp = point_light->add_component<PointLight>(PointLight::create());
-    point_light_comp->diffuse = glm::vec3(1.0f, 1.0f, 0.0f);
-    light_material->color = glm::vec4(point_light_comp->diffuse.x, point_light_comp->diffuse.y, point_light_comp->diffuse.z, 1.0f);
-    point_light->add_component<Cube>(light_material);
+    auto const point_light = CommonEntities::create_point_light(glm::vec3(1.0f, 1.0f, 0.0f));
 
-    auto const directional_light = Entity::create("DirectionalLight");
-    auto const directional_light_comp = directional_light->add_component<DirectionalLight>(DirectionalLight::create());
-    directional_light_comp->diffuse = glm::vec3(1.0f, 0.0f, 0.0f);
-    light_material->color = glm::vec4(directional_light_comp->diffuse.x, directional_light_comp->diffuse.y, directional_light_comp->diffuse.z, 1.0f);
-    directional_light->add_component<Cube>(light_material);
-    directional_light_comp->diffuse = glm::vec4(1.0f, 0.0f, 0.0f, 1.0);
-    directional_light->transform->set_euler_angles(glm::vec3(-0.2f, -1.0f, -0.3f));
+    auto const directional_light = CommonEntities::create_directional_light(glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(-0.2f, -1.0f, -0.3f));
 
-    auto const spot_light = Entity::create("SpotLight");
-    auto const spot_light_comp = spot_light->add_component<SpotLight>(SpotLight::create());
-    spot_light_comp->diffuse = glm::vec3(0.0f, 0.2f, 1.0f);
-    light_material->color = glm::vec4(spot_light_comp->diffuse.x, spot_light_comp->diffuse.y, spot_light_comp->diffuse.z, 1.0f);
-    spot_light->add_component<Cube>(light_material);
+    auto const spot_light = CommonEntities::create_spot_light(glm::vec3(0.0f, 0.2f, 1.0f));
     spot_light->transform->set_local_position(glm::vec3(2.0f, 0.0f, 0.0f));
     spot_light->transform->set_euler_angles(glm::vec3(0.0f, 0.0f, -10.866f));
 
@@ -138,19 +122,7 @@ int main(int, char**)
     container->transform->set_local_position(glm::vec3(5.0f, 0.0f, 0.0f));
     container->transform->set_local_scale(glm::vec3(1.0f, 1.0f, 1.0f));
 
-    auto const skybox = Entity::create("Skybox");
-    auto skybox_shader = Shader::create("./res/shaders/skybox.vert", "./res/shaders/skybox.frag");
-    auto skybox_material = std::make_shared<Material>(skybox_shader);
-    //std::vector<std::string> skybox_texture_paths =
-    //{
-    //    "./res/textures/skybox/right.jpg",
-    //    "./res/textures/skybox/left.jpg",
-    //    "./res/textures/skybox/top.jpg",
-    //    "./res/textures/skybox/bottom.jpg",
-    //    "./res/textures/skybox/front.jpg",
-    //    "./res/textures/skybox/back.jpg"
-    //};
-    std::vector<std::string> skybox_texture_paths =
+    std::vector<std::string> const skybox_texture_paths =
     {
         "./res/textures/skybox/storforsen/posx.jpg",
         "./res/textures/skybox/storforsen/negx.jpg",
@@ -159,8 +131,7 @@ int main(int, char**)
         "./res/textures/skybox/storforsen/posz.jpg",
         "./res/textures/skybox/storforsen/negz.jpg"
     };
-    skybox->add_component<Skybox>(skybox_material, skybox_texture_paths );
-    skybox->transform->set_local_position(glm::vec3(4.0f, 0.0f, 0.0f));
+    auto const skybox = CommonEntities::create_skybox(skybox_texture_paths);
 
     // Call awake on all entities
     main_scene->awake();

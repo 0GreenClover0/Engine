@@ -5,6 +5,7 @@
 #include "Drawable.h"
 #include "Vertex.h"
 
+// TODO: Make skybox more performant
 class Skybox final : public Drawable
 {
 public:

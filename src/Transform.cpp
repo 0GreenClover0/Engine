@@ -1,5 +1,6 @@
 #include "Transform.h"
 
+#include <iostream>
 #include <glm/ext/matrix_transform.hpp>
 
 #include "AK.h"
@@ -117,6 +118,13 @@ void Transform::add_child(std::shared_ptr<Transform> const& transform)
 
 void Transform::set_parent(std::shared_ptr<Transform> const& parent)
 {
+    if (parent == nullptr)
+    {
+        // TODO: Remove from current parrent
+        std::cout << "Setting parent to nullptr might not do what you want it to do." << "\n";
+        return;
+    }
+
     parent->add_child(shared_from_this());
     m_parent_dirty = true;
 }
