@@ -89,6 +89,7 @@ int main(int, char**)
     auto constexpr clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
 
     std::shared_ptr<Renderer> renderer = Renderer::create();
 
