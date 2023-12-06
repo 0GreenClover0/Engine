@@ -2,20 +2,21 @@
 
 #include "Globals.h"
 
-Cube::Cube(std::shared_ptr<Material> const& material) : Model(material)
+Cube::Cube(std::shared_ptr<MaterialInstance> const& material_instance) : Model(material_instance)
 {
     draw_type = GL_TRIANGLES;
     Cube::prepare();
 }
 
-Cube::Cube(std::string diffuse_texture_path, std::shared_ptr<Material> const& material) : Model(material), diffuse_texture_path(std::move(diffuse_texture_path))
+Cube::Cube(std::string diffuse_texture_path, std::shared_ptr<MaterialInstance> const& material_instance)
+    : Model(material_instance), diffuse_texture_path(std::move(diffuse_texture_path))
 {
     draw_type = GL_TRIANGLES;
     Cube::prepare();
 }
 
-Cube::Cube(std::string diffuse_texture_path, std::string specular_texture_path, std::shared_ptr<Material> const& material)
-    : Model(material), diffuse_texture_path(std::move(diffuse_texture_path)), specular_texture_path(std::move(specular_texture_path))
+Cube::Cube(std::string diffuse_texture_path, std::string specular_texture_path, std::shared_ptr<MaterialInstance> const& material_instance)
+    : Model(material_instance), diffuse_texture_path(std::move(diffuse_texture_path)), specular_texture_path(std::move(specular_texture_path))
 {
     draw_type = GL_TRIANGLES;
     Cube::prepare();
@@ -54,7 +55,7 @@ Mesh Cube::create_cube() const
     textures.insert(textures.end(), diffuse_maps.begin(), diffuse_maps.end());
     textures.insert(textures.end(), specular_maps.begin(), specular_maps.end());
 
-    return Mesh::create(vertices, indices, textures, draw_type, material);
+    return Mesh::create(vertices, indices, textures, draw_type, material_instance);
 }
 
 Texture Cube::load_texture(std::string const& path, std::string const& type) const

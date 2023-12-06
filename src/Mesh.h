@@ -17,7 +17,7 @@ public:
     Mesh(Mesh&& mesh) noexcept;
 
     static Mesh create(std::vector<Vertex> const& vertices, std::vector<std::uint32_t> const& indices,
-                       std::vector<Texture> const& textures, GLenum draw_type, std::shared_ptr<Material> const& material);
+                       std::vector<Texture> const& textures, GLenum draw_type, std::shared_ptr<MaterialInstance> const& material_instance);
 
     void draw() const;
 
@@ -26,10 +26,10 @@ public:
     std::vector<Texture> textures;
 
     GLenum draw_type;
-    std::shared_ptr<Material> material;
+    std::shared_ptr<MaterialInstance> material_instance;
 
 protected:
-    Mesh(std::vector<Vertex> vertices, std::vector<std::uint32_t> indices, std::vector<Texture> textures, GLenum draw_type, std::shared_ptr<Material> const& material);
+    Mesh(std::vector<Vertex> vertices, std::vector<std::uint32_t> indices, std::vector<Texture> textures, GLenum draw_type, std::shared_ptr<MaterialInstance> const& material_instance);
     void setup_mesh();
 
 private:

@@ -3,8 +3,8 @@
 #include <glm/trigonometric.hpp>
 #include <glm/ext/scalar_constants.hpp>
 
-Ellipse::Ellipse(float center_x, float center_z, float radius_x, float radius_z, int segment_count, std::shared_ptr<Material> const& material)
- : Model(material), center_x(center_x), center_z(center_z), radius_x(radius_x), radius_z(radius_z), segment_count(segment_count)
+Ellipse::Ellipse(float center_x, float center_z, float radius_x, float radius_z, int segment_count, std::shared_ptr<MaterialInstance> const& material_instance)
+ : Model(material_instance), center_x(center_x), center_z(center_z), radius_x(radius_x), radius_z(radius_z), segment_count(segment_count)
 {
     draw_type = GL_LINE_LOOP;
     meshes.emplace_back(create_ellipse());
@@ -37,5 +37,5 @@ Mesh Ellipse::create_ellipse() const
     } 
     glEnd();
 
-    return Mesh::create(vertices, {}, {}, draw_type, material);
+    return Mesh::create(vertices, {}, {}, draw_type, material_instance);
 }

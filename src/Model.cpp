@@ -13,14 +13,14 @@
 #include "Vertex.h"
 #include "imgui_impl/imgui_impl_opengl3_loader.h"
 
-Model::Model(std::string model_path, std::shared_ptr<Material> const& material) : Drawable(material), model_path(std::move(model_path))
+Model::Model(std::string model_path, std::shared_ptr<MaterialInstance> const& material_instance) : Drawable(material_instance), model_path(std::move(model_path))
 {
     draw_type = GL_TRIANGLES;
     meshes.reserve(1);
     Model::prepare();
 }
 
-Model::Model(std::shared_ptr<Material> const& material) : Drawable(material)
+Model::Model(std::shared_ptr<MaterialInstance> const& material_instance) : Drawable(material_instance)
 {
 }
 
@@ -123,7 +123,7 @@ Mesh Model::proccess_mesh(aiMesh const* mesh, aiScene const* scene)
     std::vector<Texture> specular_maps = load_material_textures(assimp_material, aiTextureType_SPECULAR, "texture_specular");
     textures.insert(textures.end(), specular_maps.begin(), specular_maps.end());
 
-    return Mesh::create(vertices, indices, textures, draw_type, material);
+    return Mesh::create(vertices, indices, textures, draw_type, material_instance);
 }
 
 std::vector<Texture> Model::load_material_textures(aiMaterial const* material, aiTextureType const type, std::string const& type_name)

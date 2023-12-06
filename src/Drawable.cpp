@@ -3,14 +3,14 @@
 #include "Entity.h"
 #include "Renderer.h"
 
-Drawable::Drawable(std::shared_ptr<Material> const& material)
+Drawable::Drawable(std::shared_ptr<MaterialInstance> const& material_instance)
 {
-    this->material = std::make_shared<Material>(*material);
+    this->material_instance = material_instance;
 }
 
-Drawable::Drawable(std::shared_ptr<Material> const& material, int32_t const render_order) : render_order(render_order)
+Drawable::Drawable(std::shared_ptr<MaterialInstance> const& material_instance, int32_t const render_order) : render_order(render_order)
 {
-    this->material = std::make_shared<Material>(*material);
+    this->material_instance = material_instance;
 }
 
 void Drawable::initialize()

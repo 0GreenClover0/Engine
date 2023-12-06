@@ -36,9 +36,9 @@ void Renderer::register_drawable(std::weak_ptr<Drawable> const& drawable)
 {
     if (auto const drawable_locked = drawable.lock(); drawable_locked->render_order == 0)
     {
-        assert(shaders_map.contains(drawable.lock()->material->shader));
+        assert(shaders_map.contains(drawable.lock()->material_instance->material->shader));
 
-        shaders_map[drawable.lock()->material->shader].emplace_back(drawable);
+        shaders_map[drawable.lock()->material_instance->material->shader].emplace_back(drawable);
     }
     else
     {
@@ -95,13 +95,13 @@ void Renderer::render() const
             shader->set_mat4("PVM", projection_view * drawable_locked->entity->transform->get_model_matrix());
             shader->set_mat4("model", drawable_locked->entity->transform->get_model_matrix());
 
-            shader->set_vec3("material.color", glm::vec3(drawable_locked->material->color.x, drawable_locked->material->color.y, drawable_locked->material->color.z));
-            shader->set_float("material.specular", drawable_locked->material->specular);
-            shader->set_float("material.shininess", drawable_locked->material->shininess);
+            shader->set_vec3("material.color", glm::vec3(drawable_locked->material_instance->color.x, drawable_locked->material_instance->color.y, drawable_locked->material_instance->color.z));
+            shader->set_float("material.specular", drawable_locked->material_instance->specular);
+            shader->set_float("material.shininess", drawable_locked->material_instance->shininess);
 
-            shader->set_float("radiusMultiplier", drawable_locked->material->radius_multiplier);
-            shader->set_int("sector_count", drawable_locked->material->sector_count);
-            shader->set_int("stack_count", drawable_locked->material->stack_count);
+            shader->set_float("radiusMultiplier", drawable_locked->material_instance->radius_multiplier);
+            shader->set_int("sector_count", drawable_locked->material_instance->sector_count);
+            shader->set_int("stack_count", drawable_locked->material_instance->stack_count);
 
             drawable_locked->draw();
         }
@@ -114,20 +114,20 @@ void Renderer::render() const
         if (drawable_locked == nullptr)
             continue;
 
-        drawable_locked->material->shader->use();
+        drawable_locked->material_instance->material->shader->use();
 
-        set_shader_uniforms(drawable_locked->material->shader, projection_view_no_translation);
+        set_shader_uniforms(drawable_locked->material_instance->material->shader, projection_view_no_translation);
 
-        drawable_locked->material->shader->set_mat4("PVM", projection_view * drawable_locked->entity->transform->get_model_matrix());
-        drawable_locked->material->shader->set_mat4("model", drawable_locked->entity->transform->get_model_matrix());
+        drawable_locked->material_instance->material->shader->set_mat4("PVM", projection_view * drawable_locked->entity->transform->get_model_matrix());
+        drawable_locked->material_instance->material->shader->set_mat4("model", drawable_locked->entity->transform->get_model_matrix());
 
-        drawable_locked->material->shader->set_vec3("material.color", glm::vec3(drawable_locked->material->color.x, drawable_locked->material->color.y, drawable_locked->material->color.z));
-        drawable_locked->material->shader->set_float("material.specular", drawable_locked->material->specular);
-        drawable_locked->material->shader->set_float("material.shininess", drawable_locked->material->shininess);
+        drawable_locked->material_instance->material->shader->set_vec3("material.color", glm::vec3(drawable_locked->material_instance->color.x, drawable_locked->material_instance->color.y, drawable_locked->material_instance->color.z));
+        drawable_locked->material_instance->material->shader->set_float("material.specular", drawable_locked->material_instance->specular);
+        drawable_locked->material_instance->material->shader->set_float("material.shininess", drawable_locked->material_instance->shininess);
 
-        drawable_locked->material->shader->set_float("radiusMultiplier", drawable_locked->material->radius_multiplier);
-        drawable_locked->material->shader->set_int("sector_count", drawable_locked->material->sector_count);
-        drawable_locked->material->shader->set_int("stack_count", drawable_locked->material->stack_count);
+        drawable_locked->material_instance->material->shader->set_float("radiusMultiplier", drawable_locked->material_instance->radius_multiplier);
+        drawable_locked->material_instance->material->shader->set_int("sector_count", drawable_locked->material_instance->sector_count);
+        drawable_locked->material_instance->material->shader->set_int("stack_count", drawable_locked->material_instance->stack_count);
 
         drawable_locked->draw();
     }

@@ -19,7 +19,8 @@ void PlanetarySystem::awake()
     sun->transform->set_parent(entity->transform);
 
     {
-        sun->add_component<Model>("./res/models/sun/13913_Sun_v2_l3.obj", standard_material);
+        auto const standard_material_instance = std::make_shared<MaterialInstance>(standard_material);
+        sun->add_component<Model>("./res/models/sun/13913_Sun_v2_l3.obj", standard_material_instance);
         sun->transform->set_local_scale(glm::vec3(0.002f, 0.002f, 0.002f));
     }
 
@@ -49,18 +50,21 @@ void PlanetarySystem::awake()
         float planet_scale = 0.04f;
         for (uint32_t i = 1; i <= planet_count; ++i)
         {
+            auto const planet_material_instance = std::make_shared<MaterialInstance>(custom_sphere_material_planet);
+            auto const standard_material_instance = std::make_shared<MaterialInstance>(standard_material);
+
             auto const planet = Entity::create(std::format("Planet{}", i));
             auto planet_comp = planet->add_component<AstronomicalObject>();
 
-            custom_sphere_material_planet->color = glm::vec4(glm::linearRand(0.0f, 1.0f), glm::linearRand(0.0f, 1.0f), glm::linearRand(0.0f, 1.0f), 1.0f);
-            standard_material->color = custom_sphere_material_planet->color;
+            planet_material_instance->color = glm::vec4(glm::linearRand(0.0f, 1.0f), glm::linearRand(0.0f, 1.0f), glm::linearRand(0.0f, 1.0f), 1.0f);
+            standard_material_instance->color = planet_material_instance->color;
 
             auto const sphere = planet->add_component<Sphere>(
                 3.0f,
                 Sphere::use_geometry_shader ? default_sphere_sector_count_geo : default_sphere_sector_count,
                 Sphere::use_geometry_shader ? default_sphere_stack_count_geo : default_sphere_stack_count,
                 "./res/textures/stone.jpg",
-                custom_sphere_material_planet
+                planet_material_instance
             );
 
             planet_comp->alpha = glm::linearRand(0.0f, 360.0f);
@@ -68,7 +72,7 @@ void PlanetarySystem::awake()
             planet_comp->rotation_speed = glm::linearRand(5.0f, 25.0f);
             planet_comp->model = sphere;
 
-            planets_parent->add_component<class Ellipse>(0.0f, 0.0f, orbit.x, orbit.y, 60, standard_material);
+            planets_parent->add_component<class Ellipse>(0.0f, 0.0f, orbit.x, orbit.y, 60, standard_material_instance);
 
             planet_comp->speed = i == 1 ? 2.0f : planets.back().lock()->speed * 0.6f;
 
@@ -90,19 +94,22 @@ void PlanetarySystem::awake()
 
         for (uint32_t i = 1; i <= moon_count; ++i)
         {
+            auto const moon_material_instance = std::make_shared<MaterialInstance>(custom_sphere_material_moon);
+            auto const standard_material_instance = std::make_shared<MaterialInstance>(standard_material);
+
             auto const moon = Entity::create(std::format("Moon{}", i));
             auto moon_comp = moon->add_component<AstronomicalObject>();
 
             float const color = glm::linearRand(0.0f, 1.0f);
-            custom_sphere_material_moon->color = glm::vec4(color, color, color, 1.0f);
-            standard_material->color = custom_sphere_material_moon->color;
+            moon_material_instance->color = glm::vec4(color, color, color, 1.0f);
+            standard_material_instance->color = moon_material_instance->color;
 
             auto const sphere = moon->add_component<Sphere>(
                 1.0f,
                 Sphere::use_geometry_shader ? default_sphere_sector_count_geo : default_sphere_sector_count,
                 Sphere::use_geometry_shader ? default_sphere_stack_count_geo : default_sphere_stack_count,
                 "./res/textures/stone.jpg",
-                custom_sphere_material_moon
+                moon_material_instance
             );
 
             moon_comp->alpha = glm::linearRand(0.0f, 360.0f);
@@ -117,7 +124,7 @@ void PlanetarySystem::awake()
                 moon_comp->orbit.x,
                 moon_comp->orbit.y,
                 40,
-                standard_material
+                standard_material_instance
             );
 
             moon->transform->set_parent(planets[planets.size() - i].lock()->entity->transform);

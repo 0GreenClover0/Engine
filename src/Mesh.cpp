@@ -11,8 +11,8 @@
 #include "Texture.h"
 #include "Vertex.h"
 
-Mesh::Mesh(std::vector<Vertex> vertices, std::vector<std::uint32_t> indices, std::vector<Texture> textures, GLenum draw_type, std::shared_ptr<Material> const& material)
-    : vertices(std::move(vertices)), indices(std::move(indices)), textures(std::move(textures)), draw_type(draw_type), material(material)
+Mesh::Mesh(std::vector<Vertex> vertices, std::vector<std::uint32_t> indices, std::vector<Texture> textures, GLenum draw_type, std::shared_ptr<MaterialInstance> const& material_instance)
+    : vertices(std::move(vertices)), indices(std::move(indices)), textures(std::move(textures)), draw_type(draw_type), material_instance(material_instance)
 {
 }
 
@@ -65,7 +65,7 @@ Mesh::~Mesh()
     glDeleteVertexArrays(1, &VAO);
 }
 
-Mesh::Mesh(Mesh&& mesh) noexcept : Mesh(mesh.vertices, mesh.indices, mesh.textures, mesh.draw_type, mesh.material)
+Mesh::Mesh(Mesh&& mesh) noexcept : Mesh(mesh.vertices, mesh.indices, mesh.textures, mesh.draw_type, mesh.material_instance)
 {
     VAO = mesh.VAO;
     VBO = mesh.VBO;
@@ -81,9 +81,9 @@ Mesh::Mesh(Mesh&& mesh) noexcept : Mesh(mesh.vertices, mesh.indices, mesh.textur
 }
 
 Mesh Mesh::create(std::vector<Vertex> const& vertices, std::vector<std::uint32_t> const& indices, std::vector<Texture> const& textures,
-                  GLenum const draw_type, std::shared_ptr<Material> const& material)
+                  GLenum const draw_type, std::shared_ptr<MaterialInstance> const& material_instance)
 {
-    auto mesh = Mesh(vertices, indices, textures, draw_type, material);
+    auto mesh = Mesh(vertices, indices, textures, draw_type, material_instance);
     mesh.setup_mesh();
     return mesh;
 }
@@ -105,7 +105,7 @@ void Mesh::draw() const
         else if (textures[i].type == "texture_specular")
             number = std::to_string(specular_number++);
 
-        material->shader->set_int(name + number, i);
+        material_instance->material->shader->set_int(name + number, i);
         glBindTexture(GL_TEXTURE_2D, textures[i].id);
     }
 
@@ -113,7 +113,7 @@ void Mesh::draw() const
     {
         glActiveTexture(GL_TEXTURE0);
 
-        material->shader->set_int("material.texture_diffuse1", 0);
+        material_instance->material->shader->set_int("material.texture_diffuse1", 0);
 
         glBindTexture(GL_TEXTURE_2D, InternalMeshData::white_texture.id);
     }
