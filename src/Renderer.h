@@ -1,4 +1,5 @@
 #pragma once
+#include <map>
 #include <unordered_map>
 
 #include "DirectionalLight.h"
@@ -37,6 +38,8 @@ private:
         instance = renderer;
     }
 
+    void set_shader_uniforms(std::shared_ptr<Shader> const& shader, glm::mat4 const& projection_view_no_translation) const;
+
     inline static std::shared_ptr<Renderer> instance;
 
     inline static std::vector<std::shared_ptr<PointLight>> point_lights = {};
@@ -45,6 +48,8 @@ private:
 
     std::vector<std::shared_ptr<Light>> lights = {};
     std::unordered_map<std::shared_ptr<Shader>, std::vector<std::weak_ptr<Drawable>>> shaders_map = {};
+
+    std::map<int32_t, std::weak_ptr<Drawable>> custom_render_order_drawables = {};
 
     // TODO: Retrieve this information from the shader
     // NOTE: This has to be the same value as the variable in a shader to work in all cases.

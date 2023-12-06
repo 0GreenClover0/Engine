@@ -34,9 +34,16 @@ void Renderer::unregister_shader(std::shared_ptr<Shader> const& shader)
 
 void Renderer::register_drawable(std::weak_ptr<Drawable> const& drawable)
 {
-    assert(shaders_map.contains(drawable.lock()->material->shader));
+    if (auto const drawable_locked = drawable.lock(); drawable_locked->render_order == 0)
+    {
+        assert(shaders_map.contains(drawable.lock()->material->shader));
 
-    shaders_map[drawable.lock()->material->shader].emplace_back(drawable);
+        shaders_map[drawable.lock()->material->shader].emplace_back(drawable);
+    }
+    else
+    {
+        custom_render_order_drawables.insert(std::make_pair(drawable_locked->render_order, drawable));
+    }
 }
 
 void Renderer::register_light(std::shared_ptr<Light> const& light)
@@ -69,64 +76,13 @@ void Renderer::render() const
 {
     // Premultiply projection and view matrices
     glm::mat4 const projection_view = Camera::get_main_camera()->projection * Camera::get_main_camera()->get_view_matrix();
+    glm::mat4 const projection_view_no_translation = Camera::get_main_camera()->projection * glm::mat4(glm::mat3(Camera::get_main_camera()->get_view_matrix()));
 
-    for (const auto& [shader, drawables] : shaders_map)
+    for (auto const& [shader, drawables] : shaders_map)
     {
         shader->use();
 
-        // TODO: Ultimately we would probably want to cache the uniform location instead of retrieving them by name
-
-        shader->set_vec3("cameraPosition", Camera::get_main_camera()->position);
-
-        // TODO: Choose only the closest lights
-
-        for (uint32_t i = 0; i < point_lights.size(); ++i)
-        {
-            std::string light_element = std::format("pointLights[{}].", i);
-            shader->set_vec3(light_element + "position", point_lights[i]->entity->transform->get_local_position());
-
-            shader->set_vec3(light_element + "ambient", point_lights[i]->ambient);
-            shader->set_vec3(light_element + "diffuse", point_lights[i]->diffuse);
-            shader->set_vec3(light_element + "specular", point_lights[i]->specular);
-
-            shader->set_float(light_element + "constant", point_lights[i]->constant);
-            shader->set_float(light_element + "linear", point_lights[i]->linear);
-            shader->set_float(light_element + "quadratic", point_lights[i]->quadratic);
-        }
-
-        shader->set_int("pointLightCount", point_lights.size() > max_point_lights ? max_point_lights : point_lights.size());
-
-        for (uint32_t i = 0; i < spot_lights.size(); ++i)
-        {
-            std::string light_element = std::format("spotLights[{}].", i);
-            shader->set_vec3(light_element + "position", spot_lights[i]->entity->transform->get_local_position());
-            shader->set_vec3(light_element + "direction", spot_lights[i]->entity->transform->get_euler_angles());
-
-            shader->set_vec3(light_element + "ambient", spot_lights[i]->ambient);
-            shader->set_vec3(light_element + "diffuse", spot_lights[i]->diffuse);
-            shader->set_vec3(light_element + "specular", spot_lights[i]->specular);
-
-            shader->set_float(light_element + "cutOff", spot_lights[i]->cut_off);
-            shader->set_float(light_element + "outerCutOff", spot_lights[i]->outer_cut_off);
-
-            shader->set_float(light_element + "constant", spot_lights[i]->constant);
-            shader->set_float(light_element + "linear", spot_lights[i]->linear);
-            shader->set_float(light_element + "quadratic", spot_lights[i]->quadratic);
-        }
-
-        shader->set_int("spotLightCount", spot_lights.size() > max_spot_lights ? max_spot_lights : spot_lights.size());
-
-        bool const directional_light_on = directional_light != nullptr;
-        if (directional_light_on)
-        {
-            shader->set_vec3("directionalLight.direction", directional_light->entity->transform->get_euler_angles());
-
-            shader->set_vec3("directionalLight.ambient", directional_light->ambient);
-            shader->set_vec3("directionalLight.diffuse", directional_light->diffuse);
-            shader->set_vec3("directionalLight.specular", directional_light->specular);
-        }
-
-        shader->set_bool("directionalLightOn", directional_light_on);
+        set_shader_uniforms(shader, projection_view_no_translation);
         
         for (auto const& drawable : drawables)
         {
@@ -150,4 +106,89 @@ void Renderer::render() const
             drawable_locked->draw();
         }
     }
+
+    for (auto const& [render_order, drawable] : custom_render_order_drawables)
+    {
+        auto const drawable_locked = drawable.lock();
+
+        if (drawable_locked == nullptr)
+            continue;
+
+        drawable_locked->material->shader->use();
+
+        set_shader_uniforms(drawable_locked->material->shader, projection_view_no_translation);
+
+        drawable_locked->material->shader->set_mat4("PVM", projection_view * drawable_locked->entity->transform->get_model_matrix());
+        drawable_locked->material->shader->set_mat4("model", drawable_locked->entity->transform->get_model_matrix());
+
+        drawable_locked->material->shader->set_vec3("material.color", glm::vec3(drawable_locked->material->color.x, drawable_locked->material->color.y, drawable_locked->material->color.z));
+        drawable_locked->material->shader->set_float("material.specular", drawable_locked->material->specular);
+        drawable_locked->material->shader->set_float("material.shininess", drawable_locked->material->shininess);
+
+        drawable_locked->material->shader->set_float("radiusMultiplier", drawable_locked->material->radius_multiplier);
+        drawable_locked->material->shader->set_int("sector_count", drawable_locked->material->sector_count);
+        drawable_locked->material->shader->set_int("stack_count", drawable_locked->material->stack_count);
+
+        drawable_locked->draw();
+    }
+}
+
+void Renderer::set_shader_uniforms(std::shared_ptr<Shader> const& shader, glm::mat4 const& projection_view_no_translation) const
+{
+    // TODO: Check if shader was already processed and don't perform any operations?
+    // TODO: Ultimately we would probably want to cache the uniform location instead of retrieving them by name
+
+    shader->set_vec3("cameraPosition", Camera::get_main_camera()->position);
+    //shader->set_mat4("PV", projection_view);
+    shader->set_mat4("PVnoTranslation", projection_view_no_translation);
+
+    // TODO: Choose only the closest lights
+
+    for (uint32_t i = 0; i < point_lights.size(); ++i)
+    {
+        std::string light_element = std::format("pointLights[{}].", i);
+        shader->set_vec3(light_element + "position", point_lights[i]->entity->transform->get_local_position());
+
+        shader->set_vec3(light_element + "ambient", point_lights[i]->ambient);
+        shader->set_vec3(light_element + "diffuse", point_lights[i]->diffuse);
+        shader->set_vec3(light_element + "specular", point_lights[i]->specular);
+
+        shader->set_float(light_element + "constant", point_lights[i]->constant);
+        shader->set_float(light_element + "linear", point_lights[i]->linear);
+        shader->set_float(light_element + "quadratic", point_lights[i]->quadratic);
+    }
+
+    shader->set_int("pointLightCount", point_lights.size() > max_point_lights ? max_point_lights : point_lights.size());
+
+    for (uint32_t i = 0; i < spot_lights.size(); ++i)
+    {
+        std::string light_element = std::format("spotLights[{}].", i);
+        shader->set_vec3(light_element + "position", spot_lights[i]->entity->transform->get_local_position());
+        shader->set_vec3(light_element + "direction", spot_lights[i]->entity->transform->get_euler_angles());
+
+        shader->set_vec3(light_element + "ambient", spot_lights[i]->ambient);
+        shader->set_vec3(light_element + "diffuse", spot_lights[i]->diffuse);
+        shader->set_vec3(light_element + "specular", spot_lights[i]->specular);
+
+        shader->set_float(light_element + "cutOff", spot_lights[i]->cut_off);
+        shader->set_float(light_element + "outerCutOff", spot_lights[i]->outer_cut_off);
+
+        shader->set_float(light_element + "constant", spot_lights[i]->constant);
+        shader->set_float(light_element + "linear", spot_lights[i]->linear);
+        shader->set_float(light_element + "quadratic", spot_lights[i]->quadratic);
+    }
+
+    shader->set_int("spotLightCount", spot_lights.size() > max_spot_lights ? max_spot_lights : spot_lights.size());
+
+    bool const directional_light_on = directional_light != nullptr;
+    if (directional_light_on)
+    {
+        shader->set_vec3("directionalLight.direction", directional_light->entity->transform->get_euler_angles());
+
+        shader->set_vec3("directionalLight.ambient", directional_light->ambient);
+        shader->set_vec3("directionalLight.diffuse", directional_light->diffuse);
+        shader->set_vec3("directionalLight.specular", directional_light->specular);
+    }
+
+    shader->set_bool("directionalLightOn", directional_light_on);
 }
