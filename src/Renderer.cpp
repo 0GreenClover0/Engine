@@ -24,26 +24,20 @@ std::shared_ptr<Renderer> Renderer::create()
 void Renderer::initialize()
 {
     // TODO: GPU instancing on one material currently supports only the first mesh that was bound to the material.
-    int32_t index = 0;
+    size_t max_size = 0;
     for (auto const& [material, drawables] : instanced_drawables)
     {
         material->model_matrices.reserve(drawables.size());
 
-        for (auto const& drawable : drawables)
-        {
-            auto const drawable_locked = drawable.lock();
-            material->model_matrices.emplace_back(drawable_locked->entity->transform->get_model_matrix());
-        }
-
-        GLuint ssbo;
-        glGenBuffers(1, &ssbo);
-        material->ssbo = ssbo;
-        glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
-        glBufferData(GL_SHADER_STORAGE_BUFFER, material->model_matrices.size() * sizeof(glm::mat4), material->model_matrices.data(), GL_DYNAMIC_DRAW);
-        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, index, ssbo);
-        glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
-        index++;
+        if (max_size < drawables.size())
+            max_size = drawables.size();
     }
+
+    glGenBuffers(1, &gpu_instancing_ssbo);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, gpu_instancing_ssbo);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, max_size * sizeof(glm::mat4), nullptr, GL_DYNAMIC_DRAW);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, gpu_instancing_ssbo);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 }
 
 void Renderer::register_shader(std::shared_ptr<Shader> const& shader)
@@ -199,7 +193,7 @@ void Renderer::render() const
             material->model_matrices.emplace_back(drawables[i].lock()->entity->transform->get_model_matrix());
         }
 
-        glBindBuffer(GL_SHADER_STORAGE_BUFFER, material->ssbo);
+        glBindBuffer(GL_SHADER_STORAGE_BUFFER, gpu_instancing_ssbo);
         glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, material->model_matrices.size() * sizeof(glm::mat4), material->model_matrices.data());
         glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 

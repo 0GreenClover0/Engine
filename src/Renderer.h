@@ -59,4 +59,6 @@ private:
     // NOTE: This has to be the same value as the variable in a shader to work in all cases.
     int32_t max_point_lights = 4;
     int32_t max_spot_lights = 4;
+
+    GLuint gpu_instancing_ssbo = {};
 };

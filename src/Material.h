@@ -32,7 +32,6 @@ public:
     bool is_gpu_instanced = false;
 
     // NOTE: Only valid if is_gpu_instanced is true
-    GLuint ssbo;
     std::vector<glm::mat4> model_matrices = {};
     std::shared_ptr<Drawable> first_drawable = {};
     std::vector<std::shared_ptr<Drawable>> drawables = {};
