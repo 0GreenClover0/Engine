@@ -5,6 +5,10 @@
 class Cube final : public Model
 {
 public:
+    static std::shared_ptr<Cube> create(std::shared_ptr<MaterialInstance> const& material_instance);
+    static std::shared_ptr<Cube> create(std::string const& diffuse_texture_path, std::shared_ptr<MaterialInstance> const& material_instance);
+    static std::shared_ptr<Cube> create(std::string const& diffuse_texture_path, std::string const& specular_texture_path, std::shared_ptr<MaterialInstance> const& material_instance);
+
     explicit Cube(std::shared_ptr<MaterialInstance> const& material_instance);
     explicit Cube(std::string diffuse_texture_path, std::shared_ptr<MaterialInstance> const& material_instance);
     explicit Cube(std::string diffuse_texture_path, std::string specular_texture_path, std::shared_ptr<MaterialInstance> const& material_instance);

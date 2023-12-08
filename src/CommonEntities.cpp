@@ -33,7 +33,7 @@ std::shared_ptr<Entity> create_directional_light(glm::vec3 const& diffuse, glm::
     auto const directional_light_comp = directional_light->add_component<DirectionalLight>(DirectionalLight::create());
     directional_light_comp->diffuse = diffuse;
     light_material_instance->color = glm::vec4(diffuse.x, diffuse.y, diffuse.z, 1.0f);
-    directional_light->add_component<Cube>(light_material_instance);
+    directional_light->add_component<Cube>(Cube::create(light_material_instance));
     directional_light->transform->set_euler_angles(angles);
     directional_light->transform->set_parent(parent);
 
@@ -50,7 +50,7 @@ std::shared_ptr<Entity> create_point_light(glm::vec3 const& diffuse, std::shared
     auto const point_light_comp = point_light->add_component<PointLight>(PointLight::create());
     point_light_comp->diffuse = diffuse;
     light_material_instance->color = glm::vec4(diffuse.x, diffuse.y, diffuse.z, 1.0f);
-    point_light->add_component<Cube>(light_material_instance);
+    point_light->add_component<Cube>(Cube::create(light_material_instance));
     point_light->transform->set_parent(parent);
 
     return point_light;
@@ -66,10 +66,33 @@ std::shared_ptr<Entity> create_spot_light(glm::vec3 const& diffuse, std::shared_
     auto const spot_light_comp = spot_light->add_component<SpotLight>(SpotLight::create());
     spot_light_comp->diffuse = diffuse;
     light_material_instance->color = glm::vec4(diffuse.x, diffuse.y, diffuse.z, 1.0f);
-    spot_light->add_component<Cube>(light_material_instance);
+    spot_light->add_component<Cube>(Cube::create(light_material_instance));
     spot_light->transform->set_parent(parent);
 
     return spot_light;
 }
 
+std::shared_ptr<Entity> create_cube(std::shared_ptr<MaterialInstance> const& material_instance)
+{
+    auto cube = Entity::create("Cube");
+    cube->add_component<Cube>(Cube::create(material_instance));
+
+    return cube;
+}
+
+std::shared_ptr<Entity> create_cube(std::string const& diffuse_texture_path, std::shared_ptr<MaterialInstance> const& material_instance)
+{
+    auto cube = Entity::create("Cube");
+    cube->add_component<Cube>(Cube::create(diffuse_texture_path, material_instance));
+
+    return cube;
+}
+
+std::shared_ptr<Entity> create_cube(std::string const& diffuse_texture_path, std::string const& specular_texture_path, std::shared_ptr<MaterialInstance> const& material_instance)
+{
+    auto cube = Entity::create("Cube");
+    cube->add_component<Cube>(Cube::create(diffuse_texture_path, specular_texture_path, material_instance));
+
+    return cube;
+}
 }

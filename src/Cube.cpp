@@ -2,24 +2,47 @@
 
 #include "Globals.h"
 
+std::shared_ptr<Cube> Cube::create(std::shared_ptr<MaterialInstance> const& material_instance)
+{
+    auto cube = std::make_shared<Cube>(material_instance);
+    cube->prepare();
+
+    return cube;
+}
+
+std::shared_ptr<Cube> Cube::create(std::string const& diffuse_texture_path, std::shared_ptr<MaterialInstance> const& material_instance)
+{
+    auto cube = std::make_shared<Cube>(diffuse_texture_path, material_instance);
+    cube->prepare();
+
+    return cube;
+}
+
+std::shared_ptr<Cube> Cube::create(std::string const& diffuse_texture_path, std::string const& specular_texture_path,
+                                   std::shared_ptr<MaterialInstance> const& material_instance)
+{
+    auto cube = std::make_shared<Cube>(diffuse_texture_path, specular_texture_path, material_instance);
+    cube->prepare();
+
+    return cube;
+}
+
 Cube::Cube(std::shared_ptr<MaterialInstance> const& material_instance) : Model(material_instance)
 {
     draw_type = GL_TRIANGLES;
-    Cube::prepare();
 }
 
 Cube::Cube(std::string diffuse_texture_path, std::shared_ptr<MaterialInstance> const& material_instance)
     : Model(material_instance), diffuse_texture_path(std::move(diffuse_texture_path))
 {
     draw_type = GL_TRIANGLES;
-    Cube::prepare();
 }
 
 Cube::Cube(std::string diffuse_texture_path, std::string specular_texture_path, std::shared_ptr<MaterialInstance> const& material_instance)
-    : Model(material_instance), diffuse_texture_path(std::move(diffuse_texture_path)), specular_texture_path(std::move(specular_texture_path))
+    : Model(material_instance), diffuse_texture_path(std::move(diffuse_texture_path)), specular_texture_path(
+          std::move(specular_texture_path))
 {
     draw_type = GL_TRIANGLES;
-    Cube::prepare();
 }
 
 void Cube::prepare()

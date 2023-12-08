@@ -198,8 +198,7 @@ std::shared_ptr<Entity> SceneSerializer::deserialize_entity(YAML::Node const& en
         {
             auto material = deserialize_material_instance(component["Material"]);
             deserialized_entity->add_component<Cube>(
-                component["TexturePath"].as<std::string>(),
-                material
+                Cube::create(component["TexturePath"].as<std::string>(), material)
             );
         }
         else if (component_name == "ModelComponent")
