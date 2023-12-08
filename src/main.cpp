@@ -114,10 +114,28 @@ int main(int, char**)
     auto shader2 = Shader::create("./res/shaders/standard_instanced.vert", "./res/shaders/standard.frag");
     auto const cube_material = std::make_shared<Material>(shader2, true);
 
-    for (int32_t i = 0; i < 50000; ++i)
+    auto test_shader = Shader::create("./res/shaders/standard.vert", "./res/shaders/standard.frag");
+    auto const roof_material = std::make_shared<Material>(shader2, true);
+
+    float house_x = -300.0f;
+    float house_z = -300.0f;
+    for (int32_t i = 0; i < 40000; ++i)
     {
-        auto const house = CommonEntities::create_cube("./res/textures/container.png", "./res/textures/container_specular.png", cube_material);
-        house->transform->set_local_position(glm::vec3(glm::linearRand(-100.0f, 100.0f), glm::linearRand(-100.0f, 100.0f), glm::linearRand(-100.0f, 100.0f)));
+        auto const house = CommonEntities::create_cube("House" + std::to_string(i), "./res/textures/container.png", "./res/textures/container_specular.png", cube_material);
+        house->transform->set_local_position(glm::vec3(house_x, 0.0f, house_z));
+        house_x += 5.0f;
+
+        auto const roof = Entity::create("Roof" + std::to_string(i));
+        roof->add_component<Model>(Model::create("./res/models/pyramid3/scene.gltf", roof_material));
+        roof->transform->set_parent(house->transform);
+        roof->transform->set_local_position(glm::vec3(0.0f, 0.6f, 0.0f));
+        roof->transform->set_local_scale(glm::vec3(0.4f, 0.4f, 0.4f));
+
+        if (house_x >= 300.0f)
+        {
+            house_x = -300.0f;
+            house_z += 5.0f;
+        }
     }
 
     std::vector<std::string> const skybox_texture_paths =
