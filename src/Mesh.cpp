@@ -90,7 +90,21 @@ Mesh Mesh::create(std::vector<Vertex> const& vertices, std::vector<std::uint32_t
 
 void Mesh::draw() const
 {
-    // Bind textures
+    bind_textures();
+
+    // Draw mesh
+    glBindVertexArray(VAO);
+    if (draw_type == GL_LINE_LOOP)
+        glDrawArrays(draw_type, 0, static_cast<int>(vertices.size()));
+    else
+        glDrawElements(draw_type, static_cast<int>(indices.size()), GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
+
+    unbind_textures();
+}
+
+void Mesh::bind_textures() const
+{
     std::uint32_t diffuse_number = 1;
     std::uint32_t specular_number = 1;
 
@@ -117,15 +131,10 @@ void Mesh::draw() const
 
         glBindTexture(GL_TEXTURE_2D, InternalMeshData::white_texture.id);
     }
+}
 
-    // Draw mesh
-    glBindVertexArray(VAO);
-    if (draw_type == GL_LINE_LOOP)
-        glDrawArrays(draw_type, 0, static_cast<int>(vertices.size()));
-    else
-        glDrawElements(draw_type, static_cast<int>(indices.size()), GL_UNSIGNED_INT, 0);
-    glBindVertexArray(0);
-
+void Mesh::unbind_textures() const
+{
     glActiveTexture(GL_TEXTURE0);
 
     glBindTexture(GL_TEXTURE_2D, 0);

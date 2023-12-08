@@ -21,6 +21,9 @@ public:
 
     void draw() const;
 
+    void bind_textures() const;
+    void unbind_textures() const;
+
     std::vector<Vertex> vertices;
     std::vector<std::uint32_t> indices;
     std::vector<Texture> textures;
