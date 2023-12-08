@@ -1,6 +1,7 @@
 #pragma once
 #include <map>
 #include <unordered_map>
+#include <glm/mat4x4.hpp>
 
 #include "DirectionalLight.h"
 #include "Drawable.h"
@@ -14,6 +15,8 @@ public:
     static std::shared_ptr<Renderer> create();
     Renderer(Renderer const&) = delete;
     void operator=(Renderer const&) = delete;
+
+    void initialize();
 
     void register_shader(std::shared_ptr<Shader> const& shader);
     void unregister_shader(std::shared_ptr<Shader> const& shader);
@@ -38,7 +41,7 @@ private:
         instance = renderer;
     }
 
-    void set_shader_uniforms(std::shared_ptr<Shader> const& shader, glm::mat4 const& projection_view_no_translation) const;
+    void set_shader_uniforms(std::shared_ptr<Shader> const& shader, glm::mat4 const& projection_view, glm::mat4 const& projection_view_no_translation) const;
 
     inline static std::shared_ptr<Renderer> instance;
 
@@ -48,6 +51,7 @@ private:
 
     std::vector<std::shared_ptr<Light>> lights = {};
     std::unordered_map<std::shared_ptr<Shader>, std::vector<std::weak_ptr<Drawable>>> shaders_map = {};
+    std::unordered_map<std::shared_ptr<MaterialInstance>, std::vector<std::weak_ptr<Drawable>>> instanced_drawables = {};
 
     std::map<int32_t, std::weak_ptr<Drawable>> custom_render_order_drawables = {};
 

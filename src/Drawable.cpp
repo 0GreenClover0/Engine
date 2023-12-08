@@ -19,3 +19,7 @@ void Drawable::initialize()
 
     Renderer::get_instance()->register_drawable(std::dynamic_pointer_cast<Drawable>(shared_from_this()));
 }
+
+void Drawable::draw_instanced(int32_t const size)
+{
+}

@@ -139,3 +139,15 @@ void Mesh::unbind_textures() const
 
     glBindTexture(GL_TEXTURE_2D, 0);
 }
+
+void Mesh::draw_instanced(int32_t const size) const
+{
+    bind_textures();
+
+    glBindVertexArray(VAO);
+    glDrawElementsInstanced(
+        GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0, size
+    );
+
+    unbind_textures();
+}

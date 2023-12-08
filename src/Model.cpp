@@ -30,8 +30,22 @@ void Model::draw() const
         mesh.draw();
 }
 
+void Model::draw_instanced(int32_t const size)
+{
+    for (auto const& mesh : meshes)
+        mesh.draw_instanced(size);
+}
+
 void Model::prepare()
 {
+    if (material_instance->is_gpu_instanced)
+    {
+        if (material_instance->first_drawable != nullptr)
+            return;
+
+        material_instance->first_drawable = std::dynamic_pointer_cast<Drawable>(shared_from_this());
+    }
+
     load_model(model_path);
 }
 

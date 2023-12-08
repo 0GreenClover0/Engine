@@ -1,6 +1,8 @@
 #include "Renderer.h"
 
 #include <format>
+#include <iostream>
+#include <glad/glad.h>
 
 #include "AK.h"
 #include "Camera.h"
@@ -19,6 +21,31 @@ std::shared_ptr<Renderer> Renderer::create()
     return renderer;
 }
 
+void Renderer::initialize()
+{
+    // TODO: GPU instancing on one material currently supports only the first mesh that was bound to the material.
+    int32_t index = 0;
+    for (auto const& [material_instance, drawables] : instanced_drawables)
+    {
+        material_instance->model_matrices.reserve(drawables.size());
+
+        for (auto const& drawable : drawables)
+        {
+            auto const drawable_locked = drawable.lock();
+            material_instance->model_matrices.emplace_back(drawable_locked->entity->transform->get_model_matrix());
+        }
+
+        GLuint ssbo;
+        glGenBuffers(1, &ssbo);
+        material_instance->ssbo = ssbo;
+        glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
+        glBufferData(GL_SHADER_STORAGE_BUFFER, material_instance->model_matrices.size() * sizeof(glm::mat4), material_instance->model_matrices.data(), GL_DYNAMIC_DRAW);
+        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, index, ssbo);
+        glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+        index++;
+    }
+}
+
 void Renderer::register_shader(std::shared_ptr<Shader> const& shader)
 {
     if (!shaders_map.contains(shader))
@@ -34,15 +61,33 @@ void Renderer::unregister_shader(std::shared_ptr<Shader> const& shader)
 
 void Renderer::register_drawable(std::weak_ptr<Drawable> const& drawable)
 {
-    if (auto const drawable_locked = drawable.lock(); drawable_locked->render_order == 0)
+    auto const drawable_locked = drawable.lock();
+
+    if (drawable_locked->material_instance->is_gpu_instanced)
+    {
+        drawable_locked->material_instance->drawables.emplace_back(drawable_locked);
+    }
+
+    if (drawable_locked->render_order == 0 && !drawable_locked->material_instance->is_gpu_instanced)
     {
         assert(shaders_map.contains(drawable.lock()->material_instance->material->shader));
 
         shaders_map[drawable.lock()->material_instance->material->shader].emplace_back(drawable);
     }
-    else
+    else if (drawable_locked->render_order != 0)
     {
         custom_render_order_drawables.insert(std::make_pair(drawable_locked->render_order, drawable));
+    }
+    else if (drawable_locked->material_instance->is_gpu_instanced)
+    {
+        if (auto const iterator = instanced_drawables.find(drawable_locked->material_instance); iterator != instanced_drawables.end())
+        {
+            iterator->second.emplace_back(drawable);
+        }
+        else
+        {
+            instanced_drawables.insert(std::make_pair(drawable_locked->material_instance, std::vector { drawable }));
+        }
     }
 }
 
@@ -82,7 +127,7 @@ void Renderer::render() const
     {
         shader->use();
 
-        set_shader_uniforms(shader, projection_view_no_translation);
+        set_shader_uniforms(shader, projection_view, projection_view_no_translation);
         
         for (auto const& drawable : drawables)
         {
@@ -114,32 +159,61 @@ void Renderer::render() const
         if (drawable_locked == nullptr)
             continue;
 
-        drawable_locked->material_instance->material->shader->use();
+        auto const shader = drawable_locked->material_instance->material->shader;
+        shader->use();
 
-        set_shader_uniforms(drawable_locked->material_instance->material->shader, projection_view_no_translation);
+        set_shader_uniforms(drawable_locked->material_instance->material->shader, projection_view, projection_view_no_translation);
 
-        drawable_locked->material_instance->material->shader->set_mat4("PVM", projection_view * drawable_locked->entity->transform->get_model_matrix());
-        drawable_locked->material_instance->material->shader->set_mat4("model", drawable_locked->entity->transform->get_model_matrix());
+        shader->set_mat4("PVM", projection_view * drawable_locked->entity->transform->get_model_matrix());
+        shader->set_mat4("model", drawable_locked->entity->transform->get_model_matrix());
 
-        drawable_locked->material_instance->material->shader->set_vec3("material.color", glm::vec3(drawable_locked->material_instance->color.x, drawable_locked->material_instance->color.y, drawable_locked->material_instance->color.z));
-        drawable_locked->material_instance->material->shader->set_float("material.specular", drawable_locked->material_instance->specular);
-        drawable_locked->material_instance->material->shader->set_float("material.shininess", drawable_locked->material_instance->shininess);
+        shader->set_vec3("material.color", glm::vec3(drawable_locked->material_instance->color.x, drawable_locked->material_instance->color.y, drawable_locked->material_instance->color.z));
+        shader->set_float("material.specular", drawable_locked->material_instance->specular);
+        shader->set_float("material.shininess", drawable_locked->material_instance->shininess);
 
-        drawable_locked->material_instance->material->shader->set_float("radiusMultiplier", drawable_locked->material_instance->radius_multiplier);
-        drawable_locked->material_instance->material->shader->set_int("sector_count", drawable_locked->material_instance->sector_count);
-        drawable_locked->material_instance->material->shader->set_int("stack_count", drawable_locked->material_instance->stack_count);
+        shader->set_float("radiusMultiplier", drawable_locked->material_instance->radius_multiplier);
+        shader->set_int("sector_count", drawable_locked->material_instance->sector_count);
+        shader->set_int("stack_count", drawable_locked->material_instance->stack_count);
 
         drawable_locked->draw();
     }
+
+    for (auto const& [material_instance, drawables] : instanced_drawables)
+    {
+        auto const first_drawable = material_instance->first_drawable;
+        auto const shader = first_drawable->material_instance->material->shader;
+
+        shader->use();
+
+        set_shader_uniforms(shader, projection_view, projection_view_no_translation);
+
+        shader->set_vec3("material.color", glm::vec3(first_drawable->material_instance->color.x, first_drawable->material_instance->color.y, first_drawable->material_instance->color.z));
+        shader->set_float("material.specular", first_drawable->material_instance->specular);
+        shader->set_float("material.shininess", first_drawable->material_instance->shininess);
+
+        material_instance->model_matrices.clear();
+        material_instance->model_matrices.reserve(material_instance->drawables.size());
+
+        for (int32_t i = 0; i < material_instance->drawables.size(); ++i)
+        {
+            material_instance->model_matrices.emplace_back(drawables[i].lock()->entity->transform->get_model_matrix());
+        }
+
+        glBindBuffer(GL_SHADER_STORAGE_BUFFER, material_instance->ssbo);
+        glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, material_instance->model_matrices.size() * sizeof(glm::mat4), material_instance->model_matrices.data());
+        glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+
+        first_drawable->draw_instanced(drawables.size());
+    }
 }
 
-void Renderer::set_shader_uniforms(std::shared_ptr<Shader> const& shader, glm::mat4 const& projection_view_no_translation) const
+void Renderer::set_shader_uniforms(std::shared_ptr<Shader> const& shader, glm::mat4 const& projection_view, glm::mat4 const& projection_view_no_translation) const
 {
     // TODO: Check if shader was already processed and don't perform any operations?
     // TODO: Ultimately we would probably want to cache the uniform location instead of retrieving them by name
 
     shader->set_vec3("cameraPosition", Camera::get_main_camera()->position);
-    //shader->set_mat4("PV", projection_view);
+    shader->set_mat4("PV", projection_view);
     shader->set_mat4("PVnoTranslation", projection_view_no_translation);
 
     // TODO: Choose only the closest lights

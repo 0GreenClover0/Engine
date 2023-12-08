@@ -25,6 +25,8 @@ public:
     static std::uint32_t load_texture(char const* path, bool gamma = false);
     virtual void draw() const override;
 
+    virtual void draw_instanced(int32_t const size) override;
+
     virtual void prepare();
     virtual void reset();
     virtual void reprepare();

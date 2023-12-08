@@ -92,7 +92,7 @@ int main(int, char**)
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
 
-    std::shared_ptr<Renderer> renderer = Renderer::create();
+    auto const renderer = Renderer::create();
 
     camera = std::make_shared<Camera>();
     Camera::set_main_camera(camera);
@@ -103,9 +103,6 @@ int main(int, char**)
     auto const main_scene = std::make_shared<Scene>();
     MainScene::set_instance(main_scene);
 
-    auto const planetary_system = Entity::create("PlanetarySystem");
-    auto const planetary_system_comp = planetary_system->add_component<PlanetarySystem>();
-
     auto const point_light = CommonEntities::create_point_light(glm::vec3(1.0f, 1.0f, 0.0f));
 
     auto const directional_light = CommonEntities::create_directional_light(glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(-0.2f, -1.0f, -0.3f));
@@ -114,14 +111,15 @@ int main(int, char**)
     spot_light->transform->set_local_position(glm::vec3(2.0f, 0.0f, 0.0f));
     spot_light->transform->set_euler_angles(glm::vec3(0.0f, 0.0f, -10.866f));
 
-    auto const container = Entity::create("Container");
-    auto shader = Shader::create("./res/shaders/standard.vert", "./res/shaders/standard.frag");
-    auto object_material = std::make_shared<Material>(shader);
-    auto object_material_instance = std::make_shared<MaterialInstance>(object_material);
-    object_material_instance->color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-    container->add_component<Cube>("./res/textures/container.png", "./res/textures/container_specular.png", object_material_instance);
-    container->transform->set_local_position(glm::vec3(5.0f, 0.0f, 0.0f));
-    container->transform->set_local_scale(glm::vec3(1.0f, 1.0f, 1.0f));
+    auto shader2 = Shader::create("./res/shaders/standard_instanced.vert", "./res/shaders/standard.frag");
+    auto cube_material = std::make_shared<Material>(shader2);
+    auto const cube_material_instance = std::make_shared<MaterialInstance>(cube_material, true);
+
+    for (int32_t i = 0; i < 50000; ++i)
+    {
+        auto const house = CommonEntities::create_cube("./res/textures/container.png", "./res/textures/container_specular.png", cube_material_instance);
+        house->transform->set_local_position(glm::vec3(glm::linearRand(-100.0f, 100.0f), glm::linearRand(-100.0f, 100.0f), glm::linearRand(-100.0f, 100.0f)));
+    }
 
     std::vector<std::string> const skybox_texture_paths =
     {
@@ -140,10 +138,10 @@ int main(int, char**)
     // Call start on all entities
     main_scene->start();
 
+    renderer->initialize();
+
     bool debug_open = true;
     bool polygon_mode = false;
-    float detail = 1.0f;
-    float last_detail = detail;
 
     int nb_frames = 0;
     double frame_per_second = 0.0;
@@ -179,21 +177,12 @@ int main(int, char**)
 
         ImGui::Begin("Debug", &debug_open, window_flags);
         ImGui::Checkbox("Polygon mode", &polygon_mode);
-        ImGui::SliderFloat("Rotation X", &planetary_system_comp->x_rotation, 0.0f, 360.0f);
-        ImGui::SliderFloat("Rotation Y", &planetary_system_comp->y_rotation, 0.0f, 360.0f);
-        ImGui::SliderFloat("Level of detail", &detail, 0.03f, 2.0f);
         ImGui::Text("Application average %.3f ms/frame", frame_per_second);
 
         editor.draw_scene_save();
         ImGui::End();
 
         editor.draw_scene_hierarchy();
-
-        if (!glm::epsilonEqual(last_detail, detail, 0.01f))
-        {
-            planetary_system_comp->change_detail(detail);
-            last_detail = detail;
-        }
 
         if (polygon_mode)
         {
@@ -203,8 +192,6 @@ int main(int, char**)
         {
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         }
-
-        planetary_system->transform->set_euler_angles(glm::vec3(planetary_system_comp->x_rotation, 0.0f, planetary_system_comp->y_rotation));
 
         // Input
         process_input(window->get_glfw_window());

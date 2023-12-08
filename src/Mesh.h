@@ -22,6 +22,7 @@ public:
     void draw() const;
 
     void bind_textures() const;
+    void draw_instanced(int32_t const size) const;
     void unbind_textures() const;
 
     std::vector<Vertex> vertices;

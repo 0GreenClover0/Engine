@@ -12,6 +12,8 @@ public:
     virtual void initialize() override;
     virtual void draw() const = 0;
 
+    virtual void draw_instanced(int32_t const size);
+
     std::shared_ptr<MaterialInstance> material_instance;
     int32_t render_order = 0;
 };

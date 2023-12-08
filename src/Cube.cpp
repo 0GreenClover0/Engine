@@ -47,6 +47,14 @@ Cube::Cube(std::string diffuse_texture_path, std::string specular_texture_path, 
 
 void Cube::prepare()
 {
+    if (material_instance->is_gpu_instanced)
+    {
+        if (material_instance->first_drawable != nullptr)
+            return;
+
+        material_instance->first_drawable = std::dynamic_pointer_cast<Drawable>(shared_from_this());
+    }
+
     meshes.emplace_back(create_cube());
 }
 
