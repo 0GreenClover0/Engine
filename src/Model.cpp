@@ -13,14 +13,14 @@
 #include "Vertex.h"
 #include "imgui_impl/imgui_impl_opengl3_loader.h"
 
-Model::Model(std::string model_path, std::shared_ptr<MaterialInstance> const& material_instance) : Drawable(material_instance), model_path(std::move(model_path))
+Model::Model(std::string model_path, std::shared_ptr<Material> const& material) : Drawable(material), model_path(std::move(model_path))
 {
     draw_type = GL_TRIANGLES;
     meshes.reserve(1);
     Model::prepare();
 }
 
-Model::Model(std::shared_ptr<MaterialInstance> const& material_instance) : Drawable(material_instance)
+Model::Model(std::shared_ptr<Material> const& material) : Drawable(material)
 {
 }
 
@@ -38,12 +38,12 @@ void Model::draw_instanced(int32_t const size)
 
 void Model::prepare()
 {
-    if (material_instance->is_gpu_instanced)
+    if (material->is_gpu_instanced)
     {
-        if (material_instance->first_drawable != nullptr)
+        if (material->first_drawable != nullptr)
             return;
 
-        material_instance->first_drawable = std::dynamic_pointer_cast<Drawable>(shared_from_this());
+        material->first_drawable = std::dynamic_pointer_cast<Drawable>(shared_from_this());
     }
 
     load_model(model_path);
@@ -137,7 +137,7 @@ Mesh Model::proccess_mesh(aiMesh const* mesh, aiScene const* scene)
     std::vector<Texture> specular_maps = load_material_textures(assimp_material, aiTextureType_SPECULAR, "texture_specular");
     textures.insert(textures.end(), specular_maps.begin(), specular_maps.end());
 
-    return Mesh::create(vertices, indices, textures, draw_type, material_instance);
+    return Mesh::create(vertices, indices, textures, draw_type, material);
 }
 
 std::vector<Texture> Model::load_material_textures(aiMaterial const* material, aiTextureType const type, std::string const& type_name)

@@ -7,7 +7,7 @@
 
 #include "Globals.h"
 
-Skybox::Skybox(std::shared_ptr<MaterialInstance> const& material_instance, std::vector<std::string> face_paths) : Drawable(material_instance, 9999), face_paths(std::move(face_paths))
+Skybox::Skybox(std::shared_ptr<Material> const& material, std::vector<std::string> face_paths) : Drawable(material, 9999), face_paths(std::move(face_paths))
 {
     load_textures();
     create_cube();
@@ -26,7 +26,7 @@ void Skybox::draw() const
     glBindVertexArray(VAO);
 
     glActiveTexture(GL_TEXTURE0);
-    material_instance->material->shader->set_int("skybox", 0);
+    material->shader->set_int("skybox", 0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id);
 
     // Draw mesh

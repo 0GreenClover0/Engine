@@ -112,12 +112,11 @@ int main(int, char**)
     spot_light->transform->set_euler_angles(glm::vec3(0.0f, 0.0f, -10.866f));
 
     auto shader2 = Shader::create("./res/shaders/standard_instanced.vert", "./res/shaders/standard.frag");
-    auto cube_material = std::make_shared<Material>(shader2);
-    auto const cube_material_instance = std::make_shared<MaterialInstance>(cube_material, true);
+    auto const cube_material = std::make_shared<Material>(shader2, true);
 
     for (int32_t i = 0; i < 50000; ++i)
     {
-        auto const house = CommonEntities::create_cube("./res/textures/container.png", "./res/textures/container_specular.png", cube_material_instance);
+        auto const house = CommonEntities::create_cube("./res/textures/container.png", "./res/textures/container_specular.png", cube_material);
         house->transform->set_local_position(glm::vec3(glm::linearRand(-100.0f, 100.0f), glm::linearRand(-100.0f, 100.0f), glm::linearRand(-100.0f, 100.0f)));
     }
 

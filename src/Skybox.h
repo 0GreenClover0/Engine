@@ -9,7 +9,7 @@
 class Skybox final : public Drawable
 {
 public:
-    Skybox(std::shared_ptr<MaterialInstance> const& material_instance, std::vector<std::string> face_paths);
+    Skybox(std::shared_ptr<Material> const& material, std::vector<std::string> face_paths);
 
     virtual void draw() const override;
 private:

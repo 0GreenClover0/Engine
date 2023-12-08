@@ -51,7 +51,7 @@ private:
 
     std::vector<std::shared_ptr<Light>> lights = {};
     std::unordered_map<std::shared_ptr<Shader>, std::vector<std::weak_ptr<Drawable>>> shaders_map = {};
-    std::unordered_map<std::shared_ptr<MaterialInstance>, std::vector<std::weak_ptr<Drawable>>> instanced_drawables = {};
+    std::unordered_map<std::shared_ptr<Material>, std::vector<std::weak_ptr<Drawable>>> instanced_drawables = {};
 
     std::map<int32_t, std::weak_ptr<Drawable>> custom_render_order_drawables = {};
 

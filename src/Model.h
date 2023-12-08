@@ -19,8 +19,8 @@ class Model : public Drawable
 {
 public:
     Model() = delete;
-    explicit Model(std::string model_path, std::shared_ptr<MaterialInstance> const& material_instance);
-    explicit Model(std::shared_ptr<MaterialInstance> const& material_instance);
+    explicit Model(std::string model_path, std::shared_ptr<Material> const& material);
+    explicit Model(std::shared_ptr<Material> const& material);
 
     static std::uint32_t load_texture(char const* path, bool gamma = false);
     virtual void draw() const override;

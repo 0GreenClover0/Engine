@@ -26,14 +26,14 @@ void SceneSerializer::serialize_shader(YAML::Emitter& out, std::shared_ptr<Shade
     out << YAML::EndMap; // Shader
 }
 
-void SceneSerializer::serialize_material_instance(YAML::Emitter& out, std::shared_ptr<MaterialInstance> const& material_instance)
+void SceneSerializer::serialize_material_instance(YAML::Emitter& out, std::shared_ptr<Material> const& material)
 {
     // TODO: We should not serialize each individual shader and material instances and materials, but rather batch same ones together
     out << YAML::Key << "Material";
     out << YAML::BeginMap; // Material
 
-    serialize_shader(out, material_instance->material->shader);
-    out << YAML::Key << "Color" << YAML::Value << material_instance->color;
+    serialize_shader(out, material->shader);
+    out << YAML::Key << "Color" << YAML::Value << material->color;
 
     out << YAML::EndMap; // Material
 }
@@ -50,13 +50,12 @@ std::shared_ptr<Shader> SceneSerializer::deserialize_shader(YAML::Node const& no
     return Shader::create(vertex_path, fragment_path, geometry_path);
 }
 
-std::shared_ptr<MaterialInstance> SceneSerializer::deserialize_material_instance(YAML::Node const& node) const
+std::shared_ptr<Material> SceneSerializer::deserialize_material_instance(YAML::Node const& node) const
 {
     auto const shader = deserialize_shader(node["Shader"]);
     auto material = std::make_shared<Material>(shader);
-    auto const material_instance = std::make_shared<MaterialInstance>(material);
-    material_instance->color = node["Color"].as<glm::vec4>();
-    return material_instance;
+    material->color = node["Color"].as<glm::vec4>();
+    return material;
 }
 
 void SceneSerializer::serialize_entity(YAML::Emitter& out, std::shared_ptr<Entity> const& entity)
@@ -123,7 +122,7 @@ void SceneSerializer::serialize_entity(YAML::Emitter& out, std::shared_ptr<Entit
 
             out << YAML::Key << "ModelPath" << YAML::Value << model->model_path;
 
-            serialize_material_instance(out, model->material_instance);
+            serialize_material_instance(out, model->material);
 
             out << YAML::EndMap; // ModelComponent
         }

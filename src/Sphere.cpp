@@ -8,8 +8,8 @@
 #include "Model.h"
 #include "Vertex.h"
 
-Sphere::Sphere(float const radius, uint32_t const sectors, uint32_t const stacks, std::string texture_path, std::shared_ptr<MaterialInstance> const& material_instance)
-    : Model(material_instance), sector_count(sectors), stack_count(stacks), texture_path(std::move(texture_path)), radius(radius)
+Sphere::Sphere(float const radius, uint32_t const sectors, uint32_t const stacks, std::string texture_path, std::shared_ptr<Material> const& material)
+    : Model(material), sector_count(sectors), stack_count(stacks), texture_path(std::move(texture_path)), radius(radius)
 {
     draw_type = GL_TRIANGLE_STRIP;
     Sphere::prepare();
@@ -55,11 +55,11 @@ Mesh Sphere::create_sphere() const
         std::vector<Texture> diffuse_maps = { load_texture() };
         textures.insert(textures.end(), diffuse_maps.begin(), diffuse_maps.end());
 
-        material_instance->radius_multiplier = radius;
-        material_instance->sector_count = sector_count;
-        material_instance->stack_count = stack_count;
+        material->radius_multiplier = radius;
+        material->sector_count = sector_count;
+        material->stack_count = stack_count;
 
-        return Mesh::create(vertices, indices, textures, draw_type, material_instance);
+        return Mesh::create(vertices, indices, textures, draw_type, material);
     }
 
     for (uint32_t x = 0; x <= stack_count; ++x)
@@ -107,7 +107,7 @@ Mesh Sphere::create_sphere() const
     std::vector<Texture> diffuse_maps = { load_texture() };
     textures.insert(textures.end(), diffuse_maps.begin(), diffuse_maps.end());
 
-    return Mesh::create(vertices, indices, textures, draw_type, material_instance);
+    return Mesh::create(vertices, indices, textures, draw_type, material);
 }
 
 Texture Sphere::load_texture() const
