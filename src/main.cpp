@@ -81,7 +81,7 @@ int main(int, char**)
     if (setup_glad() != 0)
         return 1;
 
-    srand(time(nullptr));
+    srand(static_cast<unsigned int>(glfwGetTime()));
 
     setup_imgui(window->get_glfw_window());
 
