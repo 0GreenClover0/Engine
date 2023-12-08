@@ -13,11 +13,24 @@
 #include "Vertex.h"
 #include "imgui_impl/imgui_impl_opengl3_loader.h"
 
+std::shared_ptr<Model> Model::create(std::string model_path, std::shared_ptr<Material> const& material)
+{
+    auto model = std::make_shared<Model>(model_path, material);
+    model->prepare();
+
+    return model;
+}
+
+std::shared_ptr<Model> Model::create(std::shared_ptr<Material> const& material)
+{
+    auto model = std::make_shared<Model>(material);
+
+    return model;
+}
+
 Model::Model(std::string model_path, std::shared_ptr<Material> const& material) : Drawable(material), model_path(std::move(model_path))
 {
     draw_type = GL_TRIANGLES;
-    meshes.reserve(1);
-    Model::prepare();
 }
 
 Model::Model(std::shared_ptr<Material> const& material) : Drawable(material)
