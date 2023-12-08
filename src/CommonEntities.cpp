@@ -68,25 +68,25 @@ std::shared_ptr<Entity> create_spot_light(glm::vec3 const& diffuse, std::shared_
     return spot_light;
 }
 
-std::shared_ptr<Entity> create_cube(std::shared_ptr<Material> const& material)
+std::shared_ptr<Entity> create_cube(std::string const& name, std::shared_ptr<Material> const& material)
 {
-    auto cube = Entity::create("Cube");
+    auto cube = Entity::create(name);
     cube->add_component<Cube>(Cube::create(material));
 
     return cube;
 }
 
-std::shared_ptr<Entity> create_cube(std::string const& diffuse_texture_path, std::shared_ptr<Material> const& material)
+std::shared_ptr<Entity> create_cube(std::string const& name, std::string const& diffuse_texture_path, std::shared_ptr<Material> const& material)
 {
-    auto cube = Entity::create("Cube");
+    auto cube = Entity::create(name);
     cube->add_component<Cube>(Cube::create(diffuse_texture_path, material));
 
     return cube;
 }
 
-std::shared_ptr<Entity> create_cube(std::string const& diffuse_texture_path, std::string const& specular_texture_path, std::shared_ptr<Material> const& material)
+std::shared_ptr<Entity> create_cube(std::string const& name, std::string const& diffuse_texture_path, std::string const& specular_texture_path, std::shared_ptr<Material> const& material)
 {
-    auto cube = Entity::create("Cube");
+    auto cube = Entity::create(name);
     cube->add_component<Cube>(Cube::create(diffuse_texture_path, specular_texture_path, material));
 
     return cube;
