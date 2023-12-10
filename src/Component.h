@@ -15,4 +15,6 @@ public:
     virtual void update();
 
     std::shared_ptr<Entity> entity;
+
+    bool enabled = true;
 };
