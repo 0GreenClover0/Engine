@@ -96,34 +96,73 @@ int main(int, char**)
 
     camera = std::make_shared<Camera>();
     Camera::set_main_camera(camera);
-    camera->position = glm::vec3(0.0f, 5.0f, 10.0f);
+    camera->position = glm::vec3(0.0f, 0.0f, 10.0f);
     camera->pitch = -10.0;
     camera->update();
 
     auto const main_scene = std::make_shared<Scene>();
     MainScene::set_instance(main_scene);
 
-    auto const point_light = CommonEntities::create_point_light(glm::vec3(1.0f, 1.0f, 0.0f));
+    auto const root = Entity::create("Root");
 
-    auto const directional_light = CommonEntities::create_directional_light(glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(-0.2f, -1.0f, -0.3f));
+    auto const point_light = CommonEntities::create_point_light(glm::vec3(1.0f, 1.0f, 0.0f), root->transform);
+    auto const point_light_comp = point_light->get_component<PointLight>();
+    auto const point_light_material = point_light->get_component<Cube>()->material;
 
-    auto const spot_light = CommonEntities::create_spot_light(glm::vec3(0.0f, 0.2f, 1.0f));
-    spot_light->transform->set_local_position(glm::vec3(2.0f, 0.0f, 0.0f));
-    spot_light->transform->set_euler_angles(glm::vec3(0.0f, 0.0f, -10.866f));
+    auto const directional_light = CommonEntities::create_directional_light(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(-0.2f, -1.0f, 50.0f), root->transform);
+    directional_light->transform->set_local_position(glm::vec3(0.0f, 5.0f, 0.0f));
+    auto const directional_light_comp = directional_light->get_component<DirectionalLight>();
+    auto const directional_light_material = directional_light->get_component<Cube>()->material;
 
-    auto shader2 = Shader::create("./res/shaders/standard_instanced.vert", "./res/shaders/standard.frag");
-    auto const cube_material = std::make_shared<Material>(shader2, true);
+    auto const directional_arrow = Entity::create("DirectionalArrow");
+    directional_arrow->transform->set_parent(directional_light->transform);
+    directional_arrow->transform->set_local_position(glm::vec3(1.0f, 0.0f, 0.0f));
+    directional_arrow->add_component<Model>(Model::create("./res/models/arrow/scene.gltf", directional_light_material));
 
-    auto test_shader = Shader::create("./res/shaders/standard.vert", "./res/shaders/standard.frag");
-    auto const roof_material = std::make_shared<Material>(shader2, true);
+    auto const spot_light = CommonEntities::create_spot_light(glm::vec3(0.0f, 0.2f, 1.0f), root->transform);
+    auto const spot_light_comp = spot_light->get_component<SpotLight>();
+    auto const spot_light_material = spot_light->get_component<Cube>()->material;
+    spot_light->transform->set_local_position(glm::vec3(12.0f, 0.0f, 0.0f));
+    spot_light->transform->set_euler_angles(glm::vec3(-2.0f, 90.0f, -2.0f));
+
+    auto const spot_arrow = Entity::create("SpotArrow");
+    spot_arrow->transform->set_parent(spot_light->transform);
+    spot_arrow->transform->set_local_position(glm::vec3(0.0f, 0.0f, 0.0f));
+    spot_arrow->transform->set_euler_angles(glm::vec3(0.0f, 90.0f, 0.0f));
+    spot_arrow->add_component<Model>(Model::create("./res/models/arrow/scene.gltf", spot_light_material));
+
+    auto const spot_light2 = CommonEntities::create_spot_light(glm::vec3(1.0f, 0.0f, 0.0f), root->transform);
+    auto const spot_light2_comp = spot_light2->get_component<SpotLight>();
+    auto const spot_light2_material = spot_light2->get_component<Cube>()->material;
+    spot_light2->transform->set_local_position(glm::vec3(-13.0f, 0.0f, 0.0f));
+    spot_light2->transform->set_euler_angles(glm::vec3(2.0f, 0.0f, -2.0f));
+
+    auto const spot2_arrow = Entity::create("SpotArrow");
+    spot2_arrow->transform->set_parent(spot_light2->transform);
+    spot2_arrow->transform->set_local_position(glm::vec3(1.0f, 0.0f, 0.0f));
+    spot2_arrow->add_component<Model>(Model::create("./res/models/arrow/scene.gltf", spot_light2_material));
+
+    auto instanced_shader = Shader::create("./res/shaders/standard_instanced.vert", "./res/shaders/standard.frag");
+    auto standard_shader = Shader::create("./res/shaders/standard.vert", "./res/shaders/standard.frag");
+    auto const cube_material = std::make_shared<Material>(instanced_shader, true);
+    auto const roof_material = std::make_shared<Material>(instanced_shader, true);
+    auto const floor_material = std::make_shared<Material>(standard_shader);
+
+    auto const floor = Entity::create("Floor");
+    floor->transform->set_parent(root->transform);
+    floor->add_component<Cube>(Cube::create("./res/textures/stone.jpg", floor_material, true));
+    floor->transform->set_local_scale(glm::vec3(1000.0f, 0.1f, 1000.0f));
+    floor->transform->set_local_position(glm::vec3(0.0f, -1.0f, 0.0f));
 
     float house_x = -300.0f;
     float house_z = -300.0f;
     for (int32_t i = 0; i < 40000; ++i)
     {
         auto const house = CommonEntities::create_cube("House" + std::to_string(i), "./res/textures/container.png", "./res/textures/container_specular.png", cube_material);
+        house->transform->set_parent(root->transform);
         house->transform->set_local_position(glm::vec3(house_x, 0.0f, house_z));
-        house_x += 5.0f;
+        house->transform->set_local_scale(glm::vec3(2.0f, 2.0f, 2.0f));
+        house_x += 10.0f;
 
         auto const roof = Entity::create("Roof" + std::to_string(i));
         roof->add_component<Model>(Model::create("./res/models/pyramid3/scene.gltf", roof_material));
@@ -134,7 +173,7 @@ int main(int, char**)
         if (house_x >= 300.0f)
         {
             house_x = -300.0f;
-            house_z += 5.0f;
+            house_z += 10.0f;
         }
     }
 
@@ -147,7 +186,7 @@ int main(int, char**)
         "./res/textures/skybox/storforsen/posz.jpg",
         "./res/textures/skybox/storforsen/negz.jpg"
     };
-    auto const skybox = CommonEntities::create_skybox(skybox_texture_paths);
+    auto const skybox = CommonEntities::create_skybox(skybox_texture_paths, root->transform);
 
     // Call awake on all entities
     main_scene->awake();
@@ -166,13 +205,24 @@ int main(int, char**)
 
     Editor::Editor const editor(main_scene);
 
+    float directional_light_color[3] = { directional_light_comp->diffuse.x, directional_light_comp->diffuse.y, directional_light_comp->diffuse.z };
+    float spot_light_color[3] = { spot_light_comp->diffuse.x, spot_light_comp->diffuse.y, spot_light_comp->diffuse.z };
+    float spot_light2_color[3] = { spot_light2_comp->diffuse.x, spot_light2_comp->diffuse.y, spot_light2_comp->diffuse.z };
+    float point_light_color[3] = { point_light_comp->diffuse.x, point_light_comp->diffuse.y, point_light_comp->diffuse.z };
+
+    bool s = false;
     // Main loop
     while (!glfwWindowShouldClose(window->get_glfw_window()))
     {
-        point_light->transform->set_local_position(glm::vec3(glm::sin(glfwGetTime()) * 5.0f, 0.0f, glm::cos(glfwGetTime()) * 2.0f));
         double const current_frame = glfwGetTime();
         delta_time = current_frame - last_frame;
         last_frame = current_frame;
+
+        float z = directional_light->transform->get_euler_angles().z;
+        //directional_light->transform->set_euler_angles(glm::vec3(-0.2f, s ? 50.0f : -50.0f, -0.3f));
+        s = !s;
+        directional_light->transform->set_euler_angles(glm::vec3(-0.2f, directional_light->transform->get_euler_angles().y + delta_time * 10.0f, directional_light->transform->get_euler_angles().z + delta_time * 10.0f));
+        point_light->transform->set_local_position(glm::vec3(glm::sin(glfwGetTime()) * 5.0f, 0.0f, glm::cos(glfwGetTime()) * 2.0f));
 
         nb_frames++;
         if (current_frame - last_time >= 1.0 )
@@ -194,12 +244,30 @@ int main(int, char**)
 
         ImGui::Begin("Debug", &debug_open, window_flags);
         ImGui::Checkbox("Polygon mode", &polygon_mode);
+        ImGui::Checkbox("Enabled directional light", &directional_light_comp->enabled);
+        ImGui::Checkbox("Enabled point light", &point_light_comp->enabled);
+        ImGui::Checkbox("Enabled spot light 1", &spot_light_comp->enabled);
+        ImGui::Checkbox("Enabled spot light 2", &spot_light2_comp->enabled);
+        ImGui::ColorEdit3("Directional light color", directional_light_color);
+        ImGui::ColorEdit3("Point light color", point_light_color);
+        ImGui::ColorEdit3("Spot light 1 color", spot_light_color);
+        ImGui::ColorEdit3("Spot light 2 color", spot_light2_color);
         ImGui::Text("Application average %.3f ms/frame", frame_per_second);
 
         editor.draw_scene_save();
         ImGui::End();
 
         editor.draw_scene_hierarchy();
+
+        directional_light_comp->diffuse = glm::vec3(directional_light_color[0], directional_light_color[1], directional_light_color[2]);
+        point_light_comp->diffuse = glm::vec3(point_light_color[0], point_light_color[1], point_light_color[2]);
+        spot_light_comp->diffuse = glm::vec3(spot_light_color[0], spot_light_color[1], spot_light_color[2]);
+        spot_light2_comp->diffuse = glm::vec3(spot_light2_color[0], spot_light2_color[1], spot_light2_color[2]);
+
+        directional_light_material->color = glm::vec4(directional_light_color[0], directional_light_color[1], directional_light_color[2], 1.0f);
+        point_light_material->color = glm::vec4(point_light_color[0], point_light_color[1], point_light_color[2], 1.0f);
+        spot_light_material->color = glm::vec4(spot_light_color[0], spot_light_color[1], spot_light_color[2], 1.0f);
+        spot_light2_material->color = glm::vec4(spot_light2_color[0], spot_light2_color[1], spot_light2_color[2], 1.0f);
 
         if (polygon_mode)
         {
@@ -289,7 +357,7 @@ std::shared_ptr<Window> setup_glfw()
     //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); // Capture mouse
 
     // Callbacks
-    //glfwSetCursorPosCallback(window, mouse_callback);
+    glfwSetCursorPosCallback(window->get_glfw_window(), mouse_callback);
     glfwSetWindowFocusCallback(window->get_glfw_window(), focus_callback);
 
     return window;
