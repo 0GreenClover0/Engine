@@ -2,26 +2,29 @@
 
 #include "Globals.h"
 
-std::shared_ptr<Cube> Cube::create(std::shared_ptr<Material> const& material)
+std::shared_ptr<Cube> Cube::create(std::shared_ptr<Material> const& material, bool big_cube)
 {
     auto cube = std::make_shared<Cube>(material);
+    cube->big_cube = big_cube;
     cube->prepare();
 
     return cube;
 }
 
-std::shared_ptr<Cube> Cube::create(std::string const& diffuse_texture_path, std::shared_ptr<Material> const& material)
+std::shared_ptr<Cube> Cube::create(std::string const& diffuse_texture_path, std::shared_ptr<Material> const& material, bool big_cube)
 {
     auto cube = std::make_shared<Cube>(diffuse_texture_path, material);
+    cube->big_cube = big_cube;
     cube->prepare();
 
     return cube;
 }
 
 std::shared_ptr<Cube> Cube::create(std::string const& diffuse_texture_path, std::string const& specular_texture_path,
-                                   std::shared_ptr<Material> const& material)
+                                   std::shared_ptr<Material> const& material, bool big_cube)
 {
     auto cube = std::make_shared<Cube>(diffuse_texture_path, specular_texture_path, material);
+    cube->big_cube = big_cube;
     cube->prepare();
 
     return cube;
@@ -71,8 +74,8 @@ void Cube::reprepare()
 
 Mesh Cube::create_cube() const
 {
-    std::vector<Vertex> const vertices = InternalMeshData::cube.vertices;
-    std::vector<uint32_t> const indices = InternalMeshData::cube.indices;
+    std::vector<Vertex> const vertices = big_cube ? InternalMeshData::big_cube.vertices : InternalMeshData::cube.vertices;
+    std::vector<uint32_t> const indices = big_cube ? InternalMeshData::big_cube.indices : InternalMeshData::cube.indices;
     std::vector<Texture> textures;
 
     std::vector<Texture> diffuse_maps = {};
