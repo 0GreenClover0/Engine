@@ -22,7 +22,7 @@ public:
     // TODO: Expose properties directly from the shader, somehow.
     glm::vec4 color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
     float specular = 1.0f;
-    float shininess = 32.0f;
+    float shininess = 128.0f;
 
     uint32_t sector_count = 5;
     uint32_t stack_count = 5;
