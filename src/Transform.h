@@ -23,6 +23,10 @@ public:
     void set_euler_angles(glm::vec3 const&);
     [[nodiscard]] glm::vec3 get_euler_angles() const;
 
+    [[nodiscard]] glm::vec3 get_euler_angles_restricted() const;
+
+    [[nodiscard]] glm::vec3 get_forward() const;
+
     [[nodiscard]] glm::mat4 const& get_model_matrix();
     [[nodiscard]] bool is_local_dirty() const;
     [[nodiscard]] bool is_parent_dirty() const;

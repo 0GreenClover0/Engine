@@ -3,6 +3,7 @@
 #include <format>
 #include <iostream>
 #include <glad/glad.h>
+#include <glm/gtx/rotate_vector.hpp>
 
 #include "AK.h"
 #include "Camera.h"
@@ -188,6 +189,8 @@ void Renderer::render() const
         material->model_matrices.clear();
         material->model_matrices.reserve(material->drawables.size());
 
+        //glDispatchCompute(drawables.size(), 1, 1);
+
         for (int32_t i = 0; i < material->drawables.size(); ++i)
         {
             material->model_matrices.emplace_back(drawables[i].lock()->entity->transform->get_model_matrix());
@@ -212,9 +215,13 @@ void Renderer::set_shader_uniforms(std::shared_ptr<Shader> const& shader, glm::m
 
     // TODO: Choose only the closest lights
 
+    int32_t enabled_light_count = 0;
     for (uint32_t i = 0; i < point_lights.size(); ++i)
     {
-        std::string light_element = std::format("pointLights[{}].", i);
+        if (!point_lights[i]->enabled)
+            continue;
+
+        std::string light_element = std::format("pointLights[{}].", enabled_light_count);
         shader->set_vec3(light_element + "position", point_lights[i]->entity->transform->get_local_position());
 
         shader->set_vec3(light_element + "ambient", point_lights[i]->ambient);
@@ -224,15 +231,21 @@ void Renderer::set_shader_uniforms(std::shared_ptr<Shader> const& shader, glm::m
         shader->set_float(light_element + "constant", point_lights[i]->constant);
         shader->set_float(light_element + "linear", point_lights[i]->linear);
         shader->set_float(light_element + "quadratic", point_lights[i]->quadratic);
+
+        enabled_light_count++;
     }
 
-    shader->set_int("pointLightCount", point_lights.size() > max_point_lights ? max_point_lights : point_lights.size());
+    shader->set_int("pointLightCount", enabled_light_count > max_point_lights ? max_point_lights : enabled_light_count);
 
+    enabled_light_count = 0;
     for (uint32_t i = 0; i < spot_lights.size(); ++i)
     {
-        std::string light_element = std::format("spotLights[{}].", i);
+        if (!spot_lights[i]->enabled)
+            continue;
+
+        std::string light_element = std::format("spotLights[{}].", enabled_light_count);
         shader->set_vec3(light_element + "position", spot_lights[i]->entity->transform->get_local_position());
-        shader->set_vec3(light_element + "direction", spot_lights[i]->entity->transform->get_euler_angles());
+        shader->set_vec3(light_element + "direction", spot_lights[i]->entity->transform->get_forward());
 
         shader->set_vec3(light_element + "ambient", spot_lights[i]->ambient);
         shader->set_vec3(light_element + "diffuse", spot_lights[i]->diffuse);
@@ -244,14 +257,16 @@ void Renderer::set_shader_uniforms(std::shared_ptr<Shader> const& shader, glm::m
         shader->set_float(light_element + "constant", spot_lights[i]->constant);
         shader->set_float(light_element + "linear", spot_lights[i]->linear);
         shader->set_float(light_element + "quadratic", spot_lights[i]->quadratic);
+
+        enabled_light_count++;
     }
 
-    shader->set_int("spotLightCount", spot_lights.size() > max_spot_lights ? max_spot_lights : spot_lights.size());
+    shader->set_int("spotLightCount", enabled_light_count > max_spot_lights ? max_spot_lights : enabled_light_count);
 
-    bool const directional_light_on = directional_light != nullptr;
+    bool const directional_light_on = directional_light != nullptr && directional_light->enabled;
     if (directional_light_on)
     {
-        shader->set_vec3("directionalLight.direction", directional_light->entity->transform->get_euler_angles());
+        shader->set_vec3("directionalLight.direction", directional_light->entity->transform->get_forward());
 
         shader->set_vec3("directionalLight.ambient", directional_light->ambient);
         shader->set_vec3("directionalLight.diffuse", directional_light->diffuse);

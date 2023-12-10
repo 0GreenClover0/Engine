@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <glm/ext/matrix_transform.hpp>
+#include <glm/gtx/rotate_vector.hpp>
 
 #include "AK.h"
 
@@ -82,6 +83,21 @@ glm::vec3 Transform::get_local_scale() const
 glm::vec3 Transform::get_euler_angles() const
 {
     return m_euler_angles;
+}
+
+glm::vec3 Transform::get_euler_angles_restricted() const
+{
+    return { glm::mod(glm::mod(m_euler_angles.x, 360.0f) + 360.0f, 360.0f), glm::mod(glm::mod(m_euler_angles.y, 360.0f) + 360.0f, 360.0f), glm::mod(glm::mod(m_euler_angles.z, 360.0f) + 360.0f, 360.0f) };
+}
+
+glm::vec3 Transform::get_forward() const
+{
+    auto direction = glm::vec3(0.0f, 0.0f, -1.0f);
+    auto const euler_angles = get_euler_angles();
+    direction = glm::rotateX(direction, glm::radians(euler_angles.x));
+    direction = glm::rotateY(direction, glm::radians(euler_angles.y));
+    direction = glm::rotateZ(direction, glm::radians(euler_angles.z));
+    return direction;
 }
 
 void Transform::compute_local_model_matrix()
