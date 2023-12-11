@@ -12,6 +12,15 @@
 
 #include "Renderer.h"
 
+std::shared_ptr<Shader> Shader::create(std::string compute_path)
+{
+    auto shader = std::shared_ptr<Shader>(new Shader(std::move(compute_path)));
+
+    // Since this is a compute shader we don't need to register it, as we only use registered shaders for drawables
+
+    return shader;
+}
+
 std::shared_ptr<Shader> Shader::create(std::string vertex_path, std::string fragment_path)
 {
     auto shader = std::shared_ptr<Shader>(new Shader(std::move(vertex_path), std::move(fragment_path)));
@@ -29,6 +38,34 @@ std::shared_ptr<Shader> Shader::create(std::string vertex_path, std::string frag
     Renderer::get_instance()->register_shader(shader);
 
     return shader;
+}
+
+Shader::Shader(std::string compute_path) : compute_path(std::move(compute_path))
+{
+    char const* compute_path_c_str = this->compute_path.c_str();
+
+    program_id = glCreateProgram();
+
+    int32_t const compute_shader_id = attach(compute_path_c_str, GL_COMPUTE_SHADER);
+
+    if (compute_shader_id == -1)
+        return;
+
+    glLinkProgram(program_id);
+
+    int32_t success = 0;
+    int32_t constexpr log_size = 512;
+    char info_log[log_size] = {};
+
+    glGetProgramiv(program_id, GL_LINK_STATUS, &success);
+    if (!success)
+    {
+        glGetProgramInfoLog(program_id, log_size, nullptr, info_log);
+        std::cout << "Error. OpenGL program linking failed" << std::endl << info_log << std::endl;
+        return;
+    }
+
+    glDeleteShader(compute_shader_id);
 }
 
 Shader::Shader(std::string vertex_path, std::string fragment_path) : vertex_path(std::move(vertex_path)), fragment_path(std::move(fragment_path))

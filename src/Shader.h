@@ -9,6 +9,7 @@ class Shader
 public:
     unsigned int program_id = {};
 
+    static std::shared_ptr<Shader> create(std::string compute_path);
     static std::shared_ptr<Shader> create(std::string vertex_path, std::string fragment_path);
     static std::shared_ptr<Shader> create(std::string vertex_path, std::string fragment_path, std::string geometry_path);
 
@@ -23,11 +24,13 @@ public:
     void set_mat4(std::string const& name, glm::mat4 value) const;
 
 private:
+    Shader(std::string compute_path);
     Shader(std::string vertex_path, std::string fragment_path);
     Shader(std::string vertex_path, std::string fragment_path, std::string geometry_path);
 
     int32_t attach(char const* path, int type) const;
 
+    std::string compute_path = {};
     std::string vertex_path = {};
     std::string fragment_path = {};
     std::string geometry_path = {};
