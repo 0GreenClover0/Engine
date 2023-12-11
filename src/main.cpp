@@ -15,6 +15,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/random.hpp>
+#include <glm/gtx/string_cast.hpp>
 
 #include "Camera.h"
 #include "CommonEntities.h"
@@ -116,7 +117,7 @@ int main(int, char**)
 
     auto const directional_arrow = Entity::create("DirectionalArrow");
     directional_arrow->transform->set_parent(directional_light->transform);
-    directional_arrow->transform->set_local_position(glm::vec3(1.0f, 0.0f, 0.0f));
+    directional_arrow->transform->set_euler_angles(glm::vec3(0.0f, 90.0f, 0.0f));
     directional_arrow->add_component<Model>(Model::create("./res/models/arrow/scene.gltf", directional_light_material));
 
     auto const spot_light = CommonEntities::create_spot_light(glm::vec3(0.0f, 0.2f, 1.0f), root->transform);
@@ -127,7 +128,6 @@ int main(int, char**)
 
     auto const spot_arrow = Entity::create("SpotArrow");
     spot_arrow->transform->set_parent(spot_light->transform);
-    spot_arrow->transform->set_local_position(glm::vec3(0.0f, 0.0f, 0.0f));
     spot_arrow->transform->set_euler_angles(glm::vec3(0.0f, 90.0f, 0.0f));
     spot_arrow->add_component<Model>(Model::create("./res/models/arrow/scene.gltf", spot_light_material));
 
@@ -139,7 +139,7 @@ int main(int, char**)
 
     auto const spot2_arrow = Entity::create("SpotArrow");
     spot2_arrow->transform->set_parent(spot_light2->transform);
-    spot2_arrow->transform->set_local_position(glm::vec3(1.0f, 0.0f, 0.0f));
+    spot2_arrow->transform->set_euler_angles(glm::vec3(0.0f, 90.0f, 0.0f));
     spot2_arrow->add_component<Model>(Model::create("./res/models/arrow/scene.gltf", spot_light2_material));
 
     auto instanced_shader = Shader::create("./res/shaders/standard_instanced.vert", "./res/shaders/standard.frag");
@@ -203,14 +203,13 @@ int main(int, char**)
     double frame_per_second = 0.0;
     double last_time = glfwGetTime();
 
-    Editor::Editor const editor(main_scene);
+    Editor::Editor editor(main_scene);
 
     float directional_light_color[3] = { directional_light_comp->diffuse.x, directional_light_comp->diffuse.y, directional_light_comp->diffuse.z };
     float spot_light_color[3] = { spot_light_comp->diffuse.x, spot_light_comp->diffuse.y, spot_light_comp->diffuse.z };
     float spot_light2_color[3] = { spot_light2_comp->diffuse.x, spot_light2_comp->diffuse.y, spot_light2_comp->diffuse.z };
     float point_light_color[3] = { point_light_comp->diffuse.x, point_light_comp->diffuse.y, point_light_comp->diffuse.z };
 
-    bool s = false;
     // Main loop
     while (!glfwWindowShouldClose(window->get_glfw_window()))
     {
@@ -219,9 +218,7 @@ int main(int, char**)
         last_frame = current_frame;
 
         float z = directional_light->transform->get_euler_angles().z;
-        //directional_light->transform->set_euler_angles(glm::vec3(-0.2f, s ? 50.0f : -50.0f, -0.3f));
-        s = !s;
-        directional_light->transform->set_euler_angles(glm::vec3(-0.2f, directional_light->transform->get_euler_angles().y + delta_time * 10.0f, directional_light->transform->get_euler_angles().z + delta_time * 10.0f));
+        directional_light->transform->set_euler_angles(glm::vec3(directional_light->transform->get_euler_angles().x + delta_time * 10.0f, directional_light->transform->get_euler_angles().y, directional_light->transform->get_euler_angles().z));
         point_light->transform->set_local_position(glm::vec3(glm::sin(glfwGetTime()) * 5.0f, 0.0f, glm::cos(glfwGetTime()) * 2.0f));
 
         nb_frames++;
@@ -244,30 +241,13 @@ int main(int, char**)
 
         ImGui::Begin("Debug", &debug_open, window_flags);
         ImGui::Checkbox("Polygon mode", &polygon_mode);
-        ImGui::Checkbox("Enabled directional light", &directional_light_comp->enabled);
-        ImGui::Checkbox("Enabled point light", &point_light_comp->enabled);
-        ImGui::Checkbox("Enabled spot light 1", &spot_light_comp->enabled);
-        ImGui::Checkbox("Enabled spot light 2", &spot_light2_comp->enabled);
-        ImGui::ColorEdit3("Directional light color", directional_light_color);
-        ImGui::ColorEdit3("Point light color", point_light_color);
-        ImGui::ColorEdit3("Spot light 1 color", spot_light_color);
-        ImGui::ColorEdit3("Spot light 2 color", spot_light2_color);
         ImGui::Text("Application average %.3f ms/frame", frame_per_second);
 
         editor.draw_scene_save();
         ImGui::End();
 
         editor.draw_scene_hierarchy();
-
-        directional_light_comp->diffuse = glm::vec3(directional_light_color[0], directional_light_color[1], directional_light_color[2]);
-        point_light_comp->diffuse = glm::vec3(point_light_color[0], point_light_color[1], point_light_color[2]);
-        spot_light_comp->diffuse = glm::vec3(spot_light_color[0], spot_light_color[1], spot_light_color[2]);
-        spot_light2_comp->diffuse = glm::vec3(spot_light2_color[0], spot_light2_color[1], spot_light2_color[2]);
-
-        directional_light_material->color = glm::vec4(directional_light_color[0], directional_light_color[1], directional_light_color[2], 1.0f);
-        point_light_material->color = glm::vec4(point_light_color[0], point_light_color[1], point_light_color[2], 1.0f);
-        spot_light_material->color = glm::vec4(spot_light_color[0], spot_light_color[1], spot_light_color[2], 1.0f);
-        spot_light2_material->color = glm::vec4(spot_light2_color[0], spot_light2_color[1], spot_light2_color[2], 1.0f);
+        editor.draw_inspector();
 
         if (polygon_mode)
         {
