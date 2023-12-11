@@ -10,6 +10,7 @@ public:
     static std::shared_ptr<Light> create();
     Light() = default;
 
+    void draw_editor() override;
     std::string get_name() const override;
 
     glm::vec3 ambient = glm::vec3(0.2f, 0.2f, 0.2f);

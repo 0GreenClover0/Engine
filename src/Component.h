@@ -16,6 +16,8 @@ public:
     virtual void update();
 
     virtual std::string get_name() const;
+    virtual void draw_editor();
+
     std::shared_ptr<Entity> entity;
 
     bool enabled = true;

@@ -9,6 +9,11 @@ std::shared_ptr<PointLight> PointLight::create()
     return point_light;
 }
 
+void PointLight::draw_editor()
+{
+    Light::draw_editor();
+}
+
 std::string PointLight::get_name() const
 {
     std::string const name = typeid(decltype(*this)).name();

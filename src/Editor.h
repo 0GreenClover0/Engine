@@ -13,14 +13,16 @@ public:
     explicit Editor(std::shared_ptr<Scene> const& scene) : open_scene(scene) { }
 
     void set_scene(std::shared_ptr<Scene> const& scene);
-    void draw_scene_hierarchy() const;
+    void draw_inspector() const;
+    void draw_scene_hierarchy();
     void draw_scene_save() const;
 
 private:
-    void draw_entity_recursively(std::shared_ptr<Transform> const& transform) const;
+    void draw_entity_recursively(std::shared_ptr<Transform> const& transform);
     void save_scene() const;
     bool load_scene() const;
 
+    std::weak_ptr<Entity> selected_entity;
     std::shared_ptr<Scene> open_scene;
 };
 

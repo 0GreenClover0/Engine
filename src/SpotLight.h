@@ -10,6 +10,7 @@ public:
     static std::shared_ptr<SpotLight> create();
     SpotLight() : Light() { }
 
+    void draw_editor() override;
     std::string get_name() const override;
 
     // Default values for an around 50m distance of cover
