@@ -31,18 +31,36 @@ void Transform::compute_model_matrix(glm::mat4 const& parent_global_model_matrix
 
 void Transform::set_local_position(glm::vec3 const& position)
 {
+    auto const is_position_modified = glm::epsilonNotEqual(position, m_local_position, 0.0001f); 
+    if (!is_position_modified.x && !is_position_modified.y && !is_position_modified.z)
+    {
+        return;
+    }
+
     m_local_position = position;
     m_local_dirty = true;
 }
 
 void Transform::set_local_scale(glm::vec3 const& scale)
 {
+    auto const is_scale_modified = glm::epsilonNotEqual(scale, m_local_scale, 0.0001f); 
+    if (!is_scale_modified.x && !is_scale_modified.y && !is_scale_modified.z)
+    {
+        return;
+    }
+
     m_local_scale = scale;
     m_local_dirty = true;
 }
 
 void Transform::set_euler_angles(glm::vec3 const& euler_angles)
 {
+    auto const is_rotation_modified = glm::epsilonNotEqual(euler_angles, m_euler_angles, 0.0001f); 
+    if (!is_rotation_modified.x && !is_rotation_modified.y && !is_rotation_modified.z)
+    {
+        return;
+    }
+
     this->m_euler_angles = euler_angles;
     m_local_dirty = true;
 }
