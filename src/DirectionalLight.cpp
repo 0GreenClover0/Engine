@@ -8,3 +8,9 @@ std::shared_ptr<DirectionalLight> DirectionalLight::create()
     Renderer::get_instance()->register_light(directional_light);
     return directional_light;
 }
+
+std::string DirectionalLight::get_name() const
+{
+    std::string const name = typeid(decltype(*this)).name();
+    return name.substr(6);
+}

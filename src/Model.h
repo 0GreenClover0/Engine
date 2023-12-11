@@ -25,6 +25,8 @@ public:
     explicit Model(std::string model_path, std::shared_ptr<Material> const& material);
     explicit Model(std::shared_ptr<Material> const& material);
 
+    std::string get_name() const override;
+
     static std::uint32_t load_texture(char const* path, bool gamma = false);
     virtual void draw() const override;
 

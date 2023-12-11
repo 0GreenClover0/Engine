@@ -8,3 +8,9 @@ std::shared_ptr<SpotLight> SpotLight::create()
     Renderer::get_instance()->register_light(spot_light);
     return spot_light;
 }
+
+std::string SpotLight::get_name() const
+{
+    std::string const name = typeid(decltype(*this)).name();
+    return name.substr(6);
+}

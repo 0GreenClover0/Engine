@@ -13,6 +13,12 @@ Skybox::Skybox(std::shared_ptr<Material> const& material, std::vector<std::strin
     create_cube();
 }
 
+std::string Skybox::get_name() const
+{
+    std::string const name = typeid(decltype(*this)).name();
+    return name.substr(6);
+}
+
 void Skybox::draw() const
 {
     if (texture_id == 0)

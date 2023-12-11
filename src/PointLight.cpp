@@ -8,3 +8,9 @@ std::shared_ptr<PointLight> PointLight::create()
     Renderer::get_instance()->register_light(point_light);
     return point_light;
 }
+
+std::string PointLight::get_name() const
+{
+    std::string const name = typeid(decltype(*this)).name();
+    return name.substr(6);
+}

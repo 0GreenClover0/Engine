@@ -15,6 +15,12 @@ Sphere::Sphere(float const radius, uint32_t const sectors, uint32_t const stacks
     Sphere::prepare();
 }
 
+std::string Sphere::get_name() const
+{
+    std::string const name = typeid(decltype(*this)).name();
+    return name.substr(6);
+}
+
 void Sphere::prepare()
 {
     meshes.emplace_back(create_sphere());

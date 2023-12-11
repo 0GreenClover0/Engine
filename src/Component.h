@@ -1,5 +1,6 @@
 #pragma once
 #include <memory>
+#include <string>
 
 class Entity;
 
@@ -14,6 +15,7 @@ public:
     virtual void start();
     virtual void update();
 
+    virtual std::string get_name() const;
     std::shared_ptr<Entity> entity;
 
     bool enabled = true;

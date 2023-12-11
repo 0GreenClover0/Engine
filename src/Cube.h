@@ -13,6 +13,8 @@ public:
     explicit Cube(std::string diffuse_texture_path, std::shared_ptr<Material> const& material);
     explicit Cube(std::string diffuse_texture_path, std::string specular_texture_path, std::shared_ptr<Material> const& material);
 
+    std::string get_name() const override;
+
     virtual void prepare() override;
     virtual void reset() override;
     virtual void reprepare() override;

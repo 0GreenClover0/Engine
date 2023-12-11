@@ -15,3 +15,9 @@ void Component::start()
 void Component::update()
 {
 }
+
+std::string Component::get_name() const
+{
+    std::string const name = typeid(decltype(*this)).name();
+    return name.substr(6);
+}

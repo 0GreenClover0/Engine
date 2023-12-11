@@ -48,6 +48,12 @@ Cube::Cube(std::string diffuse_texture_path, std::string specular_texture_path, 
     draw_type = GL_TRIANGLES;
 }
 
+std::string Cube::get_name() const
+{
+    std::string const name = typeid(decltype(*this)).name();
+    return name.substr(6);
+}
+
 void Cube::prepare()
 {
     if (material->is_gpu_instanced)
