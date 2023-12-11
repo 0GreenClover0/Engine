@@ -205,11 +205,6 @@ int main(int, char**)
 
     Editor::Editor editor(main_scene);
 
-    float directional_light_color[3] = { directional_light_comp->diffuse.x, directional_light_comp->diffuse.y, directional_light_comp->diffuse.z };
-    float spot_light_color[3] = { spot_light_comp->diffuse.x, spot_light_comp->diffuse.y, spot_light_comp->diffuse.z };
-    float spot_light2_color[3] = { spot_light2_comp->diffuse.x, spot_light2_comp->diffuse.y, spot_light2_comp->diffuse.z };
-    float point_light_color[3] = { point_light_comp->diffuse.x, point_light_comp->diffuse.y, point_light_comp->diffuse.z };
-
     // Main loop
     while (!glfwWindowShouldClose(window->get_glfw_window()))
     {
