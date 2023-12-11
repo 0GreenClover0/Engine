@@ -26,12 +26,12 @@ void Renderer::initialize()
 {
     // TODO: GPU instancing on one material currently supports only the first mesh that was bound to the material.
     size_t max_size = 0;
-    for (auto const& [material, drawables] : instanced_drawables)
+    for (auto const& material : instanced_materials)
     {
-        material->model_matrices.reserve(drawables.size());
+        material->model_matrices.reserve(material->drawables.size());
 
-        if (max_size < drawables.size())
-            max_size = drawables.size();
+        if (max_size < material->drawables.size())
+            max_size = material->drawables.size();
     }
 
     glGenBuffers(1, &gpu_instancing_ssbo);
@@ -45,7 +45,7 @@ void Renderer::register_shader(std::shared_ptr<Shader> const& shader)
 {
     if (!shaders_map.contains(shader))
     {
-        shaders_map.insert(std::make_pair(shader, std::vector<std::weak_ptr<Drawable>> {}));
+        shaders_map.insert(std::make_pair(shader, std::vector<std::shared_ptr<Drawable>> {}));
     }
 }
 
@@ -54,34 +54,29 @@ void Renderer::unregister_shader(std::shared_ptr<Shader> const& shader)
     shaders_map.erase(shader);
 }
 
-void Renderer::register_drawable(std::weak_ptr<Drawable> const& drawable)
+void Renderer::register_drawable(std::shared_ptr<Drawable> const& drawable)
 {
-    auto const drawable_locked = drawable.lock();
-
-    if (drawable_locked->material->is_gpu_instanced)
+    if (drawable->material->is_gpu_instanced)
     {
-        drawable_locked->material->drawables.emplace_back(drawable_locked);
+        drawable->material->drawables.emplace_back(drawable);
     }
 
-    if (drawable_locked->render_order == 0 && !drawable_locked->material->is_gpu_instanced)
+    if (drawable->render_order == 0 && !drawable->material->is_gpu_instanced)
     {
         assert(shaders_map.contains(drawable.lock()->material->shader));
 
-        shaders_map[drawable.lock()->material->shader].emplace_back(drawable);
+        shaders_map[drawable->material->shader].emplace_back(drawable);
     }
-    else if (drawable_locked->render_order != 0)
+    else if (drawable->render_order != 0)
     {
-        custom_render_order_drawables.insert(std::make_pair(drawable_locked->render_order, drawable));
+        custom_render_order_drawables.insert(std::make_pair(drawable->render_order, drawable));
     }
-    else if (drawable_locked->material->is_gpu_instanced)
+    else if (drawable->material->is_gpu_instanced)
     {
-        if (auto const iterator = instanced_drawables.find(drawable_locked->material); iterator != instanced_drawables.end())
+        // TODO: Add create() function for materials and register them there.
+        if (auto const iterator = std::ranges::find(instanced_materials, drawable->material); iterator == instanced_materials.end())
         {
-            iterator->second.emplace_back(drawable);
-        }
-        else
-        {
-            instanced_drawables.insert(std::make_pair(drawable_locked->material, std::vector { drawable }));
+            instanced_materials.emplace_back(drawable->material);
         }
     }
 }
@@ -126,24 +121,19 @@ void Renderer::render() const
         
         for (auto const& drawable : drawables)
         {
-            // TODO: Remove null pointers
-            auto const drawable_locked = drawable.lock();
-            if (drawable_locked == nullptr)
-                continue;
-
             // Could be beneficial to sort drawables per entities as well
-            shader->set_mat4("PVM", projection_view * drawable_locked->entity->transform->get_model_matrix());
-            shader->set_mat4("model", drawable_locked->entity->transform->get_model_matrix());
+            shader->set_mat4("PVM", projection_view * drawable->entity->transform->get_model_matrix());
+            shader->set_mat4("model", drawable->entity->transform->get_model_matrix());
 
-            shader->set_vec3("material.color", glm::vec3(drawable_locked->material->color.x, drawable_locked->material->color.y, drawable_locked->material->color.z));
-            shader->set_float("material.specular", drawable_locked->material->specular);
-            shader->set_float("material.shininess", drawable_locked->material->shininess);
+            shader->set_vec3("material.color", glm::vec3(drawable->material->color.x, drawable->material->color.y, drawable->material->color.z));
+            shader->set_float("material.specular", drawable->material->specular);
+            shader->set_float("material.shininess", drawable->material->shininess);
 
-            shader->set_float("radiusMultiplier", drawable_locked->material->radius_multiplier);
-            shader->set_int("sector_count", drawable_locked->material->sector_count);
-            shader->set_int("stack_count", drawable_locked->material->stack_count);
+            shader->set_float("radiusMultiplier", drawable->material->radius_multiplier);
+            shader->set_int("sector_count", drawable->material->sector_count);
+            shader->set_int("stack_count", drawable->material->stack_count);
 
-            drawable_locked->draw();
+            drawable->draw();
         }
     }
 
@@ -173,7 +163,7 @@ void Renderer::render() const
         drawable_locked->draw();
     }
 
-    for (auto const& [material, drawables] : instanced_drawables)
+    for (auto const& material : instanced_materials)
     {
         auto const first_drawable = material->first_drawable;
         auto const shader = first_drawable->material->shader;
@@ -193,14 +183,14 @@ void Renderer::render() const
 
         for (int32_t i = 0; i < material->drawables.size(); ++i)
         {
-            material->model_matrices.emplace_back(drawables[i].lock()->entity->transform->get_model_matrix());
+            material->model_matrices.emplace_back(material->drawables[i]->entity->transform->get_model_matrix());
         }
 
         glBindBuffer(GL_SHADER_STORAGE_BUFFER, gpu_instancing_ssbo);
         glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, material->model_matrices.size() * sizeof(glm::mat4), material->model_matrices.data());
         glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
-        first_drawable->draw_instanced(drawables.size());
+        first_drawable->draw_instanced(material->drawables.size());
     }
 }
 
