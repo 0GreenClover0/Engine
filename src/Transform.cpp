@@ -15,16 +15,14 @@ void Transform::compute_model_matrix()
 {
     assert(AK::is_uninitialized(parent));
 
-    if (!m_local_dirty)
-        return;
+    assert(m_local_dirty);
 
     m_model_matrix = get_local_model_matrix();
 }
 
 void Transform::compute_model_matrix(glm::mat4 const& parent_global_model_matrix)
 {
-    if (!m_local_dirty && !m_parent_dirty)
-        return;
+    assert(m_local_dirty || m_parent_dirty);
 
     m_model_matrix = parent_global_model_matrix * get_local_model_matrix();
 }
@@ -131,7 +129,7 @@ void Transform::compute_local_model_matrix()
 
     for (auto&& child : children)
     {
-        child->m_parent_dirty = true;
+        child->m_parent_dirty = false;
     }
 }
 
@@ -160,11 +158,11 @@ void Transform::set_parent(std::shared_ptr<Transform> const& parent)
     }
 
     parent->add_child(shared_from_this());
-    m_parent_dirty = true;
+    m_local_dirty = true;
 }
 
 void Transform::set_parent(std::weak_ptr<Transform> const& parent)
 {
     parent.lock()->add_child(shared_from_this());
-    m_parent_dirty = true;
+    m_local_dirty = true;
 }
