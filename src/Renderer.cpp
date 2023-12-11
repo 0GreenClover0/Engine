@@ -137,32 +137,6 @@ void Renderer::render() const
         }
     }
 
-    for (auto const& [render_order, drawable] : custom_render_order_drawables)
-    {
-        auto const drawable_locked = drawable.lock();
-
-        if (drawable_locked == nullptr)
-            continue;
-
-        auto const shader = drawable_locked->material->shader;
-        shader->use();
-
-        set_shader_uniforms(drawable_locked->material->shader, projection_view, projection_view_no_translation);
-
-        shader->set_mat4("PVM", projection_view * drawable_locked->entity->transform->get_model_matrix());
-        shader->set_mat4("model", drawable_locked->entity->transform->get_model_matrix());
-
-        shader->set_vec3("material.color", glm::vec3(drawable_locked->material->color.x, drawable_locked->material->color.y, drawable_locked->material->color.z));
-        shader->set_float("material.specular", drawable_locked->material->specular);
-        shader->set_float("material.shininess", drawable_locked->material->shininess);
-
-        shader->set_float("radiusMultiplier", drawable_locked->material->radius_multiplier);
-        shader->set_int("sector_count", drawable_locked->material->sector_count);
-        shader->set_int("stack_count", drawable_locked->material->stack_count);
-
-        drawable_locked->draw();
-    }
-
     for (auto const& material : instanced_materials)
     {
         auto const first_drawable = material->first_drawable;
@@ -191,6 +165,32 @@ void Renderer::render() const
         glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
         first_drawable->draw_instanced(material->drawables.size());
+    }
+
+    for (auto const& [render_order, drawable] : custom_render_order_drawables)
+    {
+        auto const drawable_locked = drawable.lock();
+
+        if (drawable_locked == nullptr)
+            continue;
+
+        auto const shader = drawable_locked->material->shader;
+        shader->use();
+
+        set_shader_uniforms(drawable_locked->material->shader, projection_view, projection_view_no_translation);
+
+        shader->set_mat4("PVM", projection_view * drawable_locked->entity->transform->get_model_matrix());
+        shader->set_mat4("model", drawable_locked->entity->transform->get_model_matrix());
+
+        shader->set_vec3("material.color", glm::vec3(drawable_locked->material->color.x, drawable_locked->material->color.y, drawable_locked->material->color.z));
+        shader->set_float("material.specular", drawable_locked->material->specular);
+        shader->set_float("material.shininess", drawable_locked->material->shininess);
+
+        shader->set_float("radiusMultiplier", drawable_locked->material->radius_multiplier);
+        shader->set_int("sector_count", drawable_locked->material->sector_count);
+        shader->set_int("stack_count", drawable_locked->material->stack_count);
+
+        drawable_locked->draw();
     }
 }
 
