@@ -5,6 +5,7 @@
 #include <iostream>
 #include <glad/glad.h>
 
+#include "Bounds.h"
 #include "Drawable.h"
 #include "Texture.h"
 #include "Vertex.h"
@@ -25,9 +26,14 @@ public:
     void draw_instanced(int32_t const size) const;
     void unbind_textures() const;
 
+    void calculate_bounding_box();
+    void adjust_bounding_box(glm::mat4 const& model_matrix);
+
     std::vector<Vertex> vertices;
     std::vector<std::uint32_t> indices;
     std::vector<Texture> textures;
+
+    Bounds bounds = {};
 
     GLenum draw_type;
     std::shared_ptr<Material> material;

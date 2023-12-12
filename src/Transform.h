@@ -43,6 +43,8 @@ public:
     std::weak_ptr<Transform> parent = {};
     std::weak_ptr<Entity> entity = {};
 
+    bool needs_bounding_box_adjusting = true;
+
 protected:
     glm::vec3 m_local_position = { 0.0f, 0.0f, 0.0f };
     glm::vec3 m_euler_angles = { 0.0f, 0.0f, 0.0f };

@@ -139,6 +139,16 @@ void Renderer::render() const
 
     for (auto const& material : instanced_materials)
     {
+        // TODO: Adjust bounding boxes on GPU?
+        for (auto const& drawable : material->drawables)
+        {
+            if (drawable->entity->transform->needs_bounding_box_adjusting)
+            {
+                drawable->adjust_bounding_box();
+                drawable->entity->transform->needs_bounding_box_adjusting = false;
+            }
+        }
+
         auto const first_drawable = material->first_drawable;
         auto const shader = first_drawable->material->shader;
 

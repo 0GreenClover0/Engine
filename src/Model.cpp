@@ -8,6 +8,7 @@
 #include <stb_image.h>
 #include <glad/glad.h>
 
+#include "Entity.h"
 #include "Mesh.h"
 #include "Texture.h"
 #include "Vertex.h"
@@ -35,6 +36,26 @@ Model::Model(std::string model_path, std::shared_ptr<Material> const& material) 
 
 Model::Model(std::shared_ptr<Material> const& material) : Drawable(material)
 {
+}
+
+void Model::calculate_bounding_box()
+{
+    for (auto& mesh : meshes)
+        mesh.calculate_bounding_box();
+
+    // TODO: Merge bounding boxes together
+    if (!meshes.empty())
+        bounds = meshes[0].bounds;
+}
+
+void Model::adjust_bounding_box()
+{
+    // TODO: If we merge bounding boxes together, I think we can just adjust the whole model bounding box
+    for (auto& mesh : meshes)
+        mesh.adjust_bounding_box(entity->transform->get_model_matrix());
+
+    if (!meshes.empty())
+        bounds = meshes[0].bounds;
 }
 
 std::string Model::get_name() const

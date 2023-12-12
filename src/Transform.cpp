@@ -42,10 +42,12 @@ void Transform::set_local_position(glm::vec3 const& position)
         for (auto&& child : children)
         {
             child->m_parent_dirty = true;
+            child->needs_bounding_box_adjusting = true;
         }
     }
 
     m_local_dirty = true;
+    needs_bounding_box_adjusting = true;
 }
 
 void Transform::set_local_scale(glm::vec3 const& scale)
@@ -63,10 +65,12 @@ void Transform::set_local_scale(glm::vec3 const& scale)
         for (auto&& child : children)
         {
             child->m_parent_dirty = true;
+            child->needs_bounding_box_adjusting = true;
         }
     }
 
     m_local_dirty = true;
+    needs_bounding_box_adjusting = true;
 }
 
 void Transform::set_euler_angles(glm::vec3 const& euler_angles)
@@ -84,10 +88,12 @@ void Transform::set_euler_angles(glm::vec3 const& euler_angles)
         for (auto&& child : children)
         {
             child->m_parent_dirty = true;
+            child->needs_bounding_box_adjusting = true;
         }
     }
 
     m_local_dirty = true;
+    needs_bounding_box_adjusting = true;
 }
 
 glm::mat4 const& Transform::get_model_matrix()
@@ -186,10 +192,12 @@ void Transform::set_parent(std::shared_ptr<Transform> const& parent)
 
     parent->add_child(shared_from_this());
     m_local_dirty = true;
+    needs_bounding_box_adjusting = true;
 }
 
 void Transform::set_parent(std::weak_ptr<Transform> const& parent)
 {
     parent.lock()->add_child(shared_from_this());
     m_local_dirty = true;
+    needs_bounding_box_adjusting = true;
 }

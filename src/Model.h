@@ -36,6 +36,9 @@ public:
     virtual void reset();
     virtual void reprepare();
 
+    void calculate_bounding_box() override;
+    void adjust_bounding_box() override;
+
     // TODO: Move this inside the material
     glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
 
