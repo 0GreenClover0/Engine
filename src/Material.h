@@ -2,7 +2,6 @@
 
 #include <memory>
 #include <vector>
-#include <glad/glad.h>
 
 #include <glm/vec4.hpp>
 #include <glm/mat4x4.hpp>
