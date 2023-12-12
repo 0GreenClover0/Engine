@@ -15,7 +15,7 @@ void Transform::compute_model_matrix()
 {
     assert(AK::is_uninitialized(parent));
 
-    assert(m_local_dirty);
+    assert(m_local_dirty || m_parent_dirty);
 
     m_model_matrix = get_local_model_matrix();
 }
@@ -36,6 +36,15 @@ void Transform::set_local_position(glm::vec3 const& position)
     }
 
     m_local_position = position;
+
+    if (!m_local_dirty)
+    {
+        for (auto&& child : children)
+        {
+            child->m_parent_dirty = true;
+        }
+    }
+
     m_local_dirty = true;
 }
 
@@ -48,6 +57,15 @@ void Transform::set_local_scale(glm::vec3 const& scale)
     }
 
     m_local_scale = scale;
+
+    if (!m_local_dirty)
+    {
+        for (auto&& child : children)
+        {
+            child->m_parent_dirty = true;
+        }
+    }
+
     m_local_dirty = true;
 }
 
@@ -60,6 +78,15 @@ void Transform::set_euler_angles(glm::vec3 const& euler_angles)
     }
 
     this->m_euler_angles = euler_angles;
+
+    if (!m_local_dirty)
+    {
+        for (auto&& child : children)
+        {
+            child->m_parent_dirty = true;
+        }
+    }
+
     m_local_dirty = true;
 }
 

@@ -51,7 +51,7 @@ protected:
     glm::mat4 m_model_matrix = glm::mat4(1.0f);
     glm::mat4 m_local_model_matrix = glm::mat4(1.0f);
     bool m_local_dirty = true;
-    bool m_parent_dirty = true;
+    bool m_parent_dirty = false;
 
     [[nodiscard]] glm::mat4 get_local_model_matrix();
 
