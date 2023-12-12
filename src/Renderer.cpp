@@ -63,7 +63,7 @@ void Renderer::register_drawable(std::shared_ptr<Drawable> const& drawable)
 
     if (drawable->render_order == 0 && !drawable->material->is_gpu_instanced)
     {
-        assert(shaders_map.contains(drawable.lock()->material->shader));
+        assert(shaders_map.contains(drawable->material->shader));
 
         shaders_map[drawable->material->shader].emplace_back(drawable);
     }
