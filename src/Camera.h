@@ -4,6 +4,8 @@
 #include <glm/vec3.hpp>
 #include <glm/mat4x4.hpp>
 
+#include "Frustum.h"
+
 constexpr double default_yaw = -90.0;
 constexpr double default_pitch = 0.0;
 constexpr float default_speed = 2.5f;
@@ -30,19 +32,32 @@ public:
 
     glm::mat4 projection;
 
+    float near_plane;
+    float far_plane;
+
+    float width;
+    float height;
+
+    float fov;
+
     double yaw;
     double pitch;
 
     float speed;
     double sensitivity;
 
-    Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f),
-           double yaw = default_yaw, double pitch = default_pitch);
+    explicit Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 world_up = glm::vec3(0.0f, 1.0f, 0.0f),
+                    double yaw = default_yaw, double pitch = default_pitch);
     Camera(float x, float y, float z, float up_x, float up_y, float up_z, double yaw, double pitch);
 
-    glm::mat4 get_view_matrix() const;
+    void update_frustum();
+
+    [[nodiscard]] glm::mat4 get_view_matrix() const;
 
     void update();
+
+    Frustum frustum = {};
+
 private:
     void update_camera_vectors();
 

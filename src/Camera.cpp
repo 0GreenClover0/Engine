@@ -24,6 +24,53 @@ Camera::Camera(float x, float y, float z, float up_x, float up_y, float up_z, do
     this->update_camera_vectors();
 }
 
+void Camera::update_frustum()
+{
+    glm::mat4 world = projection * get_view_matrix();
+
+    auto const right_normal = glm::vec3(world[0][3] - world[0][0], world[1][3] - world[1][0], world[2][3] - world[2][0]);
+    float const right_length = glm::length(right_normal);
+    frustum.right_plane = Plane(
+        right_normal / right_length,
+        (world[3][3] - world[3][0]) / right_length
+    );
+
+    auto const left_normal = glm::vec3(world[0][3] + world[0][0], world[1][3] + world[1][0], world[2][3] + world[2][0]);
+    float const left_length = glm::length(left_normal);
+    frustum.left_plane = Plane(
+        left_normal / left_length,
+        (world[3][3] + world[3][0]) / left_length
+    );
+
+    auto const bottom_normal = glm::vec3(world[0][3] + world[0][1], world[1][3] + world[1][1], world[2][3] + world[2][1]);
+    auto const bottom_length = glm::length(bottom_normal);
+    frustum.bottom_plane = Plane(
+        bottom_normal / bottom_length,
+        (world[3][3] + world[3][1]) / bottom_length
+    );
+
+    auto const top_normal = glm::vec3(world[0][3] - world[0][1], world[1][3] - world[1][1], world[2][3] - world[2][1]);
+    auto const top_length = glm::length(top_normal);
+    frustum.top_plane = Plane(
+        top_normal / top_length,
+        (world[3][3] - world[3][1]) / top_length
+    );
+
+    auto const far_normal = glm::vec3(world[0][3] - world[0][2], world[1][3] - world[1][2], world[2][3] - world[2][2]);
+    auto const far_length = glm::length(far_normal);
+    frustum.far_plane = Plane(
+        far_normal / far_length,
+        (world[3][3] - world[3][2]) / far_length
+    );
+
+    auto const near_normal = glm::vec3(world[0][3] + world[0][2], world[1][3] + world[1][2], world[2][3] + world[2][2]);
+    auto const near_length = glm::length(near_normal);
+    frustum.near_plane = Plane(
+        near_normal / near_length,
+        (world[3][3] + world[3][2]) / near_length
+    );
+}
+
 glm::mat4 Camera::get_view_matrix() const
 {
     // TODO: Add dirty flags for all these parameters, and cache this matrix
@@ -45,4 +92,6 @@ void Camera::update_camera_vectors()
     this->front = glm::normalize(front);
     this->right = glm::normalize(glm::cross(this->front, this->world_up));
     this->up = glm::normalize(glm::cross(this->right, this->front));
+
+    update_frustum();
 }

@@ -99,6 +99,9 @@ int main(int, char**)
     Camera::set_main_camera(camera);
     camera->position = glm::vec3(0.0f, 0.0f, 10.0f);
     camera->pitch = -10.0;
+    camera->near_plane = 0.1f;
+    camera->far_plane = 1000000.0f;
+    camera->fov = glm::radians(60.0f);
     camera->update();
 
     auto const main_scene = std::make_shared<Scene>();
@@ -266,10 +269,16 @@ int main(int, char**)
         glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // Update camera projection matrix
-        camera->projection = glm::perspective(glm::radians(60.0f), static_cast<float>(screen_width) / static_cast<float>(screen_height), 0.1f, 100000.0f);
+        // Update camera
+        camera->width = static_cast<float>(screen_width);
+        camera->height = static_cast<float>(screen_height);
+        camera->projection = glm::perspective(camera->fov, camera->width / camera->height, camera->near_plane, camera->far_plane);
+        camera->update();
 
+        // Run frame
         main_scene->run_frame();
+
+        // Render frame
         Renderer::get_instance()->render();
 
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -393,8 +402,6 @@ void mouse_callback(GLFWwindow* window, double x, double y)
     camera->yaw += x_offset;
     camera->pitch += y_offset;
     camera->pitch = glm::clamp(camera->pitch, -89.0, 89.0);
-
-    camera->update();
 }
 
 void focus_callback(GLFWwindow* window, int const focused)
