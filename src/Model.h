@@ -38,6 +38,7 @@ public:
 
     void calculate_bounding_box() override;
     void adjust_bounding_box() override;
+    BoundingBox get_adjusted_bounding_box(glm::mat4 const& model_matrix) const override;
 
     // TODO: Move this inside the material
     glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);

@@ -79,16 +79,24 @@ void Mesh::calculate_bounding_box()
             highest_z = vertex.position.z;
     }
 
-    bounds =
+    this->bounds =
     {
         glm::vec3(lowest_x, lowest_y, lowest_z),
-        { lowest_x, lowest_y, lowest_z },
-        glm::vec3(highest_x, highest_y, highest_z),
-        { highest_x, highest_y, highest_z }
+        glm::vec3(highest_x, highest_y, highest_z)
     };
 }
 
 void Mesh::adjust_bounding_box(glm::mat4 const& model_matrix)
+{
+    this->bounds = calculate_adjusted_bounding_box(model_matrix);
+}
+
+BoundingBox Mesh::get_adjusted_bounding_box(glm::mat4 const& model_matrix) const
+{
+    return calculate_adjusted_bounding_box(model_matrix);
+}
+
+BoundingBox Mesh::calculate_adjusted_bounding_box(glm::mat4 const& model_matrix) const
 {
     // OPTIMIZATION: For uniformly scaled objects we can perform only 2 multiplications instead of a full matrix one
     // to determine the new bounding box. This is taken from:
@@ -110,21 +118,14 @@ void Mesh::adjust_bounding_box(glm::mat4 const& model_matrix)
         {
             for (uint32_t k = 0; k < 3; ++k)
             {
-                float a = rotation[i][k] * bounds.min_array[k];
-                float b = rotation[i][k] * bounds.max_array[k];
+                float a = rotation[i][k] * bounds.min[k];
+                float b = rotation[i][k] * bounds.max[k];
                 min[i] += a < b ? a : b;
                 max[i] += a < b ? b : a;
             }
         }
 
-        bounds =
-        {
-            glm::vec3(min[0], min[1], min[2]),
-            { min[0], min[1], min[2] },
-            glm::vec3(max[0], max[1], max[2]),
-            { max[0], max[1], max[2] }
-        };
-        return;
+        return { glm::vec3(min[0], min[1], min[2]), glm::vec3(max[0], max[1], max[2]) };
     }
 
     // Create AABB vertices from bounds
@@ -171,13 +172,7 @@ void Mesh::adjust_bounding_box(glm::mat4 const& model_matrix)
             highest_z = vertex.z;
     }
 
-    bounds =
-    {
-        glm::vec3(lowest_x, lowest_y, lowest_z),
-        { lowest_x, lowest_y, lowest_z },
-        glm::vec3(highest_x, highest_y, highest_z),
-        { highest_x, highest_y, highest_z }
-    };
+    return { glm::vec3(lowest_x, lowest_y, lowest_z), glm::vec3(highest_x, highest_y, highest_z) };
 }
 
 Mesh::~Mesh()

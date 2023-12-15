@@ -139,16 +139,6 @@ void Renderer::render() const
 
     for (auto const& material : instanced_materials)
     {
-        // TODO: Adjust bounding boxes on GPU?
-        for (auto const& drawable : material->drawables)
-        {
-            if (drawable->entity->transform->needs_bounding_box_adjusting)
-            {
-                drawable->adjust_bounding_box();
-                drawable->entity->transform->needs_bounding_box_adjusting = false;
-            }
-        }
-
         auto const first_drawable = material->first_drawable;
         auto const shader = first_drawable->material->shader;
 
@@ -163,18 +153,24 @@ void Renderer::render() const
         material->model_matrices.clear();
         material->model_matrices.reserve(material->drawables.size());
 
-        //glDispatchCompute(drawables.size(), 1, 1);
-
-        for (int32_t i = 0; i < material->drawables.size(); ++i)
+        // TODO: Adjust bounding boxes on GPU?
+        for (uint32_t i = 0; i < material->drawables.size(); ++i)
         {
-            material->model_matrices.emplace_back(material->drawables[i]->entity->transform->get_model_matrix());
+            if (material->drawables[i]->entity->transform->needs_bounding_box_adjusting)
+            {
+                material->drawables[i]->bounds = material->first_drawable->get_adjusted_bounding_box(material->drawables[i]->entity->transform->get_model_matrix());
+                material->drawables[i]->entity->transform->needs_bounding_box_adjusting = false;
+            }
+
+            if (material->drawables[i]->bounds.is_in_frustum(Camera::get_main_camera()->frustum))
+                material->model_matrices.emplace_back(material->drawables[i]->entity->transform->get_model_matrix());
         }
 
         glBindBuffer(GL_SHADER_STORAGE_BUFFER, gpu_instancing_ssbo);
         glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, material->model_matrices.size() * sizeof(glm::mat4), material->model_matrices.data());
         glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
-        first_drawable->draw_instanced(material->drawables.size());
+        first_drawable->draw_instanced(material->model_matrices.size());
     }
 
     for (auto const& [render_order, drawable] : custom_render_order_drawables)

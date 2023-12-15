@@ -58,6 +58,14 @@ void Model::adjust_bounding_box()
         bounds = meshes[0].bounds;
 }
 
+BoundingBox Model::get_adjusted_bounding_box(glm::mat4 const& model_matrix) const
+{
+    if (!meshes.empty())
+        return meshes[0].get_adjusted_bounding_box(model_matrix);
+
+    return {};
+}
+
 std::string Model::get_name() const
 {
     std::string const name = typeid(decltype(*this)).name();

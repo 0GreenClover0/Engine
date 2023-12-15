@@ -20,8 +20,9 @@ public:
 
     virtual void calculate_bounding_box();
     virtual void adjust_bounding_box();
+    virtual BoundingBox get_adjusted_bounding_box(glm::mat4 const& model_matrix) const;
 
-    Bounds bounds;
+    BoundingBox bounds = {};
 
     std::shared_ptr<Material> material;
     int32_t render_order = 0;
