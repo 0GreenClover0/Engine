@@ -24,6 +24,7 @@ Camera::Camera(float x, float y, float z, float up_x, float up_y, float up_z, do
     this->update_camera_vectors();
 }
 
+// https://www.gamedevs.org/uploads/fast-extraction-viewing-frustum-planes-from-world-view-projection-matrix.pdf
 void Camera::update_frustum()
 {
     glm::mat4 world = projection * get_view_matrix();

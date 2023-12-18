@@ -159,11 +159,6 @@ void Transform::compute_local_model_matrix()
 
     m_local_model_matrix = glm::translate(glm::mat4(1.0f), m_local_position) * rotation_matrix * glm::scale(glm::mat4(1.0f), m_local_scale);
     m_local_dirty = false;
-
-    for (auto&& child : children)
-    {
-        child->m_parent_dirty = false;
-    }
 }
 
 glm::mat4 Transform::get_local_model_matrix()
