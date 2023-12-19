@@ -37,3 +37,17 @@ struct BoundingBox
 
     [[nodiscard]] bool is_in_frustum(Frustum const& frustum) const;
 };
+
+struct BoundingBoxShader
+{
+    glm::vec3 center = {};
+    float padding1;
+    glm::vec3 extents = {};
+    float padding2;
+
+    BoundingBoxShader() = default;
+
+    explicit BoundingBoxShader(BoundingBox const& bounding_box) : center(bounding_box.center), extents(bounding_box.extents)
+    {
+    }
+};

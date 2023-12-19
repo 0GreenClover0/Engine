@@ -33,6 +33,7 @@ public:
 
     // NOTE: Only valid if is_gpu_instanced is true
     std::vector<glm::mat4> model_matrices = {};
+    std::vector<BoundingBoxShader> bounding_boxes = {};
     std::shared_ptr<Drawable> first_drawable = {};
     std::vector<std::shared_ptr<Drawable>> drawables = {};
 

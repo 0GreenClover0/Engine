@@ -52,6 +52,8 @@ private:
     inline static std::vector<std::shared_ptr<SpotLight>> spot_lights = {};
     inline static std::shared_ptr<DirectionalLight> directional_light = {};
 
+    std::shared_ptr<Shader> frustum_culling_shader = {};
+
     std::vector<std::shared_ptr<Light>> lights = {};
     std::unordered_map<std::shared_ptr<Shader>, std::vector<std::shared_ptr<Drawable>>> shaders_map = {};
     std::vector<std::shared_ptr<Material>> instanced_materials = {};
@@ -64,4 +66,6 @@ private:
     int32_t max_spot_lights = 4;
 
     GLuint gpu_instancing_ssbo = {};
+    GLuint bounding_boxes_ssbo = {};
+    GLuint visible_instances_ssbo = {};
 };
