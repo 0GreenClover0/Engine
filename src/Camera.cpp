@@ -1,5 +1,6 @@
 #include "Camera.h"
 
+#include <array>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -70,6 +71,19 @@ void Camera::update_frustum()
         near_normal / near_length,
         (world[3][3] + world[3][2]) / near_length
     );
+}
+
+std::array<glm::vec4, 6> Camera::get_frustum_planes() const
+{
+    return
+    {
+        glm::vec4(frustum.left_plane.normal, frustum.left_plane.distance),
+        glm::vec4(frustum.right_plane.normal, frustum.right_plane.distance),
+        glm::vec4(frustum.top_plane.normal, frustum.top_plane.distance),
+        glm::vec4(frustum.bottom_plane.normal, frustum.bottom_plane.distance),
+        glm::vec4(frustum.near_plane.normal, frustum.near_plane.distance),
+        glm::vec4(frustum.far_plane.normal, frustum.far_plane.distance),
+    };
 }
 
 glm::mat4 Camera::get_view_matrix() const

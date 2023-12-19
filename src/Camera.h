@@ -52,6 +52,7 @@ public:
 
     void update_frustum();
 
+    [[nodiscard]] std::array<glm::vec4, 6> get_frustum_planes() const;
     [[nodiscard]] glm::mat4 get_view_matrix() const;
 
     void update();
