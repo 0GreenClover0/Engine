@@ -18,6 +18,8 @@ void Transform::compute_model_matrix()
     assert(m_local_dirty || m_parent_dirty);
 
     m_model_matrix = get_local_model_matrix();
+
+    m_parent_dirty = false;
 }
 
 void Transform::compute_model_matrix(glm::mat4 const& parent_global_model_matrix)
@@ -25,6 +27,8 @@ void Transform::compute_model_matrix(glm::mat4 const& parent_global_model_matrix
     assert(m_local_dirty || m_parent_dirty);
 
     m_model_matrix = parent_global_model_matrix * get_local_model_matrix();
+
+    m_parent_dirty = false;
 }
 
 void Transform::set_local_position(glm::vec3 const& position)
