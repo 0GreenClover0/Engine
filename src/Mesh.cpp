@@ -6,7 +6,6 @@
 #include <glad/glad.h>
 #include <glm/gtc/epsilon.hpp>
 
-#include "Camera.h"
 #include "Globals.h"
 #include "Shader.h"
 #include "Texture.h"
