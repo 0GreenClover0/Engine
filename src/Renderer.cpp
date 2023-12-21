@@ -5,6 +5,7 @@
 #include <iostream>
 #include <glad/glad.h>
 #include <glm/gtx/rotate_vector.hpp>
+#include <glm/gtx/string_cast.hpp>
 
 #include "AK.h"
 #include "Camera.h"
@@ -126,8 +127,8 @@ void Renderer::unregister_light(std::shared_ptr<Light> const& light)
 void Renderer::render() const
 {
     // Premultiply projection and view matrices
-    glm::mat4 const projection_view = Camera::get_main_camera()->projection * Camera::get_main_camera()->get_view_matrix();
-    glm::mat4 const projection_view_no_translation = Camera::get_main_camera()->projection * glm::mat4(glm::mat3(Camera::get_main_camera()->get_view_matrix()));
+    glm::mat4 const projection_view = Camera::get_main_camera()->get_projection() * Camera::get_main_camera()->get_view_matrix();
+    glm::mat4 const projection_view_no_translation = Camera::get_main_camera()->get_projection() * glm::mat4(glm::mat3(Camera::get_main_camera()->get_view_matrix()));
 
     for (auto const& [shader, drawables] : shaders_map)
     {
@@ -258,7 +259,7 @@ void Renderer::set_shader_uniforms(std::shared_ptr<Shader> const& shader, glm::m
     // TODO: Check if shader was already processed and don't perform any operations?
     // TODO: Ultimately we would probably want to cache the uniform location instead of retrieving them by name
 
-    shader->set_vec3("cameraPosition", Camera::get_main_camera()->position);
+    shader->set_vec3("cameraPosition", Camera::get_main_camera()->get_position());
     shader->set_mat4("PV", projection_view);
     shader->set_mat4("PVnoTranslation", projection_view_no_translation);
 
