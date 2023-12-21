@@ -3,32 +3,34 @@
 #include <iostream>
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/gtx/rotate_vector.hpp>
+#include <glm/gtx/matrix_decompose.hpp>
 
 #include "AK.h"
+#include "Entity.h"
 
 Transform::Transform(std::shared_ptr<Entity> const& entity) : entity(entity)
 {
 }
 
-// Version for no parent
-void Transform::compute_model_matrix()
+glm::vec3 Transform::get_position()
 {
-    assert(AK::is_uninitialized(parent));
+    recompute_model_matrix_if_needed();
 
-    assert(m_local_dirty || m_parent_dirty);
-
-    m_model_matrix = get_local_model_matrix();
-
-    m_parent_dirty = false;
+    return m_position;
 }
 
-void Transform::compute_model_matrix(glm::mat4 const& parent_global_model_matrix)
+glm::quat Transform::get_rotation()
 {
-    assert(m_local_dirty || m_parent_dirty);
+    recompute_model_matrix_if_needed();
 
-    m_model_matrix = parent_global_model_matrix * get_local_model_matrix();
+    return m_rotation;
+}
 
-    m_parent_dirty = false;
+glm::vec3 Transform::get_scale()
+{
+    recompute_model_matrix_if_needed();
+
+    return m_scale;
 }
 
 void Transform::set_local_position(glm::vec3 const& position)
@@ -54,6 +56,11 @@ void Transform::set_local_position(glm::vec3 const& position)
     needs_bounding_box_adjusting = true;
 }
 
+glm::vec3 Transform::get_local_position() const
+{
+    return m_local_position;
+}
+
 void Transform::set_local_scale(glm::vec3 const& scale)
 {
     auto const is_scale_modified = glm::epsilonNotEqual(scale, m_local_scale, 0.0001f); 
@@ -75,6 +82,11 @@ void Transform::set_local_scale(glm::vec3 const& scale)
 
     m_local_dirty = true;
     needs_bounding_box_adjusting = true;
+}
+
+glm::vec3 Transform::get_local_scale() const
+{
+    return m_local_scale;
 }
 
 void Transform::set_euler_angles(glm::vec3 const& euler_angles)
@@ -100,39 +112,6 @@ void Transform::set_euler_angles(glm::vec3 const& euler_angles)
     needs_bounding_box_adjusting = true;
 }
 
-glm::mat4 const& Transform::get_model_matrix()
-{
-    if (m_local_dirty || m_parent_dirty)
-    {
-        if (AK::is_uninitialized(parent))
-            compute_model_matrix();
-        else
-            compute_model_matrix(parent.lock()->get_model_matrix());
-    }
-
-    return m_model_matrix;
-}
-
-bool Transform::is_local_dirty() const
-{
-    return m_local_dirty;
-}
-
-bool Transform::is_parent_dirty() const
-{
-    return m_parent_dirty;
-}
-
-glm::vec3 Transform::get_local_position() const
-{
-    return m_local_position;
-}
-
-glm::vec3 Transform::get_local_scale() const
-{
-    return m_local_scale;
-}
-
 glm::vec3 Transform::get_euler_angles() const
 {
     return m_euler_angles;
@@ -151,6 +130,34 @@ glm::vec3 Transform::get_forward() const
     direction = glm::rotateY(direction, glm::radians(euler_angles.y));
     direction = glm::rotateZ(direction, glm::radians(euler_angles.z));
     return direction;
+}
+
+glm::mat4 const& Transform::get_model_matrix()
+{
+    recompute_model_matrix_if_needed();
+
+    return m_model_matrix;
+}
+
+// Version for no parent
+void Transform::compute_model_matrix()
+{
+    assert(AK::is_uninitialized(parent));
+
+    assert(m_local_dirty || m_parent_dirty);
+
+    m_model_matrix = get_local_model_matrix();
+
+    m_parent_dirty = false;
+}
+
+void Transform::compute_model_matrix(glm::mat4 const& parent_global_model_matrix)
+{
+    assert(m_local_dirty || m_parent_dirty);
+
+    m_model_matrix = parent_global_model_matrix * get_local_model_matrix();
+
+    m_parent_dirty = false;
 }
 
 void Transform::compute_local_model_matrix()
@@ -172,6 +179,19 @@ glm::mat4 Transform::get_local_model_matrix()
 
     compute_local_model_matrix();
     return m_local_model_matrix;
+}
+
+void Transform::recompute_model_matrix_if_needed()
+{
+    if (m_local_dirty || m_parent_dirty)
+    {
+        if (AK::is_uninitialized(parent))
+            compute_model_matrix();
+        else
+            compute_model_matrix(parent.lock()->get_model_matrix());
+
+        glm::decompose(m_model_matrix, m_scale, m_rotation, m_position, m_skew, m_perpective);
+    }
 }
 
 void Transform::add_child(std::shared_ptr<Transform> const& transform)
