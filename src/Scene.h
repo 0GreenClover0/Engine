@@ -2,7 +2,9 @@
 #include <memory>
 #include <vector>
 
-class Entity;
+#include "Component.h"
+
+ class Entity;
 
 class Scene
 {
@@ -15,6 +17,7 @@ public:
     void run_frame() const;
 
     std::vector<std::shared_ptr<Entity>> entities = {};
+    std::vector<std::shared_ptr<Component>> tickable_components = {};
 
     bool is_during_awake = false;
     bool is_during_start = false;
