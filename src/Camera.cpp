@@ -1,34 +1,125 @@
 #include "Camera.h"
 
 #include <array>
-#include <glad/glad.h>
-#include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-Camera::Camera(glm::vec3 position, glm::vec3 world_up, double yaw, double pitch)
-    : front(glm::vec3(0.0f, 0.0f, -1.0f)), speed(default_speed), sensitivity(default_sensitivity)
-{
-    this->position = position;
-    this->world_up = world_up;
-    this->yaw = yaw;
-    this->pitch = pitch;
+#include "Entity.h"
 
-    update_camera_vectors();
+glm::vec3 Camera::get_position() const
+{
+    return entity->transform->get_position();
 }
 
-Camera::Camera(float x, float y, float z, float up_x, float up_y, float up_z, double yaw, double pitch) : front(glm::vec3(0.0f, 0.0f, -1.0f)), speed(default_speed), sensitivity(default_sensitivity)
+glm::mat4 Camera::get_projection()
 {
-    this->position = glm::vec3(x, y, z);
-    this->world_up = glm::vec3(up_x, up_y, up_z);
-    this->yaw = yaw;
-    this->pitch = pitch;
-    this->update_camera_vectors();
+    update_internals();
+
+    return m_projection;
+}
+
+float Camera::get_near_plane() const
+{
+    return near_plane;
+}
+
+void Camera::set_near_plane(float const value)
+{
+    m_dirty = true;
+    near_plane = value;
+}
+
+float Camera::get_far_plane() const
+{
+    return far_plane;
+}
+
+void Camera::set_far_plane(float const value)
+{
+    m_dirty = true;
+    far_plane = value;
+}
+
+void Camera::set_width(float const value)
+{
+    if (glm::epsilonNotEqual(value, m_width, 0.0001f))
+    {
+        m_dirty = true;
+        m_width = value;
+    }
+}
+
+void Camera::set_height(float const value)
+{
+    if (glm::epsilonNotEqual(value, m_height, 0.0001f))
+    {
+        m_dirty = true;
+        m_height = value;
+    }
+}
+
+void Camera::set_fov(float const value)
+{
+    m_dirty = true;
+    m_fov = value;
+}
+
+double Camera::get_yaw() const
+{
+    return m_yaw;
+}
+
+void Camera::set_yaw(double const value)
+{
+    m_dirty = true;
+    m_yaw = value;
+}
+
+double Camera::get_pitch() const
+{
+    return m_pitch;
+}
+
+void Camera::set_pitch(double const value)
+{
+    m_dirty = true;
+    m_pitch = value;
+}
+
+glm::vec3 Camera::get_front()
+{
+    update_internals();
+
+    return m_front;
+}
+
+glm::vec3 Camera::get_up()
+{
+    update_internals();
+
+    return m_up;
+}
+
+Frustum Camera::get_frustum()
+{
+    update_internals();
+
+    return frustum;
+}
+
+Camera::Camera(glm::vec3 const world_up, double const yaw, double const pitch) : sensitivity(default_sensitivity), m_front(glm::vec3(0.0f, 0.0f, -1.0f))
+{
+    m_world_up = world_up;
+    m_pitch = pitch;
+    m_yaw = yaw;
+    m_dirty = true;
 }
 
 // https://www.gamedevs.org/uploads/fast-extraction-viewing-frustum-planes-from-world-view-projection-matrix.pdf
 void Camera::update_frustum()
 {
-    glm::mat4 world = projection * get_view_matrix();
+    last_frustum_position = get_position();
+
+    glm::mat4 world = m_projection * get_view_matrix();
 
     auto const right_normal = glm::vec3(world[0][3] - world[0][0], world[1][3] - world[1][0], world[2][3] - world[2][0]);
     float const right_length = glm::length(right_normal);
@@ -73,8 +164,10 @@ void Camera::update_frustum()
     );
 }
 
-std::array<glm::vec4, 6> Camera::get_frustum_planes() const
+std::array<glm::vec4, 6> Camera::get_frustum_planes()
 {
+    update_internals();
+
     return
     {
         glm::vec4(frustum.left_plane.normal, frustum.left_plane.distance),
@@ -86,27 +179,40 @@ std::array<glm::vec4, 6> Camera::get_frustum_planes() const
     };
 }
 
-glm::mat4 Camera::get_view_matrix() const
+glm::mat4 Camera::get_view_matrix()
 {
-    // TODO: Add dirty flags for all these parameters, and cache this matrix
-    return glm::lookAt(position, position + front, up);
+    update_internals();
+
+    glm::vec3 const position = get_position();
+    return glm::lookAt(position, position + m_front, m_up);
 }
 
-void Camera::update()
+void Camera::update_internals()
 {
-    update_camera_vectors();
+    if (m_dirty)
+    {
+        m_projection = glm::perspective(m_fov, m_width / m_height, near_plane, far_plane);
+
+        update_camera_vectors();
+
+        update_frustum();
+    }
+    else if (glm::epsilonEqual(last_frustum_position, get_position(), 0.0001f) != glm::bvec3(true, true, true)) // If we only moved we still need to update frustum
+    {
+        update_frustum();
+    }
 }
 
 void Camera::update_camera_vectors()
 {
     glm::dvec3 front = {};
-    front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-    front.y = sin(glm::radians(pitch));
-    front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+    front.x = cos(glm::radians(m_yaw)) * cos(glm::radians(m_pitch));
+    front.y = sin(glm::radians(m_pitch));
+    front.z = sin(glm::radians(m_yaw)) * cos(glm::radians(m_pitch));
 
-    this->front = glm::normalize(front);
-    this->right = glm::normalize(glm::cross(this->front, this->world_up));
-    this->up = glm::normalize(glm::cross(this->right, this->front));
+    this->m_front = glm::normalize(front);
+    this->m_right = glm::normalize(glm::cross(this->m_front, this->m_world_up));
+    this->m_up = glm::normalize(glm::cross(this->m_right, this->m_front));
 
-    update_frustum();
+    m_dirty = false;
 }

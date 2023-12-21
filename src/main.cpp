@@ -13,7 +13,6 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/random.hpp>
 #include <glm/gtx/string_cast.hpp>
 
@@ -66,11 +65,12 @@ float camera_movement_speed = 2.5f;
 
 double last_frame = 0.0; // Time of last frame
 
-std::shared_ptr<Camera> camera;
-
 unsigned int textures_generated = 0;
 
 glm::dvec2 last_mouse_position = glm::dvec2(static_cast<double>(screen_width) / 2.0, static_cast<double>(screen_height) / 2.0);
+
+std::shared_ptr<Entity> camera;
+std::shared_ptr<Camera> camera_comp;
 
 int main(int, char**)
 {
@@ -95,17 +95,17 @@ int main(int, char**)
 
     auto const renderer = Renderer::create();
 
-    camera = std::make_shared<Camera>();
-    Camera::set_main_camera(camera);
-    camera->position = glm::vec3(0.0f, 0.0f, 10.0f);
-    camera->pitch = -10.0;
-    camera->near_plane = 0.1f;
-    camera->far_plane = 1000000.0f;
-    camera->fov = glm::radians(60.0f);
-    camera->update();
-
     auto const main_scene = std::make_shared<Scene>();
     MainScene::set_instance(main_scene);
+
+    camera = Entity::create("Camera");
+    camera->transform->set_local_position(glm::vec3(0.0f, 0.0f, 10.0f));
+
+    camera_comp = camera->add_component<Camera>();
+    Camera::set_main_camera(camera_comp);
+    camera_comp->set_can_tick(true);
+    camera_comp->set_pitch(10.0);
+    camera_comp->set_fov(glm::radians(60.0f));
 
     auto const root = Entity::create("Root");
 
@@ -270,10 +270,8 @@ int main(int, char**)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // Update camera
-        camera->width = static_cast<float>(screen_width);
-        camera->height = static_cast<float>(screen_height);
-        camera->projection = glm::perspective(camera->fov, camera->width / camera->height, camera->near_plane, camera->far_plane);
-        camera->update();
+        camera_comp->set_width(static_cast<float>(screen_width));
+        camera_comp->set_height(static_cast<float>(screen_height));
 
         // Run frame
         main_scene->run_frame();
@@ -354,22 +352,22 @@ void process_input(GLFWwindow *window)
 
     float const camera_speed = camera_movement_speed * delta_time;
     if (is_button_pressed(window, GLFW_KEY_W))
-        camera->position += camera_speed * camera->front;
+        camera->transform->set_local_position(camera->transform->get_local_position() += camera_speed * camera_comp->get_front());
 
     if (is_button_pressed(window, GLFW_KEY_S))
-        camera->position -= camera_speed * camera->front;
+        camera->transform->set_local_position(camera->transform->get_local_position() -= camera_speed * camera_comp->get_front());
 
     if (is_button_pressed(window, GLFW_KEY_A))
-        camera->position -= glm::normalize(glm::cross(camera->front, camera->up)) * camera_speed;
+        camera->transform->set_local_position(camera->transform->get_local_position() -= glm::normalize(glm::cross(camera_comp->get_front(), camera_comp->get_up())) * camera_speed);
 
     if (is_button_pressed(window, GLFW_KEY_D))
-        camera->position += glm::normalize(glm::cross(camera->front, camera->up)) * camera_speed;
+        camera->transform->set_local_position(camera->transform->get_local_position() += glm::normalize(glm::cross(camera_comp->get_front(), camera_comp->get_up())) * camera_speed);
 
     if (is_button_pressed(window, GLFW_KEY_Q))
-        camera->position += camera_speed * camera->up;
+        camera->transform->set_local_position(camera->transform->get_local_position() += camera_speed * camera_comp->get_up());
 
     if (is_button_pressed(window, GLFW_KEY_E))
-        camera->position -= camera_speed * camera->up;
+        camera->transform->set_local_position(camera->transform->get_local_position() -= camera_speed * camera_comp->get_up());
 }
 
 bool is_button_pressed(GLFWwindow *window, int const key)
@@ -396,12 +394,11 @@ void mouse_callback(GLFWwindow* window, double x, double y)
     last_mouse_position.x = x;
     last_mouse_position.y = y;
 
-    x_offset *= camera->sensitivity;
-    y_offset *= camera->sensitivity;
+    x_offset *= camera_comp->sensitivity;
+    y_offset *= camera_comp->sensitivity;
 
-    camera->yaw += x_offset;
-    camera->pitch += y_offset;
-    camera->pitch = glm::clamp(camera->pitch, -89.0, 89.0);
+    camera_comp->set_yaw(camera_comp->get_yaw() + x_offset);
+    camera_comp->set_pitch(glm::clamp(camera_comp->get_pitch() + y_offset, -89.0, 89.0));
 }
 
 void focus_callback(GLFWwindow* window, int const focused)
