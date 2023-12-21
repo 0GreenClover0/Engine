@@ -21,4 +21,10 @@ public:
     std::shared_ptr<Entity> entity;
 
     bool enabled = true;
+
+    void set_can_tick(bool const value);
+    bool get_can_tick() const;
+
+private:
+    bool can_tick = false;
 };
