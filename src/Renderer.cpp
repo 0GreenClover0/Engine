@@ -155,6 +155,9 @@ void Renderer::render() const
 
     for (auto const& material : instanced_materials)
     {
+        if (material->drawables.size() == 0)
+            continue;
+
         auto const first_drawable = material->first_drawable;
         auto const shader = first_drawable->material->shader;
 
@@ -189,7 +192,7 @@ void Renderer::render() const
         glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
         // Run frustum culling
-        glDispatchCompute(material->drawables.size() / 1024, 1, 1);
+        glDispatchCompute((material->drawables.size() / 1024) + 1, 1, 1);
 
         // Wait for SSBO write to complete
         glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
