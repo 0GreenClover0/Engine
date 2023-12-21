@@ -129,7 +129,7 @@ glm::vec3 Transform::get_forward() const
     direction = glm::rotateX(direction, glm::radians(euler_angles.x));
     direction = glm::rotateY(direction, glm::radians(euler_angles.y));
     direction = glm::rotateZ(direction, glm::radians(euler_angles.z));
-    return direction;
+    return glm::normalize(direction);
 }
 
 glm::mat4 const& Transform::get_model_matrix()

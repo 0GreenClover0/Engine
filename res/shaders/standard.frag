@@ -77,7 +77,7 @@ vec3 common_specular_terms = vec3(0.0, 0.0, 0.0);
 
 vec3 CalculateDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDirection)
 {
-    vec3 lightDirection = normalize(-light.direction);
+    vec3 lightDirection = -light.direction;
 
     // Diffuse
     float difference = max(dot(normal, lightDirection), 0.0);
@@ -136,7 +136,7 @@ vec3 CalculateSpotLight(SpotLight light, vec3 normal, vec3 viewDirection)
     vec3 specular = attenuation * spec * light.specular * common_specular_terms;
 
     // Spotlight intensity
-    float theta = dot(lightDirection, normalize(-light.direction));
+    float theta = dot(lightDirection, -light.direction);
     float epsilon = light.cutOff - light.outerCutOff;
     float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0);
 
