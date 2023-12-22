@@ -126,6 +126,9 @@ void Renderer::unregister_light(std::shared_ptr<Light> const& light)
 
 void Renderer::render() const
 {
+    if (Camera::get_main_camera() == nullptr)
+        return;
+
     // Premultiply projection and view matrices
     glm::mat4 const projection_view = Camera::get_main_camera()->get_projection() * Camera::get_main_camera()->get_view_matrix();
     glm::mat4 const projection_view_no_translation = Camera::get_main_camera()->get_projection() * glm::mat4(glm::mat3(Camera::get_main_camera()->get_view_matrix()));
