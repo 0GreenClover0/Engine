@@ -14,6 +14,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/random.hpp>
+#include <glm/gtx/rotate_vector.hpp>
 #include <glm/gtx/string_cast.hpp>
 
 #include "Camera.h"
@@ -72,6 +73,10 @@ glm::dvec2 last_mouse_position = glm::dvec2(static_cast<double>(screen_width) / 
 std::shared_ptr<Entity> camera;
 std::shared_ptr<Camera> camera_comp;
 
+float yaw = 0.0f;
+float pitch = 10.0f;
+constexpr double sensitivity = 0.1;
+
 int main(int, char**)
 {
     auto const window = setup_glfw();
@@ -104,7 +109,6 @@ int main(int, char**)
     camera_comp = camera->add_component<Camera>();
     Camera::set_main_camera(camera_comp);
     camera_comp->set_can_tick(true);
-    camera_comp->set_pitch(10.0);
     camera_comp->set_fov(glm::radians(60.0f));
 
     auto const root = Entity::create("Root");
@@ -394,11 +398,13 @@ void mouse_callback(GLFWwindow* window, double x, double y)
     last_mouse_position.x = x;
     last_mouse_position.y = y;
 
-    x_offset *= camera_comp->sensitivity;
-    y_offset *= camera_comp->sensitivity;
+    x_offset *= sensitivity;
+    y_offset *= sensitivity;
 
-    camera_comp->set_yaw(camera_comp->get_yaw() + x_offset);
-    camera_comp->set_pitch(glm::clamp(camera_comp->get_pitch() + y_offset, -89.0, 89.0));
+    yaw += x_offset;
+    pitch = glm::clamp(pitch + y_offset, -89.0, 89.0);
+
+    camera->transform->set_euler_angles(glm::vec3(pitch, -yaw, 0.0f));
 }
 
 void focus_callback(GLFWwindow* window, int const focused)

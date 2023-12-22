@@ -63,40 +63,14 @@ void Camera::set_fov(float const value)
     m_fov = value;
 }
 
-double Camera::get_yaw() const
+glm::vec3 Camera::get_front() const
 {
-    return m_yaw;
+    return entity->transform->get_forward();
 }
 
-void Camera::set_yaw(double const value)
+glm::vec3 Camera::get_up() const
 {
-    m_dirty = true;
-    m_yaw = value;
-}
-
-double Camera::get_pitch() const
-{
-    return m_pitch;
-}
-
-void Camera::set_pitch(double const value)
-{
-    m_dirty = true;
-    m_pitch = value;
-}
-
-glm::vec3 Camera::get_front()
-{
-    update_internals();
-
-    return m_front;
-}
-
-glm::vec3 Camera::get_up()
-{
-    update_internals();
-
-    return m_up;
+    return entity->transform->get_up();
 }
 
 Frustum Camera::get_frustum()
@@ -106,12 +80,8 @@ Frustum Camera::get_frustum()
     return frustum;
 }
 
-Camera::Camera(glm::vec3 const world_up, double const yaw, double const pitch) : sensitivity(default_sensitivity), m_front(glm::vec3(0.0f, 0.0f, -1.0f))
+Camera::Camera()
 {
-    m_world_up = world_up;
-    m_pitch = pitch;
-    m_yaw = yaw;
-    m_dirty = true;
 }
 
 // https://www.gamedevs.org/uploads/fast-extraction-viewing-frustum-planes-from-world-view-projection-matrix.pdf
@@ -179,12 +149,10 @@ std::array<glm::vec4, 6> Camera::get_frustum_planes()
     };
 }
 
-glm::mat4 Camera::get_view_matrix()
+glm::mat4 Camera::get_view_matrix() const
 {
-    update_internals();
-
     glm::vec3 const position = get_position();
-    return glm::lookAt(position, position + m_front, m_up);
+    return glm::lookAt(position, position + get_front(), get_up());
 }
 
 void Camera::update_internals()
@@ -193,26 +161,10 @@ void Camera::update_internals()
     {
         m_projection = glm::perspective(m_fov, m_width / m_height, near_plane, far_plane);
 
-        update_camera_vectors();
-
         update_frustum();
     }
     else if (glm::epsilonEqual(last_frustum_position, get_position(), 0.0001f) != glm::bvec3(true, true, true)) // If we only moved we still need to update frustum
     {
         update_frustum();
     }
-}
-
-void Camera::update_camera_vectors()
-{
-    glm::dvec3 front = {};
-    front.x = cos(glm::radians(m_yaw)) * cos(glm::radians(m_pitch));
-    front.y = sin(glm::radians(m_pitch));
-    front.z = sin(glm::radians(m_yaw)) * cos(glm::radians(m_pitch));
-
-    this->m_front = glm::normalize(front);
-    this->m_right = glm::normalize(glm::cross(this->m_front, this->m_world_up));
-    this->m_up = glm::normalize(glm::cross(this->m_right, this->m_front));
-
-    m_dirty = false;
 }

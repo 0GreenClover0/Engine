@@ -7,10 +7,6 @@
 #include "Component.h"
 #include "Frustum.h"
 
-constexpr double default_yaw = -90.0;
-constexpr double default_pitch = 0.0;
-constexpr double default_sensitivity = 0.1;
-
 class Camera final : public Component
 {
 public:
@@ -38,34 +34,21 @@ public:
 
     void set_fov(float const value);
 
-    double get_yaw() const;
-    void set_yaw(double const value);
-    double get_pitch() const;
-    void set_pitch(double const value);
-
-    glm::vec3 get_front();
-    glm::vec3 get_up();
+    glm::vec3 get_front() const;
+    glm::vec3 get_up() const;
 
     Frustum get_frustum();
 
-    double sensitivity;
-
-    explicit Camera(glm::vec3 const world_up = glm::vec3(0.0f, 1.0f, 0.0f), double const yaw = default_yaw, double const pitch = default_pitch);
+    explicit Camera();
 
     [[nodiscard]] std::array<glm::vec4, 6> get_frustum_planes();
-    [[nodiscard]] glm::mat4 get_view_matrix();
+    [[nodiscard]] glm::mat4 get_view_matrix() const;
 
 private:
     void update_internals();
-    void update_camera_vectors();
     void update_frustum();
 
     Frustum frustum = {};
-
-    glm::vec3 m_front = {};
-    glm::vec3 m_up = {};
-    glm::vec3 m_right = {};
-    glm::vec3 m_world_up = {};
 
     glm::mat4 m_projection = {};
 
@@ -73,9 +56,6 @@ private:
 
     float m_width;
     float m_height;
-
-    double m_yaw;
-    double m_pitch;
 
     float m_fov;
 
