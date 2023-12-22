@@ -14,7 +14,6 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/random.hpp>
-#include <glm/gtx/rotate_vector.hpp>
 #include <glm/gtx/string_cast.hpp>
 
 #include "Camera.h"
@@ -23,6 +22,7 @@
 #include "Editor.h"
 #include "Entity.h"
 #include "Globals.h"
+#include "Input.h"
 #include "MainScene.h"
 #include "PlanetarySystem.h"
 #include "Renderer.h"
@@ -30,6 +30,7 @@
 #include "Shader.h"
 #include "stb_image.h"
 #include "Window.h"
+#include "Game/Player/PlayerInput.h"
 
 #define FORCE_DEDICATED_GPU 0
 
@@ -48,34 +49,20 @@ extern "C"
 int screen_width  = 1280;
 int screen_height = 720;
 
-void process_input(GLFWwindow*);
-bool is_button_pressed(GLFWwindow*, int);
-
-bool mouse_just_entered = true;
 std::shared_ptr<Window> setup_glfw();
 int setup_glad();
 void setup_imgui(GLFWwindow* glfw_window);
 
 void glfw_error_callback(int, char const*);
-void mouse_callback(GLFWwindow*, double, double);
-void focus_callback(GLFWwindow*, int);
 
 unsigned int generate_texture(char const* path);
-
-float camera_movement_speed = 2.5f;
 
 double last_frame = 0.0; // Time of last frame
 
 unsigned int textures_generated = 0;
 
-glm::dvec2 last_mouse_position = glm::dvec2(static_cast<double>(screen_width) / 2.0, static_cast<double>(screen_height) / 2.0);
-
 std::shared_ptr<Entity> camera;
 std::shared_ptr<Camera> camera_comp;
-
-float yaw = 0.0f;
-float pitch = 10.0f;
-constexpr double sensitivity = 0.1;
 
 int main(int, char**)
 {
@@ -90,6 +77,9 @@ int main(int, char**)
     srand(static_cast<unsigned int>(glfwGetTime()));
 
     setup_imgui(window->get_glfw_window());
+
+    auto input_system = std::make_shared<Input>(window);
+    Input::set_input(input_system);
 
     InternalMeshData::initialize();
 
@@ -109,6 +99,12 @@ int main(int, char**)
     camera_comp = camera->add_component(Camera::create());
     camera_comp->set_can_tick(true);
     camera_comp->set_fov(glm::radians(60.0f));
+
+    auto const player = Entity::create("Player");
+    auto const player_input = player->add_component<PlayerInput>();
+    player_input->set_can_tick(true);
+    player_input->camera_entity = camera;
+    player_input->window = window;
 
     auto const root = Entity::create("Root");
 
@@ -259,18 +255,8 @@ int main(int, char**)
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         }
 
-        // Input
-        process_input(window->get_glfw_window());
-
-        // Rendering
-        ImGui::Render();
-
-        int display_w, display_h;
-        glfwGetFramebufferSize(window->get_glfw_window(), &display_w, &display_h);
-        glViewport(0, 0, display_w, display_h);
-
-        glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glfwGetFramebufferSize(window->get_glfw_window(), &screen_width, &screen_height);
+        glViewport(0, 0, screen_width, screen_height);
 
         // Update camera
         camera_comp->set_width(static_cast<float>(screen_width));
@@ -280,6 +266,11 @@ int main(int, char**)
         main_scene->run_frame();
 
         // Render frame
+        ImGui::Render();
+
+        glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
         Renderer::get_instance()->render();
 
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -337,77 +328,14 @@ std::shared_ptr<Window> setup_glfw()
     // Create window with graphics context
     auto window = std::make_shared<Window>(screen_width, screen_height);
 
-    glfwSwapInterval(1); // Enable vsync
+    glfwSwapInterval(0); // Enable vsync
 
-    //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); // Capture mouse
-
-    // Callbacks
-    glfwSetCursorPosCallback(window->get_glfw_window(), mouse_callback);
-    glfwSetWindowFocusCallback(window->get_glfw_window(), focus_callback);
+    glfwSetInputMode(window->get_glfw_window(), GLFW_CURSOR, GLFW_CURSOR_DISABLED); // Capture mouse
 
     return window;
-}
-
-void process_input(GLFWwindow *window)
-{
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, true);
-
-    float const camera_speed = camera_movement_speed * delta_time;
-    if (is_button_pressed(window, GLFW_KEY_W))
-        camera->transform->set_local_position(camera->transform->get_local_position() += camera_speed * camera_comp->get_front());
-
-    if (is_button_pressed(window, GLFW_KEY_S))
-        camera->transform->set_local_position(camera->transform->get_local_position() -= camera_speed * camera_comp->get_front());
-
-    if (is_button_pressed(window, GLFW_KEY_A))
-        camera->transform->set_local_position(camera->transform->get_local_position() -= glm::normalize(glm::cross(camera_comp->get_front(), camera_comp->get_up())) * camera_speed);
-
-    if (is_button_pressed(window, GLFW_KEY_D))
-        camera->transform->set_local_position(camera->transform->get_local_position() += glm::normalize(glm::cross(camera_comp->get_front(), camera_comp->get_up())) * camera_speed);
-
-    if (is_button_pressed(window, GLFW_KEY_Q))
-        camera->transform->set_local_position(camera->transform->get_local_position() += camera_speed * camera_comp->get_up());
-
-    if (is_button_pressed(window, GLFW_KEY_E))
-        camera->transform->set_local_position(camera->transform->get_local_position() -= camera_speed * camera_comp->get_up());
-}
-
-bool is_button_pressed(GLFWwindow *window, int const key)
-{
-    return glfwGetKey(window, key) == GLFW_PRESS;
 }
 
 void glfw_error_callback(int error, char const* description)
 {
     (void)fprintf(stderr, "Glfw Error %d: %s\n", error, description);
-}
-
-void mouse_callback(GLFWwindow* window, double x, double y)
-{
-    if (mouse_just_entered)
-    {
-        last_mouse_position.x = x;
-        last_mouse_position.y = y;
-        mouse_just_entered = false;
-    }
-
-    double x_offset = x - last_mouse_position.x;
-    double y_offset = last_mouse_position.y - y;
-    last_mouse_position.x = x;
-    last_mouse_position.y = y;
-
-    x_offset *= sensitivity;
-    y_offset *= sensitivity;
-
-    yaw += x_offset;
-    pitch = glm::clamp(pitch + y_offset, -89.0, 89.0);
-
-    camera->transform->set_euler_angles(glm::vec3(pitch, -yaw, 0.0f));
-}
-
-void focus_callback(GLFWwindow* window, int const focused)
-{
-    if (focused == 0)
-        mouse_just_entered = true;
 }
