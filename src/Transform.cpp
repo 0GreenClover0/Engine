@@ -122,14 +122,25 @@ glm::vec3 Transform::get_euler_angles_restricted() const
     return { glm::mod(glm::mod(m_euler_angles.x, 360.0f) + 360.0f, 360.0f), glm::mod(glm::mod(m_euler_angles.y, 360.0f) + 360.0f, 360.0f), glm::mod(glm::mod(m_euler_angles.z, 360.0f) + 360.0f, 360.0f) };
 }
 
-glm::vec3 Transform::get_forward() const
+glm::vec3 Transform::get_forward()
 {
-    auto direction = glm::vec3(0.0f, 0.0f, -1.0f);
-    auto const euler_angles = get_euler_angles();
-    direction = glm::rotateX(direction, glm::radians(euler_angles.x));
-    direction = glm::rotateY(direction, glm::radians(euler_angles.y));
-    direction = glm::rotateZ(direction, glm::radians(euler_angles.z));
-    return glm::normalize(direction);
+    recompute_forward_right_up_if_needed();
+
+    return m_forward;
+}
+
+glm::vec3 Transform::get_right()
+{
+    recompute_forward_right_up_if_needed();
+
+    return m_right;
+}
+
+glm::vec3 Transform::get_up()
+{
+    recompute_forward_right_up_if_needed();
+
+    return m_up;
 }
 
 glm::mat4 const& Transform::get_model_matrix()
@@ -192,6 +203,23 @@ void Transform::recompute_model_matrix_if_needed()
 
         glm::decompose(m_model_matrix, m_scale, m_rotation, m_position, m_skew, m_perpective);
     }
+}
+
+void Transform::recompute_forward_right_up_if_needed()
+{
+    if (glm::epsilonEqual(m_euler_angles_when_caching, get_euler_angles(), 0.0001f) == glm::bvec3(true, true, true))
+        return;
+
+    auto const euler_angles = get_euler_angles();
+    m_euler_angles_when_caching = euler_angles;
+
+    auto direction_forward = glm::vec3(0.0f, 0.0f, -1.0f);
+    direction_forward = glm::rotateX(direction_forward, glm::radians(euler_angles.x));
+    direction_forward = glm::rotateY(direction_forward, glm::radians(euler_angles.y));
+    direction_forward = glm::rotateZ(direction_forward, glm::radians(euler_angles.z));
+    m_forward = glm::normalize(direction_forward);
+    m_right = glm::normalize(glm::cross(m_forward, m_world_up));
+    m_up = glm::normalize(glm::cross(m_right, m_forward));
 }
 
 void Transform::add_child(std::shared_ptr<Transform> const& transform)

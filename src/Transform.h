@@ -32,7 +32,9 @@ public:
 
     [[nodiscard]] glm::vec3 get_euler_angles_restricted() const;
 
-    [[nodiscard]] glm::vec3 get_forward() const;
+    [[nodiscard]] glm::vec3 get_forward();
+    [[nodiscard]] glm::vec3 get_right();
+    [[nodiscard]] glm::vec3 get_up();
 
     [[nodiscard]] glm::mat4 const& get_model_matrix();
 
@@ -59,6 +61,10 @@ protected:
     glm::quat m_rotation = {};
     glm::vec3 m_scale = {};
 
+    glm::vec3 m_forward = {};
+    glm::vec3 m_right = {};
+    glm::vec3 m_up = {};
+
     glm::vec3 m_skew = {};
     glm::vec4 m_perpective = {};
 
@@ -71,5 +77,9 @@ protected:
 
 private:
     void recompute_model_matrix_if_needed();
+    void recompute_forward_right_up_if_needed();
     void add_child(std::shared_ptr<Transform> const& transform);
+
+    glm::vec3 m_world_up = glm::vec3(0.0f, 1.0f, 0.0f);
+    glm::vec3 m_euler_angles_when_caching = glm::vec3(std::nanf("0"), std::nanf("0"), std::nanf("0"));
 };
