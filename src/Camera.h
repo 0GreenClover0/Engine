@@ -39,10 +39,12 @@ public:
 
     Frustum get_frustum();
 
-    explicit Camera();
+    static std::shared_ptr<Camera> create();
 
     [[nodiscard]] std::array<glm::vec4, 6> get_frustum_planes();
     [[nodiscard]] glm::mat4 get_view_matrix() const;
+
+    Camera() = default;
 
 private:
     void update_internals();

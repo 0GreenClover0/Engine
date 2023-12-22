@@ -80,8 +80,14 @@ Frustum Camera::get_frustum()
     return frustum;
 }
 
-Camera::Camera()
+std::shared_ptr<Camera> Camera::create()
 {
+    auto camera = std::make_shared<Camera>();
+
+    if (get_main_camera() == nullptr)
+        set_main_camera(camera);
+
+    return camera;
 }
 
 // https://www.gamedevs.org/uploads/fast-extraction-viewing-frustum-planes-from-world-view-projection-matrix.pdf

@@ -106,8 +106,7 @@ int main(int, char**)
     camera = Entity::create("Camera");
     camera->transform->set_local_position(glm::vec3(0.0f, 0.0f, 10.0f));
 
-    camera_comp = camera->add_component<Camera>();
-    Camera::set_main_camera(camera_comp);
+    camera_comp = camera->add_component(Camera::create());
     camera_comp->set_can_tick(true);
     camera_comp->set_fov(glm::radians(60.0f));
 
