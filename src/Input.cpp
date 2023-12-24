@@ -19,12 +19,10 @@ bool Input::is_key_down(int const key) const
 
 void Input::mouse_callback(GLFWwindow* window, double const x, double const y)
 {
-    if (input->mouse_callback_impl != nullptr)
-        input->mouse_callback_impl(x, y);
+    input->on_set_cursor_pos_event(x, y);
 }
 
 void Input::focus_callback(GLFWwindow* window, int const focused)
 {
-    if (input->focus_callback_impl != nullptr)
-        input->focus_callback_impl(focused);
+    input->on_focused_event(focused);
 }

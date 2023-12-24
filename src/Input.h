@@ -2,6 +2,7 @@
 
 #include <functional>
 
+#include "Event.h"
 #include "Window.h"
 
 class Input
@@ -14,13 +15,15 @@ public:
 
     // TODO: Handle custom callbacks using an observer pattern
     static void mouse_callback(GLFWwindow* window, double const x, double const y);
-    std::function<void(double const, double const)> mouse_callback_impl;
 
     static void focus_callback(GLFWwindow* window, int const focused);
-    std::function<void(int const)> focus_callback_impl;
 
     inline static std::shared_ptr<Input> input;
+
+    Event<void(int const)> on_focused_event;
+    Event<void(double const, double const)> on_set_cursor_pos_event;
 private:
+
     std::shared_ptr<Window> window;
 
 };

@@ -11,13 +11,8 @@ void PlayerInput::awake()
     camera = camera_entity->get_component<Camera>();
 
     // Callbacks
-    Input::input->focus_callback_impl = [this](int const focused){
-        this->focus_callback(focused);
-    };
-
-    Input::input->mouse_callback_impl = [this](double const x, double const y) {
-        this->mouse_callback(x, y);
-    };
+    Input::input->on_focused_event.attach(&PlayerInput::focus_callback, shared_from_this());
+    Input::input->on_set_cursor_pos_event.attach(&PlayerInput::mouse_callback, shared_from_this());
 }
 
 void PlayerInput::update()
