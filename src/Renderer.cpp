@@ -28,6 +28,7 @@ void Renderer::initialize()
 {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
+    glEnable(GL_MULTISAMPLE);
 
     frustum_culling_shader = Shader::create("./res/shaders/frustum_culling.glsl");
 

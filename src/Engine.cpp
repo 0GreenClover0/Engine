@@ -142,7 +142,7 @@ void Engine::clean_up()
 std::shared_ptr<Window> Engine::create_window()
 {
     // Create window with graphics context
-    auto new_window = std::make_shared<Window>(screen_width, screen_height);
+    auto new_window = std::make_shared<Window>(screen_width, screen_height, 4);
 
     // Enable vsync
     glfwSwapInterval(enable_vsync);
