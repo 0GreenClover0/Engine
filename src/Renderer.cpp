@@ -26,6 +26,9 @@ std::shared_ptr<Renderer> Renderer::create()
 
 void Renderer::initialize()
 {
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
+
     frustum_culling_shader = Shader::create("./res/shaders/frustum_culling.glsl");
 
     // TODO: GPU instancing on one material currently supports only the first mesh that was bound to the material.
