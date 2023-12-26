@@ -19,10 +19,8 @@ public:
     virtual void reset() override;
     virtual void reprepare() override;
 
-    [[nodiscard]] Mesh create_cube() const;
-
 private:
-    [[nodiscard]] Texture load_texture(std::string const& path, std::string const& type) const;
+    [[nodiscard]] Mesh create_cube() const;
 
     std::string diffuse_texture_path;
     std::string specular_texture_path;

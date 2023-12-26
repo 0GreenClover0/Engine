@@ -223,6 +223,15 @@ std::vector<Texture> Model::load_material_textures(aiMaterial const* material, a
     return textures;
 }
 
+Texture Model::load_texture(std::string const& path, std::string const& type)
+{
+    Texture texture;
+    texture.id = texture_from_file(path.c_str());
+    texture.type = type;
+    texture.path = path;
+    return texture;
+}
+
 std::uint32_t Model::texture_from_file(char const* texture_name, std::string const& directory, bool gamma)
 {
     auto file_name = std::string(texture_name);

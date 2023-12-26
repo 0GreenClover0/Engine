@@ -44,6 +44,7 @@ public:
     glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
 
 protected:
+    [[nodiscard]] static Texture load_texture(std::string const& path, std::string const& type);
     static std::uint32_t texture_from_file(char const* path, bool gamma = false);
     static std::uint32_t texture_from_file(char const* texture_name, std::string const& directory, bool gamma = false);
 

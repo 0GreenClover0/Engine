@@ -97,12 +97,3 @@ Mesh Cube::create_cube() const
 
     return Mesh::create(vertices, indices, textures, draw_type, material);
 }
-
-Texture Cube::load_texture(std::string const& path, std::string const& type) const
-{
-    Texture texture;
-    texture.id = texture_from_file(path.c_str());
-    texture.type = type;
-    texture.path = diffuse_texture_path;
-    return texture;
-}
