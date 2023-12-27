@@ -11,6 +11,7 @@
 #include "Model.h"
 #include "PointLight.h"
 #include "SpotLight.h"
+#include "Terrain.h"
 #include "Player/PlayerInput.h"
 
 Game::Game(std::shared_ptr<Window> const& window) : window(window)
@@ -85,12 +86,16 @@ void Game::initialize()
     auto const cube_material = Material::create(instanced_shader, 0, true);
     auto const roof_material = Material::create(instanced_shader, 0, true);
     auto const floor_material = Material::create(standard_shader);
+    auto const terrain_material = Material::create(standard_shader);
 
-    auto const floor = Entity::create("Floor");
-    floor->transform->set_parent(root->transform);
-    floor->add_component<Cube>(Cube::create("./res/textures/stone.jpg", floor_material, true));
-    floor->transform->set_local_scale(glm::vec3(1000.0f, 0.1f, 1000.0f));
-    floor->transform->set_local_position(glm::vec3(0.0f, -1.0f, 0.0f));
+    auto const terrain = Entity::create("Terrain");
+    terrain->add_component<Terrain>(Terrain::create(terrain_material, "./res/textures/map/iceland_heightmap.png"));
+
+    //auto const floor = Entity::create("Floor");
+    //floor->transform->set_parent(root->transform);
+    //floor->add_component<Cube>(Cube::create("./res/textures/stone.jpg", floor_material, true));
+    //floor->transform->set_local_scale(glm::vec3(1000.0f, 0.1f, 1000.0f));
+    //floor->transform->set_local_position(glm::vec3(0.0f, -1.0f, 0.0f));
 
     float house_x = 0.0f;
     float house_z = 0.0f;
