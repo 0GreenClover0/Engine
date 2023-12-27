@@ -53,7 +53,7 @@ std::shared_ptr<Shader> SceneSerializer::deserialize_shader(YAML::Node const& no
 std::shared_ptr<Material> SceneSerializer::deserialize_material_instance(YAML::Node const& node) const
 {
     auto const shader = deserialize_shader(node["Shader"]);
-    auto material = std::make_shared<Material>(shader);
+    auto material = Material::create(shader);
     material->color = node["Color"].as<glm::vec4>();
     return material;
 }

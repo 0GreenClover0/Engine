@@ -25,5 +25,4 @@ public:
     BoundingBox bounds = {};
 
     std::shared_ptr<Material> material;
-    int32_t render_order = 0;
 };

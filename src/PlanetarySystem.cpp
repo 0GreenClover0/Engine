@@ -18,7 +18,7 @@ void PlanetarySystem::awake()
     sun->transform->set_parent(entity->transform);
 
     {
-        auto const standard_material = std::make_shared<Material>(standard_shader);
+        auto const standard_material = Material::create(standard_shader);
         sun->add_component<Model>("./res/models/sun/13913_Sun_v2_l3.obj", standard_material);
         sun->transform->set_local_scale(glm::vec3(0.002f, 0.002f, 0.002f));
     }
@@ -46,8 +46,8 @@ void PlanetarySystem::awake()
         float planet_scale = 0.04f;
         for (uint32_t i = 1; i <= planet_count; ++i)
         {
-            auto const planet_material = std::make_shared<Material>(custom_sphere_shader_planet);
-            auto const standard_material = std::make_shared<Material>(standard_shader);
+            auto const planet_material = Material::create(custom_sphere_shader_planet);
+            auto const standard_material = Material::create(standard_shader);
 
             auto const planet = Entity::create(std::format("Planet{}", i));
             auto planet_comp = planet->add_component<AstronomicalObject>();
@@ -90,8 +90,8 @@ void PlanetarySystem::awake()
 
         for (uint32_t i = 1; i <= moon_count; ++i)
         {
-            auto const moon_material = std::make_shared<Material>(custom_sphere_shader_moon);
-            auto const standard_material = std::make_shared<Material>(standard_shader);
+            auto const moon_material = Material::create(custom_sphere_shader_moon);
+            auto const standard_material = Material::create(standard_shader);
 
             auto const moon = Entity::create(std::format("Moon{}", i));
             auto moon_comp = moon->add_component<AstronomicalObject>();

@@ -8,11 +8,6 @@ Drawable::Drawable(std::shared_ptr<Material> const& material)
     this->material = material;
 }
 
-Drawable::Drawable(std::shared_ptr<Material> const& material, int32_t const render_order) : render_order(render_order)
-{
-    this->material = material;
-}
-
 void Drawable::calculate_bounding_box()
 {
 }

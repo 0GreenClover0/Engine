@@ -2,7 +2,10 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 #include <glm/fwd.hpp>
+
+class Material;
 
 class Shader
 {
@@ -22,6 +25,8 @@ public:
     void set_vec3(std::string const& name, glm::vec3 value) const;
     void set_vec4(std::string const& name, glm::vec4 value) const;
     void set_mat4(std::string const& name, glm::mat4 value) const;
+
+    std::vector<std::shared_ptr<Material>> materials;
 
 private:
     Shader(std::string compute_path);

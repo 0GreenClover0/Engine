@@ -7,7 +7,7 @@
 
 #include "Globals.h"
 
-Skybox::Skybox(std::shared_ptr<Material> const& material, std::vector<std::string> face_paths) : Drawable(material, 9999), face_paths(std::move(face_paths))
+Skybox::Skybox(std::shared_ptr<Material> const& material, std::vector<std::string> face_paths) : Drawable(material), face_paths(std::move(face_paths))
 {
     load_textures();
     create_cube();

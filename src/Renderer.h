@@ -1,6 +1,7 @@
 #pragma once
 
 #include <map>
+#include <set>
 #include <unordered_map>
 
 #include <glad/glad.h>
@@ -26,6 +27,9 @@ public:
 
     void register_drawable(std::shared_ptr<Drawable> const& drawable);
 
+    void register_material(std::shared_ptr<Material> const& material);
+    void unregister_material(std::shared_ptr<Material> const& material);
+
     void register_light(std::shared_ptr<Light> const& light);
     void unregister_light(std::shared_ptr<Light> const& light);
 
@@ -44,6 +48,9 @@ private:
         instance = renderer;
     }
 
+    void draw(std::shared_ptr<Material> const& material, glm::mat4 const& projection_view) const;
+    void draw_instanced(std::shared_ptr<Material> const& material, glm::mat4 const& projection_view, glm::mat4 const& projection_view_no_translation) const;
+
     void set_shader_uniforms(std::shared_ptr<Shader> const& shader, glm::mat4 const& projection_view, glm::mat4 const& projection_view_no_translation) const;
 
     inline static std::shared_ptr<Renderer> instance;
@@ -52,13 +59,24 @@ private:
     inline static std::vector<std::shared_ptr<SpotLight>> spot_lights = {};
     inline static std::shared_ptr<DirectionalLight> directional_light = {};
 
+    struct MaterialWithOrder
+    {
+        int32_t render_order;
+        std::shared_ptr<Material> material;
+
+        bool operator<(MaterialWithOrder const& b) const
+        {
+            return render_order < b.render_order;
+        }
+    };
+
     std::shared_ptr<Shader> frustum_culling_shader = {};
 
     std::vector<std::shared_ptr<Light>> lights = {};
-    std::unordered_map<std::shared_ptr<Shader>, std::vector<std::shared_ptr<Drawable>>> shaders_map = {};
+    std::vector<std::shared_ptr<Shader>> shaders = {};
     std::vector<std::shared_ptr<Material>> instanced_materials = {};
 
-    std::map<int32_t, std::weak_ptr<Drawable>> custom_render_order_drawables = {};
+    std::multiset<MaterialWithOrder> custom_render_order_materials = {};
 
     // TODO: Retrieve this information from the shader
     // NOTE: This has to be the same value as the variable in a shader to work in all cases.

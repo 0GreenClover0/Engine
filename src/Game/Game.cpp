@@ -69,9 +69,9 @@ void Game::initialize()
 
     auto instanced_shader = Shader::create("./res/shaders/standard_instanced.vert", "./res/shaders/standard.frag");
     auto standard_shader = Shader::create("./res/shaders/standard.vert", "./res/shaders/standard.frag");
-    auto const cube_material = std::make_shared<Material>(instanced_shader, true);
-    auto const roof_material = std::make_shared<Material>(instanced_shader, true);
-    auto const floor_material = std::make_shared<Material>(standard_shader);
+    auto const cube_material = Material::create(instanced_shader, 0, true);
+    auto const roof_material = Material::create(instanced_shader, 0, true);
+    auto const floor_material = Material::create(standard_shader);
 
     auto const floor = Entity::create("Floor");
     floor->transform->set_parent(root->transform);
@@ -113,7 +113,7 @@ void Game::initialize()
     };
     auto const skybox = CommonEntities::create_skybox(skybox_texture_paths, root->transform);
 
-    //auto const material_backpack = std::make_shared<Material>(instanced_shader, true);
+    //auto const material_backpack = Material::create(instanced_shader, 0, true);
     //auto const back = Entity::create("backpck");
     //back->transform->set_local_position(glm::vec3(0.0f, 0.0f, -3.0f));
     //back->add_component<Model>(Model::create("./res/models/backpack/backpack.obj", material_backpack));

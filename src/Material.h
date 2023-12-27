@@ -14,8 +14,16 @@ class Drawable;
 class Material
 {
 public:
-    explicit Material(std::shared_ptr<Shader> const& shader);
-    explicit Material(std::shared_ptr<Shader> const& shader, bool const is_gpu_instanced);
+    static std::shared_ptr<Material> create(std::shared_ptr<Shader> const& shader, int32_t const render_order = 0, bool const is_gpu_instanced = false);
+
+    explicit Material(std::shared_ptr<Shader> const& shader, int32_t const render_order, bool const is_gpu_instanced);
+
+    [[nodiscard]] bool has_custom_render_order() const
+    {
+        return render_order != 0;
+    }
+
+    [[nodiscard]] int32_t get_render_order() const;
 
     std::shared_ptr<Shader> shader;
 
@@ -38,5 +46,8 @@ public:
     std::vector<std::shared_ptr<Drawable>> drawables = {};
 
 private:
+    // TODO: Negative render order is currently not supported
+    int32_t render_order = 0;
+
     friend class SceneSerializer;
 };

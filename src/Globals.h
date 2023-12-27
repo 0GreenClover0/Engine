@@ -7,6 +7,8 @@
 
 inline double delta_time;
 
+inline int32_t SKYBOX_RENDER_ORDER = 100;
+
 struct MeshData
 {
     std::vector<Vertex> vertices;
