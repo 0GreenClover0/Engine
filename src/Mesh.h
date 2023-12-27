@@ -21,6 +21,7 @@ public:
                        std::vector<Texture> const& textures, GLenum draw_type, std::shared_ptr<Material> const& material);
 
     void draw() const;
+    void draw(uint32_t const size, void const* offset) const;
 
     void bind_textures() const;
     void draw_instanced(int32_t const size) const;
@@ -40,7 +41,8 @@ public:
     std::shared_ptr<Material> material;
 
 protected:
-    Mesh(std::vector<Vertex> vertices, std::vector<std::uint32_t> indices, std::vector<Texture> textures, GLenum draw_type, std::shared_ptr<Material> const& material);
+    Mesh(std::vector<Vertex> vertices, std::vector<std::uint32_t> indices, std::vector<Texture> textures,
+         GLenum draw_type, std::shared_ptr<Material> const& material);
     void setup_mesh();
 
     [[nodiscard]] BoundingBox calculate_adjusted_bounding_box(glm::mat4 const& model_matrix) const;

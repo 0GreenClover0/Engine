@@ -11,7 +11,8 @@
 #include "Texture.h"
 #include "Vertex.h"
 
-Mesh::Mesh(std::vector<Vertex> vertices, std::vector<std::uint32_t> indices, std::vector<Texture> textures, GLenum draw_type, std::shared_ptr<Material> const& material)
+Mesh::Mesh(std::vector<Vertex> vertices, std::vector<std::uint32_t> indices, std::vector<Texture> textures,
+           GLenum draw_type, std::shared_ptr<Material> const& material)
     : vertices(std::move(vertices)), indices(std::move(indices)), textures(std::move(textures)), draw_type(draw_type), material(material)
 {
 }
@@ -223,6 +224,19 @@ void Mesh::draw() const
         glDrawArrays(draw_type, 0, static_cast<int>(vertices.size()));
     else
         glDrawElements(draw_type, static_cast<int>(indices.size()), GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
+
+    unbind_textures();
+}
+
+void Mesh::draw(uint32_t const size, void const* offset) const
+{
+    bind_textures();
+
+    glBindVertexArray(VAO);
+
+    glDrawElements(draw_type, size, GL_UNSIGNED_INT, offset);
+
     glBindVertexArray(0);
 
     unbind_textures();
