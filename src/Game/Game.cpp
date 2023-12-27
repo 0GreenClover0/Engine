@@ -5,6 +5,7 @@
 #include "Cube.h"
 #include "DirectionalLight.h"
 #include "Entity.h"
+#include "Grass.h"
 #include "Model.h"
 #include "PointLight.h"
 #include "SpotLight.h"
@@ -16,6 +17,8 @@ Game::Game(std::shared_ptr<Window> const& window) : window(window)
 
 void Game::initialize()
 {
+    auto instanced_shader = Shader::create("./res/shaders/standard_instanced.vert", "./res/shaders/standard.frag");
+
     camera = Entity::create("Camera");
     camera->transform->set_local_position(glm::vec3(0.0f, 0.0f, 10.0f));
 
@@ -29,13 +32,17 @@ void Game::initialize()
     player_input->camera_entity = camera;
     player_input->window = window;
 
+    auto const grass_material = Material::create(instanced_shader, 101, true);
+    auto const grass = Entity::create("Grass");
+    grass->add_component<Grass>(Grass::create(grass_material, 1, "./res/textures/grass.png"));
+
     auto const root = Entity::create("Root");
 
     auto const point_light = CommonEntities::create_point_light(glm::vec3(1.0f, 1.0f, 0.0f), root->transform);
     auto const point_light_comp = point_light->get_component<PointLight>();
     auto const point_light_material = point_light->get_component<Cube>()->material;
 
-    auto const directional_light = CommonEntities::create_directional_light(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(-0.2f, -1.0f, 50.0f), root->transform);
+    auto const directional_light = CommonEntities::create_directional_light(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(-65.0f, -1.0f, 0.1f), root->transform);
     directional_light->transform->set_local_position(glm::vec3(0.0f, 5.0f, 0.0f));
     auto const directional_light_comp = directional_light->get_component<DirectionalLight>();
     auto const directional_light_material = directional_light->get_component<Cube>()->material;
@@ -67,7 +74,6 @@ void Game::initialize()
     spot2_arrow->transform->set_euler_angles(glm::vec3(0.0f, 90.0f, 0.0f));
     spot2_arrow->add_component<Model>(Model::create("./res/models/arrow/scene.gltf", spot_light2_material));
 
-    auto instanced_shader = Shader::create("./res/shaders/standard_instanced.vert", "./res/shaders/standard.frag");
     auto standard_shader = Shader::create("./res/shaders/standard.vert", "./res/shaders/standard.frag");
     auto const cube_material = Material::create(instanced_shader, 0, true);
     auto const roof_material = Material::create(instanced_shader, 0, true);
@@ -81,7 +87,7 @@ void Game::initialize()
 
     float house_x = 0.0f;
     float house_z = 0.0f;
-    for (int32_t i = 0; i < 100; ++i)
+    for (int32_t i = 0; i < 0; ++i)
     {
         auto const house = CommonEntities::create_cube("House" + std::to_string(i), "./res/textures/container.png", "./res/textures/container_specular.png", cube_material);
         house->transform->set_parent(root->transform);
