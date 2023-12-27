@@ -17,9 +17,6 @@ int32_t Engine::initialize()
     if (auto const result = initialize_thirdparty(); result != 0)
         return result;
 
-    auto const input_system = std::make_shared<Input>(window);
-    Input::set_input(input_system);
-
     InternalMeshData::initialize();
 
     auto const renderer = Renderer::create();
@@ -115,13 +112,12 @@ void Engine::run()
         MainScene::get_instance()->run_frame();
 
         // Render frame
-        ImGui::Render();
-
         glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         Renderer::get_instance()->render();
 
+        ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
         glfwMakeContextCurrent(window->get_glfw_window());
@@ -163,6 +159,10 @@ int32_t Engine::initialize_thirdparty()
 
     if (window == nullptr)
         return 2;
+
+    // NOTE: Creating input callbacks needs to happen BEFORE setting up imgui (for some unknown reason)
+    auto const input_system = std::make_shared<Input>(window);
+    Input::set_input(input_system);
 
     if (setup_glad() != 0)
         return 3;
