@@ -30,6 +30,9 @@ void Renderer::initialize()
     glEnable(GL_CULL_FACE);
     glEnable(GL_MULTISAMPLE);
 
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     frustum_culling_shader = Shader::create("./res/shaders/frustum_culling.glsl");
 
     // TODO: GPU instancing on one material currently supports only the first mesh that was bound to the material.
