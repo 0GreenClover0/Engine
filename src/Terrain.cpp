@@ -52,6 +52,13 @@ Mesh Terrain::create_terrain_from_height_map()
     int32_t width, height, number_of_components;
     unsigned char* data = stbi_load(height_map_path.c_str(), &width, &height, &number_of_components, 0);
 
+    if (data == nullptr)
+    {
+        std::cout << "Height map failed to load at path: " << height_map_path << '\n';
+        stbi_image_free(data);
+        return Mesh::create({}, {}, {}, draw_type, material);
+    }
+
     std::vector<Vertex> vertices = {};
     vertices.reserve(height * width);
 
