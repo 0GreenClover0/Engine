@@ -148,7 +148,14 @@ void main()
     vec3 normal = normalize(NormalVertex);
     vec3 viewDirection = normalize(cameraPosition - FragmentPosition);
 
-    diffuse_texture = vec3(texture(material.texture_diffuse1, TextureCoordinatesVertex));
+    vec4 diffuse_texture_with_alpha = texture(material.texture_diffuse1, TextureCoordinatesVertex);
+
+    if (diffuse_texture_with_alpha.w < 0.01)
+    {
+        discard;
+    }
+
+    diffuse_texture = vec3(diffuse_texture_with_alpha);
     specular_texture = vec3(texture(material.texture_specular1, TextureCoordinatesVertex));
 
     common_diffuse_terms = material.color * diffuse_texture;
@@ -174,5 +181,5 @@ void main()
         result += CalculateSpotLight(spotLights[i], normal, viewDirection);
     }
 
-    FragColor = vec4(result, 1.0);
+    FragColor = vec4(result.xyz, diffuse_texture_with_alpha.w);
 }
