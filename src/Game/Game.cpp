@@ -1,5 +1,7 @@
 #include "Game.h"
 
+#include <glm/gtc/random.hpp>
+
 #include "Camera.h"
 #include "CommonEntities.h"
 #include "Cube.h"
@@ -33,8 +35,13 @@ void Game::initialize()
     player_input->window = window;
 
     auto const grass_material = Material::create(instanced_shader, 101, true);
-    auto const grass = Entity::create("Grass");
-    grass->add_component<Grass>(Grass::create(grass_material, 1, "./res/textures/grass.png"));
+
+    for (uint32_t i = 0; i < 10000; ++i)
+    {
+        auto const grass = Entity::create("Grass");
+        grass->add_component<Grass>(Grass::create(grass_material, 1, "./res/textures/grass.png"));
+        grass->transform->set_local_position(glm::vec3(glm::linearRand(-50.0f, 50.0f), 0.0f, glm::linearRand(-50.0f, 50.0f)));
+    }
 
     auto const root = Entity::create("Root");
 
@@ -110,12 +117,12 @@ void Game::initialize()
 
     std::vector<std::string> const skybox_texture_paths =
     {
-        "./res/textures/skybox/storforsen/posx.jpg",
-        "./res/textures/skybox/storforsen/negx.jpg",
-        "./res/textures/skybox/storforsen/posy.jpg",
-        "./res/textures/skybox/storforsen/negy.jpg",
-        "./res/textures/skybox/storforsen/posz.jpg",
-        "./res/textures/skybox/storforsen/negz.jpg"
+        "./res/textures/skybox/interstellar/interstellar_ft.tga",
+        "./res/textures/skybox/interstellar/interstellar_bk.tga",
+        "./res/textures/skybox/interstellar/interstellar_up.tga",
+        "./res/textures/skybox/interstellar/interstellar_dn.tga",
+        "./res/textures/skybox/interstellar/interstellar_rt.tga",
+        "./res/textures/skybox/interstellar/interstellar_lf.tga",
     };
     auto const skybox = CommonEntities::create_skybox(skybox_texture_paths, root->transform);
 
