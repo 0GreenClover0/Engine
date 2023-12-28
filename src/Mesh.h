@@ -17,8 +17,15 @@ public:
     ~Mesh();
     Mesh(Mesh&& mesh) noexcept;
 
+    enum DrawFunctionType
+    {
+        Indexed,
+        NotIndexed,
+    };
+
     static Mesh create(std::vector<Vertex> const& vertices, std::vector<std::uint32_t> const& indices,
-                       std::vector<Texture> const& textures, GLenum draw_type, std::shared_ptr<Material> const& material);
+                       std::vector<Texture> const& textures, GLenum draw_type, std::shared_ptr<Material> const& material,
+                       DrawFunctionType const draw_function = DrawFunctionType::Indexed);
 
     void draw() const;
     void draw(uint32_t const size, void const* offset) const;
@@ -42,11 +49,13 @@ public:
 
 protected:
     Mesh(std::vector<Vertex> vertices, std::vector<std::uint32_t> indices, std::vector<Texture> textures,
-         GLenum draw_type, std::shared_ptr<Material> const& material);
+         GLenum draw_type, std::shared_ptr<Material> const& material, DrawFunctionType const draw_function);
     void setup_mesh();
 
     [[nodiscard]] BoundingBox calculate_adjusted_bounding_box(glm::mat4 const& model_matrix) const;
 
 private:
+    DrawFunctionType draw_function;
+
     std::uint32_t VAO = {}, VBO = {}, EBO = {};
 };

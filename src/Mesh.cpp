@@ -12,8 +12,9 @@
 #include "Vertex.h"
 
 Mesh::Mesh(std::vector<Vertex> vertices, std::vector<std::uint32_t> indices, std::vector<Texture> textures,
-           GLenum draw_type, std::shared_ptr<Material> const& material)
-    : vertices(std::move(vertices)), indices(std::move(indices)), textures(std::move(textures)), draw_type(draw_type), material(material)
+           GLenum draw_type, std::shared_ptr<Material> const& material, DrawFunctionType const draw_function)
+    : vertices(std::move(vertices)), indices(std::move(indices)), textures(std::move(textures)), draw_type(draw_type), material(material),
+      draw_function(draw_function)
 {
 }
 
@@ -191,7 +192,7 @@ Mesh::~Mesh()
     glDeleteVertexArrays(1, &VAO);
 }
 
-Mesh::Mesh(Mesh&& mesh) noexcept : Mesh(mesh.vertices, mesh.indices, mesh.textures, mesh.draw_type, mesh.material)
+Mesh::Mesh(Mesh&& mesh) noexcept : Mesh(mesh.vertices, mesh.indices, mesh.textures, mesh.draw_type, mesh.material, mesh.draw_function)
 {
     VAO = mesh.VAO;
     VBO = mesh.VBO;
@@ -207,9 +208,9 @@ Mesh::Mesh(Mesh&& mesh) noexcept : Mesh(mesh.vertices, mesh.indices, mesh.textur
 }
 
 Mesh Mesh::create(std::vector<Vertex> const& vertices, std::vector<std::uint32_t> const& indices, std::vector<Texture> const& textures,
-                  GLenum const draw_type, std::shared_ptr<Material> const& material)
+                  GLenum const draw_type, std::shared_ptr<Material> const& material, DrawFunctionType const draw_function)
 {
-    auto mesh = Mesh(vertices, indices, textures, draw_type, material);
+    auto mesh = Mesh(vertices, indices, textures, draw_type, material, draw_function);
     mesh.setup_mesh();
     return mesh;
 }
@@ -220,10 +221,12 @@ void Mesh::draw() const
 
     // Draw mesh
     glBindVertexArray(VAO);
-    if (draw_type == GL_LINE_LOOP)
+
+    if (draw_function == DrawFunctionType::NotIndexed)
         glDrawArrays(draw_type, 0, static_cast<int>(vertices.size()));
     else
         glDrawElements(draw_type, static_cast<int>(indices.size()), GL_UNSIGNED_INT, 0);
+
     glBindVertexArray(0);
 
     unbind_textures();
@@ -235,7 +238,14 @@ void Mesh::draw(uint32_t const size, void const* offset) const
 
     glBindVertexArray(VAO);
 
-    glDrawElements(draw_type, size, GL_UNSIGNED_INT, offset);
+    if (draw_function == DrawFunctionType::Indexed)
+    {
+        glDrawElements(draw_type, size, GL_UNSIGNED_INT, offset);
+    }
+    else
+    {
+        std::cout << "Non indexed drawing with offset is not currently supported." << "\n";
+    }
 
     glBindVertexArray(0);
 

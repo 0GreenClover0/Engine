@@ -43,5 +43,5 @@ Mesh Ellipse::create_ellipse() const
     } 
     glEnd();
 
-    return Mesh::create(vertices, {}, {}, draw_type, material);
+    return Mesh::create(vertices, {}, {}, draw_type, material, Mesh::NotIndexed);
 }
