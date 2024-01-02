@@ -40,6 +40,17 @@ std::shared_ptr<Shader> Shader::create(std::string vertex_path, std::string frag
     return shader;
 }
 
+std::shared_ptr<Shader> Shader::create(std::string vertex_path, std::string tessellation_control_path,
+    std::string tessellation_evaluation_path, std::string fragment_path)
+{
+    auto shader = std::shared_ptr<Shader>(new Shader(std::move(vertex_path), std::move(tessellation_control_path),
+                                                     std::move(tessellation_evaluation_path), std::move(fragment_path)));
+
+    Renderer::get_instance()->register_shader(shader);
+
+    return shader;
+}
+
 Shader::Shader(std::string compute_path) : compute_path(std::move(compute_path))
 {
     char const* compute_path_c_str = this->compute_path.c_str();
@@ -144,6 +155,59 @@ Shader::Shader(std::string vertex_path, std::string fragment_path, std::string g
     glDeleteShader(vertex_shader_id);
     glDeleteShader(fragment_shader_id);
     glDeleteShader(geometry_shader_id);
+}
+
+Shader::Shader(std::string vertex_path, std::string tessellation_control_path, std::string tessellation_evaluation_path,
+               std::string fragment_path) : vertex_path(std::move(vertex_path)),
+                                            tessellation_control_path(std::move(tessellation_control_path)),
+                                            tessellation_evaluation_path(std::move(tessellation_evaluation_path)),
+                                            fragment_path(std::move(fragment_path))
+{
+    char const* vertex_path_c_str = this->vertex_path.c_str();
+    char const* tessellation_control_path_c_str = this->tessellation_control_path.c_str();
+    char const* tessellation_evaluation_path_c_str = this->tessellation_evaluation_path.c_str();
+    char const* fragment_path_c_str = this->fragment_path.c_str();
+
+    program_id = glCreateProgram();
+
+    int32_t const vertex_shader_id = attach(vertex_path_c_str, GL_VERTEX_SHADER);
+
+    if (vertex_shader_id == -1)
+        return;
+
+    int32_t const fragment_shader_id = attach(fragment_path_c_str, GL_FRAGMENT_SHADER);
+
+    if (fragment_shader_id == -1)
+        return;
+
+    int32_t const tessellation_control_shader_id = attach(tessellation_control_path_c_str, GL_TESS_CONTROL_SHADER);
+
+    if (tessellation_control_shader_id == -1)
+        return;
+
+    int32_t const tessellation_evaluation_shader_id = attach(tessellation_evaluation_path_c_str, GL_TESS_EVALUATION_SHADER);
+
+    if (tessellation_evaluation_shader_id == -1)
+        return;
+
+    glLinkProgram(program_id);
+
+    int32_t success = 0;
+    int32_t constexpr log_size = 512;
+    char info_log[log_size] = {};
+
+    glGetProgramiv(program_id, GL_LINK_STATUS, &success);
+    if (!success)
+    {
+        glGetProgramInfoLog(program_id, log_size, nullptr, info_log);
+        std::cout << "Error. OpenGL program linking failed" << std::endl << info_log << std::endl;
+        return;
+    }
+
+    glDeleteShader(vertex_shader_id);
+    glDeleteShader(fragment_shader_id);
+    glDeleteShader(tessellation_control_shader_id);
+    glDeleteShader(tessellation_evaluation_shader_id);
 }
 
 int32_t Shader::attach(char const* path, int const type) const

@@ -15,6 +15,8 @@ public:
     static std::shared_ptr<Shader> create(std::string compute_path);
     static std::shared_ptr<Shader> create(std::string vertex_path, std::string fragment_path);
     static std::shared_ptr<Shader> create(std::string vertex_path, std::string fragment_path, std::string geometry_path);
+    static std::shared_ptr<Shader> create(std::string vertex_path, std::string tessellation_control_path,
+                                          std::string tessellation_evaluation_path, std::string fragment_path);
 
     Shader() = delete;
 
@@ -29,14 +31,18 @@ public:
     std::vector<std::shared_ptr<Material>> materials;
 
 private:
-    Shader(std::string compute_path);
+    explicit Shader(std::string compute_path);
     Shader(std::string vertex_path, std::string fragment_path);
     Shader(std::string vertex_path, std::string fragment_path, std::string geometry_path);
+    Shader(std::string vertex_path, std::string tessellation_control_path, std::string tessellation_evaluation_path,
+           std::string fragment_path);
 
     int32_t attach(char const* path, int type) const;
 
     std::string compute_path = {};
     std::string vertex_path = {};
+    std::string tessellation_control_path = {};
+    std::string tessellation_evaluation_path = {};
     std::string fragment_path = {};
     std::string geometry_path = {};
 
