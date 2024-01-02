@@ -36,6 +36,9 @@ public:
     uint32_t stack_count = 5;
     float radius_multiplier = 2.0f;
 
+    // NOTE: This does not work for gpu instanced meshes, as model matrices are batched together in a single SSBO
+    bool needs_view_model = false;
+
     // TODO: GPU instancing on one material currently supports only the first mesh that was bound to the material.
     bool is_gpu_instanced = false;
 
