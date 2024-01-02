@@ -256,6 +256,7 @@ void Mesh::bind_textures() const
 {
     std::uint32_t diffuse_number = 1;
     std::uint32_t specular_number = 1;
+    std::uint32_t height_number = 1;
 
     for (std::uint32_t i = 0; i < textures.size(); ++i)
     {
@@ -263,10 +264,19 @@ void Mesh::bind_textures() const
 
         std::string number;
         std::string name = "material." + textures[i].type;
+
         if (textures[i].type == "texture_diffuse")
+        {
             number = std::to_string(diffuse_number++);
+        }
         else if (textures[i].type == "texture_specular")
+        {
             number = std::to_string(specular_number++);
+        }
+        else if (textures[i].type == "texture_height")
+        {
+            number = std::to_string(height_number++);
+        }
 
         material->shader->set_int(name + number, i);
         glBindTexture(GL_TEXTURE_2D, textures[i].id);
