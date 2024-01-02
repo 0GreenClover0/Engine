@@ -86,10 +86,13 @@ void Game::initialize()
     auto const cube_material = Material::create(instanced_shader, 0, true);
     auto const roof_material = Material::create(instanced_shader, 0, true);
     auto const floor_material = Material::create(standard_shader);
-    auto const terrain_material = Material::create(standard_shader);
+
+    auto terrain_shader = Shader::create("./res/shaders/terrain.vert", "./res/shaders/terrain.tcs", "./res/shaders/terrain.tes", "./res/shaders/terrain.frag");
+    auto const terrain_material = Material::create(terrain_shader);
+    terrain_material->needs_view_model = true;
 
     auto const terrain = Entity::create("Terrain");
-    terrain->add_component<Terrain>(Terrain::create(terrain_material, "./res/textures/map/iceland_heightmap.png"));
+    terrain->add_component<Terrain>(Terrain::create(terrain_material, true, "./res/textures/map/italy_height.png"));
 
     //auto const floor = Entity::create("Floor");
     //floor->transform->set_parent(root->transform);

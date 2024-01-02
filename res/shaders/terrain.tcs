@@ -1,0 +1,54 @@
+#version 430 core
+
+layout (vertices = 4) out;
+
+uniform mat4 VM;
+
+in vec2 TextureCoordinatesVertex[];
+out vec2 TextureCoordinatesTessellation[];
+
+const int MIN_TESS_LEVEL = 1;
+const int MAX_TESS_LEVEL = 256;
+const float MIN_DISTANCE = 0.0;
+const float MAX_DISTANCE = 1000.0;
+const float MAX_MIN_DIFFERENCE = MAX_DISTANCE - MIN_DISTANCE;
+
+void main()
+{
+    gl_out[gl_InvocationID].gl_Position = gl_in[gl_InvocationID].gl_Position;
+    TextureCoordinatesTessellation[gl_InvocationID] = TextureCoordinatesVertex[gl_InvocationID];
+
+    if (gl_InvocationID == 0)
+    {
+        vec4 eyeSpacePos00 = VM * gl_in[0].gl_Position;
+        vec4 eyeSpacePos01 = VM * gl_in[1].gl_Position;
+        vec4 eyeSpacePos10 = VM * gl_in[2].gl_Position;
+        vec4 eyeSpacePos11 = VM * gl_in[3].gl_Position;
+
+        // Compute the distance from the camera to the vertices
+        float distance00 = clamp((abs(eyeSpacePos00.z) - MIN_DISTANCE) / (MAX_MIN_DIFFERENCE), 0.0, 1.0);
+        float distance01 = clamp((abs(eyeSpacePos01.z) - MIN_DISTANCE) / (MAX_MIN_DIFFERENCE), 0.0, 1.0);
+        float distance10 = clamp((abs(eyeSpacePos10.z) - MIN_DISTANCE) / (MAX_MIN_DIFFERENCE), 0.0, 1.0);
+        float distance11 = clamp((abs(eyeSpacePos11.z) - MIN_DISTANCE) / (MAX_MIN_DIFFERENCE), 0.0, 1.0);
+        // float distance00 = clamp((length(eyeSpacePos00.xyz) - MIN_DISTANCE) / (MAX_MIN_DIFFERENCE), 0.0, 1.0);
+        // float distance01 = clamp((length(eyeSpacePos01.xyz) - MIN_DISTANCE) / (MAX_MIN_DIFFERENCE), 0.0, 1.0);
+        // float distance10 = clamp((length(eyeSpacePos10.xyz) - MIN_DISTANCE) / (MAX_MIN_DIFFERENCE), 0.0, 1.0);
+        // float distance11 = clamp((length(eyeSpacePos11.xyz) - MIN_DISTANCE) / (MAX_MIN_DIFFERENCE), 0.0, 1.0);
+
+        // Compute the tessellation level
+        float tessLevel0 = mix(MAX_TESS_LEVEL, MIN_TESS_LEVEL, min(distance10, distance00));
+        float tessLevel1 = mix(MAX_TESS_LEVEL, MIN_TESS_LEVEL, min(distance00, distance01));
+        float tessLevel2 = mix(MAX_TESS_LEVEL, MIN_TESS_LEVEL, min(distance01, distance11));
+        float tessLevel3 = mix(MAX_TESS_LEVEL, MIN_TESS_LEVEL, min(distance11, distance10));
+
+        // Set the outer tessellation levels to corresponding tessellation levels
+        gl_TessLevelOuter[0] = tessLevel0;
+        gl_TessLevelOuter[1] = tessLevel1;
+        gl_TessLevelOuter[2] = tessLevel2;
+        gl_TessLevelOuter[3] = tessLevel3;
+
+        // Set inner tessellation level to the max of the two parallel edges
+        gl_TessLevelInner[0] = max(tessLevel1, tessLevel3);
+        gl_TessLevelInner[1] = max(tessLevel0, tessLevel2);
+    }
+}

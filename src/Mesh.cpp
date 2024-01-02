@@ -46,6 +46,11 @@ void Mesh::setup_mesh()
     glEnableVertexAttribArray(2);
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texture_coordinates));
 
+    if (draw_type == GL_PATCHES)
+    {
+        glPatchParameteri(GL_PATCH_VERTICES, 4); // FIXME: Hardcoded patch size
+    }
+
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
