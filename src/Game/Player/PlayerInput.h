@@ -10,7 +10,7 @@ public:
     std::shared_ptr<Entity> camera_entity;
     std::shared_ptr<Window> window;
 
-    float camera_speed = 2.5f;
+    float camera_speed = 32.5f;
 
     void awake() override;
     void update() override;

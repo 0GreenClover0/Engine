@@ -36,10 +36,10 @@ void PlayerInput::process_input() const
         camera_entity->transform->set_local_position(camera_entity->transform->get_local_position() += glm::normalize(glm::cross(camera->get_front(), camera->get_up())) * current_speed);
 
     if (Input::input->is_key_down(GLFW_KEY_Q))
-        camera_entity->transform->set_local_position(camera_entity->transform->get_local_position() += current_speed * camera->get_up());
+        camera_entity->transform->set_local_position(camera_entity->transform->get_local_position() += current_speed * glm::vec3(0.0f, 1.0f, 0.0f));
 
     if (Input::input->is_key_down(GLFW_KEY_E))
-        camera_entity->transform->set_local_position(camera_entity->transform->get_local_position() -= current_speed * camera->get_up());
+        camera_entity->transform->set_local_position(camera_entity->transform->get_local_position() -= current_speed * glm::vec3(0.0f, 1.0f, 0.0f));
 }
 
 void PlayerInput::mouse_callback(double const x, double const y)
