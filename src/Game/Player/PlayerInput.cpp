@@ -17,7 +17,31 @@ void PlayerInput::awake()
 
 void PlayerInput::update()
 {
-    process_input();
+    if (Input::input->get_key_down(GLFW_KEY_T))
+    {
+        terminator_mode = !terminator_mode;
+        camera_entity->transform->set_local_position(glm::vec3(0.0f, 2.5f, 4.0f));
+
+        if (terminator_mode)
+        {
+            camera_entity->transform->set_euler_angles(camera_euler_angles_terminator);
+            glfwSetInputMode(window->get_glfw_window(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        }
+        else
+        {
+            camera_euler_angles_terminator = camera_entity->transform->get_euler_angles();
+            glfwSetInputMode(window->get_glfw_window(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        }
+    }
+
+    if (!terminator_mode)
+    {
+        process_input();
+    }
+    else
+    {
+        process_terminator_input();
+    }
 }
 
 void PlayerInput::process_input() const
@@ -42,6 +66,30 @@ void PlayerInput::process_input() const
         camera_entity->transform->set_local_position(camera_entity->transform->get_local_position() -= current_speed * glm::vec3(0.0f, 1.0f, 0.0f));
 }
 
+void PlayerInput::process_terminator_input() const
+{
+    float const current_speed = player_speed * delta_time;
+    if (Input::input->get_key(GLFW_KEY_W))
+        player->transform->set_local_position(player->transform->get_local_position() -= current_speed * player_model->transform->get_forward());
+
+    if (Input::input->get_key(GLFW_KEY_S))
+        player->transform->set_local_position(player->transform->get_local_position() += current_speed * player_model->transform->get_forward());
+
+    if (Input::input->get_key(GLFW_KEY_A))
+    {
+        camera_parent->transform->set_euler_angles(camera_parent->transform->get_euler_angles() += glm::vec3(0.0f, 10.0f, 0.0f) * current_speed);
+        player_model->transform->set_euler_angles(player_model->transform->get_euler_angles() += glm::vec3(0.0f, 10.0f, 0.0f) * current_speed);
+        camera_entity->transform->set_euler_angles(camera_entity->transform->get_euler_angles() += glm::vec3(0.0f, 10.0f, 0.0f) * current_speed);
+    }
+
+    if (Input::input->get_key(GLFW_KEY_D))
+    {
+        camera_parent->transform->set_euler_angles(camera_parent->transform->get_euler_angles() -= glm::vec3(0.0f, 10.0f, 0.0f) * current_speed);
+        player_model->transform->set_euler_angles(player_model->transform->get_euler_angles() -= glm::vec3(0.0f, 10.0f, 0.0f) * current_speed);
+        camera_entity->transform->set_euler_angles(camera_entity->transform->get_euler_angles() -= glm::vec3(0.0f, 10.0f, 0.0f) * current_speed);
+    }
+}
+
 void PlayerInput::mouse_callback(double const x, double const y)
 {
     if (mouse_just_entered)
@@ -58,6 +106,14 @@ void PlayerInput::mouse_callback(double const x, double const y)
 
     x_offset *= sensitivity;
     y_offset *= sensitivity;
+
+    if (terminator_mode)
+    {
+        float const current_rotation = player_head->transform->get_euler_angles().y + y_offset;
+        float const new_rotation = std::clamp(current_rotation, -40.0f, 40.0f);
+        player_head->transform->set_euler_angles(glm::vec3(0.0f, new_rotation, 0.0F));
+        return;
+    }
 
     yaw += x_offset;
     pitch = glm::clamp(pitch + y_offset, -89.0, 89.0);

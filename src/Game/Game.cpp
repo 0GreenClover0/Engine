@@ -24,6 +24,7 @@ void Game::initialize()
     auto standard_shader = Shader::create("./res/shaders/standard.vert", "./res/shaders/standard.frag");
     auto reflective_shader = Shader::create("./res/shaders/standard.vert", "./res/shaders/reflective.frag");
     auto refractive_shader = Shader::create("./res/shaders/standard.vert", "./res/shaders/refractive.frag");
+    auto const standard_material = Material::create(standard_shader);
 
     camera = Entity::create("Camera");
     camera->transform->set_local_position(glm::vec3(0.0f, 0.0f, 10.0f));
@@ -36,21 +37,23 @@ void Game::initialize()
     auto const player_input = player->add_component<PlayerInput>();
     player_input->set_can_tick(true);
     player_input->camera_entity = camera;
+    player_input->player = player;
     player_input->window = window;
 
     auto const player_model = Entity::create("PlayerModel");
     player_model->transform->set_parent(player->transform);
-    player_model->transform->set_euler_angles(glm::vec3(0.0f, 0.0f, 0.0f));
+    player_model->transform->set_euler_angles(glm::vec3(0.0f, 180.0f, 0.0f));
     player_model->transform->set_local_scale(glm::vec3(0.01f, 0.01f, 0.01f));
+
+    auto const camera_parent = Entity::create("CameraParent");
+    camera_parent->transform->set_parent(player->transform);
+    camera->transform->set_parent(camera_parent->transform);
+    player_input->camera_parent = camera_parent;
 
     auto terminator_material = Material::create(standard_shader);
     auto const player_body = Entity::create("Body");
     player_body->transform->set_parent(player_model->transform);
-
-    auto const player_head = Entity::create("Head");
-    player_head->transform->set_parent(player_model->transform);
-    //player_head->transform->set_local_position(glm::vec3(10.0f, -2.0f, 200.0f));
-    player_head->add_component<Model>(Model::create("./res/models/terminator2/Terminator2.obj", terminator_material));
+    player_body->add_component<Model>(Model::create("./res/models/terminator2/Terminator2.obj", terminator_material));
 
     auto const reflective_material = Material::create(reflective_shader);
     reflective_material->needs_skybox = true;
@@ -66,13 +69,28 @@ void Game::initialize()
 
     auto const head = Entity::create("Head");
     head->transform->set_parent(player_model->transform);
+    head->transform->set_local_position(glm::vec3(0.0f, 185.0f, 0.0f));
     head->add_component<Model>(Model::create("./res/models/terminator2/Head.obj", terminator_material));
+    player_input->player_head = head;
+    player_input->player_model = player_model;
 
-    auto const grass_material = Material::create(instanced_shader, 101, true);
+    auto const reflective_cube = Entity::create("Reflective");
+    reflective_cube->add_component<Cube>(Cube::create(reflective_material));
+    reflective_cube->transform->set_local_position(glm::vec3(-5.0f, 1.0f, 0.0f));
+    reflective_cube->transform->set_local_scale(glm::vec3(2.0f, 2.0f, 2.0f));
 
+    auto const refractive_cube = Entity::create("Refractive");
+    refractive_cube->add_component<Cube>(Cube::create(refractive_material));
+    refractive_cube->transform->set_local_position(glm::vec3(5.0f, 1.0f, 0.0f));
+    refractive_cube->transform->set_local_scale(glm::vec3(2.0f, 2.0f, 2.0f));
+
+    auto const grass_material = Material::create(instanced_shader, 101, true, true);
+
+    auto const grass_parent = Entity::create("Grass");
     for (uint32_t i = 0; i < 10000; ++i)
     {
         auto const grass = Entity::create("Grass");
+        grass->transform->set_parent(grass_parent->transform);
         grass->add_component<Grass>(Grass::create(grass_material, 1, "./res/textures/grass.png"));
         grass->transform->set_local_position(glm::vec3(glm::linearRand(-50.0f, 50.0f), 0.0f, glm::linearRand(-50.0f, 50.0f)));
     }
@@ -124,6 +142,7 @@ void Game::initialize()
     terrain_material->needs_view_model = true;
 
     auto const terrain = Entity::create("Terrain");
+    terrain->transform->set_local_position(glm::vec3(0.0f, 11.0f, 0.0f));
     terrain->add_component<Terrain>(Terrain::create(terrain_material, true, "./res/textures/map/italy_height.png"));
 
     //auto const floor = Entity::create("Floor");
@@ -134,7 +153,7 @@ void Game::initialize()
 
     float house_x = 0.0f;
     float house_z = 0.0f;
-    for (int32_t i = 0; i < 0; ++i)
+    for (int32_t i = 0; i < 40000; ++i)
     {
         auto const house = CommonEntities::create_cube("House" + std::to_string(i), "./res/textures/container.png", "./res/textures/container_specular.png", cube_material);
         house->transform->set_parent(root->transform);
