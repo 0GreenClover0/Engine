@@ -21,6 +21,9 @@ Game::Game(std::shared_ptr<Window> const& window) : window(window)
 void Game::initialize()
 {
     auto instanced_shader = Shader::create("./res/shaders/standard_instanced.vert", "./res/shaders/standard.frag");
+    auto standard_shader = Shader::create("./res/shaders/standard.vert", "./res/shaders/standard.frag");
+    auto reflective_shader = Shader::create("./res/shaders/standard.vert", "./res/shaders/reflective.frag");
+    auto refractive_shader = Shader::create("./res/shaders/standard.vert", "./res/shaders/refractive.frag");
 
     camera = Entity::create("Camera");
     camera->transform->set_local_position(glm::vec3(0.0f, 0.0f, 10.0f));
@@ -34,6 +37,36 @@ void Game::initialize()
     player_input->set_can_tick(true);
     player_input->camera_entity = camera;
     player_input->window = window;
+
+    auto const player_model = Entity::create("PlayerModel");
+    player_model->transform->set_parent(player->transform);
+    player_model->transform->set_euler_angles(glm::vec3(0.0f, 0.0f, 0.0f));
+    player_model->transform->set_local_scale(glm::vec3(0.01f, 0.01f, 0.01f));
+
+    auto terminator_material = Material::create(standard_shader);
+    auto const player_body = Entity::create("Body");
+    player_body->transform->set_parent(player_model->transform);
+
+    auto const player_head = Entity::create("Head");
+    player_head->transform->set_parent(player_model->transform);
+    //player_head->transform->set_local_position(glm::vec3(10.0f, -2.0f, 200.0f));
+    player_head->add_component<Model>(Model::create("./res/models/terminator2/Terminator2.obj", terminator_material));
+
+    auto const reflective_material = Material::create(reflective_shader);
+    reflective_material->needs_skybox = true;
+    auto const left_hand = Entity::create("LeftHand");
+    left_hand->transform->set_parent(player_model->transform);
+    left_hand->add_component<Model>(Model::create("./res/models/terminator2/LeftHand.obj", reflective_material));
+
+    auto const refractive_material = Material::create(refractive_shader);
+    refractive_material->needs_skybox = true;
+    auto const right_hand = Entity::create("RightHand");
+    right_hand->transform->set_parent(player_model->transform);
+    right_hand->add_component<Model>(Model::create("./res/models/terminator2/RightHand.obj", refractive_material));
+
+    auto const head = Entity::create("Head");
+    head->transform->set_parent(player_model->transform);
+    head->add_component<Model>(Model::create("./res/models/terminator2/Head.obj", terminator_material));
 
     auto const grass_material = Material::create(instanced_shader, 101, true);
 
@@ -82,7 +115,6 @@ void Game::initialize()
     spot2_arrow->transform->set_euler_angles(glm::vec3(0.0f, 90.0f, 0.0f));
     spot2_arrow->add_component<Model>(Model::create("./res/models/arrow/scene.gltf", spot_light2_material));
 
-    auto standard_shader = Shader::create("./res/shaders/standard.vert", "./res/shaders/standard.frag");
     auto const cube_material = Material::create(instanced_shader, 0, true);
     auto const roof_material = Material::create(instanced_shader, 0, true);
     auto const floor_material = Material::create(standard_shader);
