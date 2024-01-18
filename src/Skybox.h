@@ -14,10 +14,30 @@ public:
     std::string get_name() const override;
 
     virtual void draw() const override;
+
+    uint32_t get_texture_id() const;
+
+    static void bind_skybox();
+
+    static void set_instance(std::shared_ptr<Skybox> const& skybox)
+    {
+        instance = skybox;
+    }
+
+    static std::shared_ptr<Skybox> get_instance()
+    {
+        return instance;
+    }
+
+    Skybox(Skybox const&) = delete;
+    void operator=(Skybox const&) = delete;
+
 private:
     void create_cube();
     void load_textures();
     void setup_mesh();
+
+    inline static std::shared_ptr<Skybox> instance;
 
     uint32_t texture_id = 0;
     std::vector<std::string> face_paths;

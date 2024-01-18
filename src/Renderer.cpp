@@ -10,6 +10,7 @@
 #include "AK.h"
 #include "Camera.h"
 #include "Entity.h"
+#include "Skybox.h"
 
 std::shared_ptr<Renderer> Renderer::create()
 {
@@ -179,6 +180,9 @@ void Renderer::draw(std::shared_ptr<Material> const& material, glm::mat4 const& 
     {
         if (material->needs_view_model)
             material->shader->set_mat4("VM", Camera::get_main_camera()->get_view_matrix() * drawable->entity->transform->get_model_matrix());
+
+        if (material->needs_skybox)
+            Skybox::bind_skybox();
 
         material->shader->set_mat4("PVM", projection_view * drawable->entity->transform->get_model_matrix());
         material->shader->set_mat4("model", drawable->entity->transform->get_model_matrix());

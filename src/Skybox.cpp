@@ -47,6 +47,16 @@ void Skybox::draw() const
     glDepthFunc(depth_func_previous_value);
 }
 
+uint32_t Skybox::get_texture_id() const
+{
+    return texture_id;
+}
+
+void Skybox::bind_skybox()
+{
+    glBindTexture(GL_TEXTURE_CUBE_MAP, instance->texture_id);
+}
+
 void Skybox::create_cube()
 {
     setup_mesh();

@@ -17,7 +17,8 @@ std::shared_ptr<Entity> create_skybox(std::vector<std::string> const& skybox_tex
     auto skybox_shader = Shader::create("./res/shaders/skybox.vert", "./res/shaders/skybox.frag");
     auto skybox_material = Material::create(skybox_shader, SKYBOX_RENDER_ORDER);
 
-    skybox->add_component<Skybox>(skybox_material, skybox_texture_paths);
+    auto const skybox_comp = skybox->add_component<Skybox>(skybox_material, skybox_texture_paths);
+    Skybox::set_instance(skybox_comp);
     skybox->transform->set_parent(parent);
 
     return skybox;
