@@ -80,6 +80,9 @@ private:
     void recompute_forward_right_up_if_needed();
     void add_child(std::shared_ptr<Transform> const& transform);
 
+    void set_dirty();
+    void set_parent_dirty();
+
     glm::vec3 m_world_up = glm::vec3(0.0f, 1.0f, 0.0f);
     glm::vec3 m_euler_angles_when_caching = glm::vec3(std::nanf("0"), std::nanf("0"), std::nanf("0"));
 };

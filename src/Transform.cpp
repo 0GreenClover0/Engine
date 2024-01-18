@@ -43,17 +43,7 @@ void Transform::set_local_position(glm::vec3 const& position)
 
     m_local_position = position;
 
-    if (!m_local_dirty)
-    {
-        for (auto&& child : children)
-        {
-            child->m_parent_dirty = true;
-            child->needs_bounding_box_adjusting = true;
-        }
-    }
-
-    m_local_dirty = true;
-    needs_bounding_box_adjusting = true;
+    set_dirty();
 }
 
 glm::vec3 Transform::get_local_position() const
@@ -71,17 +61,7 @@ void Transform::set_local_scale(glm::vec3 const& scale)
 
     m_local_scale = scale;
 
-    if (!m_local_dirty)
-    {
-        for (auto&& child : children)
-        {
-            child->m_parent_dirty = true;
-            child->needs_bounding_box_adjusting = true;
-        }
-    }
-
-    m_local_dirty = true;
-    needs_bounding_box_adjusting = true;
+    set_dirty();
 }
 
 glm::vec3 Transform::get_local_scale() const
@@ -99,17 +79,7 @@ void Transform::set_euler_angles(glm::vec3 const& euler_angles)
 
     this->m_euler_angles = euler_angles;
 
-    if (!m_local_dirty)
-    {
-        for (auto&& child : children)
-        {
-            child->m_parent_dirty = true;
-            child->needs_bounding_box_adjusting = true;
-        }
-    }
-
-    m_local_dirty = true;
-    needs_bounding_box_adjusting = true;
+    set_dirty();
 }
 
 glm::vec3 Transform::get_euler_angles() const
@@ -226,6 +196,34 @@ void Transform::add_child(std::shared_ptr<Transform> const& transform)
 {
     children.emplace_back(transform);
     transform->parent = shared_from_this();
+}
+
+void Transform::set_dirty()
+{
+    if (!m_local_dirty)
+    {
+        for (auto&& child : children)
+        {
+            child->set_parent_dirty();
+        }
+    }
+
+    m_local_dirty = true;
+    needs_bounding_box_adjusting = true;
+}
+
+void Transform::set_parent_dirty()
+{
+    if (!m_parent_dirty)
+    {
+        for (auto&& child : children)
+        {
+            child->set_parent_dirty();
+        }
+    }
+
+    m_parent_dirty = true;
+    needs_bounding_box_adjusting = true;
 }
 
 void Transform::set_parent(std::shared_ptr<Transform> const& parent)
