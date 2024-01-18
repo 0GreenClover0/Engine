@@ -202,6 +202,14 @@ void Renderer::draw_instanced(std::shared_ptr<Material> const& material, glm::ma
     material->model_matrices.clear();
     material->model_matrices.reserve(material->drawables.size());
 
+    if (material->is_billboard)
+    {
+        for (auto const& drawable : material->drawables)
+        {
+            drawable->entity->transform->set_euler_angles(glm::vec3(0.0f, Camera::get_main_camera()->entity->transform->get_euler_angles().y, 0.0f));
+        }
+    }
+
     // TODO: Adjust bounding boxes on GPU?
     for (uint32_t i = 0; i < material->drawables.size(); ++i)
     {

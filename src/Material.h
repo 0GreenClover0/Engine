@@ -14,9 +14,9 @@ class Drawable;
 class Material
 {
 public:
-    static std::shared_ptr<Material> create(std::shared_ptr<Shader> const& shader, int32_t const render_order = 0, bool const is_gpu_instanced = false);
+    static std::shared_ptr<Material> create(std::shared_ptr<Shader> const& shader, int32_t const render_order = 0, bool const is_gpu_instanced = false, bool const is_billboard = false);
 
-    explicit Material(std::shared_ptr<Shader> const& shader, int32_t const render_order, bool const is_gpu_instanced);
+    explicit Material(std::shared_ptr<Shader> const& shader, int32_t const render_order, bool const is_gpu_instanced, bool const is_billboard);
 
     [[nodiscard]] bool has_custom_render_order() const
     {
@@ -40,6 +40,8 @@ public:
     bool needs_view_model = false;
 
     bool needs_skybox = false;
+
+    bool is_billboard = false;
 
     // TODO: GPU instancing on one material currently supports only the first mesh that was bound to the material.
     bool is_gpu_instanced = false;
