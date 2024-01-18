@@ -70,6 +70,7 @@ void Engine::run()
         }
 
         glfwPollEvents();
+        Input::input->update_keys();
 
         // Start the Dear ImGui frame
         ImGui_ImplOpenGL3_NewFrame();
