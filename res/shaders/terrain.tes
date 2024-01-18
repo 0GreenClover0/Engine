@@ -31,7 +31,7 @@ void main()
     vec2 textureCoordinates = (t1 - t0) * v + t0;
 
     // Lookup texel at the interpolated texture coordinates of the patch. Scale and shift as desired
-    Height = texture(material.texture_height1, textureCoordinates).y * 64.0 - 16.0;
+    Height = texture(material.texture_height1, textureCoordinates).y * 32.0 - 16.0;
 
     // Retrieve control point positions
     vec4 p00 = gl_in[0].gl_Position;
