@@ -257,6 +257,9 @@ void Renderer::draw_instanced(std::shared_ptr<Material> const& material, glm::ma
         }
     }
 
+    // Free visible_instances memory
+    delete[] visible_instances;
+
     shader->use();
 
     //set_shader_uniforms(shader, projection_view, projection_view_no_translation);
