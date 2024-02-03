@@ -2,6 +2,9 @@
 
 #define FORCE_DEDICATED_GPU 1
 
+#define MINIAUDIO_IMPLEMENTATION
+#include "miniaudio.h"
+
 #if FORCE_DEDICATED_GPU
 extern "C"
 {
