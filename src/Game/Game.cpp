@@ -10,6 +10,8 @@
 #include "Grass.h"
 #include "Model.h"
 #include "PointLight.h"
+#include "Sound.h"
+#include "SoundListener.h"
 #include "SpotLight.h"
 #include "Terrain.h"
 #include "Player/PlayerInput.h"
@@ -28,6 +30,8 @@ void Game::initialize()
 
     camera = Entity::create("Camera");
     camera->transform->set_local_position(glm::vec3(0.0f, 0.0f, 10.0f));
+
+    camera->add_component<SoundListener>(SoundListener::create());
 
     camera_comp = camera->add_component(Camera::create());
     camera_comp->set_can_tick(true);

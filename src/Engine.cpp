@@ -1,6 +1,8 @@
 #include "Engine.h"
 
 #define STB_IMAGE_IMPLEMENTATION
+#include <miniaudio.h>
+
 #include "stb_image.h"
 
 #include "Camera.h"
@@ -172,6 +174,9 @@ int32_t Engine::initialize_thirdparty()
 
     setup_imgui(window->get_glfw_window());
 
+    if (setup_miniaudio() != 0)
+        return 4;
+
     return 0;
 }
 
@@ -215,4 +220,20 @@ void Engine::setup_imgui(GLFWwindow* glfw_window)
 
     // Setup style
     ImGui::StyleColorsDark();
+}
+
+int32_t Engine::setup_miniaudio()
+{
+    ma_engine_config config = ma_engine_config_init();
+    config.channels = 2;
+    config.sampleRate = 48000;
+    config.listenerCount = 1;
+
+    if (ma_engine_init(&config, &audio_engine) != MA_SUCCESS)
+        return -1;
+
+    if (ma_engine_start(&audio_engine) != MA_SUCCESS)
+        return -2;
+
+    return 0;
 }

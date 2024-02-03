@@ -10,6 +10,8 @@
 
 #include <spdlog/spdlog.h>
 
+#include <miniaudio.h>
+
 #include <memory>
 
 #include "Window.h"
@@ -30,6 +32,7 @@ public:
 
     inline static ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
+    inline static ma_engine audio_engine;
 
 private:
     static int32_t initialize_thirdparty();
@@ -41,6 +44,8 @@ private:
     static int32_t setup_glad();
 
     static void setup_imgui(GLFWwindow* glfw_window);
+
+    static int32_t setup_miniaudio();
 
     inline static std::shared_ptr<Window> window;
 };
