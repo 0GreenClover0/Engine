@@ -38,12 +38,6 @@ void Engine::create_game()
 
 void Engine::run()
 {
-    // Call awake on all entities
-    MainScene::get_instance()->awake();
-
-    // Call start on all entities
-    MainScene::get_instance()->start();
-
     Renderer::get_instance()->initialize();
 
     bool debug_open = true;

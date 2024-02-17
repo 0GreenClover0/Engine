@@ -1,5 +1,6 @@
 #include "Scene.h"
 
+#include "AK.h"
 #include "Entity.h"
 
 void Scene::add_child(std::shared_ptr<Entity> const& entity)
@@ -7,48 +8,45 @@ void Scene::add_child(std::shared_ptr<Entity> const& entity)
     entities.emplace_back(entity);
 }
 
-void Scene::awake()
+void Scene::run_frame()
 {
-    is_during_awake = true;
-
-    // Scene Entities vector might be modified by components, ex. when they create new entities
-    // TODO: Destroying entities is not handled properly. But we don't support any way of destroying an entity anyway, so...
-    auto const entities_copy = entities;
-    for (auto const& entity : entities_copy)
+    // Call Awake on every component that was constructed before running the first frame
+    if (!is_running)
     {
-        for (auto const& component : entity->components)
+        is_running = true;
+
+        auto const copy_components_to_awake = this->components_to_awake;
+        for (auto const& component : components_to_awake)
         {
             component->awake();
         }
+
+        components_to_awake.clear();
+
+        // Release the capacity
+        components_to_awake.shrink_to_fit();
     }
 
-    is_during_awake = false;
-    is_after_awake = true;
-}
-
-void Scene::start()
-{
-    is_during_start = true;
-
-    // Scene Entities vector might be modified by components, ex. when they create new entities
-    // TODO: Destroying entities is not handled properly. But we don't support any way of destroying an entity anyway, so...
-    auto const entities_copy = entities;
-    for (auto const& entity : entities_copy)
+    // Call Start on every component that hasn't been started yet
+    auto const copy_components_to_start = this->components_to_start;
+    for (auto const& component : copy_components_to_start)
     {
-        for (auto const& component : entity->components)
+        if (component != nullptr)
         {
             component->start();
+            component->has_been_started = true;
         }
+
+        AK::swap_and_erase(this->components_to_start, component);
     }
 
-    is_during_start = false;
-    is_after_start = true;
-}
+    // Call Update on every tickable component
 
-void Scene::run_frame() const
-{
     // Scene Entities vector might be modified by components, ex. when they create new entities
     // TODO: Destroying entities is not handled properly. But we don't support any way of destroying an entity anyway, so...
+
+    // TODO: Don't make a copy of tickable components every frame, since they will most likely not change frequently, so we might
+    //       just manually manage the vector?
     auto const components_copy = tickable_components;
     for (auto const& component : components_copy)
     {
