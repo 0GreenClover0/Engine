@@ -8,7 +8,7 @@
 class Entity : public std::enable_shared_from_this<Entity>
 {
 public:
-    Entity(std::string name);
+    explicit Entity(std::string name);
     static std::shared_ptr<Entity> create(std::string const& name = "Entity");
     static std::shared_ptr<Entity> create(std::string const& guid, std::string const& name);
 
@@ -18,16 +18,26 @@ public:
         auto component = std::make_shared<T>();
         components.emplace_back(component);
         component->entity = shared_from_this();
+
+        // Initialization for internal components
         component->initialize();
 
         // TODO: Assumption that this entity belongs to the main scene
-        if (auto const& scene = MainScene::get_instance(); scene->is_after_start)
+        // NOTE: Currently we treat manually assigning references in the Game initialization code as if someone would ex. drag a reference
+        //       to an object in the Unity's inspector. This means that the Awake call of the constructed components should be called
+        //       after all of these references were assigned, or more precisely, when the game has started. We do this manually, by
+        //       gathering all the components in the components_to_awake vector and calling Awake on those when the game starts.
+        //       If the component is constructed during the gameplay, we call the Awake immediately here.
+        if (MainScene::get_instance()->is_running)
         {
-            // TODO: Order of component Awake, Start on components instantiated inside the Awake call below is wrong.
-            //         The new component's Awake and Start will finish before the Start of this component.
             component->awake();
-            component->start();
         }
+        else
+        {
+            MainScene::get_instance()->components_to_awake.emplace_back(component);
+        }
+
+        MainScene::get_instance()->components_to_start.emplace_back(component);
 
         return component;
     }
@@ -37,16 +47,26 @@ public:
     {
         components.emplace_back(component);
         component->entity = shared_from_this();
+
+        // Initialization for internal components
         component->initialize();
 
         // TODO: Assumption that this entity belongs to the main scene
-        if (auto const& scene = MainScene::get_instance(); scene->is_after_start)
+        // NOTE: Currently we treat manually assigning references in the Game initialization code as if someone would ex. drag a reference
+        //       to an object in the Unity's inspector. This means that the Awake call of the constructed components should be called
+        //       after all of these references were assigned, or more precisely, when the game has started. We do this manually, by
+        //       gathering all the components in the components_to_awake vector and calling Awake on those when the game starts.
+        //       If the component is constructed during the gameplay, we call the Awake immediately here.
+        if (MainScene::get_instance()->is_running)
         {
-            // TODO: Order of component Awake, Start on components instantiated inside the Awake call below is wrong.
-            //         The new component's Awake and Start will finish before the Start of this component.
             component->awake();
-            component->start();
         }
+        else
+        {
+            MainScene::get_instance()->components_to_awake.emplace_back(component);
+        }
+
+        MainScene::get_instance()->components_to_start.emplace_back(component);
 
         return component;
     }
@@ -57,14 +77,26 @@ public:
         auto component = std::make_shared<T>(std::forward<TArgs>(args)...);
         components.emplace_back(component);
         component->entity = shared_from_this();
+
+        // Initialization for internal components
         component->initialize();
 
         // TODO: Assumption that this entity belongs to the main scene
-        if (auto const& scene = MainScene::get_instance(); scene->is_after_start)
+        // NOTE: Currently we treat manually assigning references in the Game initialization code as if someone would ex. drag a reference
+        //       to an object in the Unity's inspector. This means that the Awake call of the constructed components should be called
+        //       after all of these references were assigned, or more precisely, when the game has started. We do this manually, by
+        //       gathering all the components in the components_to_awake vector and calling Awake on those when the game starts.
+        //       If the component is constructed during the gameplay, we call the Awake immediately here.
+        if (MainScene::get_instance()->is_running)
         {
             component->awake();
-            component->start();
         }
+        else
+        {
+            MainScene::get_instance()->components_to_awake.emplace_back(component);
+        }
+
+        MainScene::get_instance()->components_to_start.emplace_back(component);
 
         return component;
     }
