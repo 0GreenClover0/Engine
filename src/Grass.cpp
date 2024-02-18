@@ -4,7 +4,7 @@
 
 std::shared_ptr<Grass> Grass::create(std::shared_ptr<Material> const& material, uint32_t const grass_count)
 {
-    auto grass = std::make_shared<Grass>(material, grass_count);
+    auto grass = std::make_shared<Grass>(AK::Badge<Grass> {}, material, grass_count);
     grass->prepare();
 
     return grass;
@@ -13,18 +13,18 @@ std::shared_ptr<Grass> Grass::create(std::shared_ptr<Material> const& material, 
 std::shared_ptr<Grass> Grass::create(std::shared_ptr<Material> const& material, uint32_t const grass_count,
                                      std::string const& diffuse_texture_path)
 {
-    auto grass = std::make_shared<Grass>(material, grass_count, diffuse_texture_path);
+    auto grass = std::make_shared<Grass>(AK::Badge<Grass> {}, material, grass_count, diffuse_texture_path);
     grass->prepare();
 
     return grass;
 }
 
-Grass::Grass(std::shared_ptr<Material> const& material, uint32_t const grass_count) : Model(material), grass_count(grass_count)
+Grass::Grass(AK::Badge<Grass>, std::shared_ptr<Material> const& material, uint32_t const grass_count) : Model(material), grass_count(grass_count)
 {
     draw_type = GL_TRIANGLES;
 }
 
-Grass::Grass(std::shared_ptr<Material> const& material, uint32_t const grass_count, std::string diffuse_texture_path)
+Grass::Grass(AK::Badge<Grass>, std::shared_ptr<Material> const& material, uint32_t const grass_count, std::string diffuse_texture_path)
     : Model(material), grass_count(grass_count), diffuse_texture_path(std::move(diffuse_texture_path))
 {
     draw_type = GL_TRIANGLES;

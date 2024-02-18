@@ -7,7 +7,7 @@
 
 std::shared_ptr<SoundListener> SoundListener::create()
 {
-    std::shared_ptr<SoundListener> sound_listener = std::make_shared<SoundListener>();
+    std::shared_ptr<SoundListener> sound_listener = std::make_shared<SoundListener>(AK::Badge<SoundListener> {});
 
     if (instance != nullptr)
     {

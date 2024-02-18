@@ -3,7 +3,7 @@
 #include "MainScene.h"
 #include "AK/AK.h"
 
-Entity::Entity(std::string name) : name(std::move(name))
+Entity::Entity(AK::Badge<Entity>, std::string name) : name(std::move(name))
 {
 }
 
@@ -11,7 +11,7 @@ Entity::Entity(std::string name) : name(std::move(name))
 // Maybe there is a better pattern
 std::shared_ptr<Entity> Entity::create(std::string const& name)
 {
-    auto entity = std::make_shared<Entity>(name);
+    auto entity = std::make_shared<Entity>(AK::Badge<Entity> {}, name);
     entity->guid = AK::generate_guid();
     std::hash<std::string> constexpr hasher;
     entity->hashed_guid = hasher(entity->guid);
@@ -24,7 +24,7 @@ std::shared_ptr<Entity> Entity::create(std::string const& name)
 // Maybe there is a better pattern
 std::shared_ptr<Entity> Entity::create(std::string const& guid, std::string const& name)
 {
-    auto entity = std::make_shared<Entity>(name);
+    auto entity = std::make_shared<Entity>(AK::Badge<Entity> {}, name);
     entity->guid = guid;
     std::hash<std::string> constexpr hasher;
     entity->hashed_guid = hasher(entity->guid);

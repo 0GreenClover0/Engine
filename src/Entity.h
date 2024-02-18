@@ -4,11 +4,12 @@
 #include "Drawable.h"
 #include "MainScene.h"
 #include "Transform.h"
+#include "AK/Badge.h"
 
 class Entity : public std::enable_shared_from_this<Entity>
 {
 public:
-    explicit Entity(std::string name);
+    explicit Entity(AK::Badge<Entity>, std::string name);
     static std::shared_ptr<Entity> create(std::string const& name = "Entity");
     static std::shared_ptr<Entity> create(std::string const& guid, std::string const& name);
 

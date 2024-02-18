@@ -12,11 +12,14 @@
 #include "Light.h"
 #include "PointLight.h"
 #include "SpotLight.h"
+#include "AK/Badge.h"
 
 class Renderer
 {
 public:
     static std::shared_ptr<Renderer> create();
+
+    explicit Renderer(AK::Badge<Renderer>) {}
     Renderer(Renderer const&) = delete;
     void operator=(Renderer const&) = delete;
 
@@ -41,8 +44,6 @@ public:
     }
 
 private:
-    Renderer() = default;
-
     static void set_instance(std::shared_ptr<Renderer> const& renderer)
     {
         instance = renderer;

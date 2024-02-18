@@ -16,7 +16,7 @@
 
 std::shared_ptr<Model> Model::create(std::string model_path, std::shared_ptr<Material> const& material)
 {
-    auto model = std::make_shared<Model>(model_path, material);
+    auto model = std::make_shared<Model>(AK::Badge<Model> {}, model_path, material);
     model->prepare();
 
     return model;
@@ -24,17 +24,17 @@ std::shared_ptr<Model> Model::create(std::string model_path, std::shared_ptr<Mat
 
 std::shared_ptr<Model> Model::create(std::shared_ptr<Material> const& material)
 {
-    auto model = std::make_shared<Model>(material);
+    auto model = std::make_shared<Model>(AK::Badge<Model> {}, material);
 
     return model;
 }
 
-Model::Model(std::string model_path, std::shared_ptr<Material> const& material) : Drawable(material), model_path(std::move(model_path))
+Model::Model(AK::Badge<Model>, std::string model_path, std::shared_ptr<Material> const& material) : Drawable(material), model_path(std::move(model_path))
 {
     draw_type = GL_TRIANGLES;
 }
 
-Model::Model(std::shared_ptr<Material> const& material) : Drawable(material)
+Model::Model(AK::Badge<Model>, std::shared_ptr<Material> const& material) : Drawable(material)
 {
 }
 
@@ -64,6 +64,15 @@ BoundingBox Model::get_adjusted_bounding_box(glm::mat4 const& model_matrix) cons
         return meshes[0].get_adjusted_bounding_box(model_matrix);
 
     return {};
+}
+
+Model::Model(std::string model_path, std::shared_ptr<Material> const& material) : Drawable(material), model_path(std::move(model_path))
+{
+    draw_type = GL_TRIANGLES;
+}
+
+Model::Model(std::shared_ptr<Material> const& material) : Drawable(material)
+{
 }
 
 std::string Model::get_name() const

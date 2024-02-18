@@ -4,6 +4,7 @@
 #include <glm/vec3.hpp>
 
 #include "Component.h"
+#include "AK/Badge.h"
 
 class Sound final : public Component
 {
@@ -16,13 +17,15 @@ public:
                                                          float rolloff = 0.5f,
                                                          ma_attenuation_model attenuation = ma_attenuation_model_inverse);
 
+    explicit Sound(AK::Badge<Sound>) {}
+
     void play();
     void stop();
     void stop_with_fade(uint64_t const milliseconds);
     void update() override;
 
 private:
-    ma_sound internal_sound;
+    ma_sound internal_sound = {};
 
     bool is_positional = false;
 };

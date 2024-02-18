@@ -1,12 +1,13 @@
 #pragma once
 
 #include "Light.h"
+#include "AK/Badge.h"
 
 class PointLight final : public Light
 {
 public:
     static std::shared_ptr<PointLight> create();
-    PointLight() : Light() { }
+    explicit PointLight(AK::Badge<PointLight>) : Light() { }
 
     void draw_editor() override;
     std::string get_name() const override;

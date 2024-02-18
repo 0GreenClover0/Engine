@@ -19,7 +19,7 @@ void PlanetarySystem::awake()
 
     {
         auto const standard_material = Material::create(standard_shader);
-        sun->add_component<Model>("./res/models/sun/13913_Sun_v2_l3.obj", standard_material);
+        sun->add_component<Model>(Model::create("./res/models/sun/13913_Sun_v2_l3.obj", standard_material));
         sun->transform->set_local_scale(glm::vec3(0.002f, 0.002f, 0.002f));
     }
 

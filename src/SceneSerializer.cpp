@@ -204,8 +204,10 @@ std::shared_ptr<Entity> SceneSerializer::deserialize_entity(YAML::Node const& en
         {
             auto material = deserialize_material_instance(component["Material"]);
             deserialized_entity->add_component<Model>(
-                component["ModelPath"].as<std::string>(),
-                material
+                Model::create(
+                    component["ModelPath"].as<std::string>(),
+                    material
+                )
             );
         }
     }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Light.h"
+#include "AK/Badge.h"
 
 class DirectionalLight final : public Light
 {
@@ -11,5 +12,5 @@ public:
 
     std::string get_name() const override;
 
-    DirectionalLight() : Light() { }
+    explicit DirectionalLight(AK::Badge<DirectionalLight> badge) : Light() { }
 };

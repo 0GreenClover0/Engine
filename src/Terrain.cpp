@@ -4,14 +4,14 @@
 
 std::shared_ptr<Terrain> Terrain::create(std::shared_ptr<Material> const& material, bool const use_gpu, std::string const& height_map_path)
 {
-    auto terrain = std::make_shared<Terrain>(material, use_gpu, height_map_path);
+    auto terrain = std::make_shared<Terrain>(AK::Badge<Terrain> {}, material, use_gpu, height_map_path);
 
     terrain->prepare();
 
     return terrain;
 }
 
-Terrain::Terrain(std::shared_ptr<Material> const& material, bool const use_gpu, std::string const& height_map_path)
+Terrain::Terrain(AK::Badge<Terrain>, std::shared_ptr<Material> const& material, bool const use_gpu, std::string const& height_map_path)
     : Model(material), use_gpu(use_gpu), height_map_path(height_map_path)
 {
     if (use_gpu)

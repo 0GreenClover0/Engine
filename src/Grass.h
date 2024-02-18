@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Model.h"
+#include "AK/Badge.h"
 
 class Grass final : public Model
 {
@@ -8,8 +9,8 @@ public:
     static std::shared_ptr<Grass> create(std::shared_ptr<Material> const& material, uint32_t const grass_count = 1024);
     static std::shared_ptr<Grass> create(std::shared_ptr<Material> const& material, uint32_t const grass_count = 1024, std::string const& diffuse_texture_path = "");
 
-    explicit Grass(std::shared_ptr<Material> const& material, uint32_t const grass_count);
-    explicit Grass(std::shared_ptr<Material> const& material, uint32_t const grass_count, std::string diffuse_texture_path);
+    explicit Grass(AK::Badge<Grass>, std::shared_ptr<Material> const& material, uint32_t const grass_count);
+    explicit Grass(AK::Badge<Grass>, std::shared_ptr<Material> const& material, uint32_t const grass_count, std::string diffuse_texture_path);
 
     virtual std::string get_name() const override;
 
