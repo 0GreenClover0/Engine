@@ -31,11 +31,8 @@ void Scene::run_frame()
     auto const copy_components_to_start = this->components_to_start;
     for (auto const& component : copy_components_to_start)
     {
-        if (component != nullptr)
-        {
-            component->start();
-            component->has_been_started = true;
-        }
+        component->start();
+        component->has_been_started = true;
 
         AK::swap_and_erase(this->components_to_start, component);
     }
