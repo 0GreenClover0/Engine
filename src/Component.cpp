@@ -1,6 +1,6 @@
 #include "Component.h"
 
-#include "AK.h"
+#include "AK/AK.h"
 #include "MainScene.h"
 
 void Component::initialize()
