@@ -1,6 +1,6 @@
 #include "Scene.h"
 
-#include "AK.h"
+#include "AK/AK.h"
 #include "Entity.h"
 
 void Scene::add_child(std::shared_ptr<Entity> const& entity)

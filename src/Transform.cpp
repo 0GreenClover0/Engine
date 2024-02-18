@@ -5,7 +5,7 @@
 #include <glm/gtx/rotate_vector.hpp>
 #include <glm/gtx/matrix_decompose.hpp>
 
-#include "AK.h"
+#include "AK/AK.h"
 #include "Entity.h"
 
 Transform::Transform(std::shared_ptr<Entity> const& entity) : entity(entity)

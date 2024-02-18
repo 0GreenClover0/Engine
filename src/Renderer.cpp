@@ -7,7 +7,7 @@
 #include <glm/gtx/rotate_vector.hpp>
 #include <glm/gtx/string_cast.hpp>
 
-#include "AK.h"
+#include "AK/AK.h"
 #include "Camera.h"
 #include "Entity.h"
 #include "Skybox.h"

@@ -1,7 +1,7 @@
 #include "Entity.h"
 
 #include "MainScene.h"
-#include "AK.h"
+#include "AK/AK.h"
 
 Entity::Entity(std::string name) : name(std::move(name))
 {
