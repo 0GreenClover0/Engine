@@ -82,7 +82,17 @@ Frustum Camera::get_frustum()
 
 std::shared_ptr<Camera> Camera::create()
 {
-    auto camera = std::make_shared<Camera>();
+    auto camera = std::make_shared<Camera>(AK::Badge<Camera> {});
+
+    if (get_main_camera() == nullptr)
+        set_main_camera(camera);
+
+    return camera;
+}
+
+std::shared_ptr<Camera> Camera::create(float const width, float const height, float const fov)
+{
+    auto camera = std::make_shared<Camera>(AK::Badge<Camera> {}, width, height, fov);
 
     if (get_main_camera() == nullptr)
         set_main_camera(camera);
@@ -159,6 +169,14 @@ glm::mat4 Camera::get_view_matrix() const
 {
     glm::vec3 const position = get_position();
     return glm::lookAt(position, position + get_front(), get_up());
+}
+
+Camera::Camera(AK::Badge<Camera>)
+{
+}
+
+Camera::Camera(AK::Badge<Camera>, float const width, float const height, float const fov) : m_width(width), m_height(height), m_fov(fov)
+{
 }
 
 void Camera::update_internals()

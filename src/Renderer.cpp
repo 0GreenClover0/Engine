@@ -14,9 +14,7 @@
 
 std::shared_ptr<Renderer> Renderer::create()
 {
-    // We can't use make_shared here because the constructor is private.
-    // https://stackoverflow.com/questions/56735974/access-private-constructor-from-public-static-member-function-using-shared-ptr-i
-    auto renderer = std::shared_ptr<Renderer>(new Renderer());
+    auto renderer = std::make_shared<Renderer>(AK::Badge<Renderer> {});
 
     assert(instance == nullptr);
 

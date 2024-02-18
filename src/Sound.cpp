@@ -7,7 +7,7 @@
 
 std::shared_ptr<Sound> Sound::create(std::string const& path)
 {
-    std::shared_ptr<Sound> sound = std::make_shared<Sound>();
+    std::shared_ptr<Sound> sound = std::make_shared<Sound>(AK::Badge<Sound> {});
     ma_sound_init_from_file(&Engine::audio_engine, path.c_str(), 0, nullptr, nullptr, &sound->internal_sound);
 
     ma_sound_set_attenuation_model(&sound->internal_sound, ma_attenuation_model_none);
@@ -20,7 +20,7 @@ std::shared_ptr<Sound> Sound::create(std::string const& path)
 std::shared_ptr<Sound> Sound::create(std::string const& path, glm::vec3 const direction, float const rolloff,
                                      ma_attenuation_model const attenuation)
 {
-    std::shared_ptr<Sound> sound = std::make_shared<Sound>();
+    std::shared_ptr<Sound> sound = std::make_shared<Sound>(AK::Badge<Sound> {});
     ma_sound_init_from_file(&Engine::audio_engine, path.c_str(), 0, nullptr, nullptr, &sound->internal_sound);
 
     ma_sound_set_attenuation_model(&sound->internal_sound, attenuation);

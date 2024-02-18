@@ -12,46 +12,44 @@
 
 #include "Renderer.h"
 
-std::shared_ptr<Shader> Shader::create(std::string compute_path)
+std::shared_ptr<Shader> Shader::create(std::string const& compute_path)
 {
-    auto shader = std::shared_ptr<Shader>(new Shader(std::move(compute_path)));
+    auto shader = std::make_shared<Shader>(AK::Badge<Shader> {}, compute_path);
 
     // Since this is a compute shader we don't need to register it, as we only use registered shaders for drawables
 
     return shader;
 }
 
-std::shared_ptr<Shader> Shader::create(std::string vertex_path, std::string fragment_path)
+std::shared_ptr<Shader> Shader::create(std::string const& vertex_path, std::string const& fragment_path)
 {
-    auto shader = std::shared_ptr<Shader>(new Shader(std::move(vertex_path), std::move(fragment_path)));
+    auto shader = std::make_shared<Shader>(AK::Badge<Shader> {}, vertex_path, fragment_path);
 
     Renderer::get_instance()->register_shader(shader);
 
     return shader;
 }
 
-
-std::shared_ptr<Shader> Shader::create(std::string vertex_path, std::string fragment_path, std::string geometry_path)
+std::shared_ptr<Shader> Shader::create(std::string const& vertex_path, std::string const& fragment_path, std::string const& geometry_path)
 {
-    auto shader = std::shared_ptr<Shader>(new Shader(std::move(vertex_path), std::move(fragment_path), std::move(geometry_path)));
+    auto shader = std::make_shared<Shader>(AK::Badge<Shader> {}, vertex_path, fragment_path, geometry_path);
 
     Renderer::get_instance()->register_shader(shader);
 
     return shader;
 }
 
-std::shared_ptr<Shader> Shader::create(std::string vertex_path, std::string tessellation_control_path,
-    std::string tessellation_evaluation_path, std::string fragment_path)
+std::shared_ptr<Shader> Shader::create(std::string const& vertex_path, std::string const& tessellation_control_path,
+                                       std::string const& tessellation_evaluation_path, std::string const& fragment_path)
 {
-    auto shader = std::shared_ptr<Shader>(new Shader(std::move(vertex_path), std::move(tessellation_control_path),
-                                                     std::move(tessellation_evaluation_path), std::move(fragment_path)));
+    auto shader = std::make_shared<Shader>(AK::Badge<Shader> {}, vertex_path, tessellation_control_path, tessellation_evaluation_path, fragment_path);
 
     Renderer::get_instance()->register_shader(shader);
 
     return shader;
 }
 
-Shader::Shader(std::string compute_path) : compute_path(std::move(compute_path))
+Shader::Shader(AK::Badge<Shader>, std::string compute_path) : compute_path(std::move(compute_path))
 {
     char const* compute_path_c_str = this->compute_path.c_str();
 
@@ -79,7 +77,7 @@ Shader::Shader(std::string compute_path) : compute_path(std::move(compute_path))
     glDeleteShader(compute_shader_id);
 }
 
-Shader::Shader(std::string vertex_path, std::string fragment_path) : vertex_path(std::move(vertex_path)), fragment_path(std::move(fragment_path))
+Shader::Shader(AK::Badge<Shader>, std::string vertex_path, std::string fragment_path) : vertex_path(std::move(vertex_path)), fragment_path(std::move(fragment_path))
 {
     char const* vertex_path_c_str = this->vertex_path.c_str();
     char const* fragment_path_c_str = this->fragment_path.c_str();
@@ -114,7 +112,7 @@ Shader::Shader(std::string vertex_path, std::string fragment_path) : vertex_path
     glDeleteShader(fragment_shader_id);
 }
 
-Shader::Shader(std::string vertex_path, std::string fragment_path, std::string geometry_path)
+Shader::Shader(AK::Badge<Shader>, std::string vertex_path, std::string fragment_path, std::string geometry_path)
     : vertex_path(std::move(vertex_path)), fragment_path(std::move(fragment_path)), geometry_path(std::move(geometry_path))
 {
     char const* vertex_path_c_str = this->vertex_path.c_str();
@@ -157,7 +155,7 @@ Shader::Shader(std::string vertex_path, std::string fragment_path, std::string g
     glDeleteShader(geometry_shader_id);
 }
 
-Shader::Shader(std::string vertex_path, std::string tessellation_control_path, std::string tessellation_evaluation_path,
+Shader::Shader(AK::Badge<Shader>, std::string vertex_path, std::string tessellation_control_path, std::string tessellation_evaluation_path,
                std::string fragment_path) : vertex_path(std::move(vertex_path)),
                                             tessellation_control_path(std::move(tessellation_control_path)),
                                             tessellation_evaluation_path(std::move(tessellation_evaluation_path)),

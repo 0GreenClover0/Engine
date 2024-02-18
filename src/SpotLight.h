@@ -8,7 +8,7 @@ class SpotLight final : public Light
 {
 public:
     static std::shared_ptr<SpotLight> create();
-    SpotLight() : Light() { }
+    explicit SpotLight(AK::Badge<SpotLight>) : Light() { }
 
     void draw_editor() override;
     std::string get_name() const override;

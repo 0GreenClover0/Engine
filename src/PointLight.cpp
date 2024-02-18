@@ -4,7 +4,7 @@
 
 std::shared_ptr<PointLight> PointLight::create()
 {
-    auto point_light = std::make_shared<PointLight>();
+    auto point_light = std::make_shared<PointLight>(AK::Badge<PointLight> {});
     Renderer::get_instance()->register_light(point_light);
     return point_light;
 }

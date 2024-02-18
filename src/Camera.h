@@ -6,6 +6,7 @@
 
 #include "Component.h"
 #include "Frustum.h"
+#include "AK/Badge.h"
 
 class Camera final : public Component
 {
@@ -40,11 +41,13 @@ public:
     Frustum get_frustum();
 
     static std::shared_ptr<Camera> create();
+    static std::shared_ptr<Camera> create(float const width, float const height, float const fov);
 
     [[nodiscard]] std::array<glm::vec4, 6> get_frustum_planes();
     [[nodiscard]] glm::mat4 get_view_matrix() const;
 
-    Camera() = default;
+    explicit Camera(AK::Badge<Camera>);
+    explicit Camera(AK::Badge<Camera>, float const width, float const height, float const fov);
 
 private:
     void update_internals();
@@ -56,10 +59,10 @@ private:
 
     bool m_dirty = true;
 
-    float m_width;
-    float m_height;
+    float m_width = 0.0f;
+    float m_height = 0.0f;
 
-    float m_fov;
+    float m_fov = 0.0f;
 
     float near_plane = 0.1f;
     float far_plane = 1000000.0f;

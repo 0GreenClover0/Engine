@@ -1,19 +1,22 @@
 #include "Cube.h"
 
+#include <memory>
+
 #include "Globals.h"
 
-std::shared_ptr<Cube> Cube::create(std::shared_ptr<Material> const& material, bool big_cube)
+std::shared_ptr<Cube> Cube::create(std::shared_ptr<Material> const& material, bool const big_cube)
 {
-    auto cube = std::make_shared<Cube>(material);
+    auto cube = std::make_shared<Cube>(AK::Badge<Cube> {}, material);
     cube->big_cube = big_cube;
     cube->prepare();
 
     return cube;
 }
 
-std::shared_ptr<Cube> Cube::create(std::string const& diffuse_texture_path, std::shared_ptr<Material> const& material, bool big_cube)
+std::shared_ptr<Cube> Cube::create(std::string const& diffuse_texture_path, std::shared_ptr<Material> const& material, bool const big_cube)
 {
-    auto cube = std::make_shared<Cube>(diffuse_texture_path, material);
+    AK::Badge<Cube> badge;
+    auto cube = std::make_shared<Cube>(AK::Badge<Cube> {}, diffuse_texture_path, material);
     cube->big_cube = big_cube;
     cube->prepare();
 
@@ -21,29 +24,30 @@ std::shared_ptr<Cube> Cube::create(std::string const& diffuse_texture_path, std:
 }
 
 std::shared_ptr<Cube> Cube::create(std::string const& diffuse_texture_path, std::string const& specular_texture_path,
-                                   std::shared_ptr<Material> const& material, bool big_cube)
+                                   std::shared_ptr<Material> const& material, bool const big_cube)
 {
-    auto cube = std::make_shared<Cube>(diffuse_texture_path, specular_texture_path, material);
+    AK::Badge<Cube> badge;
+    auto cube = std::make_shared<Cube>(AK::Badge<Cube> {}, diffuse_texture_path, specular_texture_path, material);
     cube->big_cube = big_cube;
     cube->prepare();
 
     return cube;
 }
 
-Cube::Cube(std::shared_ptr<Material> const& material) : Model(material)
+Cube::Cube(AK::Badge<Cube>, std::shared_ptr<Material> const& material) : Model(material), big_cube(false)
 {
     draw_type = GL_TRIANGLES;
 }
 
-Cube::Cube(std::string diffuse_texture_path, std::shared_ptr<Material> const& material)
-    : Model(material), diffuse_texture_path(std::move(diffuse_texture_path))
+Cube::Cube(AK::Badge<Cube>, std::string diffuse_texture_path, std::shared_ptr<Material> const& material)
+    : Model(material), diffuse_texture_path(std::move(diffuse_texture_path)), big_cube(false)
 {
     draw_type = GL_TRIANGLES;
 }
 
-Cube::Cube(std::string diffuse_texture_path, std::string specular_texture_path, std::shared_ptr<Material> const& material)
-    : Model(material), diffuse_texture_path(std::move(diffuse_texture_path)), specular_texture_path(
-          std::move(specular_texture_path))
+Cube::Cube(AK::Badge<Cube>, std::string diffuse_texture_path, std::string specular_texture_path, std::shared_ptr<Material> const& material)
+    : Model(material), diffuse_texture_path(std::move(diffuse_texture_path)), specular_texture_path(std::move(specular_texture_path)),
+      big_cube(false)
 {
     draw_type = GL_TRIANGLES;
 }
