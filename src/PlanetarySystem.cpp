@@ -6,13 +6,14 @@
 #include "Ellipse.h"
 #include "Entity.h"
 #include "Material.h"
+#include "ShaderFactory.h"
 #include "Sphere.h"
 
 PlanetarySystem::PlanetarySystem() = default;
 
 void PlanetarySystem::awake()
 {
-    auto standard_shader = Shader::create("./res/shaders/vertex.vert", "./res/shaders/fragment.frag");
+    auto standard_shader = ShaderFactory::create("./res/shaders/vertex.vert", "./res/shaders/fragment.frag");
 
     auto const sun = Entity::create("Sun");
     sun->transform->set_parent(entity->transform);
@@ -33,13 +34,13 @@ void PlanetarySystem::awake()
     {
         auto sun_comp = sun->add_component<AstronomicalObject>();
 
-        auto custom_sphere_shader_planet = Shader::create("./res/shaders/standard.vert", "./res/shaders/standard.frag");
-        auto custom_sphere_shader_moon = Shader::create("./res/shaders/standard.vert", "./res/shaders/standard.frag");
+        auto custom_sphere_shader_planet = ShaderFactory::create("./res/shaders/standard.vert", "./res/shaders/standard.frag");
+        auto custom_sphere_shader_moon = ShaderFactory::create("./res/shaders/standard.vert", "./res/shaders/standard.frag");
 
         if (Sphere::use_geometry_shader)
         {
-            custom_sphere_shader_planet = Shader::create("./res/shaders/vertex_sphere.vert", "./res/shaders/fragment_sphere.frag", "./res/shaders/geometry.geo");
-            custom_sphere_shader_moon = Shader::create("./res/shaders/vertex_sphere.vert", "./res/shaders/fragment_sphere.frag", "./res/shaders/geometry.geo");
+            custom_sphere_shader_planet = ShaderFactory::create("./res/shaders/vertex_sphere.vert", "./res/shaders/fragment_sphere.frag", "./res/shaders/geometry.geo");
+            custom_sphere_shader_moon = ShaderFactory::create("./res/shaders/vertex_sphere.vert", "./res/shaders/fragment_sphere.frag", "./res/shaders/geometry.geo");
         }
 
         glm::vec2 orbit = glm::vec2(2.5f, 2.5f);

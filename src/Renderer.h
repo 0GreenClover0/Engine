@@ -1,8 +1,6 @@
 #pragma once
 
-#include <map>
 #include <set>
-#include <unordered_map>
 
 #include <glad/glad.h>
 #include <glm/mat4x4.hpp>
@@ -42,6 +40,13 @@ public:
     {
         return instance;
     }
+
+    enum class RendererApi
+    {
+        OpenGL,
+    };
+
+    inline static RendererApi renderer_api;
 
 private:
     static void set_instance(std::shared_ptr<Renderer> const& renderer)

@@ -10,6 +10,7 @@
 #include "Grass.h"
 #include "Model.h"
 #include "PointLight.h"
+#include "ShaderFactory.h"
 #include "Sound.h"
 #include "SoundListener.h"
 #include "SpotLight.h"
@@ -22,10 +23,10 @@ Game::Game(std::shared_ptr<Window> const& window) : window(window)
 
 void Game::initialize()
 {
-    auto instanced_shader = Shader::create("./res/shaders/standard_instanced.vert", "./res/shaders/standard.frag");
-    auto standard_shader = Shader::create("./res/shaders/standard.vert", "./res/shaders/standard.frag");
-    auto reflective_shader = Shader::create("./res/shaders/standard.vert", "./res/shaders/reflective.frag");
-    auto refractive_shader = Shader::create("./res/shaders/standard.vert", "./res/shaders/refractive.frag");
+    auto instanced_shader = ShaderFactory::create("./res/shaders/standard_instanced.vert", "./res/shaders/standard.frag");
+    auto standard_shader = ShaderFactory::create("./res/shaders/standard.vert", "./res/shaders/standard.frag");
+    auto reflective_shader = ShaderFactory::create("./res/shaders/standard.vert", "./res/shaders/reflective.frag");
+    auto refractive_shader = ShaderFactory::create("./res/shaders/standard.vert", "./res/shaders/refractive.frag");
     auto const standard_material = Material::create(standard_shader);
 
     camera = Entity::create("Camera");
@@ -141,7 +142,7 @@ void Game::initialize()
     auto const roof_material = Material::create(instanced_shader, 0, true);
     auto const floor_material = Material::create(standard_shader);
 
-    auto terrain_shader = Shader::create("./res/shaders/terrain.vert", "./res/shaders/terrain.tcs", "./res/shaders/terrain.tes", "./res/shaders/terrain.frag");
+    auto terrain_shader = ShaderFactory::create("./res/shaders/terrain.vert", "./res/shaders/terrain.tcs", "./res/shaders/terrain.tes", "./res/shaders/terrain.frag");
     auto const terrain_material = Material::create(terrain_shader);
     terrain_material->needs_view_model = true;
 

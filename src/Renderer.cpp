@@ -10,6 +10,7 @@
 #include "AK/AK.h"
 #include "Camera.h"
 #include "Entity.h"
+#include "ShaderFactory.h"
 #include "Skybox.h"
 
 std::shared_ptr<Renderer> Renderer::create()
@@ -32,7 +33,7 @@ void Renderer::initialize()
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    frustum_culling_shader = Shader::create("./res/shaders/frustum_culling.glsl");
+    frustum_culling_shader = ShaderFactory::create("./res/shaders/frustum_culling.glsl");
 
     // TODO: GPU instancing on one material currently supports only the first mesh that was bound to the material.
     size_t max_size = 0;
