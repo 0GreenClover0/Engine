@@ -5,8 +5,6 @@
 #include <vector>
 #include <glm/fwd.hpp>
 
-#include "AK/Badge.h"
-
 class Material;
 
 class Shader
@@ -14,32 +12,27 @@ class Shader
 public:
     unsigned int program_id = {};
 
-    static std::shared_ptr<Shader> create(std::string const& compute_path);
-    static std::shared_ptr<Shader> create(std::string const& vertex_path, std::string const& fragment_path);
-    static std::shared_ptr<Shader> create(std::string const& vertex_path, std::string const& fragment_path, std::string const& geometry_path);
-    static std::shared_ptr<Shader> create(std::string const& vertex_path, std::string const& tessellation_control_path,
-                                          std::string const& tessellation_evaluation_path, std::string const& fragment_path);
-
-    explicit Shader(AK::Badge<Shader>, std::string compute_path);
-    Shader(AK::Badge<Shader>, std::string vertex_path, std::string fragment_path);
-    Shader(AK::Badge<Shader>, std::string vertex_path, std::string fragment_path, std::string geometry_path);
-    Shader(AK::Badge<Shader>, std::string vertex_path, std::string tessellation_control_path, std::string tessellation_evaluation_path,
-           std::string fragment_path);
-
     Shader() = delete;
+    virtual ~Shader() = default;
 
-    void use() const;
-    void set_bool(std::string const& name, bool value) const;
-    void set_int(std::string const& name, int value) const;
-    void set_float(std::string const& name, float value) const;
-    void set_vec3(std::string const& name, glm::vec3 value) const;
-    void set_vec4(std::string const& name, glm::vec4 value) const;
-    void set_mat4(std::string const& name, glm::mat4 value) const;
+    void virtual use() const = 0;
+    void virtual set_bool(std::string const& name, bool value) const = 0;
+    void virtual set_int(std::string const& name, int value) const = 0;
+    void virtual set_float(std::string const& name, float value) const = 0;
+    void virtual set_vec3(std::string const& name, glm::vec3 value) const = 0;
+    void virtual set_vec4(std::string const& name, glm::vec4 value) const = 0;
+    void virtual set_mat4(std::string const& name, glm::mat4 value) const = 0;
 
     std::vector<std::shared_ptr<Material>> materials;
 
-private:
-    int32_t attach(char const* path, int type) const;
+protected:
+    explicit Shader(std::string const& compute_path);
+    explicit Shader(std::string const& vertex_path, std::string const& fragment_path);
+    explicit Shader(std::string const& vertex_path, std::string const& fragment_path, std::string const& geometry_path);
+    explicit Shader(std::string const& vertex_path, std::string const& tessellation_control_path, std::string const& tessellation_evaluation_path,
+                    std::string const& fragment_path);
+
+    int32_t virtual attach(char const* path, int type) const = 0;
 
     std::string compute_path = {};
     std::string vertex_path = {};
@@ -48,5 +41,6 @@ private:
     std::string fragment_path = {};
     std::string geometry_path = {};
 
+private:
     friend class SceneSerializer;
 };
