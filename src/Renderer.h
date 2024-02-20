@@ -10,14 +10,10 @@
 #include "Light.h"
 #include "PointLight.h"
 #include "SpotLight.h"
-#include "AK/Badge.h"
 
 class Renderer
 {
 public:
-    static std::shared_ptr<Renderer> create();
-
-    explicit Renderer(AK::Badge<Renderer>) {}
     Renderer(Renderer const&) = delete;
     void operator=(Renderer const&) = delete;
 
@@ -48,12 +44,26 @@ public:
 
     inline static RendererApi renderer_api;
 
-private:
+protected:
+    Renderer() = default;
+    virtual ~Renderer() = default;
+
     static void set_instance(std::shared_ptr<Renderer> const& renderer)
     {
         instance = renderer;
     }
 
+    void virtual initialize_global_renderer_settings() = 0;
+    void virtual initialize_buffers(size_t const max_size) = 0;
+    void virtual perform_frustum_culling(std::shared_ptr<Material> const& material) const = 0;
+
+    std::shared_ptr<Shader> frustum_culling_shader = {};
+
+    GLuint gpu_instancing_ssbo = {};
+    GLuint bounding_boxes_ssbo = {};
+    GLuint visible_instances_ssbo = {};
+
+private:
     void draw(std::shared_ptr<Material> const& material, glm::mat4 const& projection_view) const;
     void draw_instanced(std::shared_ptr<Material> const& material, glm::mat4 const& projection_view, glm::mat4 const& projection_view_no_translation) const;
 
@@ -76,8 +86,6 @@ private:
         }
     };
 
-    std::shared_ptr<Shader> frustum_culling_shader = {};
-
     std::vector<std::shared_ptr<Light>> lights = {};
     std::vector<std::shared_ptr<Shader>> shaders = {};
     std::vector<std::shared_ptr<Material>> instanced_materials = {};
@@ -88,8 +96,4 @@ private:
     // NOTE: This has to be the same value as the variable in a shader to work in all cases.
     int32_t max_point_lights = 4;
     int32_t max_spot_lights = 4;
-
-    GLuint gpu_instancing_ssbo = {};
-    GLuint bounding_boxes_ssbo = {};
-    GLuint visible_instances_ssbo = {};
 };

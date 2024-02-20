@@ -1,5 +1,7 @@
 #include "Engine.h"
 
+#include <utility>
+
 #define STB_IMAGE_IMPLEMENTATION
 #include <miniaudio.h>
 
@@ -11,6 +13,7 @@
 #include "Input.h"
 #include "MainScene.h"
 #include "Renderer.h"
+#include "RendererGL.h"
 #include "Window.h"
 #include "Game/Game.h"
 
@@ -21,7 +24,14 @@ int32_t Engine::initialize()
 
     InternalMeshData::initialize();
 
-    auto const renderer = Renderer::create();
+    if (Renderer::renderer_api == Renderer::RendererApi::OpenGL)
+    {
+        static_cast<void>(RendererGL::create());
+    }
+    else
+    {
+        std::unreachable();
+    }
 
     return 0;
 }
