@@ -13,25 +13,9 @@
 #include "ShaderFactory.h"
 #include "Skybox.h"
 
-std::shared_ptr<Renderer> Renderer::create()
-{
-    auto renderer = std::make_shared<Renderer>(AK::Badge<Renderer> {});
-
-    assert(instance == nullptr);
-
-    set_instance(renderer);
-
-    return renderer;
-}
-
 void Renderer::initialize()
 {
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
-    glEnable(GL_MULTISAMPLE);
-
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    initialize_global_renderer_settings();
 
     frustum_culling_shader = ShaderFactory::create("./res/shaders/frustum_culling.glsl");
 
@@ -46,23 +30,7 @@ void Renderer::initialize()
             max_size = material->drawables.size();
     }
 
-    glGenBuffers(1, &gpu_instancing_ssbo);
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, gpu_instancing_ssbo);
-    glBufferData(GL_SHADER_STORAGE_BUFFER, max_size * sizeof(glm::mat4), nullptr, GL_DYNAMIC_DRAW);
-    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, gpu_instancing_ssbo);
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
-
-    glGenBuffers(1, &bounding_boxes_ssbo);
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, bounding_boxes_ssbo);
-    glBufferData(GL_SHADER_STORAGE_BUFFER, max_size * sizeof(BoundingBoxShader), nullptr, GL_DYNAMIC_READ);
-    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, bounding_boxes_ssbo);
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
-
-    glGenBuffers(1, &visible_instances_ssbo);
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, visible_instances_ssbo);
-    glBufferData(GL_SHADER_STORAGE_BUFFER, max_size * sizeof(GLuint), nullptr, GL_DYNAMIC_READ);
-    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, visible_instances_ssbo);
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+    initialize_buffers(max_size);
 }
 
 void Renderer::register_shader(std::shared_ptr<Shader> const& shader)
@@ -196,7 +164,7 @@ void Renderer::draw_instanced(std::shared_ptr<Material> const& material, glm::ma
         return;
 
     auto const first_drawable = material->first_drawable;
-    auto const shader = first_drawable->material->shader;
+    auto const shader = material->shader;
 
     material->model_matrices.clear();
     material->model_matrices.reserve(material->drawables.size());
@@ -220,44 +188,7 @@ void Renderer::draw_instanced(std::shared_ptr<Material> const& material, glm::ma
         }
     }
 
-    frustum_culling_shader->use();
-
-    // Set frustum planes
-    auto const frustum_planes = Camera::get_main_camera()->get_frustum_planes();
-
-    for (uint32_t i = 0; i < 6; ++i)
-    {
-        frustum_culling_shader->set_vec4(std::format("frustumPlanes[{}]", i), frustum_planes[i]);
-    }
-
-    // Send bounding boxes
-    // TODO: Batch them with all other existing objects and send only once
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, bounding_boxes_ssbo);
-    glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, material->bounding_boxes.size() * sizeof(BoundingBoxShader), material->bounding_boxes.data());
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
-
-    // Run frustum culling
-    glDispatchCompute((material->drawables.size() / 1024) + 1, 1, 1);
-
-    // Wait for SSBO write to complete
-    glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
-
-    // Read visible_instances SSBO which has value of 1 when a corresponding object is visible and 0 if it is not visible
-    auto* visible_instances = new GLuint[material->drawables.size()];
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, visible_instances_ssbo);
-    glGetBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, material->drawables.size() * sizeof(GLuint), visible_instances);
-
-    // TODO: Pass visible instances directly to the shader by a shared SSBO. Might not actually be beneficial?
-    for (uint32_t i = 0; i < material->drawables.size(); ++i)
-    {
-        if (visible_instances[i] == 1)
-        {
-            material->model_matrices.emplace_back(material->drawables[i]->entity->transform->get_model_matrix());
-        }
-    }
-
-    // Free visible_instances memory
-    delete[] visible_instances;
+    perform_frustum_culling(material);
 
     shader->use();
 
@@ -266,10 +197,6 @@ void Renderer::draw_instanced(std::shared_ptr<Material> const& material, glm::ma
     shader->set_vec3("material.color", glm::vec3(first_drawable->material->color.x, first_drawable->material->color.y, first_drawable->material->color.z));
     shader->set_float("material.specular", first_drawable->material->specular);
     shader->set_float("material.shininess", first_drawable->material->shininess);
-
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, gpu_instancing_ssbo);
-    glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, material->model_matrices.size() * sizeof(glm::mat4), material->model_matrices.data());
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
     first_drawable->draw_instanced(material->model_matrices.size());
 }
