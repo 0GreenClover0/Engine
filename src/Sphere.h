@@ -13,7 +13,7 @@ public:
     virtual void reset() override;
     virtual void reprepare() override;
 
-    [[nodiscard]] Mesh create_sphere() const;
+    [[nodiscard]] std::shared_ptr<Mesh> create_sphere() const;
 
     uint32_t sector_count;
     uint32_t stack_count;

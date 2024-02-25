@@ -28,6 +28,6 @@ private:
 
     std::string diffuse_texture_path;
 
-    [[nodiscard]] Mesh create_blade() const;
+    [[nodiscard]] std::shared_ptr<Mesh> create_blade() const;
 };
 

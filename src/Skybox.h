@@ -17,7 +17,7 @@ public:
 
     uint32_t get_texture_id() const;
 
-    static void bind_skybox();
+    void bind() const;
 
     static void set_instance(std::shared_ptr<Skybox> const& skybox)
     {

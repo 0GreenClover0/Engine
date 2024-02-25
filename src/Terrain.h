@@ -18,8 +18,8 @@ public:
     virtual void prepare() override;
 
 private:
-    [[nodiscard]] Mesh create_terrain_from_height_map_gpu() const;
-    [[nodiscard]] Mesh create_terrain_from_height_map();
+    [[nodiscard]] std::shared_ptr<Mesh> create_terrain_from_height_map_gpu() const;
+    [[nodiscard]] std::shared_ptr<Mesh> create_terrain_from_height_map();
 
     bool use_gpu = true;
 

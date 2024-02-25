@@ -10,7 +10,7 @@ public:
     std::string get_name() const override;
 
 private:
-    [[nodiscard]] Mesh create_ellipse() const;
+    [[nodiscard]] std::shared_ptr<Mesh> create_ellipse() const;
 
     float center_x;
     float center_z;

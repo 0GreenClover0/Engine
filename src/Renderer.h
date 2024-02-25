@@ -8,8 +8,11 @@
 #include "DirectionalLight.h"
 #include "Drawable.h"
 #include "Light.h"
+#include "Mesh.h"
 #include "PointLight.h"
 #include "SpotLight.h"
+#include "Texture.h"
+#include "Vertex.h"
 
 class Renderer
 {

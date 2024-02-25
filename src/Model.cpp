@@ -10,11 +10,12 @@
 
 #include "Entity.h"
 #include "Mesh.h"
+#include "MeshFactory.h"
 #include "Texture.h"
 #include "Vertex.h"
 #include "imgui_impl/imgui_impl_opengl3_loader.h"
 
-std::shared_ptr<Model> Model::create(std::string model_path, std::shared_ptr<Material> const& material)
+std::shared_ptr<Model> Model::create(std::string const& model_path, std::shared_ptr<Material> const& material)
 {
     auto model = std::make_shared<Model>(AK::Badge<Model> {}, model_path, material);
     model->prepare();
@@ -29,9 +30,9 @@ std::shared_ptr<Model> Model::create(std::shared_ptr<Material> const& material)
     return model;
 }
 
-Model::Model(AK::Badge<Model>, std::string model_path, std::shared_ptr<Material> const& material) : Drawable(material), model_path(std::move(model_path))
+Model::Model(AK::Badge<Model>, std::string const& model_path, std::shared_ptr<Material> const& material)
+    : Drawable(material), model_path(model_path)
 {
-    draw_type = GL_TRIANGLES;
 }
 
 Model::Model(AK::Badge<Model>, std::shared_ptr<Material> const& material) : Drawable(material)
@@ -40,35 +41,35 @@ Model::Model(AK::Badge<Model>, std::shared_ptr<Material> const& material) : Draw
 
 void Model::calculate_bounding_box()
 {
-    for (auto& mesh : meshes)
-        mesh.calculate_bounding_box();
+    for (auto const& mesh : meshes)
+        mesh->calculate_bounding_box();
 
     // TODO: Merge bounding boxes together
     if (!meshes.empty())
-        bounds = meshes[0].bounds;
+        bounds = meshes[0]->bounds;
 }
 
 void Model::adjust_bounding_box()
 {
     // TODO: If we merge bounding boxes together, I think we can just adjust the whole model bounding box
-    for (auto& mesh : meshes)
-        mesh.adjust_bounding_box(entity->transform->get_model_matrix());
+    for (auto const& mesh : meshes)
+        mesh->adjust_bounding_box(entity->transform->get_model_matrix());
 
     if (!meshes.empty())
-        bounds = meshes[0].bounds;
+        bounds = meshes[0]->bounds;
 }
 
 BoundingBox Model::get_adjusted_bounding_box(glm::mat4 const& model_matrix) const
 {
     if (!meshes.empty())
-        return meshes[0].get_adjusted_bounding_box(model_matrix);
+        return meshes[0]->get_adjusted_bounding_box(model_matrix);
 
     return {};
 }
 
-Model::Model(std::string model_path, std::shared_ptr<Material> const& material) : Drawable(material), model_path(std::move(model_path))
+Model::Model(std::string const& model_path, std::shared_ptr<Material> const& material)
+    : Drawable(material), model_path(model_path)
 {
-    draw_type = GL_TRIANGLES;
 }
 
 Model::Model(std::shared_ptr<Material> const& material) : Drawable(material)
@@ -84,13 +85,13 @@ std::string Model::get_name() const
 void Model::draw() const
 {
     for (auto const& mesh : meshes)
-        mesh.draw();
+        mesh->draw();
 }
 
 void Model::draw_instanced(int32_t const size)
 {
     for (auto const& mesh : meshes)
-        mesh.draw_instanced(size);
+        mesh->draw_instanced(size);
 }
 
 void Model::prepare()
@@ -148,7 +149,7 @@ void Model::proccess_node(aiNode const* node, aiScene const* scene)
     }
 }
 
-Mesh Model::proccess_mesh(aiMesh const* mesh, aiScene const* scene)
+std::shared_ptr<Mesh> Model::proccess_mesh(aiMesh const* mesh, aiScene const* scene)
 {
     std::vector<Vertex> vertices;
     std::vector<std::uint32_t> indices;
@@ -194,7 +195,7 @@ Mesh Model::proccess_mesh(aiMesh const* mesh, aiScene const* scene)
     std::vector<Texture> specular_maps = load_material_textures(assimp_material, aiTextureType_SPECULAR, "texture_specular");
     textures.insert(textures.end(), specular_maps.begin(), specular_maps.end());
 
-    return Mesh::create(vertices, indices, textures, draw_type, material);
+    return MeshFactory::create(vertices, indices, textures, draw_type, material);
 }
 
 std::vector<Texture> Model::load_material_textures(aiMaterial const* material, aiTextureType const type, std::string const& type_name)

@@ -2,10 +2,10 @@
 
 #include <array>
 #include <format>
-#include <iostream>
 
 #include "Camera.h"
 #include "Entity.h"
+#include "MeshGL.h"
 
 std::shared_ptr<RendererGL> RendererGL::create()
 {

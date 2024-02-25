@@ -149,7 +149,7 @@ void Renderer::draw(std::shared_ptr<Material> const& material, glm::mat4 const& 
             material->shader->set_mat4("VM", Camera::get_main_camera()->get_view_matrix() * drawable->entity->transform->get_model_matrix());
 
         if (material->needs_skybox)
-            Skybox::bind_skybox();
+            Skybox::get_instance()->bind();
 
         material->shader->set_mat4("PVM", projection_view * drawable->entity->transform->get_model_matrix());
         material->shader->set_mat4("model", drawable->entity->transform->get_model_matrix());

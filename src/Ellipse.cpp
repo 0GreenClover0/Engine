@@ -3,10 +3,12 @@
 #include <glm/trigonometric.hpp>
 #include <glm/ext/scalar_constants.hpp>
 
+#include "MeshFactory.h"
+
 Ellipse::Ellipse(float center_x, float center_z, float radius_x, float radius_z, int segment_count, std::shared_ptr<Material> const& material)
     : Model(material), center_x(center_x), center_z(center_z), radius_x(radius_x), radius_z(radius_z), segment_count(segment_count)
 {
-    draw_type = GL_LINE_LOOP;
+    draw_type = DrawType::LineLoop;
     meshes.emplace_back(create_ellipse());
 }
 
@@ -16,7 +18,7 @@ std::string Ellipse::get_name() const
     return name.substr(6);
 }
 
-Mesh Ellipse::create_ellipse() const
+std::shared_ptr<Mesh> Ellipse::create_ellipse() const
 { 
     float const theta = 2 * glm::pi<float>() / static_cast<float>(segment_count); 
     float const c = glm::cos(theta);
@@ -43,5 +45,5 @@ Mesh Ellipse::create_ellipse() const
     } 
     glEnd();
 
-    return Mesh::create(vertices, {}, {}, draw_type, material, Mesh::NotIndexed);
+    return MeshFactory::create(vertices, {}, {}, draw_type, material, DrawFunctionType::NotIndexed);
 }
