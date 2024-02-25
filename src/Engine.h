@@ -1,14 +1,8 @@
 #pragma once
 
-#include <imgui.h>
-#include <imgui_impl/imgui_impl_glfw.h>
-#include <imgui_impl/imgui_impl_opengl3.h>
-
 #include <glad/glad.h> // Initialize with gladLoadGL()
 
 #include <GLFW/glfw3.h> // Include glfw3.h after our OpenGL definitions
-
-#include <spdlog/spdlog.h>
 
 #include <miniaudio.h>
 
@@ -27,13 +21,9 @@ public:
     inline static bool enable_vsync = false;
     inline static bool enable_mouse_capture = true;
 
-    inline static int32_t screen_width = 1280;
-    inline static int32_t screen_height = 720;
-
-    inline static ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-
     inline static ma_engine audio_engine;
 
+    inline static std::shared_ptr<Window> window;
 private:
     static int32_t initialize_thirdparty();
 
@@ -46,6 +36,4 @@ private:
     static void setup_imgui(GLFWwindow* glfw_window);
 
     static int32_t setup_miniaudio();
-
-    inline static std::shared_ptr<Window> window;
 };

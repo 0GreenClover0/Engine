@@ -1,5 +1,6 @@
 #pragma once
 
+#include <imgui.h>
 #include <set>
 
 #include <glad/glad.h>
@@ -33,6 +34,7 @@ public:
     void register_light(std::shared_ptr<Light> const& light);
     void unregister_light(std::shared_ptr<Light> const& light);
 
+    void virtual begin_frame() const;
     void render() const;
 
     static std::shared_ptr<Renderer> get_instance()
@@ -46,6 +48,13 @@ public:
     };
 
     inline static RendererApi renderer_api;
+
+    bool wireframe_mode_active = false;
+
+    inline static ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+
+    inline static int32_t screen_width = 1280;
+    inline static int32_t screen_height = 720;
 
 protected:
     Renderer() = default;

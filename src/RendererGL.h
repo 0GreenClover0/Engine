@@ -11,6 +11,8 @@ public:
 
     ~RendererGL() override = default;
 
+    void begin_frame() const override;
+
 private:
     void initialize_global_renderer_settings() override;
     void initialize_buffers(size_t const max_size) override;

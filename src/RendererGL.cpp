@@ -22,6 +22,25 @@ RendererGL::RendererGL(AK::Badge<RendererGL>)
 {
 }
 
+void RendererGL::begin_frame() const
+{
+    Renderer::begin_frame();
+
+    glViewport(0, 0, screen_width, screen_height);
+
+    if (wireframe_mode_active)
+    {
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    }
+    else
+    {
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    }
+
+    glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
 void RendererGL::initialize_global_renderer_settings()
 {
     glEnable(GL_DEPTH_TEST);
