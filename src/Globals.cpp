@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "Model.h"
+#include "TextureLoader.h"
 
 namespace InternalMeshData
 {
@@ -128,9 +129,7 @@ void initialize()
     }
 
     // Load white texture
-    white_texture.id = Model::load_texture("./res/textures/white.jpg");
-    white_texture.type = aiTextureType_DIFFUSE;
-    white_texture.path = "texture_diffuse";
+    white_texture = TextureLoader::get_instance()->load_texture("./res/textures/white.jpg", "texture_diffuse");
 }
 
 }

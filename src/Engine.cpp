@@ -25,8 +25,6 @@ int32_t Engine::initialize()
     if (auto const result = initialize_thirdparty(); result != 0)
         return result;
 
-    InternalMeshData::initialize();
-
     if (Renderer::renderer_api == Renderer::RendererApi::OpenGL)
     {
         static_cast<void>(RendererGL::create());
@@ -35,6 +33,8 @@ int32_t Engine::initialize()
     {
         std::unreachable();
     }
+
+    InternalMeshData::initialize();
 
     return 0;
 }

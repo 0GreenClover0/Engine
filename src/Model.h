@@ -26,10 +26,9 @@ public:
 
     std::string get_name() const override;
 
-    static std::uint32_t load_texture(char const* path, bool gamma = false);
-    virtual void draw() const override;
+    void draw() const override;
 
-    virtual void draw_instanced(int32_t const size) override;
+    void draw_instanced(int32_t const size) override;
 
     virtual void prepare();
     virtual void reset();
@@ -45,10 +44,6 @@ public:
 protected:
     explicit Model(std::string const& model_path, std::shared_ptr<Material> const& material);
     explicit Model(std::shared_ptr<Material> const& material);
-
-    [[nodiscard]] static Texture load_texture(std::string const& path, std::string const& type);
-    static std::uint32_t texture_from_file(char const* path, bool gamma = false);
-    static std::uint32_t texture_from_file(char const* texture_name, std::string const& directory, bool gamma = false);
 
     DrawType draw_type = DrawType::Triangles;
     std::vector<std::shared_ptr<Mesh>> meshes = {};

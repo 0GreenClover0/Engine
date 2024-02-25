@@ -7,6 +7,7 @@
 
 #include "MeshFactory.h"
 #include "Model.h"
+#include "TextureLoader.h"
 #include "Vertex.h"
 
 Sphere::Sphere(float const radius, uint32_t const sectors, uint32_t const stacks, std::string texture_path, std::shared_ptr<Material> const& material)
@@ -59,7 +60,7 @@ std::shared_ptr<Mesh> Sphere::create_sphere() const
         indices.push_back(1);
         indices.push_back(2);
 
-        std::vector<Texture> diffuse_maps = { load_texture() };
+        std::vector<Texture> diffuse_maps = { TextureLoader::get_instance()->load_texture(texture_path, "texture_diffuse") };
         textures.insert(textures.end(), diffuse_maps.begin(), diffuse_maps.end());
 
         material->radius_multiplier = radius;
@@ -111,17 +112,8 @@ std::shared_ptr<Mesh> Sphere::create_sphere() const
         odd_row = !odd_row;
     }
 
-    std::vector<Texture> diffuse_maps = { load_texture() };
+    std::vector<Texture> diffuse_maps = { TextureLoader::get_instance()->load_texture(texture_path, "texture_diffuse") };
     textures.insert(textures.end(), diffuse_maps.begin(), diffuse_maps.end());
 
     return MeshFactory::create(vertices, indices, textures, draw_type, material);
-}
-
-Texture Sphere::load_texture() const
-{
-    Texture texture;
-    texture.id = texture_from_file(texture_path.c_str());
-    texture.type = "texture_diffuse";
-    texture.path = texture_path;
-    return texture;
 }
