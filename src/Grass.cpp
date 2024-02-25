@@ -70,7 +70,7 @@ std::shared_ptr<Mesh> Grass::create_blade() const
 
     std::vector<Texture> diffuse_maps = {};
     if (!diffuse_texture_path.empty())
-        diffuse_maps.emplace_back(TextureLoader::get_instance()->load_texture(diffuse_texture_path, "texture_diffuse"));
+        diffuse_maps.emplace_back(TextureLoader::get_instance()->load_texture(diffuse_texture_path, TextureType::Diffuse));
 
     textures.insert(textures.end(), diffuse_maps.begin(), diffuse_maps.end());
 

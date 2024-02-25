@@ -3,9 +3,17 @@
 #include <cstdint>
 #include <string>
 
+enum class TextureType
+{
+    None,
+    Diffuse,
+    Specular,
+    Heightmap,
+};
+
 struct Texture
 {
     std::uint32_t id;
-    std::string type;
+    TextureType type;
     std::string path;
 };

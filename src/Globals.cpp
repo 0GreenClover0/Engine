@@ -129,7 +129,7 @@ void initialize()
     }
 
     // Load white texture
-    white_texture = TextureLoader::get_instance()->load_texture("./res/textures/white.jpg", "texture_diffuse");
+    white_texture = TextureLoader::get_instance()->load_texture("./res/textures/white.jpg", TextureType::Diffuse);
 }
 
 }

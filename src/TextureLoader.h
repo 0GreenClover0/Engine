@@ -10,7 +10,7 @@ class TextureLoader
 public:
     virtual ~TextureLoader() = default;
 
-    Texture load_texture(std::string const& path, std::string const& type);
+    Texture load_texture(std::string const& path, TextureType type);
 
     static std::shared_ptr<TextureLoader> get_instance()
     {
