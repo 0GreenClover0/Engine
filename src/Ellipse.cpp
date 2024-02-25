@@ -29,7 +29,6 @@ std::shared_ptr<Mesh> Ellipse::create_ellipse() const
 
     std::vector<Vertex> vertices;
 
-    glBegin(GL_LINE_LOOP); 
     for (int i = 0; i < segment_count; ++i) 
     {
         Vertex vertex = {};
@@ -42,8 +41,7 @@ std::shared_ptr<Mesh> Ellipse::create_ellipse() const
         z = s * t + c * z;
 
         vertices.emplace_back(vertex);
-    } 
-    glEnd();
+    }
 
     return MeshFactory::create(vertices, {}, {}, draw_type, material, DrawFunctionType::NotIndexed);
 }

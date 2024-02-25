@@ -9,6 +9,7 @@
 
 #include "AK/AK.h"
 #include "Camera.h"
+#include "Engine.h"
 #include "Entity.h"
 #include "ShaderFactory.h"
 #include "Skybox.h"
@@ -91,6 +92,18 @@ void Renderer::register_light(std::shared_ptr<Light> const& light)
 void Renderer::unregister_light(std::shared_ptr<Light> const& light)
 {
     AK::swap_and_erase(lights, light);
+}
+
+void Renderer::begin_frame() const
+{
+    glfwGetFramebufferSize(Engine::window->get_glfw_window(), &screen_width, &screen_height);
+
+    // Update camera
+    if (Camera::get_main_camera() != nullptr)
+    {
+        Camera::get_main_camera()->set_width(static_cast<float>(screen_width));
+        Camera::get_main_camera()->set_height(static_cast<float>(screen_height));
+    }
 }
 
 void Renderer::render() const

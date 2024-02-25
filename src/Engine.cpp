@@ -2,12 +2,15 @@
 
 #include <utility>
 
-#define STB_IMAGE_IMPLEMENTATION
-#include <miniaudio.h>
+#include <imgui_impl/imgui_impl_glfw.h>
+#include <imgui_impl/imgui_impl_opengl3.h>
+#include <spdlog/spdlog.h>
 
+#define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-#include "Camera.h"
+#include <miniaudio.h>
+
 #include "Editor.h"
 #include "Globals.h"
 #include "Input.h"
@@ -96,33 +99,15 @@ void Engine::run()
         editor.draw_scene_hierarchy();
         editor.draw_inspector();
 
-        if (polygon_mode)
-        {
-            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        }
-        else
-        {
-            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        }
 
-        glfwGetFramebufferSize(window->get_glfw_window(), &screen_width, &screen_height);
-        glViewport(0, 0, screen_width, screen_height);
+        Renderer::get_instance()->wireframe_mode_active = polygon_mode;
 
-        // Update camera
-        if (Camera::get_main_camera() != nullptr)
-        {
-            Camera::get_main_camera()->set_width(static_cast<float>(screen_width));
-            Camera::get_main_camera()->set_height(static_cast<float>(screen_height));
-        }
+        Renderer::get_instance()->begin_frame();
 
-        // Run frame
         MainScene::get_instance()->run_frame();
 
-        // Render frame
-        glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
         Renderer::get_instance()->render();
+
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -145,7 +130,7 @@ void Engine::clean_up()
 std::shared_ptr<Window> Engine::create_window()
 {
     // Create window with graphics context
-    auto new_window = std::make_shared<Window>(screen_width, screen_height, 4);
+    auto new_window = std::make_shared<Window>(Renderer::screen_width, Renderer::screen_height, 4);
 
     // Enable vsync
     glfwSwapInterval(enable_vsync);
