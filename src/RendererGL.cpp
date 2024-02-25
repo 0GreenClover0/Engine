@@ -6,6 +6,7 @@
 #include "Camera.h"
 #include "Entity.h"
 #include "MeshGL.h"
+#include "TextureLoaderGL.h"
 
 std::shared_ptr<RendererGL> RendererGL::create()
 {
@@ -14,6 +15,8 @@ std::shared_ptr<RendererGL> RendererGL::create()
     assert(instance == nullptr);
 
     set_instance(renderer);
+
+    TextureLoaderGL::create();
 
     return renderer;
 }

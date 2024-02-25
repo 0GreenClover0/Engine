@@ -4,6 +4,7 @@
 
 #include "Globals.h"
 #include "MeshFactory.h"
+#include "TextureLoader.h"
 
 std::shared_ptr<Cube> Cube::create(std::shared_ptr<Material> const& material, bool const big_cube)
 {
@@ -90,11 +91,11 @@ std::shared_ptr<Mesh> Cube::create_cube() const
 
     std::vector<Texture> diffuse_maps = {};
     if (!diffuse_texture_path.empty())
-        diffuse_maps.emplace_back(load_texture(diffuse_texture_path, "texture_diffuse"));
+        diffuse_maps.emplace_back(TextureLoader::get_instance()->load_texture(diffuse_texture_path, "texture_diffuse"));
 
     std::vector<Texture> specular_maps = {};
     if (!specular_texture_path.empty())
-        specular_maps.emplace_back(load_texture(specular_texture_path, "texture_specular"));
+        specular_maps.emplace_back(TextureLoader::get_instance()->load_texture(specular_texture_path, "texture_specular"));
 
     textures.insert(textures.end(), diffuse_maps.begin(), diffuse_maps.end());
     textures.insert(textures.end(), specular_maps.begin(), specular_maps.end());
