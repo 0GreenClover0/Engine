@@ -119,7 +119,7 @@ std::shared_ptr<Mesh> Terrain::create_terrain_from_height_map_gpu() const
 
     Texture texture;
     texture.id = texture_id;
-    texture.type = "texture_height";
+    texture.type = TextureType::Heightmap;
     texture.path = height_map_path;
 
     std::vector<Texture> textures;

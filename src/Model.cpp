@@ -188,16 +188,16 @@ std::shared_ptr<Mesh> Model::proccess_mesh(aiMesh const* mesh, aiScene const* sc
 
     aiMaterial const* assimp_material = scene->mMaterials[mesh->mMaterialIndex];
 
-    std::vector<Texture> diffuse_maps = load_material_textures(assimp_material, aiTextureType_DIFFUSE, "texture_diffuse");
+    std::vector<Texture> diffuse_maps = load_material_textures(assimp_material, aiTextureType_DIFFUSE, TextureType::Diffuse);
     textures.insert(textures.end(), diffuse_maps.begin(), diffuse_maps.end());
 
-    std::vector<Texture> specular_maps = load_material_textures(assimp_material, aiTextureType_SPECULAR, "texture_specular");
+    std::vector<Texture> specular_maps = load_material_textures(assimp_material, aiTextureType_SPECULAR, TextureType::Specular);
     textures.insert(textures.end(), specular_maps.begin(), specular_maps.end());
 
     return MeshFactory::create(vertices, indices, textures, draw_type, material);
 }
 
-std::vector<Texture> Model::load_material_textures(aiMaterial const* material, aiTextureType const type, std::string const& type_name)
+std::vector<Texture> Model::load_material_textures(aiMaterial const* material, aiTextureType const type, TextureType const type_name)
 {
     std::vector<Texture> textures;
 

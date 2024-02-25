@@ -4,6 +4,7 @@
 #include <glad/glad.h>
 
 #include "Globals.h"
+#include "Texture.h"
 
 MeshGL::MeshGL(AK::Badge<MeshFactory>, std::vector<Vertex> const& vertices, std::vector<std::uint32_t> const& indices,
                std::vector<Texture> const& textures, DrawType const draw_type, std::shared_ptr<Material> const& material,
@@ -167,18 +168,21 @@ void MeshGL::bind_textures() const
         glActiveTexture(GL_TEXTURE0 + i);
 
         std::string number;
-        std::string name = "material." + textures[i].type;
+        std::string name = "material.";
 
-        if (textures[i].type == "texture_diffuse")
+        if (textures[i].type == TextureType::Diffuse)
         {
+            name += "texture_diffuse";
             number = std::to_string(diffuse_number++);
         }
-        else if (textures[i].type == "texture_specular")
+        else if (textures[i].type == TextureType::Specular)
         {
+            name += "texture_specular";
             number = std::to_string(specular_number++);
         }
-        else if (textures[i].type == "texture_height")
+        else if (textures[i].type == TextureType::Heightmap)
         {
+            name += "texture_height";
             number = std::to_string(height_number++);
         }
 
