@@ -1,6 +1,6 @@
 #include "Grass.h"
 
-#include <glm/gtc/random.hpp>
+#include "MeshFactory.h"
 
 std::shared_ptr<Grass> Grass::create(std::shared_ptr<Material> const& material, uint32_t const grass_count)
 {
@@ -21,13 +21,13 @@ std::shared_ptr<Grass> Grass::create(std::shared_ptr<Material> const& material, 
 
 Grass::Grass(AK::Badge<Grass>, std::shared_ptr<Material> const& material, uint32_t const grass_count) : Model(material), grass_count(grass_count)
 {
-    draw_type = GL_TRIANGLES;
+    draw_type = DrawType::Triangles;
 }
 
 Grass::Grass(AK::Badge<Grass>, std::shared_ptr<Material> const& material, uint32_t const grass_count, std::string diffuse_texture_path)
     : Model(material), grass_count(grass_count), diffuse_texture_path(std::move(diffuse_texture_path))
 {
-    draw_type = GL_TRIANGLES;
+    draw_type = DrawType::Triangles;
 }
 
 std::string Grass::get_name() const
@@ -49,7 +49,7 @@ void Grass::prepare()
     meshes.emplace_back(create_blade());
 }
 
-Mesh Grass::create_blade() const
+std::shared_ptr<Mesh> Grass::create_blade() const
 {
     std::vector<Vertex> const vertices =
     {
@@ -73,5 +73,5 @@ Mesh Grass::create_blade() const
 
     textures.insert(textures.end(), diffuse_maps.begin(), diffuse_maps.end());
 
-    return Mesh::create(vertices, indices, textures, draw_type, material);
+    return MeshFactory::create(vertices, indices, textures, draw_type, material);
 }

@@ -1,6 +1,9 @@
 #include "Terrain.h"
 
+#include <iostream>
 #include <stb_image.h>
+
+#include "MeshFactory.h"
 
 std::shared_ptr<Terrain> Terrain::create(std::shared_ptr<Material> const& material, bool const use_gpu, std::string const& height_map_path)
 {
@@ -15,9 +18,9 @@ Terrain::Terrain(AK::Badge<Terrain>, std::shared_ptr<Material> const& material, 
     : Model(material), use_gpu(use_gpu), height_map_path(height_map_path)
 {
     if (use_gpu)
-        draw_type = GL_PATCHES;
+        draw_type = DrawType::Patches;
     else
-        draw_type = GL_TRIANGLE_STRIP;
+        draw_type = DrawType::TriangleStrip;
 }
 
 std::string Terrain::get_name() const
@@ -32,13 +35,13 @@ void Terrain::draw() const
 
     if (use_gpu)
     {
-        meshes[0].draw();
+        meshes[0]->draw();
     }
     else
     {
         for (uint32_t strip = 0; strip < strips_count; ++strip)
         {
-            meshes[0].draw(vertices_per_strip, (void*)(sizeof(uint32_t) * vertices_per_strip * strip));
+            meshes[0]->draw(vertices_per_strip, (void*)(sizeof(uint32_t) * vertices_per_strip * strip));
         }
     }
 }
@@ -58,7 +61,7 @@ void Terrain::prepare()
     }
 }
 
-Mesh Terrain::create_terrain_from_height_map_gpu() const
+std::shared_ptr<Mesh> Terrain::create_terrain_from_height_map_gpu() const
 {
     stbi_set_flip_vertically_on_load(true);
 
@@ -69,7 +72,7 @@ Mesh Terrain::create_terrain_from_height_map_gpu() const
     {
         std::cout << "Height map failed to load at path: " << height_map_path << '\n';
         stbi_image_free(data);
-        return Mesh::create({}, {}, {}, draw_type, material);
+        return MeshFactory::create({}, {}, {}, draw_type, material);
     }
 
     std::uint32_t texture_id;
@@ -184,10 +187,10 @@ Mesh Terrain::create_terrain_from_height_map_gpu() const
         }
     }
 
-    return Mesh::create(vertices, {}, textures, draw_type, material, Mesh::NotIndexed);
+    return MeshFactory::create(vertices, {}, textures, draw_type, material, DrawFunctionType::NotIndexed);
 }
 
-Mesh Terrain::create_terrain_from_height_map()
+std::shared_ptr<Mesh> Terrain::create_terrain_from_height_map()
 {
     stbi_set_flip_vertically_on_load(true);
 
@@ -198,7 +201,7 @@ Mesh Terrain::create_terrain_from_height_map()
     {
         std::cout << "Height map failed to load at path: " << height_map_path << '\n';
         stbi_image_free(data);
-        return Mesh::create({}, {}, {}, draw_type, material);
+        return MeshFactory::create({}, {}, {}, draw_type, material);
     }
 
     std::vector<Vertex> vertices = {};
@@ -238,5 +241,5 @@ Mesh Terrain::create_terrain_from_height_map()
     strips_count = height - 1;
     vertices_per_strip = width * 2;
 
-    return Mesh::create(vertices, indices, {}, draw_type, material);
+    return MeshFactory::create(vertices, indices, {}, draw_type, material);
 }

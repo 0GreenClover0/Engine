@@ -1,6 +1,7 @@
 #include "SceneSerializer.h"
 
 #include <fstream>
+#include <iostream>
 #include <yaml-cpp/yaml.h>
 
 #include "Cube.h"

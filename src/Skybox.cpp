@@ -52,7 +52,7 @@ uint32_t Skybox::get_texture_id() const
     return texture_id;
 }
 
-void Skybox::bind_skybox()
+void Skybox::bind() const
 {
     glBindTexture(GL_TEXTURE_CUBE_MAP, instance->texture_id);
 }

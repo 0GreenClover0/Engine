@@ -3,6 +3,7 @@
 #include <memory>
 
 #include "Globals.h"
+#include "MeshFactory.h"
 
 std::shared_ptr<Cube> Cube::create(std::shared_ptr<Material> const& material, bool const big_cube)
 {
@@ -34,22 +35,21 @@ std::shared_ptr<Cube> Cube::create(std::string const& diffuse_texture_path, std:
     return cube;
 }
 
-Cube::Cube(AK::Badge<Cube>, std::shared_ptr<Material> const& material) : Model(material), big_cube(false)
+Cube::Cube(AK::Badge<Cube>, std::shared_ptr<Material> const& material) : Model(material)
 {
-    draw_type = GL_TRIANGLES;
+    draw_type = DrawType::Triangles;
 }
 
-Cube::Cube(AK::Badge<Cube>, std::string diffuse_texture_path, std::shared_ptr<Material> const& material)
-    : Model(material), diffuse_texture_path(std::move(diffuse_texture_path)), big_cube(false)
+Cube::Cube(AK::Badge<Cube>, std::string const& diffuse_texture_path, std::shared_ptr<Material> const& material)
+    : Model(material), diffuse_texture_path(diffuse_texture_path)
 {
-    draw_type = GL_TRIANGLES;
+    draw_type = DrawType::Triangles;
 }
 
-Cube::Cube(AK::Badge<Cube>, std::string diffuse_texture_path, std::string specular_texture_path, std::shared_ptr<Material> const& material)
-    : Model(material), diffuse_texture_path(std::move(diffuse_texture_path)), specular_texture_path(std::move(specular_texture_path)),
-      big_cube(false)
+Cube::Cube(AK::Badge<Cube>, std::string const& diffuse_texture_path, std::string const& specular_texture_path, std::shared_ptr<Material> const& material)
+    : Model(material), diffuse_texture_path(diffuse_texture_path), specular_texture_path(specular_texture_path)
 {
-    draw_type = GL_TRIANGLES;
+    draw_type = DrawType::Triangles;
 }
 
 std::string Cube::get_name() const
@@ -82,7 +82,7 @@ void Cube::reprepare()
     Cube::prepare();
 }
 
-Mesh Cube::create_cube() const
+std::shared_ptr<Mesh> Cube::create_cube() const
 {
     std::vector<Vertex> const vertices = big_cube ? InternalMeshData::big_cube.vertices : InternalMeshData::cube.vertices;
     std::vector<uint32_t> const indices = big_cube ? InternalMeshData::big_cube.indices : InternalMeshData::cube.indices;
@@ -99,5 +99,5 @@ Mesh Cube::create_cube() const
     textures.insert(textures.end(), diffuse_maps.begin(), diffuse_maps.end());
     textures.insert(textures.end(), specular_maps.begin(), specular_maps.end());
 
-    return Mesh::create(vertices, indices, textures, draw_type, material);
+    return MeshFactory::create(vertices, indices, textures, draw_type, material);
 }

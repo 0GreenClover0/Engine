@@ -5,13 +5,14 @@
 #include <glm/ext/scalar_constants.hpp>
 #include <utility>
 
+#include "MeshFactory.h"
 #include "Model.h"
 #include "Vertex.h"
 
 Sphere::Sphere(float const radius, uint32_t const sectors, uint32_t const stacks, std::string texture_path, std::shared_ptr<Material> const& material)
     : Model(material), sector_count(sectors), stack_count(stacks), texture_path(std::move(texture_path)), radius(radius)
 {
-    draw_type = GL_TRIANGLE_STRIP;
+    draw_type = DrawType::TriangleStrip;
     Sphere::prepare();
 }
 
@@ -37,7 +38,7 @@ void Sphere::reprepare()
     Sphere::prepare();
 }
 
-Mesh Sphere::create_sphere() const
+std::shared_ptr<Mesh> Sphere::create_sphere() const
 {
     auto constexpr PI = glm::pi<float>();
     float const length_inverse = 1.0f / radius;
@@ -65,7 +66,7 @@ Mesh Sphere::create_sphere() const
         material->sector_count = sector_count;
         material->stack_count = stack_count;
 
-        return Mesh::create(vertices, indices, textures, draw_type, material);
+        return MeshFactory::create(vertices, indices, textures, draw_type, material);
     }
 
     for (uint32_t x = 0; x <= stack_count; ++x)
@@ -113,7 +114,7 @@ Mesh Sphere::create_sphere() const
     std::vector<Texture> diffuse_maps = { load_texture() };
     textures.insert(textures.end(), diffuse_maps.begin(), diffuse_maps.end());
 
-    return Mesh::create(vertices, indices, textures, draw_type, material);
+    return MeshFactory::create(vertices, indices, textures, draw_type, material);
 }
 
 Texture Sphere::load_texture() const
