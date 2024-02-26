@@ -11,8 +11,8 @@ public:
     static std::shared_ptr<Light> create();
     explicit Light(AK::Badge<Light>) {}
 
-    void draw_editor() override;
-    std::string get_name() const override;
+    virtual void draw_editor() override;
+    virtual std::string get_name() const override;
 
     glm::vec3 ambient = glm::vec3(0.2f, 0.2f, 0.2f);
     glm::vec3 diffuse = glm::vec3(1.0f, 1.0f, 1.0f);

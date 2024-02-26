@@ -23,19 +23,19 @@ public:
     explicit Model(AK::Badge<Model>, std::string const& model_path, std::shared_ptr<Material> const& material);
     explicit Model(AK::Badge<Model>, std::shared_ptr<Material> const& material);
 
-    std::string get_name() const override;
+    virtual std::string get_name() const override;
 
-    void draw() const override;
+    virtual void draw() const override;
 
-    void draw_instanced(int32_t const size) override;
+    virtual void draw_instanced(int32_t const size) override;
 
     virtual void prepare();
     virtual void reset();
     virtual void reprepare();
 
-    void calculate_bounding_box() override;
-    void adjust_bounding_box() override;
-    BoundingBox get_adjusted_bounding_box(glm::mat4 const& model_matrix) const override;
+    virtual void calculate_bounding_box() override;
+    virtual void adjust_bounding_box() override;
+    virtual BoundingBox get_adjusted_bounding_box(glm::mat4 const& model_matrix) const override;
 
 protected:
     explicit Model(std::string const& model_path, std::shared_ptr<Material> const& material);

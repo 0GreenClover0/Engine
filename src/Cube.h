@@ -14,7 +14,7 @@ public:
     explicit Cube(AK::Badge<Cube>, std::string const& diffuse_texture_path, std::shared_ptr<Material> const& material);
     explicit Cube(AK::Badge<Cube>, std::string const& diffuse_texture_path, std::string const& specular_texture_path, std::shared_ptr<Material> const& material);
 
-    std::string get_name() const override;
+    virtual std::string get_name() const override;
 
     virtual void prepare() override;
     virtual void reset() override;

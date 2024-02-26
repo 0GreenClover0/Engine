@@ -7,7 +7,7 @@ class Sphere final : public Model
 public:
     Sphere(float radius, uint32_t sectors, uint32_t stacks, std::string texture_path, std::shared_ptr<Material> const& material);
 
-    std::string get_name() const override;
+    virtual std::string get_name() const override;
 
     virtual void prepare() override;
     virtual void reset() override;

@@ -10,7 +10,7 @@ public:
 
     explicit SoundListener(AK::Badge<SoundListener>) {}
 
-    void update() override;
+    virtual void update() override;
 
     inline static std::shared_ptr<SoundListener> instance;
 };

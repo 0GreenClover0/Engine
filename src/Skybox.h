@@ -11,9 +11,9 @@ class Skybox : public Drawable
 public:
     Skybox(std::shared_ptr<Material> const& material, std::vector<std::string> const& face_paths);
 
-    std::string get_name() const override;
+    virtual std::string get_name() const override;
 
-    void draw() const override = 0;
+    virtual void draw() const override = 0;
     void virtual bind() = 0;
 
     static void set_instance(std::shared_ptr<Skybox> const& skybox)
