@@ -1,9 +1,6 @@
 #include "Mesh.h"
 
 #include <iostream>
-#include <string>
-#include <utility>
-#include <glad/glad.h>
 #include <glm/gtc/epsilon.hpp>
 
 #include "Globals.h"
