@@ -20,7 +20,7 @@
 #include "Window.h"
 #include "Game/Game.h"
 
-int32_t Engine::initialize()
+i32 Engine::initialize()
 {
     if (auto const result = initialize_thirdparty(); result != 0)
         return result;
@@ -56,7 +56,7 @@ void Engine::run()
     bool debug_open = true;
     bool polygon_mode = false;
 
-    int nb_frames = 0;
+    i32 nb_frames = 0;
     double frame_per_second = 0.0;
     double last_time = glfwGetTime();
     double last_frame = 0.0; // Time of last frame
@@ -142,7 +142,7 @@ std::shared_ptr<Window> Engine::create_window()
     return new_window;
 }
 
-int32_t Engine::initialize_thirdparty()
+i32 Engine::initialize_thirdparty()
 {
     if (setup_glfw() != 0)
         return 1;
@@ -159,7 +159,7 @@ int32_t Engine::initialize_thirdparty()
     if (setup_glad() != 0)
         return 3;
 
-    srand(static_cast<unsigned int>(glfwGetTime()));
+    srand(static_cast<u32>(glfwGetTime()));
 
     setup_imgui(window->get_glfw_window());
 
@@ -169,7 +169,7 @@ int32_t Engine::initialize_thirdparty()
     return 0;
 }
 
-int32_t Engine::setup_glfw()
+i32 Engine::setup_glfw()
 {
     glfwSetErrorCallback(glfw_error_callback);
     if (!glfwInit())
@@ -178,12 +178,12 @@ int32_t Engine::setup_glfw()
     return 0;
 }
 
-void Engine::glfw_error_callback(int const error, char const* description)
+void Engine::glfw_error_callback(i32 const error, char const* description)
 {
     (void)fprintf(stderr, "Glfw Error %d: %s\n", error, description);
 }
 
-int32_t Engine::setup_glad()
+i32 Engine::setup_glad()
 {
     // Initialize OpenGL loader
     if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)))
@@ -211,7 +211,7 @@ void Engine::setup_imgui(GLFWwindow* glfw_window)
     ImGui::StyleColorsDark();
 }
 
-int32_t Engine::setup_miniaudio()
+i32 Engine::setup_miniaudio()
 {
     ma_engine_config config = ma_engine_config_init();
     config.channels = 2;

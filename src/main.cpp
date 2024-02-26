@@ -8,16 +8,16 @@
 #if FORCE_DEDICATED_GPU
 extern "C"
 {
-    __declspec(dllexport) unsigned long NvOptimusEnablement = 0x00000001;
+    __declspec(dllexport) u32 NvOptimusEnablement = 0x00000001;
 }
 
 extern "C"
 {
-    __declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1;
+    __declspec(dllexport) i32 AmdPowerXpressRequestHighPerformance = 1;
 }
 #endif
 
-int main(int, char**)
+i32 main(i32, char**)
 {
     if (auto const result = Engine::initialize(); result != 0)
         return result;

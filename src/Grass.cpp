@@ -59,7 +59,7 @@ std::shared_ptr<Mesh> Grass::create_blade() const
         { glm::vec3(-1.0f, 1.0f, 0.0f), {}, { 0.0f, 1.0f } },  // top left
     };
 
-    std::vector<uint32_t> const indices =
+    std::vector<u32> const indices =
     {
         0, 1, 2,
         0, 2, 3

@@ -30,7 +30,7 @@ public:
     void operator=(Skybox const&) = delete;
 
 protected:
-    uint32_t m_texture_id = 0;
+    u32 m_texture_id = 0;
 
 private:
     void virtual bind_texture() const = 0;

@@ -5,6 +5,7 @@
 
 #include "Component.h"
 #include "AK/Badge.h"
+#include "AK/Types.h"
 
 class Sound final : public Component
 {
@@ -21,7 +22,7 @@ public:
 
     void play();
     void stop();
-    void stop_with_fade(uint64_t const milliseconds);
+    void stop_with_fade(u64 const milliseconds);
     virtual void update() override;
 
 private:

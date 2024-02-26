@@ -36,6 +36,6 @@ std::shared_ptr<Material> Drawable::material()
     return m_material;
 }
 
-void Drawable::draw_instanced(int32_t const size)
+void Drawable::draw_instanced(i32 const size)
 {
 }

@@ -3,6 +3,7 @@
 #include <glm/vec3.hpp>
 
 #include "Frustum.h"
+#include "AK/Types.h"
 
 struct BoundingBox
 {
@@ -29,7 +30,7 @@ struct BoundingBox
         glm::vec3( 1.0f,  1.0f,  1.0f)
     };
 
-    [[nodiscard]] static int32_t plane_normal_to_index(glm::vec3 const& normal);
+    [[nodiscard]] static i32 plane_normal_to_index(glm::vec3 const& normal);
 
     [[nodiscard]] bool half_plane_test(glm::vec3 const& p, glm::vec3 const& normal, float const offset) const;
 
@@ -41,9 +42,9 @@ struct BoundingBox
 struct BoundingBoxShader
 {
     glm::vec3 center = {};
-    float padding1;
+    float padding1 = 0.0f;
     glm::vec3 extents = {};
-    float padding2;
+    float padding2 = 0.0f;
 
     BoundingBoxShader() = default;
 

@@ -26,7 +26,7 @@ public:
 private:
     void process_input() const;
     void process_terminator_input() const;
-    void focus_callback(int const focused);
+    void focus_callback(i32 const focused);
     void mouse_callback(double const x, double const y);
 
     std::shared_ptr<Camera> m_camera;

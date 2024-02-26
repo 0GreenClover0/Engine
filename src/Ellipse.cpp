@@ -5,7 +5,7 @@
 
 #include "MeshFactory.h"
 
-Ellipse::Ellipse(float center_x, float center_z, float radius_x, float radius_z, int segment_count, std::shared_ptr<Material> const& material)
+Ellipse::Ellipse(float center_x, float center_z, float radius_x, float radius_z, i32 segment_count, std::shared_ptr<Material> const& material)
     : Model(material), m_center_x(center_x), m_center_z(center_z), m_radius_x(radius_x), m_radius_z(radius_z), m_segment_count(segment_count)
 {
     m_draw_type = DrawType::LineLoop;
@@ -29,7 +29,7 @@ std::shared_ptr<Mesh> Ellipse::create_ellipse() const
 
     std::vector<Vertex> vertices;
 
-    for (int i = 0; i < m_segment_count; ++i) 
+    for (i32 i = 0; i < m_segment_count; ++i) 
     {
         Vertex vertex = {};
         // Apply radius and offset

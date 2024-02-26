@@ -180,7 +180,7 @@ std::shared_ptr<Entity> SceneSerializer::deserialize_entity(YAML::Node const& en
                 component["CenterZ"].as<float>(),
                 component["RadiusX"].as<float>(),
                 component["RadiusZ"].as<float>(),
-                component["SegmentCount"].as<int>(),
+                component["SegmentCount"].as<i32>(),
                 material
             );
         }
@@ -189,8 +189,8 @@ std::shared_ptr<Entity> SceneSerializer::deserialize_entity(YAML::Node const& en
             auto material = deserialize_material_instance(component["Material"]);
             deserialized_entity->add_component<Sphere>(
                 component["Radius"].as<float>(),
-                component["Sectors"].as<uint32_t>(),
-                component["Stacks"].as<uint32_t>(),
+                component["Sectors"].as<u32>(),
+                component["Stacks"].as<u32>(),
                 component["TexturePath"].as<std::string>(),
                 material
             );

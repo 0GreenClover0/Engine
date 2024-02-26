@@ -9,6 +9,8 @@
 #include <cassert>
 #include <algorithm>
 
+#include "AK/Types.h"
+
 // Based on https://codereview.stackexchange.com/questions/188989/a-c-style-event-object-in-c
 
 template<typename T>
@@ -75,7 +77,7 @@ public:
         }
     }
 
-    [[nodiscard]] int count() const
+    [[nodiscard]] i32 count() const
     {
         std::lock_guard guard(mutex);
 

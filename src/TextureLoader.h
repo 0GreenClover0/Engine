@@ -8,10 +8,10 @@
 
 struct TextureData
 {
-    std::uint32_t id = 0;
-    std::uint32_t width = 0;
-    std::uint32_t height = 0;
-    std::uint32_t number_of_components = 0;
+    u32 id = 0;
+    u32 width = 0;
+    u32 height = 0;
+    u32 number_of_components = 0;
 };
 
 class TextureLoader

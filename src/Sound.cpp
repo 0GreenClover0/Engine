@@ -69,7 +69,7 @@ void Sound::stop()
     ma_sound_stop(&m_internal_sound);
 }
 
-void Sound::stop_with_fade(uint64_t const milliseconds)
+void Sound::stop_with_fade(u64 const milliseconds)
 {
     ma_sound_stop_with_fade_in_milliseconds(&m_internal_sound, milliseconds);
 }

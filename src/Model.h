@@ -27,7 +27,7 @@ public:
 
     virtual void draw() const override;
 
-    virtual void draw_instanced(int32_t const size) override;
+    virtual void draw_instanced(i32 const size) override;
 
     virtual void prepare();
     virtual void reset();

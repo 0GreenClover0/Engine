@@ -17,7 +17,7 @@ public:
 
     virtual void draw() const = 0;
 
-    virtual void draw_instanced(int32_t const size);
+    virtual void draw_instanced(i32 const size);
 
     virtual void calculate_bounding_box();
     virtual void adjust_bounding_box();

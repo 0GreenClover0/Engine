@@ -10,21 +10,21 @@ void Input::set_input(std::shared_ptr<Input> const& input_system)
 
 Input::Input(std::shared_ptr<Window> const& window) : m_window(window)
 {
-    m_keys.insert(std::pair<int32_t, Key>(GLFW_KEY_W, GLFW_KEY_W));
-    m_keys.insert(std::pair<int32_t, Key>(GLFW_KEY_S, GLFW_KEY_S));
-    m_keys.insert(std::pair<int32_t, Key>(GLFW_KEY_A, GLFW_KEY_A));
-    m_keys.insert(std::pair<int32_t, Key>(GLFW_KEY_D, GLFW_KEY_D));
-    m_keys.insert(std::pair<int32_t, Key>(GLFW_KEY_Q, GLFW_KEY_Q));
-    m_keys.insert(std::pair<int32_t, Key>(GLFW_KEY_E, GLFW_KEY_E));
-    m_keys.insert(std::pair<int32_t, Key>(GLFW_KEY_T, GLFW_KEY_T));
+    m_keys.insert(std::pair<i32, Key>(GLFW_KEY_W, GLFW_KEY_W));
+    m_keys.insert(std::pair<i32, Key>(GLFW_KEY_S, GLFW_KEY_S));
+    m_keys.insert(std::pair<i32, Key>(GLFW_KEY_A, GLFW_KEY_A));
+    m_keys.insert(std::pair<i32, Key>(GLFW_KEY_D, GLFW_KEY_D));
+    m_keys.insert(std::pair<i32, Key>(GLFW_KEY_Q, GLFW_KEY_Q));
+    m_keys.insert(std::pair<i32, Key>(GLFW_KEY_E, GLFW_KEY_E));
+    m_keys.insert(std::pair<i32, Key>(GLFW_KEY_T, GLFW_KEY_T));
 }
 
-bool Input::get_key(int32_t const key) const
+bool Input::get_key(i32 const key) const
 {
     return m_keys.at(key).get_key();
 }
 
-bool Input::get_key_down(int32_t const key) const
+bool Input::get_key_down(i32 const key) const
 {
     return m_keys.at(key).get_key_down();
 }
@@ -34,7 +34,7 @@ void Input::mouse_callback(GLFWwindow* window, double const x, double const y)
     input->on_set_cursor_pos_event(x, y);
 }
 
-void Input::focus_callback(GLFWwindow* window, int const focused)
+void Input::focus_callback(GLFWwindow* window, i32 const focused)
 {
     input->on_focused_event(focused);
 }
@@ -48,7 +48,7 @@ void Input::update_keys()
     }
 }
 
-bool Input::is_key_pressed(int const key) const
+bool Input::is_key_pressed(i32 const key) const
 {
     return glfwGetKey(m_window->get_glfw_window(), key) == GLFW_PRESS;
 }

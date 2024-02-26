@@ -23,8 +23,8 @@ private:
 
     bool m_use_gpu = true;
 
-    uint32_t m_strips_count = 0;
-    uint32_t m_vertices_per_strip = 0;
+    u32 m_strips_count = 0;
+    u32 m_vertices_per_strip = 0;
 
     std::string m_height_map_path;
 };

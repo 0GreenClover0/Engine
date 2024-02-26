@@ -12,12 +12,12 @@ std::shared_ptr<TextureLoaderGL> TextureLoaderGL::create()
 
 TextureData TextureLoaderGL::texture_from_file(std::string const& path, TextureSettings const settings)
 {
-    std::uint32_t texture_id;
+    u32 texture_id;
     glGenTextures(1, &texture_id);
 
     stbi_set_flip_vertically_on_load(settings.flip_vertically);
 
-    std::int32_t width, height, number_of_components;
+    i32 width, height, number_of_components;
     unsigned char* data = stbi_load(path.c_str(), &width, &height, &number_of_components, 0);
 
     if (data == nullptr)
@@ -71,25 +71,25 @@ TextureData TextureLoaderGL::texture_from_file(std::string const& path, TextureS
     glBindTexture(GL_TEXTURE_2D, 0);
     
     stbi_image_free(data);
-    return { texture_id, static_cast<uint32_t>(width), static_cast<uint32_t>(height), static_cast<uint32_t>(number_of_components) };
+    return { texture_id, static_cast<u32>(width), static_cast<u32>(height), static_cast<u32>(number_of_components) };
 }
 
 TextureData TextureLoaderGL::cubemap_from_files(std::vector<std::string> const& paths, TextureSettings const settings)
 {
-    uint32_t texture_id;
+    u32 texture_id;
     glGenTextures(1, &texture_id);
 
     stbi_set_flip_vertically_on_load(settings.flip_vertically);
 
     glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id);
 
-    int32_t width = 0;
-    int32_t height = 0;
-    int32_t channel_count = 0;
+    i32 width = 0;
+    i32 height = 0;
+    i32 channel_count = 0;
 
-    for (uint32_t i = 0; i < paths.size(); ++i)
+    for (u32 i = 0; i < paths.size(); ++i)
     {
-        uint8_t* data = stbi_load(paths[i].c_str(), &width, &height, &channel_count, 0);
+        u8* data = stbi_load(paths[i].c_str(), &width, &height, &channel_count, 0);
 
         if (data != nullptr)
         {
@@ -121,7 +121,7 @@ TextureData TextureLoaderGL::cubemap_from_files(std::vector<std::string> const& 
 
     glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
-    return { texture_id, static_cast<uint32_t>(width), static_cast<uint32_t>(height), static_cast<uint32_t>(channel_count) };
+    return { texture_id, static_cast<u32>(width), static_cast<u32>(height), static_cast<u32>(channel_count) };
 }
 
 GLint TextureLoaderGL::convert_wrap_mode(TextureWrapMode const wrap_mode)

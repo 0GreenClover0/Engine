@@ -40,9 +40,9 @@ void Terrain::draw() const
     }
     else
     {
-        for (uint32_t strip = 0; strip < m_strips_count; ++strip)
+        for (u32 strip = 0; strip < m_strips_count; ++strip)
         {
-            m_meshes[0]->draw(m_vertices_per_strip, (void*)(sizeof(uint32_t) * m_vertices_per_strip * strip));
+            m_meshes[0]->draw(m_vertices_per_strip, (void*)(sizeof(u32) * m_vertices_per_strip * strip));
         }
     }
 }
@@ -83,19 +83,19 @@ std::shared_ptr<Mesh> Terrain::create_terrain_from_height_map_gpu() const
         return MeshFactory::create({}, {}, {}, m_draw_type, m_material);
     }
 
-    int32_t const width = heightmap.width;
-    int32_t const height = heightmap.height;
+    i32 const width = heightmap.width;
+    i32 const height = heightmap.height;
 
     std::vector<Texture> textures;
     textures.emplace_back(heightmap);
 
-    uint32_t constexpr resolution = 20;
+    u32 constexpr resolution = 20;
     std::vector<Vertex> vertices = {};
     vertices.reserve(resolution * resolution * 4);
 
-    for (uint32_t i = 0; i <= resolution - 1; ++i)
+    for (u32 i = 0; i <= resolution - 1; ++i)
     {
-        for (uint32_t k = 0; k <= resolution - 1; ++k)
+        for (u32 k = 0; k <= resolution - 1; ++k)
         {
             vertices.emplace_back(
                 glm::vec3(
@@ -158,7 +158,7 @@ std::shared_ptr<Mesh> Terrain::create_terrain_from_height_map()
 {
     stbi_set_flip_vertically_on_load(true);
 
-    int32_t width, height, number_of_components;
+    i32 width, height, number_of_components;
     unsigned char* data = stbi_load(m_height_map_path.c_str(), &width, &height, &number_of_components, 0);
 
     if (data == nullptr)
@@ -174,9 +174,9 @@ std::shared_ptr<Mesh> Terrain::create_terrain_from_height_map()
     float constexpr y_scale = 64.0f / 256.0f;
     float constexpr y_shift = 16.0f;
 
-    for (uint32_t i = 0; i < height; ++i)
+    for (u32 i = 0; i < height; ++i)
     {
-        for (uint32_t k = 0; k < width; ++k)
+        for (u32 k = 0; k < width; ++k)
         {
             unsigned const char* texel = data + (k + width * i) * number_of_components;
 
@@ -189,13 +189,13 @@ std::shared_ptr<Mesh> Terrain::create_terrain_from_height_map()
 
     stbi_image_free(data);
 
-    std::vector<uint32_t> indices = {};
+    std::vector<u32> indices = {};
     indices.reserve((height - 1) * width * 2);
-    for (uint32_t i = 0; i < height - 1; ++i)
+    for (u32 i = 0; i < height - 1; ++i)
     {
-        for (uint32_t k = 0; k < width; k++)
+        for (u32 k = 0; k < width; k++)
         {
-            for (uint32_t m = 0; m < 2; m++)
+            for (u32 m = 0; m < 2; m++)
             {
                 indices.emplace_back(k + width * (i + m));
             }

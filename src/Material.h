@@ -9,22 +9,23 @@
 #include "Bounds.h"
 #include "Shader.h"
 #include "AK/Badge.h"
+#include "AK/Types.h"
 
 class Drawable;
 
 class Material
 {
 public:
-    static std::shared_ptr<Material> create(std::shared_ptr<Shader> const& shader, int32_t const render_order = 0, bool const is_gpu_instanced = false, bool const is_billboard = false);
+    static std::shared_ptr<Material> create(std::shared_ptr<Shader> const& shader, i32 const render_order = 0, bool const is_gpu_instanced = false, bool const is_billboard = false);
 
-    explicit Material(AK::Badge<Material>, std::shared_ptr<Shader> const& shader, int32_t const render_order, bool const is_gpu_instanced, bool const is_billboard);
+    explicit Material(AK::Badge<Material>, std::shared_ptr<Shader> const& shader, i32 const render_order, bool const is_gpu_instanced, bool const is_billboard);
 
     [[nodiscard]] bool has_custom_render_order() const
     {
         return m_render_order != 0;
     }
 
-    [[nodiscard]] int32_t get_render_order() const;
+    [[nodiscard]] i32 get_render_order() const;
 
     std::shared_ptr<Shader> shader;
 
@@ -33,8 +34,8 @@ public:
     float specular = 1.0f;
     float shininess = 128.0f;
 
-    uint32_t sector_count = 5;
-    uint32_t stack_count = 5;
+    u32 sector_count = 5;
+    u32 stack_count = 5;
     float radius_multiplier = 2.0f;
 
     // NOTE: This does not work for gpu instanced meshes, as model matrices are batched together in a single SSBO
@@ -55,7 +56,7 @@ public:
 
 private:
     // TODO: Negative render order is currently not supported
-    int32_t m_render_order = 0;
+    i32 m_render_order = 0;
 
     friend class SceneSerializer;
 };

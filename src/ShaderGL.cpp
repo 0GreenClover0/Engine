@@ -15,15 +15,15 @@ ShaderGL::ShaderGL(AK::Badge<ShaderFactory>, std::string const& compute_path) : 
 
     program_id = glCreateProgram();
 
-    int32_t const compute_shader_id = attach(compute_path_c_str, GL_COMPUTE_SHADER);
+    i32 const compute_shader_id = attach(compute_path_c_str, GL_COMPUTE_SHADER);
 
     if (compute_shader_id == -1)
         return;
 
     glLinkProgram(program_id);
 
-    int32_t success = 0;
-    int32_t constexpr log_size = 512;
+    i32 success = 0;
+    i32 constexpr log_size = 512;
     char info_log[log_size] = {};
 
     glGetProgramiv(program_id, GL_LINK_STATUS, &success);
@@ -45,20 +45,20 @@ ShaderGL::ShaderGL(AK::Badge<ShaderFactory>, std::string const& vertex_path, std
 
     program_id = glCreateProgram();
 
-    int32_t const vertex_shader_id = attach(vertex_path_c_str, GL_VERTEX_SHADER);
+    i32 const vertex_shader_id = attach(vertex_path_c_str, GL_VERTEX_SHADER);
 
     if (vertex_shader_id == -1)
         return;
 
-    int32_t const fragment_shader_id = attach(fragment_path_c_str, GL_FRAGMENT_SHADER);
+    i32 const fragment_shader_id = attach(fragment_path_c_str, GL_FRAGMENT_SHADER);
 
     if (fragment_shader_id == -1)
         return;
 
     glLinkProgram(program_id);
 
-    int32_t success = 0;
-    int32_t constexpr log_size = 512;
+    i32 success = 0;
+    i32 constexpr log_size = 512;
     char info_log[log_size] = {};
 
     glGetProgramiv(program_id, GL_LINK_STATUS, &success);
@@ -82,25 +82,25 @@ ShaderGL::ShaderGL(AK::Badge<ShaderFactory>, std::string const& vertex_path, std
 
     program_id = glCreateProgram();
 
-    int32_t const vertex_shader_id = attach(vertex_path_c_str, GL_VERTEX_SHADER);
+    i32 const vertex_shader_id = attach(vertex_path_c_str, GL_VERTEX_SHADER);
 
     if (vertex_shader_id == -1)
         return;
 
-    int32_t const fragment_shader_id = attach(fragment_path_c_str, GL_FRAGMENT_SHADER);
+    i32 const fragment_shader_id = attach(fragment_path_c_str, GL_FRAGMENT_SHADER);
 
     if (fragment_shader_id == -1)
         return;
 
-    int32_t const geometry_shader_id = attach(geometry_path_c_str, GL_GEOMETRY_SHADER);
+    i32 const geometry_shader_id = attach(geometry_path_c_str, GL_GEOMETRY_SHADER);
 
     if (geometry_shader_id == -1)
         return;
 
     glLinkProgram(program_id);
 
-    int32_t success = 0;
-    int32_t constexpr log_size = 512;
+    i32 success = 0;
+    i32 constexpr log_size = 512;
     char info_log[log_size] = {};
 
     glGetProgramiv(program_id, GL_LINK_STATUS, &success);
@@ -128,30 +128,30 @@ ShaderGL::ShaderGL(AK::Badge<ShaderFactory>, std::string const& vertex_path, std
 
     program_id = glCreateProgram();
 
-    int32_t const vertex_shader_id = attach(vertex_path_c_str, GL_VERTEX_SHADER);
+    i32 const vertex_shader_id = attach(vertex_path_c_str, GL_VERTEX_SHADER);
 
     if (vertex_shader_id == -1)
         return;
 
-    int32_t const fragment_shader_id = attach(fragment_path_c_str, GL_FRAGMENT_SHADER);
+    i32 const fragment_shader_id = attach(fragment_path_c_str, GL_FRAGMENT_SHADER);
 
     if (fragment_shader_id == -1)
         return;
 
-    int32_t const tessellation_control_shader_id = attach(tessellation_control_path_c_str, GL_TESS_CONTROL_SHADER);
+    i32 const tessellation_control_shader_id = attach(tessellation_control_path_c_str, GL_TESS_CONTROL_SHADER);
 
     if (tessellation_control_shader_id == -1)
         return;
 
-    int32_t const tessellation_evaluation_shader_id = attach(tessellation_evaluation_path_c_str, GL_TESS_EVALUATION_SHADER);
+    i32 const tessellation_evaluation_shader_id = attach(tessellation_evaluation_path_c_str, GL_TESS_EVALUATION_SHADER);
 
     if (tessellation_evaluation_shader_id == -1)
         return;
 
     glLinkProgram(program_id);
 
-    int32_t success = 0;
-    int32_t constexpr log_size = 512;
+    i32 success = 0;
+    i32 constexpr log_size = 512;
     char info_log[log_size] = {};
 
     glGetProgramiv(program_id, GL_LINK_STATUS, &success);
@@ -168,7 +168,7 @@ ShaderGL::ShaderGL(AK::Badge<ShaderFactory>, std::string const& vertex_path, std
     glDeleteShader(tessellation_evaluation_shader_id);
 }
 
-int32_t ShaderGL::attach(char const* path, int const type) const
+i32 ShaderGL::attach(char const* path, i32 const type) const
 {
     std::string code;
     std::ifstream shader_file;
@@ -194,11 +194,11 @@ int32_t ShaderGL::attach(char const* path, int const type) const
 
     char const* shader_code = code.c_str();
 
-    int32_t success = 0;
-    int32_t constexpr log_size = 512;
+    i32 success = 0;
+    i32 constexpr log_size = 512;
     char info_log[log_size] = {};
 
-    int32_t const shader_id = glCreateShader(type);
+    i32 const shader_id = glCreateShader(type);
     glShaderSource(shader_id, 1, &shader_code, nullptr);
     glCompileShader(shader_id);
 
@@ -221,10 +221,10 @@ void ShaderGL::use() const
 
 void ShaderGL::set_bool(std::string const& name, bool value) const
 {
-    glUniform1i(glGetUniformLocation(program_id, name.c_str()), static_cast<int>(value));
+    glUniform1i(glGetUniformLocation(program_id, name.c_str()), static_cast<i32>(value));
 }
 
-void ShaderGL::set_int(std::string const& name, int value) const
+void ShaderGL::set_int(std::string const& name, i32 value) const
 {
     glUniform1i(glGetUniformLocation(program_id, name.c_str()), value);
 }

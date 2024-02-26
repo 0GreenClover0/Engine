@@ -53,8 +53,8 @@ public:
 
     inline static ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
-    inline static int32_t screen_width = 1280;
-    inline static int32_t screen_height = 720;
+    inline static i32 screen_width = 1280;
+    inline static i32 screen_height = 720;
 
 protected:
     Renderer() = default;
@@ -85,7 +85,7 @@ private:
 
     struct MaterialWithOrder
     {
-        int32_t render_order;
+        i32 render_order;
         std::shared_ptr<Material> material;
 
         bool operator<(MaterialWithOrder const& b) const
@@ -102,6 +102,6 @@ private:
 
     // TODO: Retrieve this information from the shader
     // NOTE: This has to be the same value as the variable in a shader to work in all cases.
-    int32_t m_max_point_lights = 4;
-    int32_t m_max_spot_lights = 4;
+    i32 m_max_point_lights = 4;
+    i32 m_max_spot_lights = 4;
 };
