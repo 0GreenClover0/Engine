@@ -15,8 +15,8 @@ public:
     float player_speed = 5.0f;
     float camera_speed = 12.5f;
 
-    void awake() override;
-    void update() override;
+    virtual void awake() override;
+    virtual void update() override;
 
     std::shared_ptr<Entity> player;
     std::shared_ptr<Entity> player_model;

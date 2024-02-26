@@ -22,7 +22,7 @@ public:
     void play();
     void stop();
     void stop_with_fade(uint64_t const milliseconds);
-    void update() override;
+    virtual void update() override;
 
 private:
     ma_sound m_internal_sound = {};

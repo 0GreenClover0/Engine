@@ -14,12 +14,12 @@ public:
     MeshGL(MeshGL&& mesh) noexcept;
     ~MeshGL() override;
 
-    void draw() const override;
-    void draw(uint32_t const size, void const* offset) const override;
-    void draw_instanced(int32_t const size) const override;
+    virtual void draw() const override;
+    virtual void draw(uint32_t const size, void const* offset) const override;
+    virtual void draw_instanced(int32_t const size) const override;
 
-    void bind_textures() const override;
-    void unbind_textures() const override;
+    virtual void bind_textures() const override;
+    virtual void unbind_textures() const override;
 
 private:
     uint32_t m_draw_typeGL = 0;
