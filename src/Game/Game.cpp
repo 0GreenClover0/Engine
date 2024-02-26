@@ -29,19 +29,19 @@ void Game::initialize()
     auto refractive_shader = ShaderFactory::create("./res/shaders/standard.vert", "./res/shaders/refractive.frag");
     auto const standard_material = Material::create(standard_shader);
 
-    camera = Entity::create("Camera");
-    camera->transform->set_local_position(glm::vec3(0.0f, 0.0f, 10.0f));
+    m_camera = Entity::create("Camera");
+    m_camera->transform->set_local_position(glm::vec3(0.0f, 0.0f, 10.0f));
 
-    camera->add_component<SoundListener>(SoundListener::create());
+    m_camera->add_component<SoundListener>(SoundListener::create());
 
-    camera_comp = camera->add_component(Camera::create());
-    camera_comp->set_can_tick(true);
-    camera_comp->set_fov(glm::radians(60.0f));
+    m_camera_comp = m_camera->add_component(Camera::create());
+    m_camera_comp->set_can_tick(true);
+    m_camera_comp->set_fov(glm::radians(60.0f));
 
     auto const player = Entity::create("Player");
     auto const player_input = player->add_component<PlayerInput>();
     player_input->set_can_tick(true);
-    player_input->camera_entity = camera;
+    player_input->camera_entity = m_camera;
     player_input->player = player;
     player_input->window = window;
 
@@ -52,7 +52,7 @@ void Game::initialize()
 
     auto const camera_parent = Entity::create("CameraParent");
     camera_parent->transform->set_parent(player->transform);
-    camera->transform->set_parent(camera_parent->transform);
+    m_camera->transform->set_parent(camera_parent->transform);
     player_input->camera_parent = camera_parent;
 
     auto terminator_material = Material::create(standard_shader);
@@ -96,7 +96,7 @@ void Game::initialize()
     {
         auto const grass = Entity::create("Grass");
         grass->transform->set_parent(grass_parent->transform);
-        grass->add_component<Grass>(Grass::create(grass_material, 1, "./res/textures/grass.png"));
+        grass->add_component<Grass>(Grass::create(grass_material, "./res/textures/grass.png"));
         grass->transform->set_local_position(glm::vec3(glm::linearRand(-50.0f, 50.0f), 0.0f, glm::linearRand(-50.0f, 50.0f)));
     }
 
@@ -104,12 +104,12 @@ void Game::initialize()
 
     auto const point_light = CommonEntities::create_point_light(glm::vec3(1.0f, 1.0f, 0.0f), root->transform);
     auto const point_light_comp = point_light->get_component<PointLight>();
-    auto const point_light_material = point_light->get_component<Cube>()->material;
+    auto const point_light_material = point_light->get_component<Cube>()->material();
 
     auto const directional_light = CommonEntities::create_directional_light(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(-65.0f, -1.0f, 0.1f), root->transform);
     directional_light->transform->set_local_position(glm::vec3(0.0f, 5.0f, 0.0f));
     auto const directional_light_comp = directional_light->get_component<DirectionalLight>();
-    auto const directional_light_material = directional_light->get_component<Cube>()->material;
+    auto const directional_light_material = directional_light->get_component<Cube>()->material();
 
     auto const directional_arrow = Entity::create("DirectionalArrow");
     directional_arrow->transform->set_parent(directional_light->transform);
@@ -118,7 +118,7 @@ void Game::initialize()
 
     auto const spot_light = CommonEntities::create_spot_light(glm::vec3(0.0f, 0.2f, 1.0f), root->transform);
     auto const spot_light_comp = spot_light->get_component<SpotLight>();
-    auto const spot_light_material = spot_light->get_component<Cube>()->material;
+    auto const spot_light_material = spot_light->get_component<Cube>()->material();
     spot_light->transform->set_local_position(glm::vec3(12.0f, 0.0f, 0.0f));
     spot_light->transform->set_euler_angles(glm::vec3(-2.0f, 90.0f, -2.0f));
 
@@ -129,7 +129,7 @@ void Game::initialize()
 
     auto const spot_light2 = CommonEntities::create_spot_light(glm::vec3(1.0f, 0.0f, 0.0f), root->transform);
     auto const spot_light2_comp = spot_light2->get_component<SpotLight>();
-    auto const spot_light2_material = spot_light2->get_component<Cube>()->material;
+    auto const spot_light2_material = spot_light2->get_component<Cube>()->material();
     spot_light2->transform->set_local_position(glm::vec3(-13.0f, 0.0f, 0.0f));
     spot_light2->transform->set_euler_angles(glm::vec3(2.0f, 0.0f, -2.0f));
 

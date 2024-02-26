@@ -25,7 +25,7 @@ public:
     void update() override;
 
 private:
-    ma_sound internal_sound = {};
+    ma_sound m_internal_sound = {};
 
-    bool is_positional = false;
+    bool m_is_positional = false;
 };

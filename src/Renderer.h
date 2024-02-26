@@ -39,7 +39,7 @@ public:
 
     static std::shared_ptr<Renderer> get_instance()
     {
-        return instance;
+        return m_instance;
     }
 
     enum class RendererApi
@@ -62,18 +62,14 @@ protected:
 
     static void set_instance(std::shared_ptr<Renderer> const& renderer)
     {
-        instance = renderer;
+        m_instance = renderer;
     }
 
     void virtual initialize_global_renderer_settings() = 0;
     void virtual initialize_buffers(size_t const max_size) = 0;
     void virtual perform_frustum_culling(std::shared_ptr<Material> const& material) const = 0;
 
-    std::shared_ptr<Shader> frustum_culling_shader = {};
-
-    GLuint gpu_instancing_ssbo = {};
-    GLuint bounding_boxes_ssbo = {};
-    GLuint visible_instances_ssbo = {};
+    std::shared_ptr<Shader> m_frustum_culling_shader = {};
 
 private:
     void draw(std::shared_ptr<Material> const& material, glm::mat4 const& projection_view) const;
@@ -81,11 +77,11 @@ private:
 
     void set_shader_uniforms(std::shared_ptr<Shader> const& shader, glm::mat4 const& projection_view, glm::mat4 const& projection_view_no_translation) const;
 
-    inline static std::shared_ptr<Renderer> instance;
+    inline static std::shared_ptr<Renderer> m_instance;
 
-    inline static std::vector<std::shared_ptr<PointLight>> point_lights = {};
-    inline static std::vector<std::shared_ptr<SpotLight>> spot_lights = {};
-    inline static std::shared_ptr<DirectionalLight> directional_light = {};
+    inline static std::vector<std::shared_ptr<PointLight>> m_point_lights = {};
+    inline static std::vector<std::shared_ptr<SpotLight>> m_spot_lights = {};
+    inline static std::shared_ptr<DirectionalLight> m_directional_light = {};
 
     struct MaterialWithOrder
     {
@@ -98,14 +94,14 @@ private:
         }
     };
 
-    std::vector<std::shared_ptr<Light>> lights = {};
-    std::vector<std::shared_ptr<Shader>> shaders = {};
-    std::vector<std::shared_ptr<Material>> instanced_materials = {};
+    std::vector<std::shared_ptr<Light>> m_lights = {};
+    std::vector<std::shared_ptr<Shader>> m_shaders = {};
+    std::vector<std::shared_ptr<Material>> m_instanced_materials = {};
 
-    std::multiset<MaterialWithOrder> custom_render_order_materials = {};
+    std::multiset<MaterialWithOrder> m_custom_render_order_materials = {};
 
     // TODO: Retrieve this information from the shader
     // NOTE: This has to be the same value as the variable in a shader to work in all cases.
-    int32_t max_point_lights = 4;
-    int32_t max_spot_lights = 4;
+    int32_t m_max_point_lights = 4;
+    int32_t m_max_spot_lights = 4;
 };

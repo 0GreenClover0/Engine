@@ -11,7 +11,7 @@
 
 ShaderGL::ShaderGL(AK::Badge<ShaderFactory>, std::string const& compute_path) : Shader(compute_path)
 {
-    char const* compute_path_c_str = this->compute_path.c_str();
+    char const* compute_path_c_str = m_compute_path.c_str();
 
     program_id = glCreateProgram();
 
@@ -40,8 +40,8 @@ ShaderGL::ShaderGL(AK::Badge<ShaderFactory>, std::string const& compute_path) : 
 ShaderGL::ShaderGL(AK::Badge<ShaderFactory>, std::string const& vertex_path, std::string const& fragment_path)
     : Shader(vertex_path, fragment_path)
 {
-    char const* vertex_path_c_str = this->vertex_path.c_str();
-    char const* fragment_path_c_str = this->fragment_path.c_str();
+    char const* vertex_path_c_str = m_vertex_path.c_str();
+    char const* fragment_path_c_str = m_fragment_path.c_str();
 
     program_id = glCreateProgram();
 
@@ -76,9 +76,9 @@ ShaderGL::ShaderGL(AK::Badge<ShaderFactory>, std::string const& vertex_path, std
 ShaderGL::ShaderGL(AK::Badge<ShaderFactory>, std::string const& vertex_path, std::string const& fragment_path, std::string const& geometry_path)
     : Shader(vertex_path, fragment_path, geometry_path)
 {
-    char const* vertex_path_c_str = this->vertex_path.c_str();
-    char const* fragment_path_c_str = this->fragment_path.c_str();
-    char const* geometry_path_c_str = this->geometry_path.c_str();
+    char const* vertex_path_c_str = m_vertex_path.c_str();
+    char const* fragment_path_c_str = m_fragment_path.c_str();
+    char const* geometry_path_c_str = m_geometry_path.c_str();
 
     program_id = glCreateProgram();
 
@@ -121,10 +121,10 @@ ShaderGL::ShaderGL(AK::Badge<ShaderFactory>, std::string const& vertex_path, std
                    std::string const& fragment_path) : Shader(vertex_path, tessellation_control_path, tessellation_evaluation_path,
                                                               fragment_path)
 {
-    char const* vertex_path_c_str = this->vertex_path.c_str();
-    char const* tessellation_control_path_c_str = this->tessellation_control_path.c_str();
-    char const* tessellation_evaluation_path_c_str = this->tessellation_evaluation_path.c_str();
-    char const* fragment_path_c_str = this->fragment_path.c_str();
+    char const* vertex_path_c_str = m_vertex_path.c_str();
+    char const* tessellation_control_path_c_str = m_tessellation_control_path.c_str();
+    char const* tessellation_evaluation_path_c_str = m_tessellation_evaluation_path.c_str();
+    char const* fragment_path_c_str = m_fragment_path.c_str();
 
     program_id = glCreateProgram();
 

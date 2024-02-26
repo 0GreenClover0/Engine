@@ -124,7 +124,7 @@ public:
 
 private:
 
-    std::string parent_guid; // NOTE: Only for serialization
+    std::string m_parent_guid; // NOTE: Only for serialization
 
     friend class SceneSerializer;
 };

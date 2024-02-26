@@ -39,6 +39,6 @@ protected:
 
     [[nodiscard]] BoundingBox calculate_adjusted_bounding_box(glm::mat4 const& model_matrix) const;
 
-    DrawType draw_type;
-    DrawFunctionType draw_function;
+    DrawType m_draw_type;
+    DrawFunctionType m_draw_function;
 };

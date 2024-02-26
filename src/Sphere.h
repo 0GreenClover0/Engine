@@ -23,8 +23,8 @@ public:
 private:
     [[nodiscard]] Texture load_texture() const;
 
-    std::string texture_path;
-    float radius;
+    std::string m_texture_path;
+    float m_radius;
 
     friend class SceneSerializer;
 };

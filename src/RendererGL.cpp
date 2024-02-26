@@ -56,40 +56,40 @@ void RendererGL::initialize_global_renderer_settings()
 
 void RendererGL::initialize_buffers(size_t const max_size)
 {
-    glGenBuffers(1, &gpu_instancing_ssbo);
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, gpu_instancing_ssbo);
+    glGenBuffers(1, &m_gpu_instancing_ssbo);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_gpu_instancing_ssbo);
     glBufferData(GL_SHADER_STORAGE_BUFFER, max_size * sizeof(glm::mat4), nullptr, GL_DYNAMIC_DRAW);
-    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, gpu_instancing_ssbo);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, m_gpu_instancing_ssbo);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
-    glGenBuffers(1, &bounding_boxes_ssbo);
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, bounding_boxes_ssbo);
+    glGenBuffers(1, &m_bounding_boxes_ssbo);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_bounding_boxes_ssbo);
     glBufferData(GL_SHADER_STORAGE_BUFFER, max_size * sizeof(BoundingBoxShader), nullptr, GL_DYNAMIC_READ);
-    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, bounding_boxes_ssbo);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, m_bounding_boxes_ssbo);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
-    glGenBuffers(1, &visible_instances_ssbo);
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, visible_instances_ssbo);
+    glGenBuffers(1, &m_visible_instances_ssbo);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_visible_instances_ssbo);
     glBufferData(GL_SHADER_STORAGE_BUFFER, max_size * sizeof(GLuint), nullptr, GL_DYNAMIC_READ);
-    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, visible_instances_ssbo);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, m_visible_instances_ssbo);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 }
 
 void RendererGL::perform_frustum_culling(std::shared_ptr<Material> const& material) const
 {
-    frustum_culling_shader->use();
+    m_frustum_culling_shader->use();
 
     // Set frustum planes
     auto const frustum_planes = Camera::get_main_camera()->get_frustum_planes();
 
     for (uint32_t i = 0; i < 6; ++i)
     {
-        frustum_culling_shader->set_vec4(std::format("frustumPlanes[{}]", i), frustum_planes[i]);
+        m_frustum_culling_shader->set_vec4(std::format("frustumPlanes[{}]", i), frustum_planes[i]);
     }
 
     // Send bounding boxes
     // TODO: Batch them with all other existing objects and send only once
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, bounding_boxes_ssbo);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_bounding_boxes_ssbo);
     glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, material->bounding_boxes.size() * sizeof(BoundingBoxShader), material->bounding_boxes.data());
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
@@ -101,7 +101,7 @@ void RendererGL::perform_frustum_culling(std::shared_ptr<Material> const& materi
 
     // Read visible_instances SSBO which has value of 1 when a corresponding object is visible and 0 if it is not visible
     auto* visible_instances = new GLuint[material->drawables.size()];
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, visible_instances_ssbo);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_visible_instances_ssbo);
     glGetBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, material->drawables.size() * sizeof(GLuint), visible_instances);
 
     // TODO: Pass visible instances directly to the shader by a shared SSBO. Might not actually be beneficial?
@@ -119,7 +119,7 @@ void RendererGL::perform_frustum_culling(std::shared_ptr<Material> const& materi
     material->shader->use();
 
     // Pass model matrices of visible instances to the GPU
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, gpu_instancing_ssbo);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_gpu_instancing_ssbo);
     glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, material->model_matrices.size() * sizeof(glm::mat4), material->model_matrices.data());
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 }

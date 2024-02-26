@@ -34,12 +34,12 @@ protected:
 
     int32_t virtual attach(char const* path, int type) const = 0;
 
-    std::string compute_path = {};
-    std::string vertex_path = {};
-    std::string tessellation_control_path = {};
-    std::string tessellation_evaluation_path = {};
-    std::string fragment_path = {};
-    std::string geometry_path = {};
+    std::string m_compute_path = {};
+    std::string m_vertex_path = {};
+    std::string m_tessellation_control_path = {};
+    std::string m_tessellation_evaluation_path = {};
+    std::string m_fragment_path = {};
+    std::string m_geometry_path = {};
 
 private:
     friend class SceneSerializer;

@@ -16,12 +16,12 @@ std::shared_ptr<Terrain> Terrain::create(std::shared_ptr<Material> const& materi
 }
 
 Terrain::Terrain(AK::Badge<Terrain>, std::shared_ptr<Material> const& material, bool const use_gpu, std::string const& height_map_path)
-    : Model(material), use_gpu(use_gpu), height_map_path(height_map_path)
+    : Model(material), m_use_gpu(use_gpu), m_height_map_path(height_map_path)
 {
     if (use_gpu)
-        draw_type = DrawType::Patches;
+        m_draw_type = DrawType::Patches;
     else
-        draw_type = DrawType::TriangleStrip;
+        m_draw_type = DrawType::TriangleStrip;
 }
 
 std::string Terrain::get_name() const
@@ -34,31 +34,31 @@ void Terrain::draw() const
 {
     assert(meshes.size() == 1);
 
-    if (use_gpu)
+    if (m_use_gpu)
     {
-        meshes[0]->draw();
+        m_meshes[0]->draw();
     }
     else
     {
-        for (uint32_t strip = 0; strip < strips_count; ++strip)
+        for (uint32_t strip = 0; strip < m_strips_count; ++strip)
         {
-            meshes[0]->draw(vertices_per_strip, (void*)(sizeof(uint32_t) * vertices_per_strip * strip));
+            m_meshes[0]->draw(m_vertices_per_strip, (void*)(sizeof(uint32_t) * m_vertices_per_strip * strip));
         }
     }
 }
 
 void Terrain::prepare()
 {
-    if (height_map_path.empty())
+    if (m_height_map_path.empty())
     {
         std::cout << "Terrain currently only supports loading from a height map." << "\n";
     }
     else
     {
-        if (use_gpu)
-            meshes.emplace_back(create_terrain_from_height_map_gpu());
+        if (m_use_gpu)
+            m_meshes.emplace_back(create_terrain_from_height_map_gpu());
         else
-            meshes.emplace_back(create_terrain_from_height_map());
+            m_meshes.emplace_back(create_terrain_from_height_map());
     }
 }
 
@@ -75,12 +75,12 @@ std::shared_ptr<Mesh> Terrain::create_terrain_from_height_map_gpu() const
         false,
     };
 
-    Texture const heightmap = TextureLoader::get_instance()->load_texture(height_map_path, TextureType::Heightmap, texture_settings);
+    Texture const heightmap = TextureLoader::get_instance()->load_texture(m_height_map_path, TextureType::Heightmap, texture_settings);
 
     if (heightmap.id == 0)
     {
-        std::cout << "Height map failed to load at path: " << height_map_path << '\n';
-        return MeshFactory::create({}, {}, {}, draw_type, material);
+        std::cout << "Height map failed to load at path: " << m_height_map_path << '\n';
+        return MeshFactory::create({}, {}, {}, m_draw_type, m_material);
     }
 
     int32_t const width = heightmap.width;
@@ -151,7 +151,7 @@ std::shared_ptr<Mesh> Terrain::create_terrain_from_height_map_gpu() const
         }
     }
 
-    return MeshFactory::create(vertices, {}, textures, draw_type, material, DrawFunctionType::NotIndexed);
+    return MeshFactory::create(vertices, {}, textures, m_draw_type, m_material, DrawFunctionType::NotIndexed);
 }
 
 std::shared_ptr<Mesh> Terrain::create_terrain_from_height_map()
@@ -159,13 +159,13 @@ std::shared_ptr<Mesh> Terrain::create_terrain_from_height_map()
     stbi_set_flip_vertically_on_load(true);
 
     int32_t width, height, number_of_components;
-    unsigned char* data = stbi_load(height_map_path.c_str(), &width, &height, &number_of_components, 0);
+    unsigned char* data = stbi_load(m_height_map_path.c_str(), &width, &height, &number_of_components, 0);
 
     if (data == nullptr)
     {
-        std::cout << "Height map failed to load at path: " << height_map_path << '\n';
+        std::cout << "Height map failed to load at path: " << m_height_map_path << '\n';
         stbi_image_free(data);
-        return MeshFactory::create({}, {}, {}, draw_type, material);
+        return MeshFactory::create({}, {}, {}, m_draw_type, m_material);
     }
 
     std::vector<Vertex> vertices = {};
@@ -202,8 +202,8 @@ std::shared_ptr<Mesh> Terrain::create_terrain_from_height_map()
         }
     }
 
-    strips_count = height - 1;
-    vertices_per_strip = width * 2;
+    m_strips_count = height - 1;
+    m_vertices_per_strip = width * 2;
 
-    return MeshFactory::create(vertices, indices, {}, draw_type, material);
+    return MeshFactory::create(vertices, indices, {}, m_draw_type, m_material);
 }

@@ -21,10 +21,10 @@ private:
     [[nodiscard]] std::shared_ptr<Mesh> create_terrain_from_height_map_gpu() const;
     [[nodiscard]] std::shared_ptr<Mesh> create_terrain_from_height_map();
 
-    bool use_gpu = true;
+    bool m_use_gpu = true;
 
-    uint32_t strips_count = 0;
-    uint32_t vertices_per_strip = 0;
+    uint32_t m_strips_count = 0;
+    uint32_t m_vertices_per_strip = 0;
 
-    std::string height_map_path;
+    std::string m_height_map_path;
 };

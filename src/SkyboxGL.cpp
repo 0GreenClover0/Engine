@@ -17,7 +17,7 @@ void SkyboxGL::bind()
 
 void SkyboxGL::draw() const
 {
-    if (texture_id == 0)
+    if (m_texture_id == 0)
         return;
 
     GLint depth_func_previous_value;
@@ -25,11 +25,11 @@ void SkyboxGL::draw() const
 
     glDepthFunc(GL_LEQUAL);
 
-    glBindVertexArray(VAO);
+    glBindVertexArray(m_VAO);
 
     glActiveTexture(GL_TEXTURE0);
-    material->shader->set_int("skybox", 0);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id);
+    m_material->shader->set_int("skybox", 0);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, m_texture_id);
 
     // Draw mesh
     glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -45,17 +45,17 @@ void SkyboxGL::draw() const
 
 void SkyboxGL::bind_texture() const
 {
-    glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, m_texture_id);
 }
 
 void SkyboxGL::create_cube()
 {
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
+    glGenVertexArrays(1, &m_VAO);
+    glGenBuffers(1, &m_VBO);
 
-    glBindVertexArray(VAO);
+    glBindVertexArray(m_VAO);
 
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(InternalMeshData::skybox_vertices), &InternalMeshData::skybox_vertices, GL_STATIC_DRAW);
 
     // Vertex positions

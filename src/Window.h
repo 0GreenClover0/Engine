@@ -11,5 +11,5 @@ public:
     [[nodiscard]] GLFWwindow* get_glfw_window() const;
 
 private:
-    GLFWwindow* window;
+    GLFWwindow* m_window;
 };

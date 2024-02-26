@@ -24,17 +24,17 @@ public:
 
     static std::shared_ptr<TextureLoader> get_instance()
     {
-        return instance;
+        return m_instance;
     }
 
 protected:
     static void set_instance(std::shared_ptr<TextureLoader> const& texture_loader)
     {
-        instance = texture_loader;
+        m_instance = texture_loader;
     }
 
 private:
-    inline static std::shared_ptr<TextureLoader> instance;
+    inline static std::shared_ptr<TextureLoader> m_instance;
 
     TextureData virtual texture_from_file(std::string const& path, TextureSettings const settings) = 0;
     TextureData virtual cubemap_from_files(std::vector<std::string> const& paths, TextureSettings const settings) = 0;

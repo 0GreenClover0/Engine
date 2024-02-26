@@ -22,7 +22,7 @@ public:
     void unbind_textures() const override;
 
 private:
-    uint32_t draw_typeGL = 0;
+    uint32_t m_draw_typeGL = 0;
 
-    uint32_t VAO = 0, VBO = 0, EBO = 0;
+    uint32_t m_VAO = 0, m_VBO = 0, m_EBO = 0;
 };

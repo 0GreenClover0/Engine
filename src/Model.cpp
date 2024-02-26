@@ -30,7 +30,7 @@ std::shared_ptr<Model> Model::create(std::shared_ptr<Material> const& material)
 }
 
 Model::Model(AK::Badge<Model>, std::string const& model_path, std::shared_ptr<Material> const& material)
-    : Drawable(material), model_path(model_path)
+    : Drawable(material), m_model_path(model_path)
 {
 }
 
@@ -40,34 +40,34 @@ Model::Model(AK::Badge<Model>, std::shared_ptr<Material> const& material) : Draw
 
 void Model::calculate_bounding_box()
 {
-    for (auto const& mesh : meshes)
+    for (auto const& mesh : m_meshes)
         mesh->calculate_bounding_box();
 
     // TODO: Merge bounding boxes together
-    if (!meshes.empty())
-        bounds = meshes[0]->bounds;
+    if (!m_meshes.empty())
+        bounds = m_meshes[0]->bounds;
 }
 
 void Model::adjust_bounding_box()
 {
     // TODO: If we merge bounding boxes together, I think we can just adjust the whole model bounding box
-    for (auto const& mesh : meshes)
+    for (auto const& mesh : m_meshes)
         mesh->adjust_bounding_box(entity->transform->get_model_matrix());
 
-    if (!meshes.empty())
-        bounds = meshes[0]->bounds;
+    if (!m_meshes.empty())
+        bounds = m_meshes[0]->bounds;
 }
 
 BoundingBox Model::get_adjusted_bounding_box(glm::mat4 const& model_matrix) const
 {
-    if (!meshes.empty())
-        return meshes[0]->get_adjusted_bounding_box(model_matrix);
+    if (!m_meshes.empty())
+        return m_meshes[0]->get_adjusted_bounding_box(model_matrix);
 
     return {};
 }
 
 Model::Model(std::string const& model_path, std::shared_ptr<Material> const& material)
-    : Drawable(material), model_path(model_path)
+    : Drawable(material), m_model_path(model_path)
 {
 }
 
@@ -83,33 +83,33 @@ std::string Model::get_name() const
 
 void Model::draw() const
 {
-    for (auto const& mesh : meshes)
+    for (auto const& mesh : m_meshes)
         mesh->draw();
 }
 
 void Model::draw_instanced(int32_t const size)
 {
-    for (auto const& mesh : meshes)
+    for (auto const& mesh : m_meshes)
         mesh->draw_instanced(size);
 }
 
 void Model::prepare()
 {
-    if (material->is_gpu_instanced)
+    if (m_material->is_gpu_instanced)
     {
-        if (material->first_drawable != nullptr)
+        if (m_material->first_drawable != nullptr)
             return;
 
-        material->first_drawable = std::dynamic_pointer_cast<Drawable>(shared_from_this());
+        m_material->first_drawable = std::dynamic_pointer_cast<Drawable>(shared_from_this());
     }
 
-    load_model(model_path);
+    load_model(m_model_path);
 }
 
 void Model::reset()
 {
-    meshes.clear();
-    loaded_textures.clear();
+    m_meshes.clear();
+    m_loaded_textures.clear();
 }
 
 void Model::reprepare()
@@ -129,7 +129,7 @@ void Model::load_model(std::string const& path)
         return;
     }
 
-    directory = path.substr(0, path.find_last_of('/'));
+    m_directory = path.substr(0, path.find_last_of('/'));
 
     proccess_node(scene->mRootNode, scene);
 }
@@ -139,7 +139,7 @@ void Model::proccess_node(aiNode const* node, aiScene const* scene)
     for (std::uint32_t i = 0; i < node->mNumMeshes; ++i)
     {
         aiMesh const* mesh = scene->mMeshes[node->mMeshes[i]];
-        meshes.emplace_back(proccess_mesh(mesh, scene));
+        m_meshes.emplace_back(proccess_mesh(mesh, scene));
     }
 
     for (std::uint32_t i = 0; i < node->mNumChildren; ++i)
@@ -194,7 +194,7 @@ std::shared_ptr<Mesh> Model::proccess_mesh(aiMesh const* mesh, aiScene const* sc
     std::vector<Texture> specular_maps = load_material_textures(assimp_material, aiTextureType_SPECULAR, TextureType::Specular);
     textures.insert(textures.end(), specular_maps.begin(), specular_maps.end());
 
-    return MeshFactory::create(vertices, indices, textures, draw_type, material);
+    return MeshFactory::create(vertices, indices, textures, m_draw_type, m_material);
 }
 
 std::vector<Texture> Model::load_material_textures(aiMaterial const* material, aiTextureType const type, TextureType const type_name)
@@ -208,7 +208,7 @@ std::vector<Texture> Model::load_material_textures(aiMaterial const* material, a
         material->GetTexture(type, i, &str);
 
         bool is_already_loaded = false;
-        for (const auto& loaded_texture : loaded_textures)
+        for (const auto& loaded_texture : m_loaded_textures)
         {
             if (std::strcmp(loaded_texture.path.data(), str.C_Str()) == 0)
             {
@@ -222,11 +222,11 @@ std::vector<Texture> Model::load_material_textures(aiMaterial const* material, a
             continue;
 
         auto file_path = std::string(str.C_Str());
-        file_path = directory + '/' + file_path;
+        file_path = m_directory + '/' + file_path;
 
         Texture texture = TextureLoader::get_instance()->load_texture(file_path, type_name);
         textures.push_back(texture);
-        loaded_textures.push_back(texture);
+        m_loaded_textures.push_back(texture);
     }
 
     return textures;

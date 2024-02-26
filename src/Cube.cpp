@@ -9,7 +9,7 @@
 std::shared_ptr<Cube> Cube::create(std::shared_ptr<Material> const& material, bool const big_cube)
 {
     auto cube = std::make_shared<Cube>(AK::Badge<Cube> {}, material);
-    cube->big_cube = big_cube;
+    cube->m_big_cube = big_cube;
     cube->prepare();
 
     return cube;
@@ -19,7 +19,7 @@ std::shared_ptr<Cube> Cube::create(std::string const& diffuse_texture_path, std:
 {
     AK::Badge<Cube> badge;
     auto cube = std::make_shared<Cube>(AK::Badge<Cube> {}, diffuse_texture_path, material);
-    cube->big_cube = big_cube;
+    cube->m_big_cube = big_cube;
     cube->prepare();
 
     return cube;
@@ -30,7 +30,7 @@ std::shared_ptr<Cube> Cube::create(std::string const& diffuse_texture_path, std:
 {
     AK::Badge<Cube> badge;
     auto cube = std::make_shared<Cube>(AK::Badge<Cube> {}, diffuse_texture_path, specular_texture_path, material);
-    cube->big_cube = big_cube;
+    cube->m_big_cube = big_cube;
     cube->prepare();
 
     return cube;
@@ -38,19 +38,19 @@ std::shared_ptr<Cube> Cube::create(std::string const& diffuse_texture_path, std:
 
 Cube::Cube(AK::Badge<Cube>, std::shared_ptr<Material> const& material) : Model(material)
 {
-    draw_type = DrawType::Triangles;
+    m_draw_type = DrawType::Triangles;
 }
 
 Cube::Cube(AK::Badge<Cube>, std::string const& diffuse_texture_path, std::shared_ptr<Material> const& material)
-    : Model(material), diffuse_texture_path(diffuse_texture_path)
+    : Model(material), m_diffuse_texture_path(diffuse_texture_path)
 {
-    draw_type = DrawType::Triangles;
+    m_draw_type = DrawType::Triangles;
 }
 
 Cube::Cube(AK::Badge<Cube>, std::string const& diffuse_texture_path, std::string const& specular_texture_path, std::shared_ptr<Material> const& material)
-    : Model(material), diffuse_texture_path(diffuse_texture_path), specular_texture_path(specular_texture_path)
+    : Model(material), m_diffuse_texture_path(diffuse_texture_path), m_specular_texture_path(specular_texture_path)
 {
-    draw_type = DrawType::Triangles;
+    m_draw_type = DrawType::Triangles;
 }
 
 std::string Cube::get_name() const
@@ -61,20 +61,20 @@ std::string Cube::get_name() const
 
 void Cube::prepare()
 {
-    if (material->is_gpu_instanced)
+    if (m_material->is_gpu_instanced)
     {
-        if (material->first_drawable != nullptr)
+        if (m_material->first_drawable != nullptr)
             return;
 
-        material->first_drawable = std::dynamic_pointer_cast<Drawable>(shared_from_this());
+        m_material->first_drawable = std::dynamic_pointer_cast<Drawable>(shared_from_this());
     }
 
-    meshes.emplace_back(create_cube());
+    m_meshes.emplace_back(create_cube());
 }
 
 void Cube::reset()
 {
-    meshes.clear();
+    m_meshes.clear();
 }
 
 void Cube::reprepare()
@@ -85,20 +85,20 @@ void Cube::reprepare()
 
 std::shared_ptr<Mesh> Cube::create_cube() const
 {
-    std::vector<Vertex> const vertices = big_cube ? InternalMeshData::big_cube.vertices : InternalMeshData::cube.vertices;
-    std::vector<uint32_t> const indices = big_cube ? InternalMeshData::big_cube.indices : InternalMeshData::cube.indices;
+    std::vector<Vertex> const vertices = m_big_cube ? InternalMeshData::big_cube.vertices : InternalMeshData::cube.vertices;
+    std::vector<uint32_t> const indices = m_big_cube ? InternalMeshData::big_cube.indices : InternalMeshData::cube.indices;
     std::vector<Texture> textures;
 
     std::vector<Texture> diffuse_maps = {};
-    if (!diffuse_texture_path.empty())
-        diffuse_maps.emplace_back(TextureLoader::get_instance()->load_texture(diffuse_texture_path, TextureType::Diffuse));
+    if (!m_diffuse_texture_path.empty())
+        diffuse_maps.emplace_back(TextureLoader::get_instance()->load_texture(m_diffuse_texture_path, TextureType::Diffuse));
 
     std::vector<Texture> specular_maps = {};
-    if (!specular_texture_path.empty())
-        specular_maps.emplace_back(TextureLoader::get_instance()->load_texture(specular_texture_path, TextureType::Specular));
+    if (!m_specular_texture_path.empty())
+        specular_maps.emplace_back(TextureLoader::get_instance()->load_texture(m_specular_texture_path, TextureType::Specular));
 
     textures.insert(textures.end(), diffuse_maps.begin(), diffuse_maps.end());
     textures.insert(textures.end(), specular_maps.begin(), specular_maps.end());
 
-    return MeshFactory::create(vertices, indices, textures, draw_type, material);
+    return MeshFactory::create(vertices, indices, textures, m_draw_type, m_material);
 }

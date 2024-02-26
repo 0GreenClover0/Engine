@@ -23,10 +23,11 @@ public:
 private:
     [[nodiscard]] std::shared_ptr<Mesh> create_cube() const;
 
-    std::string diffuse_texture_path;
-    std::string specular_texture_path;
+    std::string m_diffuse_texture_path;
+    std::string m_specular_texture_path;
 
-    bool big_cube = false;
+    // TODO: This is a hack to make texture coordinates work nicely on a largely scaled cube. There should be a proper way to fix this
+    bool m_big_cube = false;
 
     friend class SceneSerializer;
 };

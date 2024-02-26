@@ -16,5 +16,5 @@ private:
     void bind_texture() const override;
     void create_cube() override;
 
-    std::uint32_t VAO = 0, VBO = 0, EBO = 0;
+    std::uint32_t m_VAO = 0, m_VBO = 0, m_EBO = 0;
 };

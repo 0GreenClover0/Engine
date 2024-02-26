@@ -26,5 +26,5 @@ public:
     bool get_can_tick() const;
 
 private:
-    bool can_tick = false;
+    bool m_can_tick = false;
 };
