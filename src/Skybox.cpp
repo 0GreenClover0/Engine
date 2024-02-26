@@ -1,11 +1,11 @@
 #include "Skybox.h"
 
 #include <iostream>
-#include <stb_image.h>
 #include <utility>
 #include <glad/glad.h>
 
 #include "Globals.h"
+#include "TextureLoader.h"
 
 Skybox::Skybox(std::shared_ptr<Material> const& material, std::vector<std::string> face_paths) : Drawable(material), face_paths(std::move(face_paths))
 {
@@ -64,49 +64,19 @@ void Skybox::create_cube()
 
 void Skybox::load_textures()
 {
-    stbi_set_flip_vertically_on_load(false);
-    uint32_t texture_id = 0;
-    glGenTextures(1, &texture_id);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id);
-
-    int32_t width = 0;
-    int32_t height = 0;
-    int32_t channel_count = 0;
-
-    for (uint32_t i = 0; i < face_paths.size(); ++i)
+    TextureSettings constexpr texture_settings =
     {
-        uint8_t* data = stbi_load(face_paths[i].c_str(), &width, &height, &channel_count, 0);
+        TextureWrapMode::ClampToEdge,
+        TextureWrapMode::ClampToEdge,
+        TextureWrapMode::ClampToEdge,
+        TextureFiltering::Linear,
+        TextureFiltering::Linear,
+        false,
+        false
+    };
 
-        if (data != nullptr)
-        {
-            glTexImage2D(
-                GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
-                0,
-                GL_RGB,
-                width,
-                height,
-                0,
-                GL_RGB,
-                GL_UNSIGNED_BYTE,
-                data
-            );
-        }
-        else
-        {
-            std::cout << "Cubemap texture failed to load at path: " << face_paths[i] << "\n";
-        }
-
-        stbi_image_free(data);
-    }
-
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-
-    this->texture_id = texture_id;
-    stbi_set_flip_vertically_on_load(true);
+    Texture const texture = TextureLoader::get_instance()->load_cubemap(face_paths, TextureType::None, texture_settings);
+    this->texture_id = texture.id;
 }
 
 void Skybox::setup_mesh()
