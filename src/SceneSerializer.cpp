@@ -12,7 +12,7 @@
 #include "Sphere.h"
 #include "yaml-cpp-extensions.h"
 
-SceneSerializer::SceneSerializer(std::shared_ptr<Scene> const& scene) : scene(scene)
+SceneSerializer::SceneSerializer(std::shared_ptr<Scene> const& scene) : m_scene(scene)
 {
 }
 
@@ -21,9 +21,9 @@ void SceneSerializer::serialize_shader(YAML::Emitter& out, std::shared_ptr<Shade
     out << YAML::Key << "Shader";
     out << YAML::BeginMap; // Shader
 
-    out << YAML::Key << "VertexPath" << YAML::Value << shader->vertex_path;
-    out << YAML::Key << "FragmentPath" << YAML::Value << shader->fragment_path;
-    out << YAML::Key << "GeometryPath" << YAML::Value << shader->geometry_path;
+    out << YAML::Key << "VertexPath" << YAML::Value << shader->m_vertex_path;
+    out << YAML::Key << "FragmentPath" << YAML::Value << shader->m_fragment_path;
+    out << YAML::Key << "GeometryPath" << YAML::Value << shader->m_geometry_path;
 
     out << YAML::EndMap; // Shader
 }
@@ -93,28 +93,28 @@ void SceneSerializer::serialize_entity(YAML::Emitter& out, std::shared_ptr<Entit
                 out << YAML::BeginMap; // ModelComponent
                 out << YAML::Key << "ComponentName" << YAML::Value << "EllipseComponent";
 
-                out << YAML::Key << "CenterX" << YAML::Value << ellipse->center_x;
-                out << YAML::Key << "CenterZ" << YAML::Value << ellipse->center_z;
-                out << YAML::Key << "RadiusX" << YAML::Value << ellipse->radius_x;
-                out << YAML::Key << "RadiusZ" << YAML::Value << ellipse->radius_z;
-                out << YAML::Key << "SegmentCount" << YAML::Value << ellipse->segment_count;
+                out << YAML::Key << "CenterX" << YAML::Value << ellipse->m_center_x;
+                out << YAML::Key << "CenterZ" << YAML::Value << ellipse->m_center_z;
+                out << YAML::Key << "RadiusX" << YAML::Value << ellipse->m_radius_x;
+                out << YAML::Key << "RadiusZ" << YAML::Value << ellipse->m_radius_z;
+                out << YAML::Key << "SegmentCount" << YAML::Value << ellipse->m_segment_count;
             }
             else if (auto const sphere = std::dynamic_pointer_cast<Sphere>(component); sphere != nullptr)
             {
                 out << YAML::BeginMap; // ModelComponent
                 out << YAML::Key << "ComponentName" << YAML::Value << "SphereComponent";
 
-                out << YAML::Key << "Radius" << YAML::Value << sphere->radius;
+                out << YAML::Key << "Radius" << YAML::Value << sphere->m_radius;
                 out << YAML::Key << "Sectors" << YAML::Value << sphere->sector_count;
                 out << YAML::Key << "Stacks" << YAML::Value << sphere->stack_count;
-                out << YAML::Key << "TexturePath" << YAML::Value << sphere->texture_path;
+                out << YAML::Key << "TexturePath" << YAML::Value << sphere->m_texture_path;
             }
             else if (auto const cube = std::dynamic_pointer_cast<class Cube>(component); cube != nullptr)
             {
                 out << YAML::BeginMap; // ModelComponent
                 out << YAML::Key << "ComponentName" << YAML::Value << "CubeComponent";
 
-                out << YAML::Key << "TexturePath" << YAML::Value << cube->diffuse_texture_path;
+                out << YAML::Key << "TexturePath" << YAML::Value << cube->m_diffuse_texture_path;
             }
             else
             {
@@ -122,9 +122,9 @@ void SceneSerializer::serialize_entity(YAML::Emitter& out, std::shared_ptr<Entit
                 out << YAML::Key << "ComponentName" << YAML::Value << "ModelComponent";
             }
 
-            out << YAML::Key << "ModelPath" << YAML::Value << model->model_path;
+            out << YAML::Key << "ModelPath" << YAML::Value << model->m_model_path;
 
-            serialize_material_instance(out, model->material);
+            serialize_material_instance(out, model->m_material);
 
             out << YAML::EndMap; // ModelComponent
         }
@@ -164,7 +164,7 @@ std::shared_ptr<Entity> SceneSerializer::deserialize_entity(YAML::Node const& en
     deserialized_entity->transform->set_local_position(transform["Translation"].as<glm::vec3>());
     deserialized_entity->transform->set_euler_angles(transform["Rotation"].as<glm::vec3>());
     deserialized_entity->transform->set_local_scale(transform["Scale"].as<glm::vec3>());
-    deserialized_entity->parent_guid = transform["Parent"].as<std::string>();
+    deserialized_entity->m_parent_guid = transform["Parent"].as<std::string>();
 
     auto const components = entity["Components"];
 
@@ -225,7 +225,7 @@ void SceneSerializer::serialize(std::string const& file_path) const
     out << YAML::Key << "Entities";
     out << YAML::Value << YAML::BeginSeq;
 
-    for (auto const& entity : scene->entities)
+    for (auto const& entity : m_scene->entities)
     {
         serialize_entity(out, entity);
     }
@@ -286,12 +286,12 @@ bool SceneSerializer::deserialize(std::string const& file_path) const
         // TODO: Create a map of entity : guid to save performance?
         for (auto const& entity : deserialized_entities)
         {
-            if (entity->parent_guid.empty())
+            if (entity->m_parent_guid.empty())
                 continue;
 
             for (auto const& other_entity : deserialized_entities)
             {
-                if (entity->parent_guid == other_entity->guid)
+                if (entity->m_parent_guid == other_entity->guid)
                 {
                     entity->transform->set_parent(other_entity->transform);
                     break;

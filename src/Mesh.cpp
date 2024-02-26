@@ -10,7 +10,7 @@
 
 Mesh::Mesh(std::vector<Vertex> const& vertices, std::vector<std::uint32_t> const& indices, std::vector<Texture> const& textures,
            DrawType const draw_type, std::shared_ptr<Material> const& material, DrawFunctionType const draw_function)
-    : vertices(vertices), indices(indices), textures(textures), material(material), draw_type(draw_type), draw_function(draw_function)
+    : vertices(vertices), indices(indices), textures(textures), material(material), m_draw_type(draw_type), m_draw_function(draw_function)
 {
 }
 

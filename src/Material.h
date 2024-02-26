@@ -21,7 +21,7 @@ public:
 
     [[nodiscard]] bool has_custom_render_order() const
     {
-        return render_order != 0;
+        return m_render_order != 0;
     }
 
     [[nodiscard]] int32_t get_render_order() const;
@@ -55,7 +55,7 @@ public:
 
 private:
     // TODO: Negative render order is currently not supported
-    int32_t render_order = 0;
+    int32_t m_render_order = 0;
 
     friend class SceneSerializer;
 };

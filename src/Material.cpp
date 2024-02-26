@@ -13,11 +13,11 @@ std::shared_ptr<Material> Material::create(std::shared_ptr<Shader> const& shader
 }
 
 Material::Material(AK::Badge<Material>, std::shared_ptr<Shader> const& shader, int32_t const render_order, bool const is_gpu_instanced, bool const is_billboard)
-    : shader(shader), is_billboard(is_billboard), is_gpu_instanced(is_gpu_instanced), render_order(render_order)
+    : shader(shader), is_billboard(is_billboard), is_gpu_instanced(is_gpu_instanced), m_render_order(render_order)
 {
 }
 
 int32_t Material::get_render_order() const
 {
-    return render_order;
+    return m_render_order;
 }

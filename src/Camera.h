@@ -13,12 +13,12 @@ class Camera final : public Component
 public:
     static void set_main_camera(std::shared_ptr<Camera> const& camera)
     {
-        main_camera = camera;
+        m_main_camera = camera;
     }
 
     static std::shared_ptr<Camera> get_main_camera()
     {
-        return main_camera;
+        return m_main_camera;
     }
 
     glm::vec3 get_position() const;
@@ -53,7 +53,7 @@ private:
     void update_internals();
     void update_frustum();
 
-    Frustum frustum = {};
+    Frustum m_frustum = {};
 
     glm::mat4 m_projection = {};
 
@@ -64,10 +64,10 @@ private:
 
     float m_fov = 0.0f;
 
-    float near_plane = 0.1f;
-    float far_plane = 1000000.0f;
+    float m_near_plane = 0.1f;
+    float m_far_plane = 1000000.0f;
 
-    glm::vec3 last_frustum_position = {};
+    glm::vec3 m_last_frustum_position = {};
 
-    inline static std::shared_ptr<Camera> main_camera;
+    inline static std::shared_ptr<Camera> m_main_camera;
 };

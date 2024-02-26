@@ -18,11 +18,11 @@ void Renderer::initialize()
 {
     initialize_global_renderer_settings();
 
-    frustum_culling_shader = ShaderFactory::create("./res/shaders/frustum_culling.glsl");
+    m_frustum_culling_shader = ShaderFactory::create("./res/shaders/frustum_culling.glsl");
 
     // TODO: GPU instancing on one material currently supports only the first mesh that was bound to the material.
     size_t max_size = 0;
-    for (auto const& material : instanced_materials)
+    for (auto const& material : m_instanced_materials)
     {
         material->model_matrices.reserve(material->drawables.size());
         material->bounding_boxes = std::vector<BoundingBoxShader>(material->drawables.size());
@@ -36,62 +36,62 @@ void Renderer::initialize()
 
 void Renderer::register_shader(std::shared_ptr<Shader> const& shader)
 {
-    shaders.emplace_back(shader);
+    m_shaders.emplace_back(shader);
 }
 
 void Renderer::unregister_shader(std::shared_ptr<Shader> const& shader)
 {
-    AK::swap_and_erase(shaders, shader);
+    AK::swap_and_erase(m_shaders, shader);
 }
 
 void Renderer::register_drawable(std::shared_ptr<Drawable> const& drawable)
 {
-    drawable->material->drawables.emplace_back(drawable);
+    drawable->material()->drawables.emplace_back(drawable);
 }
 
 void Renderer::register_material(std::shared_ptr<Material> const& material)
 {
     if (material->is_gpu_instanced)
-        instanced_materials.emplace_back(material);
+        m_instanced_materials.emplace_back(material);
 
     if (material->has_custom_render_order())
-        custom_render_order_materials.insert( { material->get_render_order(), material });
+        m_custom_render_order_materials.insert( { material->get_render_order(), material });
 }
 
 void Renderer::unregister_material(std::shared_ptr<Material> const& material)
 {
     if (material->is_gpu_instanced)
-        AK::swap_and_erase(instanced_materials, material);
+        AK::swap_and_erase(m_instanced_materials, material);
 
     // FIXME: Not sure if find works
     if (material->has_custom_render_order())
-        custom_render_order_materials.erase(custom_render_order_materials.find( { material->get_render_order(), material }));
+        m_custom_render_order_materials.erase(m_custom_render_order_materials.find( { material->get_render_order(), material }));
 }
 
 void Renderer::register_light(std::shared_ptr<Light> const& light)
 {
     if (auto const potential_point_light = std::dynamic_pointer_cast<PointLight>(light))
     {
-        point_lights.emplace_back(potential_point_light);
+        m_point_lights.emplace_back(potential_point_light);
     }
     else if (auto const potential_spot_light = std::dynamic_pointer_cast<SpotLight>(light))
     {
-        spot_lights.emplace_back(potential_spot_light);
+        m_spot_lights.emplace_back(potential_spot_light);
     }
     else if (auto const potential_directional_light = std::dynamic_pointer_cast<DirectionalLight>(light))
     {
         // Don't assert here
         assert(directional_light == nullptr);
 
-        directional_light = potential_directional_light;
+        m_directional_light = potential_directional_light;
     }
 
-    lights.emplace_back(light);
+    m_lights.emplace_back(light);
 }
 
 void Renderer::unregister_light(std::shared_ptr<Light> const& light)
 {
-    AK::swap_and_erase(lights, light);
+    AK::swap_and_erase(m_lights, light);
 }
 
 void Renderer::begin_frame() const
@@ -115,7 +115,7 @@ void Renderer::render() const
     glm::mat4 const projection_view = Camera::get_main_camera()->get_projection() * Camera::get_main_camera()->get_view_matrix();
     glm::mat4 const projection_view_no_translation = Camera::get_main_camera()->get_projection() * glm::mat4(glm::mat3(Camera::get_main_camera()->get_view_matrix()));
 
-    for (auto const& shader : shaders)
+    for (auto const& shader : m_shaders)
     {
         shader->use();
 
@@ -133,7 +133,7 @@ void Renderer::render() const
         }
     }
 
-    for (auto const& [render_order, material] : custom_render_order_materials)
+    for (auto const& [render_order, material] : m_custom_render_order_materials)
     {
         material->shader->use();
 
@@ -207,9 +207,9 @@ void Renderer::draw_instanced(std::shared_ptr<Material> const& material, glm::ma
 
     //set_shader_uniforms(shader, projection_view, projection_view_no_translation);
 
-    shader->set_vec3("material.color", glm::vec3(first_drawable->material->color.x, first_drawable->material->color.y, first_drawable->material->color.z));
-    shader->set_float("material.specular", first_drawable->material->specular);
-    shader->set_float("material.shininess", first_drawable->material->shininess);
+    shader->set_vec3("material.color", glm::vec3(first_drawable->material()->color.x, first_drawable->material()->color.y, first_drawable->material()->color.z));
+    shader->set_float("material.specular", first_drawable->material()->specular);
+    shader->set_float("material.shininess", first_drawable->material()->shininess);
 
     first_drawable->draw_instanced(material->model_matrices.size());
 }
@@ -225,61 +225,61 @@ void Renderer::set_shader_uniforms(std::shared_ptr<Shader> const& shader, glm::m
     // TODO: Choose only the closest lights
 
     int32_t enabled_light_count = 0;
-    for (uint32_t i = 0; i < point_lights.size(); ++i)
+    for (uint32_t i = 0; i < m_point_lights.size(); ++i)
     {
-        if (!point_lights[i]->enabled)
+        if (!m_point_lights[i]->enabled)
             continue;
 
         std::string light_element = std::format("pointLights[{}].", enabled_light_count);
-        shader->set_vec3(light_element + "position", point_lights[i]->entity->transform->get_local_position());
+        shader->set_vec3(light_element + "position", m_point_lights[i]->entity->transform->get_local_position());
 
-        shader->set_vec3(light_element + "ambient", point_lights[i]->ambient);
-        shader->set_vec3(light_element + "diffuse", point_lights[i]->diffuse);
-        shader->set_vec3(light_element + "specular", point_lights[i]->specular);
+        shader->set_vec3(light_element + "ambient", m_point_lights[i]->ambient);
+        shader->set_vec3(light_element + "diffuse", m_point_lights[i]->diffuse);
+        shader->set_vec3(light_element + "specular", m_point_lights[i]->specular);
 
-        shader->set_float(light_element + "constant", point_lights[i]->constant);
-        shader->set_float(light_element + "linear", point_lights[i]->linear);
-        shader->set_float(light_element + "quadratic", point_lights[i]->quadratic);
+        shader->set_float(light_element + "constant", m_point_lights[i]->constant);
+        shader->set_float(light_element + "linear", m_point_lights[i]->linear);
+        shader->set_float(light_element + "quadratic", m_point_lights[i]->quadratic);
 
         enabled_light_count++;
     }
 
-    shader->set_int("pointLightCount", enabled_light_count > max_point_lights ? max_point_lights : enabled_light_count);
+    shader->set_int("pointLightCount", enabled_light_count > m_max_point_lights ? m_max_point_lights : enabled_light_count);
 
     enabled_light_count = 0;
-    for (uint32_t i = 0; i < spot_lights.size(); ++i)
+    for (uint32_t i = 0; i < m_spot_lights.size(); ++i)
     {
-        if (!spot_lights[i]->enabled)
+        if (!m_spot_lights[i]->enabled)
             continue;
 
         std::string light_element = std::format("spotLights[{}].", enabled_light_count);
-        shader->set_vec3(light_element + "position", spot_lights[i]->entity->transform->get_local_position());
-        shader->set_vec3(light_element + "direction", spot_lights[i]->entity->transform->get_forward());
+        shader->set_vec3(light_element + "position", m_spot_lights[i]->entity->transform->get_local_position());
+        shader->set_vec3(light_element + "direction", m_spot_lights[i]->entity->transform->get_forward());
 
-        shader->set_vec3(light_element + "ambient", spot_lights[i]->ambient);
-        shader->set_vec3(light_element + "diffuse", spot_lights[i]->diffuse);
-        shader->set_vec3(light_element + "specular", spot_lights[i]->specular);
+        shader->set_vec3(light_element + "ambient", m_spot_lights[i]->ambient);
+        shader->set_vec3(light_element + "diffuse", m_spot_lights[i]->diffuse);
+        shader->set_vec3(light_element + "specular", m_spot_lights[i]->specular);
 
-        shader->set_float(light_element + "cutOff", spot_lights[i]->cut_off);
-        shader->set_float(light_element + "outerCutOff", spot_lights[i]->outer_cut_off);
+        shader->set_float(light_element + "cutOff", m_spot_lights[i]->cut_off);
+        shader->set_float(light_element + "outerCutOff", m_spot_lights[i]->outer_cut_off);
 
-        shader->set_float(light_element + "constant", spot_lights[i]->constant);
-        shader->set_float(light_element + "linear", spot_lights[i]->linear);
-        shader->set_float(light_element + "quadratic", spot_lights[i]->quadratic);
+        shader->set_float(light_element + "constant", m_spot_lights[i]->constant);
+        shader->set_float(light_element + "linear", m_spot_lights[i]->linear);
+        shader->set_float(light_element + "quadratic", m_spot_lights[i]->quadratic);
 
         enabled_light_count++;
     }
 
-    shader->set_int("spotLightCount", enabled_light_count > max_spot_lights ? max_spot_lights : enabled_light_count);
+    shader->set_int("spotLightCount", enabled_light_count > m_max_spot_lights ? m_max_spot_lights : enabled_light_count);
 
-    bool const directional_light_on = directional_light != nullptr && directional_light->enabled;
+    bool const directional_light_on = m_directional_light != nullptr && m_directional_light->enabled;
     if (directional_light_on)
     {
-        shader->set_vec3("directionalLight.direction", directional_light->entity->transform->get_forward());
+        shader->set_vec3("directionalLight.direction", m_directional_light->entity->transform->get_forward());
 
-        shader->set_vec3("directionalLight.ambient", directional_light->ambient);
-        shader->set_vec3("directionalLight.diffuse", directional_light->diffuse);
-        shader->set_vec3("directionalLight.specular", directional_light->specular);
+        shader->set_vec3("directionalLight.ambient", m_directional_light->ambient);
+        shader->set_vec3("directionalLight.diffuse", m_directional_light->diffuse);
+        shader->set_vec3("directionalLight.specular", m_directional_light->specular);
     }
 
     shader->set_bool("directionalLightOn", directional_light_on);

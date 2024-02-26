@@ -29,15 +29,15 @@ private:
     void focus_callback(int const focused);
     void mouse_callback(double const x, double const y);
 
-    std::shared_ptr<Camera> camera;
-    glm::vec3 camera_euler_angles_terminator = glm::vec3(-8.5f, 0.0f, 0.0f);
+    std::shared_ptr<Camera> m_camera;
+    glm::vec3 m_camera_euler_angles_terminator = glm::vec3(-8.5f, 0.0f, 0.0f);
 
-    glm::dvec2 last_mouse_position = glm::dvec2(1280.0 / 2.0, 720.0 / 2.0);
-    float yaw = 0.0f;
-    float pitch = 10.0f;
-    bool mouse_just_entered = true;
+    glm::dvec2 m_last_mouse_position = glm::dvec2(1280.0 / 2.0, 720.0 / 2.0);
+    float m_yaw = 0.0f;
+    float m_pitch = 10.0f;
+    bool m_mouse_just_entered = true;
 
-    double sensitivity = 0.1;
+    double m_sensitivity = 0.1;
 
-    bool terminator_mode = false;
+    bool m_terminator_mode = false;
 };

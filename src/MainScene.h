@@ -7,17 +7,17 @@ class MainScene : public Scene
 public:
     static void set_instance(std::shared_ptr<Scene> const& scene)
     {
-        instance = scene;
+        m_instance = scene;
     }
 
     static std::shared_ptr<Scene> get_instance()
     {
-        return instance;
+        return m_instance;
     }
 
     MainScene(MainScene const&) = delete;
     void operator=(MainScene const&) = delete;
 
 private:
-    inline static std::shared_ptr<Scene> instance;
+    inline static std::shared_ptr<Scene> m_instance;
 };

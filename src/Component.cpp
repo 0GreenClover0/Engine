@@ -31,7 +31,7 @@ void Component::draw_editor()
 
 void Component::set_can_tick(bool const value)
 {
-    if (can_tick != value)
+    if (m_can_tick != value)
     {
         if (value)
             MainScene::get_instance()->tickable_components.emplace_back(shared_from_this());
@@ -39,10 +39,10 @@ void Component::set_can_tick(bool const value)
             AK::swap_and_erase(MainScene::get_instance()->tickable_components, shared_from_this());
     }
 
-    can_tick = value;
+    m_can_tick = value;
 }
 
 bool Component::get_can_tick() const
 {
-    return can_tick;
+    return m_can_tick;
 }

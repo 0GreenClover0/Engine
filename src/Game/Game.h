@@ -14,6 +14,6 @@ public:
     std::shared_ptr<Window> window;
 
 private:
-    std::shared_ptr<Entity> camera;
-    std::shared_ptr<Camera> camera_comp;
+    std::shared_ptr<Entity> m_camera;
+    std::shared_ptr<Camera> m_camera_comp;
 };

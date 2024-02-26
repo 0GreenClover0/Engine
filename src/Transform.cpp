@@ -77,7 +77,7 @@ void Transform::set_euler_angles(glm::vec3 const& euler_angles)
         return;
     }
 
-    this->m_euler_angles = euler_angles;
+    m_euler_angles = euler_angles;
 
     set_dirty();
 }

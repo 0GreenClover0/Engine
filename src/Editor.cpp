@@ -10,7 +10,7 @@ namespace Editor
 {
 void Editor::set_scene(std::shared_ptr<Scene> const& scene)
 {
-    this->open_scene = scene;
+    m_open_scene = scene;
 }
 
 void Editor::draw_scene_hierarchy()
@@ -18,7 +18,7 @@ void Editor::draw_scene_hierarchy()
     ImGui::Begin("Hierarchy");
 
     // Draw every entity without a parent, and draw its children recursively
-    for (auto const& entity : open_scene->entities)
+    for (auto const& entity : m_open_scene->entities)
     {
         if (!entity->transform->parent.expired())
             continue;
@@ -31,19 +31,19 @@ void Editor::draw_scene_hierarchy()
 void Editor::draw_entity_recursively(std::shared_ptr<Transform> const& transform)
 {
     auto const entity = transform->entity.lock();
-    ImGuiTreeNodeFlags const node_flags = (!selected_entity.expired() && selected_entity.lock()->hashed_guid == entity->hashed_guid ? ImGuiTreeNodeFlags_Selected : 0) | (
+    ImGuiTreeNodeFlags const node_flags = (!m_selected_entity.expired() && m_selected_entity.lock()->hashed_guid == entity->hashed_guid ? ImGuiTreeNodeFlags_Selected : 0) | (
         transform->children.empty() ? ImGuiTreeNodeFlags_Leaf : 0) | ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_OpenOnArrow;
 
     if (!ImGui::TreeNodeEx(reinterpret_cast<void*>(static_cast<intptr_t>(entity->hashed_guid)), node_flags, "%s", entity->name.c_str()))
     {
         if (ImGui::IsItemClicked())
-            selected_entity = entity;
+            m_selected_entity = entity;
 
         return;
     }
 
     if (ImGui::IsItemClicked())
-        selected_entity = entity;
+        m_selected_entity = entity;
 
     for (auto const& child : transform->children)
     {
@@ -57,13 +57,13 @@ void Editor::draw_inspector() const
 {
     ImGui::Begin("Inspector");
 
-    if (selected_entity.expired())
+    if (m_selected_entity.expired())
     {
         ImGui::End();
         return;
     }
 
-    auto const entity = selected_entity.lock();
+    auto const entity = m_selected_entity.lock();
 
     ImGui::Text("Transform");
     ImGui::Spacing();
@@ -126,13 +126,13 @@ void Editor::draw_scene_save() const
 
 void Editor::save_scene() const
 {
-    auto const scene_serializer = std::make_shared<SceneSerializer>(open_scene);
+    auto const scene_serializer = std::make_shared<SceneSerializer>(m_open_scene);
     scene_serializer->serialize("./res/scenes/scene.txt");
 }
 
 bool Editor::load_scene() const
 {
-    auto const scene_serializer = std::make_shared<SceneSerializer>(open_scene);
+    auto const scene_serializer = std::make_shared<SceneSerializer>(m_open_scene);
 
     return scene_serializer->deserialize("./res/scenes/scene.txt");
 }

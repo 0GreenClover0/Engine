@@ -12,15 +12,15 @@ Window::Window(int32_t const screen_width, int32_t const screen_height, int32_t 
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);            // 3.0+ only
     glfwWindowHint(GLFW_SAMPLES, subsamples);
 
-    window = glfwCreateWindow(screen_width, screen_height, "Dear ImGui GLFW+OpenGL3 example", nullptr, nullptr);
+    m_window = glfwCreateWindow(screen_width, screen_height, "Dear ImGui GLFW+OpenGL3 example", nullptr, nullptr);
 
-    if (window == nullptr)
+    if (m_window == nullptr)
         throw std::runtime_error("Could not create a window.");
 
-    glfwMakeContextCurrent(window);
+    glfwMakeContextCurrent(m_window);
 }
 
 GLFWwindow* Window::get_glfw_window() const
 {
-    return window;
+    return m_window;
 }

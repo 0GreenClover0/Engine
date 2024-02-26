@@ -27,6 +27,6 @@ private:
     static void serialize_shader(YAML::Emitter& out, std::shared_ptr<Shader> const& shader);
     [[nodiscard]] std::shared_ptr<Shader> deserialize_shader(YAML::Node const& node) const;
 
-    std::shared_ptr<Scene> scene;
+    std::shared_ptr<Scene> m_scene;
 };
 

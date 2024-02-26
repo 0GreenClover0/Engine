@@ -2,8 +2,7 @@
 #include <string>
 #include <vector>
 
-#include "Renderer.h"
-#include "assimp/material.h"
+#include <assimp/material.h>
 
 struct aiMaterial;
 struct aiMesh;
@@ -42,8 +41,8 @@ protected:
     explicit Model(std::string const& model_path, std::shared_ptr<Material> const& material);
     explicit Model(std::shared_ptr<Material> const& material);
 
-    DrawType draw_type = DrawType::Triangles;
-    std::vector<std::shared_ptr<Mesh>> meshes = {};
+    DrawType m_draw_type = DrawType::Triangles;
+    std::vector<std::shared_ptr<Mesh>> m_meshes = {};
 
 private:
 
@@ -52,9 +51,9 @@ private:
     std::shared_ptr<Mesh> proccess_mesh(aiMesh const* mesh, aiScene const* scene);
     std::vector<Texture> load_material_textures(aiMaterial const* material, aiTextureType type, TextureType const type_name);
 
-    std::string directory;
-    std::string model_path;
-    std::vector<Texture> loaded_textures;
+    std::string m_directory;
+    std::string m_model_path;
+    std::vector<Texture> m_loaded_textures;
 
     friend class SceneSerializer;
 };

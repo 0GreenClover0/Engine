@@ -5,7 +5,7 @@
 
 Drawable::Drawable(std::shared_ptr<Material> const& material)
 {
-    this->material = material;
+    m_material = material;
 }
 
 void Drawable::calculate_bounding_box()
@@ -29,6 +29,11 @@ void Drawable::initialize()
 
     calculate_bounding_box();
     adjust_bounding_box();
+}
+
+std::shared_ptr<Material> Drawable::material()
+{
+    return m_material;
 }
 
 void Drawable::draw_instanced(int32_t const size)

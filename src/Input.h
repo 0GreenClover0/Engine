@@ -1,6 +1,5 @@
 #pragma once
 
-#include <functional>
 #include <map>
 
 #include "Event.h"
@@ -30,7 +29,7 @@ public:
 private:
     [[nodiscard]] bool is_key_pressed(int const key) const;
 
-    std::map<int32_t, Key> keys = {};
+    std::map<int32_t, Key> m_keys = {};
 
-    std::shared_ptr<Window> window;
+    std::shared_ptr<Window> m_window;
 };

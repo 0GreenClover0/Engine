@@ -25,12 +25,12 @@ public:
     {
         std::lock_guard guard(mutex);
 
-        if (this->listeners.empty())
+        if (m_listeners.empty())
             return;
         
         this->clean();
 
-        for (auto listeners_copy = this->listeners; auto const& listener : listeners_copy)
+        for (auto listeners_copy = m_listeners; auto const& listener : listeners_copy)
         {
             if (auto locked = listener.first.lock())
             {
@@ -58,7 +58,7 @@ public:
             return P();
         };
 
-        listeners.emplace_back(std::weak_ptr<void>(w), l);
+        m_listeners.emplace_back(std::weak_ptr<void>(w), l);
     }
 
     void detach(std::weak_ptr<void> const& p)
@@ -69,9 +69,9 @@ public:
 
         auto found = find(p);
 
-        if (found != listeners.end())
+        if (found != m_listeners.end())
         {
-            listeners.erase(found);
+            m_listeners.erase(found);
         }
     }
 
@@ -79,7 +79,7 @@ public:
     {
         std::lock_guard guard(mutex);
 
-        return this->listeners.size();
+        return m_listeners.size();
     }
 
     std::mutex mutex;
@@ -89,21 +89,21 @@ protected:
 
     bool attached(std::weak_ptr<void> const& p)
     {
-        return find(p) != listeners.end();
+        return find(p) != m_listeners.end();
     }
 
     void clean()
     {
-        listeners.erase(std::remove_if(std::begin(listeners), std::end(listeners), [&](event_pair const & p) -> bool {
+        m_listeners.erase(std::remove_if(std::begin(m_listeners), std::end(m_listeners), [&](event_pair const & p) -> bool {
             return p.first.expired();
-        }), std::end(listeners));
+        }), std::end(m_listeners));
     }
 
     typename std::vector<event_pair>::const_iterator find(std::weak_ptr<void> const& p) const
     {
         if (auto listener = p.lock())
         {
-            return std::find_if(listeners.begin(), listeners.end(), [&listener](event_pair const& pair)
+            return std::find_if(m_listeners.begin(), m_listeners.end(), [&listener](event_pair const& pair)
             {
                 auto other = pair.first.lock();
 
@@ -111,8 +111,8 @@ protected:
             });
         }
 
-        return listeners.end();
+        return m_listeners.end();
     }
 
-    std::vector<event_pair> listeners;
+    std::vector<event_pair> m_listeners;
 };

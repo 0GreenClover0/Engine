@@ -14,43 +14,43 @@ MeshGL::MeshGL(AK::Badge<MeshFactory>, std::vector<Vertex> const& vertices, std:
     switch (draw_type)
     {
     case DrawType::Triangles:
-        draw_typeGL = GL_TRIANGLES;
+        m_draw_typeGL = GL_TRIANGLES;
         break;
     case DrawType::TriangleStrip:
-        draw_typeGL = GL_TRIANGLE_STRIP;
+        m_draw_typeGL = GL_TRIANGLE_STRIP;
         break;
     case DrawType::Patches:
-        draw_typeGL = GL_PATCHES;
+        m_draw_typeGL = GL_PATCHES;
         break;
     case DrawType::TriangleFan:
-        draw_typeGL = GL_TRIANGLE_FAN;
+        m_draw_typeGL = GL_TRIANGLE_FAN;
         break;
     case DrawType::LineLoop:
-        draw_typeGL = GL_LINE_LOOP;
+        m_draw_typeGL = GL_LINE_LOOP;
         break;
     case DrawType::LineStrip:
-        draw_typeGL = GL_LINE_STRIP;
+        m_draw_typeGL = GL_LINE_STRIP;
         break;
     case DrawType::Lines:
-        draw_typeGL = GL_LINES;
+        m_draw_typeGL = GL_LINES;
         break;
     case DrawType::Points:
-        draw_typeGL = GL_POINTS;
+        m_draw_typeGL = GL_POINTS;
         break;
     default:
         std::unreachable();
     }
 
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    glGenBuffers(1, &EBO);
+    glGenVertexArrays(1, &m_VAO);
+    glGenBuffers(1, &m_VBO);
+    glGenBuffers(1, &m_EBO);
 
-    glBindVertexArray(VAO);
+    glBindVertexArray(m_VAO);
 
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
     glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(std::uint32_t), indices.data(), GL_STATIC_DRAW);
 
     // FIXME: Not all shaders have all these attributes
@@ -77,15 +77,15 @@ MeshGL::MeshGL(AK::Badge<MeshFactory>, std::vector<Vertex> const& vertices, std:
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-MeshGL::MeshGL(MeshGL&& mesh) noexcept : Mesh(mesh.vertices, mesh.indices, mesh.textures, mesh.draw_type, mesh.material, mesh.draw_function)
+MeshGL::MeshGL(MeshGL&& mesh) noexcept : Mesh(mesh.vertices, mesh.indices, mesh.textures, mesh.m_draw_type, mesh.material, mesh.m_draw_function)
 {
-    VAO = mesh.VAO;
-    VBO = mesh.VBO;
-    EBO = mesh.EBO;
+    m_VAO = mesh.m_VAO;
+    m_VBO = mesh.m_VBO;
+    m_EBO = mesh.m_EBO;
 
-    mesh.VAO = 0;
-    mesh.VBO = 0;
-    mesh.EBO = 0;
+    mesh.m_VAO = 0;
+    mesh.m_VBO = 0;
+    mesh.m_EBO = 0;
 
     mesh.vertices.clear();
     mesh.indices.clear();
@@ -103,9 +103,9 @@ MeshGL::~MeshGL()
     indices.clear();
     textures.clear();
 
-    glDeleteBuffers(1, &EBO);
-    glDeleteBuffers(1, &VBO);
-    glDeleteVertexArrays(1, &VAO);
+    glDeleteBuffers(1, &m_EBO);
+    glDeleteBuffers(1, &m_VBO);
+    glDeleteVertexArrays(1, &m_VAO);
 }
 
 void MeshGL::draw() const
@@ -113,12 +113,12 @@ void MeshGL::draw() const
     bind_textures();
 
     // Draw mesh
-    glBindVertexArray(VAO);
+    glBindVertexArray(m_VAO);
 
-    if (draw_function == DrawFunctionType::NotIndexed)
-        glDrawArrays(draw_typeGL, 0, static_cast<int>(vertices.size()));
+    if (m_draw_function == DrawFunctionType::NotIndexed)
+        glDrawArrays(m_draw_typeGL, 0, static_cast<int>(vertices.size()));
     else
-        glDrawElements(draw_typeGL, static_cast<int>(indices.size()), GL_UNSIGNED_INT, 0);
+        glDrawElements(m_draw_typeGL, static_cast<int>(indices.size()), GL_UNSIGNED_INT, 0);
 
     glBindVertexArray(0);
 
@@ -129,11 +129,11 @@ void MeshGL::draw(uint32_t const size, void const* offset) const
 {
     bind_textures();
 
-    glBindVertexArray(VAO);
+    glBindVertexArray(m_VAO);
 
-    if (draw_function == DrawFunctionType::Indexed)
+    if (m_draw_function == DrawFunctionType::Indexed)
     {
-        glDrawElements(draw_typeGL, size, GL_UNSIGNED_INT, offset);
+        glDrawElements(m_draw_typeGL, size, GL_UNSIGNED_INT, offset);
     }
     else
     {
@@ -149,7 +149,7 @@ void MeshGL::draw_instanced(int32_t const size) const
 {
     bind_textures();
 
-    glBindVertexArray(VAO);
+    glBindVertexArray(m_VAO);
     glDrawElementsInstanced(
         GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, (void*)0, size
     );

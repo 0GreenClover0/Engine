@@ -18,26 +18,26 @@ public:
 
     static void set_instance(std::shared_ptr<Skybox> const& skybox)
     {
-        instance = skybox;
+        m_instance = skybox;
     }
 
     static std::shared_ptr<Skybox> get_instance()
     {
-        return instance;
+        return m_instance;
     }
 
     Skybox(Skybox const&) = delete;
     void operator=(Skybox const&) = delete;
 
 protected:
-    uint32_t texture_id = 0;
+    uint32_t m_texture_id = 0;
 
 private:
     void virtual bind_texture() const = 0;
     void virtual create_cube() = 0;
     void load_textures();
 
-    inline static std::shared_ptr<Skybox> instance;
+    inline static std::shared_ptr<Skybox> m_instance;
 
-    std::vector<std::string> face_paths;
+    std::vector<std::string> m_face_paths;
 };
