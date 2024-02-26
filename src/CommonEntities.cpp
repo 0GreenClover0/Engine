@@ -7,6 +7,7 @@
 #include "PointLight.h"
 #include "ShaderFactory.h"
 #include "Skybox.h"
+#include "SkyboxFactory.h"
 #include "SpotLight.h"
 
 namespace CommonEntities
@@ -15,10 +16,10 @@ namespace CommonEntities
 std::shared_ptr<Entity> create_skybox(std::vector<std::string> const& skybox_texture_paths, std::shared_ptr<Transform> const& parent)
 {
     auto skybox = Entity::create("Skybox");
-    auto skybox_shader = ShaderFactory::create("./res/shaders/skybox.vert", "./res/shaders/skybox.frag");
-    auto skybox_material = Material::create(skybox_shader, SKYBOX_RENDER_ORDER);
+    auto const skybox_shader = ShaderFactory::create("./res/shaders/skybox.vert", "./res/shaders/skybox.frag");
+    auto const skybox_material = Material::create(skybox_shader, SKYBOX_RENDER_ORDER);
 
-    auto const skybox_comp = skybox->add_component<Skybox>(skybox_material, skybox_texture_paths);
+    auto const skybox_comp = skybox->add_component<Skybox>(SkyboxFactory::create(skybox_material, skybox_texture_paths));
     Skybox::set_instance(skybox_comp);
     skybox->transform->set_parent(parent);
 

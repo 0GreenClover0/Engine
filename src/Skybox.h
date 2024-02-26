@@ -6,18 +6,15 @@
 #include "Vertex.h"
 
 // TODO: Make skybox more performant
-class Skybox final : public Drawable
+class Skybox : public Drawable
 {
 public:
-    Skybox(std::shared_ptr<Material> const& material, std::vector<std::string> face_paths);
+    Skybox(std::shared_ptr<Material> const& material, std::vector<std::string> const& face_paths);
 
     std::string get_name() const override;
 
-    virtual void draw() const override;
-
-    uint32_t get_texture_id() const;
-
-    void bind() const;
+    void draw() const override = 0;
+    void virtual bind() = 0;
 
     static void set_instance(std::shared_ptr<Skybox> const& skybox)
     {
@@ -32,14 +29,15 @@ public:
     Skybox(Skybox const&) = delete;
     void operator=(Skybox const&) = delete;
 
+protected:
+    uint32_t texture_id = 0;
+
 private:
-    void create_cube();
+    void virtual bind_texture() const = 0;
+    void virtual create_cube() = 0;
     void load_textures();
-    void setup_mesh();
 
     inline static std::shared_ptr<Skybox> instance;
 
-    uint32_t texture_id = 0;
     std::vector<std::string> face_paths;
-    std::uint32_t VAO = 0, VBO = 0, EBO = 0;
 };
