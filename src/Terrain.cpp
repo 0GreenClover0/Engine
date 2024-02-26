@@ -4,6 +4,7 @@
 #include <stb_image.h>
 
 #include "MeshFactory.h"
+#include "TextureLoader.h"
 
 std::shared_ptr<Terrain> Terrain::create(std::shared_ptr<Material> const& material, bool const use_gpu, std::string const& height_map_path)
 {
@@ -63,67 +64,30 @@ void Terrain::prepare()
 
 std::shared_ptr<Mesh> Terrain::create_terrain_from_height_map_gpu() const
 {
-    stbi_set_flip_vertically_on_load(true);
+    TextureSettings constexpr texture_settings =
+    {
+        TextureWrapMode::Repeat,
+        TextureWrapMode::Repeat,
+        TextureWrapMode::Repeat,
+        TextureFiltering::Linear,
+        TextureFiltering::Linear,
+        true,
+        false,
+    };
 
-    int32_t width, height, number_of_components;
-    unsigned char* data = stbi_load(height_map_path.c_str(), &width, &height, &number_of_components, 0);
+    Texture const heightmap = TextureLoader::get_instance()->load_texture(height_map_path, TextureType::Heightmap, texture_settings);
 
-    if (data == nullptr)
+    if (heightmap.id == 0)
     {
         std::cout << "Height map failed to load at path: " << height_map_path << '\n';
-        stbi_image_free(data);
         return MeshFactory::create({}, {}, {}, draw_type, material);
     }
 
-    std::uint32_t texture_id;
-    glGenTextures(1, &texture_id);
-
-    GLenum format;
-    if (number_of_components == 1)
-    {
-        format = GL_RED;
-    }
-    else if (number_of_components == 3)
-    {
-        format = GL_RGB;
-    }
-    else if (number_of_components == 4)
-    {
-        format = GL_RGBA;
-    }
-    else
-    {
-        std::cout << "Unknown texture format. Assuming RGBA." << '\n';
-        format = GL_RGBA;
-    }
-
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texture_id);
-
-    if (format != GL_RGBA)
-        std::cout << "Not rgba" << "\n";
-    else
-        std::cout << "Success" << "\n";
-
-    glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    glBindTexture(GL_TEXTURE_2D, 0);
-
-    stbi_image_free(data);
-
-    Texture texture;
-    texture.id = texture_id;
-    texture.type = TextureType::Heightmap;
-    texture.path = height_map_path;
+    int32_t const width = heightmap.width;
+    int32_t const height = heightmap.height;
 
     std::vector<Texture> textures;
-    textures.emplace_back(texture);
+    textures.emplace_back(heightmap);
 
     uint32_t constexpr resolution = 20;
     std::vector<Vertex> vertices = {};
