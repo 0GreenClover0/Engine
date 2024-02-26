@@ -86,7 +86,7 @@ void Cube::reprepare()
 std::shared_ptr<Mesh> Cube::create_cube() const
 {
     std::vector<Vertex> const vertices = m_big_cube ? InternalMeshData::big_cube.vertices : InternalMeshData::cube.vertices;
-    std::vector<uint32_t> const indices = m_big_cube ? InternalMeshData::big_cube.indices : InternalMeshData::cube.indices;
+    std::vector<u32> const indices = m_big_cube ? InternalMeshData::big_cube.indices : InternalMeshData::cube.indices;
     std::vector<Texture> textures;
 
     std::vector<Texture> diffuse_maps = {};

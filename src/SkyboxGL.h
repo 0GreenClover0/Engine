@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Skybox.h"
+#include "AK/Types.h"
 
 class SkyboxFactory;
 
@@ -16,5 +17,5 @@ private:
     virtual void bind_texture() const override;
     virtual void create_cube() override;
 
-    std::uint32_t m_VAO = 0, m_VBO = 0, m_EBO = 0;
+    u32 m_VAO = 0, m_VBO = 0, m_EBO = 0;
 };

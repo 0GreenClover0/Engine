@@ -191,7 +191,7 @@ void Renderer::draw_instanced(std::shared_ptr<Material> const& material, glm::ma
     }
 
     // TODO: Adjust bounding boxes on GPU?
-    for (uint32_t i = 0; i < material->drawables.size(); ++i)
+    for (u32 i = 0; i < material->drawables.size(); ++i)
     {
         if (material->drawables[i]->entity->transform->needs_bounding_box_adjusting)
         {
@@ -224,8 +224,8 @@ void Renderer::set_shader_uniforms(std::shared_ptr<Shader> const& shader, glm::m
 
     // TODO: Choose only the closest lights
 
-    int32_t enabled_light_count = 0;
-    for (uint32_t i = 0; i < m_point_lights.size(); ++i)
+    i32 enabled_light_count = 0;
+    for (u32 i = 0; i < m_point_lights.size(); ++i)
     {
         if (!m_point_lights[i]->enabled)
             continue;
@@ -247,7 +247,7 @@ void Renderer::set_shader_uniforms(std::shared_ptr<Shader> const& shader, glm::m
     shader->set_int("pointLightCount", enabled_light_count > m_max_point_lights ? m_max_point_lights : enabled_light_count);
 
     enabled_light_count = 0;
-    for (uint32_t i = 0; i < m_spot_lights.size(); ++i)
+    for (u32 i = 0; i < m_spot_lights.size(); ++i)
     {
         if (!m_spot_lights[i]->enabled)
             continue;

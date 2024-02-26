@@ -13,6 +13,7 @@
 #include "Texture.h"
 #include "TextureLoader.h"
 #include "Vertex.h"
+#include "AK/Types.h"
 
 std::shared_ptr<Model> Model::create(std::string const& model_path, std::shared_ptr<Material> const& material)
 {
@@ -87,7 +88,7 @@ void Model::draw() const
         mesh->draw();
 }
 
-void Model::draw_instanced(int32_t const size)
+void Model::draw_instanced(i32 const size)
 {
     for (auto const& mesh : m_meshes)
         mesh->draw_instanced(size);
@@ -136,13 +137,13 @@ void Model::load_model(std::string const& path)
 
 void Model::proccess_node(aiNode const* node, aiScene const* scene)
 {
-    for (std::uint32_t i = 0; i < node->mNumMeshes; ++i)
+    for (u32 i = 0; i < node->mNumMeshes; ++i)
     {
         aiMesh const* mesh = scene->mMeshes[node->mMeshes[i]];
         m_meshes.emplace_back(proccess_mesh(mesh, scene));
     }
 
-    for (std::uint32_t i = 0; i < node->mNumChildren; ++i)
+    for (u32 i = 0; i < node->mNumChildren; ++i)
     {
         proccess_node(node->mChildren[i], scene);
     }
@@ -151,10 +152,10 @@ void Model::proccess_node(aiNode const* node, aiScene const* scene)
 std::shared_ptr<Mesh> Model::proccess_mesh(aiMesh const* mesh, aiScene const* scene)
 {
     std::vector<Vertex> vertices;
-    std::vector<std::uint32_t> indices;
+    std::vector<u32> indices;
     std::vector<Texture> textures;
 
-    for (std::uint32_t i = 0; i < mesh->mNumVertices; ++i)
+    for (u32 i = 0; i < mesh->mNumVertices; ++i)
     {
         Vertex vertex = {};
 
@@ -177,10 +178,10 @@ std::shared_ptr<Mesh> Model::proccess_mesh(aiMesh const* mesh, aiScene const* sc
         vertices.push_back(vertex);
     }
 
-    for (std::uint32_t i = 0; i < mesh->mNumFaces; ++i)
+    for (u32 i = 0; i < mesh->mNumFaces; ++i)
     {
         aiFace const face = mesh->mFaces[i];
-        for (std::uint32_t k = 0; k < face.mNumIndices; k++)
+        for (u32 k = 0; k < face.mNumIndices; k++)
         {
             indices.push_back(face.mIndices[k]);
         }
@@ -201,8 +202,8 @@ std::vector<Texture> Model::load_material_textures(aiMaterial const* material, a
 {
     std::vector<Texture> textures;
 
-    std::uint32_t const material_count = material->GetTextureCount(type);
-    for (std::uint32_t i = 0; i < material_count; ++i)
+    u32 const material_count = material->GetTextureCount(type);
+    for (u32 i = 0; i < material_count; ++i)
     {
         aiString str;
         material->GetTexture(type, i, &str);

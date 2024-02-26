@@ -78,7 +78,7 @@ void initialize()
         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  100.0f,  // G 23
     };
 
-    for (uint32_t i = 0; i < sizeof(cube_vertices) / sizeof(float); i += 8)
+    for (u32 i = 0; i < sizeof(cube_vertices) / sizeof(float); i += 8)
     {
         Vertex vertex = {};
         vertex.position = glm::vec3(cube_vertices[i], cube_vertices[i + 1], cube_vertices[i + 2]);
@@ -87,7 +87,7 @@ void initialize()
         cube.vertices.emplace_back(vertex);
     }
 
-    for (uint32_t i = 0; i < sizeof(big_cube_vertices) / sizeof(float); i += 8)
+    for (u32 i = 0; i < sizeof(big_cube_vertices) / sizeof(float); i += 8)
     {
         Vertex vertex = {};
         vertex.position = glm::vec3(big_cube_vertices[i], big_cube_vertices[i + 1], big_cube_vertices[i + 2]);
@@ -96,7 +96,7 @@ void initialize()
         big_cube.vertices.emplace_back(vertex);
     }
 
-    uint32_t constexpr cube_indices[] = {
+    u32 constexpr cube_indices[] = {
         // Front and back
         0, 3, 2,
         2, 1, 0,
@@ -116,10 +116,10 @@ void initialize()
         22, 23, 20
     };
 
-    cube.indices = std::vector<uint32_t>();
+    cube.indices = std::vector<u32>();
     cube.indices.reserve(12);
 
-    big_cube.indices = std::vector<uint32_t>();
+    big_cube.indices = std::vector<u32>();
     big_cube.indices.reserve(12);
 
     for (auto const index : cube_indices)

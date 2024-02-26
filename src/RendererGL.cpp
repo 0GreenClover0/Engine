@@ -82,7 +82,7 @@ void RendererGL::perform_frustum_culling(std::shared_ptr<Material> const& materi
     // Set frustum planes
     auto const frustum_planes = Camera::get_main_camera()->get_frustum_planes();
 
-    for (uint32_t i = 0; i < 6; ++i)
+    for (u32 i = 0; i < 6; ++i)
     {
         m_frustum_culling_shader->set_vec4(std::format("frustumPlanes[{}]", i), frustum_planes[i]);
     }
@@ -105,7 +105,7 @@ void RendererGL::perform_frustum_culling(std::shared_ptr<Material> const& materi
     glGetBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, material->drawables.size() * sizeof(GLuint), visible_instances);
 
     // TODO: Pass visible instances directly to the shader by a shared SSBO. Might not actually be beneficial?
-    for (uint32_t i = 0; i < material->drawables.size(); ++i)
+    for (u32 i = 0; i < material->drawables.size(); ++i)
     {
         if (visible_instances[i] == 1)
         {

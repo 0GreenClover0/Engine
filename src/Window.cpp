@@ -4,7 +4,7 @@
 
 #include "imgui_impl/imgui_impl_opengl3_loader.h"
 
-Window::Window(int32_t const screen_width, int32_t const screen_height, int32_t const subsamples)
+Window::Window(i32 const screen_width, i32 const screen_height, i32 const subsamples)
 {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);

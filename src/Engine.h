@@ -9,11 +9,12 @@
 #include <memory>
 
 #include "Window.h"
+#include "AK/Types.h"
 
 class Engine
 {
 public:
-    static int32_t initialize();
+    static i32 initialize();
     static void create_game();
     static void run();
     static void clean_up();
@@ -25,15 +26,15 @@ public:
 
     inline static std::shared_ptr<Window> window;
 private:
-    static int32_t initialize_thirdparty();
+    static i32 initialize_thirdparty();
 
-    static int32_t setup_glfw();
+    static i32 setup_glfw();
     static std::shared_ptr<Window> create_window();
-    static void glfw_error_callback(int const error, char const* description);
+    static void glfw_error_callback(i32 const error, char const* description);
 
-    static int32_t setup_glad();
+    static i32 setup_glad();
 
     static void setup_imgui(GLFWwindow* glfw_window);
 
-    static int32_t setup_miniaudio();
+    static i32 setup_miniaudio();
 };

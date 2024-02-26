@@ -6,7 +6,7 @@
 #include "Globals.h"
 #include "Texture.h"
 
-MeshGL::MeshGL(AK::Badge<MeshFactory>, std::vector<Vertex> const& vertices, std::vector<std::uint32_t> const& indices,
+MeshGL::MeshGL(AK::Badge<MeshFactory>, std::vector<Vertex> const& vertices, std::vector<u32> const& indices,
                std::vector<Texture> const& textures, DrawType const draw_type, std::shared_ptr<Material> const& material,
                DrawFunctionType const draw_function):
     Mesh(vertices, indices, textures, draw_type, material, draw_function)
@@ -51,7 +51,7 @@ MeshGL::MeshGL(AK::Badge<MeshFactory>, std::vector<Vertex> const& vertices, std:
     glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(std::uint32_t), indices.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(u32), indices.data(), GL_STATIC_DRAW);
 
     // FIXME: Not all shaders have all these attributes
 
@@ -116,16 +116,16 @@ void MeshGL::draw() const
     glBindVertexArray(m_VAO);
 
     if (m_draw_function == DrawFunctionType::NotIndexed)
-        glDrawArrays(m_draw_typeGL, 0, static_cast<int>(vertices.size()));
+        glDrawArrays(m_draw_typeGL, 0, static_cast<i32>(vertices.size()));
     else
-        glDrawElements(m_draw_typeGL, static_cast<int>(indices.size()), GL_UNSIGNED_INT, 0);
+        glDrawElements(m_draw_typeGL, static_cast<i32>(indices.size()), GL_UNSIGNED_INT, 0);
 
     glBindVertexArray(0);
 
     unbind_textures();
 }
 
-void MeshGL::draw(uint32_t const size, void const* offset) const
+void MeshGL::draw(u32 const size, void const* offset) const
 {
     bind_textures();
 
@@ -145,7 +145,7 @@ void MeshGL::draw(uint32_t const size, void const* offset) const
     unbind_textures();
 }
 
-void MeshGL::draw_instanced(int32_t const size) const
+void MeshGL::draw_instanced(i32 const size) const
 {
     bind_textures();
 
@@ -159,11 +159,11 @@ void MeshGL::draw_instanced(int32_t const size) const
 
 void MeshGL::bind_textures() const
 {
-    std::uint32_t diffuse_number = 1;
-    std::uint32_t specular_number = 1;
-    std::uint32_t height_number = 1;
+    u32 diffuse_number = 1;
+    u32 specular_number = 1;
+    u32 height_number = 1;
 
-    for (std::uint32_t i = 0; i < textures.size(); ++i)
+    for (u32 i = 0; i < textures.size(); ++i)
     {
         glActiveTexture(GL_TEXTURE0 + i);
 

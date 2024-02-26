@@ -121,7 +121,7 @@ void PlayerInput::mouse_callback(double const x, double const y)
     camera_entity->transform->set_euler_angles(glm::vec3(m_pitch, -m_yaw, 0.0f));
 }
 
-void PlayerInput::focus_callback(int const focused)
+void PlayerInput::focus_callback(i32 const focused)
 {
     if (focused == 0)
         m_mouse_just_entered = true;

@@ -5,7 +5,7 @@
 class Sphere final : public Model
 {
 public:
-    Sphere(float radius, uint32_t sectors, uint32_t stacks, std::string texture_path, std::shared_ptr<Material> const& material);
+    Sphere(float radius, u32 sectors, u32 stacks, std::string texture_path, std::shared_ptr<Material> const& material);
 
     virtual std::string get_name() const override;
 
@@ -15,8 +15,8 @@ public:
 
     [[nodiscard]] std::shared_ptr<Mesh> create_sphere() const;
 
-    uint32_t sector_count;
-    uint32_t stack_count;
+    u32 sector_count;
+    u32 stack_count;
 
     inline static bool use_geometry_shader = false;
 

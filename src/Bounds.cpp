@@ -14,9 +14,9 @@ BoundingBox::BoundingBox(glm::vec3 const center, float const x, float const y, f
 
 // https://github.com/MichaelBeeu/OctreeDemo/blob/master/src/Frustum.cpp#L33
 // http://www.flipcode.com/archives/Octrees_For_Visibility.shtml
-int32_t BoundingBox::plane_normal_to_index(glm::vec3 const& normal)
+i32 BoundingBox::plane_normal_to_index(glm::vec3 const& normal)
 {
-    int index = 0;
+    i32 index = 0;
 
     if (normal.z >= 0 )
         index |= 1;
@@ -40,7 +40,7 @@ bool BoundingBox::half_plane_test(glm::vec3 const& p, glm::vec3 const& normal, f
 
 bool BoundingBox::is_on_or_forward_plane(Plane const& plane) const
 {
-    int const index = plane_normal_to_index(plane.normal);
+    i32 const index = plane_normal_to_index(plane.normal);
 
     // Test the farthest point of the box from the plane
     // if it's behind the plane, then the entire box will be.

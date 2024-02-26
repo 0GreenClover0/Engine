@@ -10,7 +10,7 @@
 #include "TextureLoader.h"
 #include "Vertex.h"
 
-Sphere::Sphere(float const radius, uint32_t const sectors, uint32_t const stacks, std::string texture_path, std::shared_ptr<Material> const& material)
+Sphere::Sphere(float const radius, u32 const sectors, u32 const stacks, std::string texture_path, std::shared_ptr<Material> const& material)
     : Model(material), sector_count(sectors), stack_count(stacks), m_texture_path(std::move(texture_path)), m_radius(radius)
 {
     m_draw_type = DrawType::TriangleStrip;
@@ -45,7 +45,7 @@ std::shared_ptr<Mesh> Sphere::create_sphere() const
     float const length_inverse = 1.0f / m_radius;
 
     std::vector<Vertex> vertices;
-    std::vector<std::uint32_t> indices;
+    std::vector<u32> indices;
     std::vector<Texture> textures;
 
     if (use_geometry_shader)
@@ -70,9 +70,9 @@ std::shared_ptr<Mesh> Sphere::create_sphere() const
         return MeshFactory::create(vertices, indices, textures, m_draw_type, m_material);
     }
 
-    for (uint32_t x = 0; x <= stack_count; ++x)
+    for (u32 x = 0; x <= stack_count; ++x)
     {
-        for (uint32_t y = 0; y <= sector_count; ++y)
+        for (u32 y = 0; y <= sector_count; ++y)
         {
             float const x_segment = static_cast<float>(x) / static_cast<float>(stack_count);
             float const y_segment = static_cast<float>(y) / static_cast<float>(sector_count);
@@ -90,11 +90,11 @@ std::shared_ptr<Mesh> Sphere::create_sphere() const
     }
 
     bool odd_row = false;
-    for (uint32_t y = 0; y < sector_count; ++y)
+    for (u32 y = 0; y < sector_count; ++y)
     {
         if (!odd_row)
         {
-            for (uint32_t x = 0; x <= stack_count; ++x)
+            for (u32 x = 0; x <= stack_count; ++x)
             {
                 indices.push_back(y * (stack_count + 1) + x);
                 indices.push_back((y + 1) * (stack_count + 1) + x);
@@ -102,7 +102,7 @@ std::shared_ptr<Mesh> Sphere::create_sphere() const
         }
         else
         {
-            for (int32_t x = stack_count; x >= 0; --x)
+            for (i32 x = stack_count; x >= 0; --x)
             {
                 indices.push_back((y + 1) * (stack_count + 1) + x);
                 indices.push_back(y * (stack_count + 1) + x);

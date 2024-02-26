@@ -8,7 +8,7 @@
 #include "Texture.h"
 #include "Vertex.h"
 
-Mesh::Mesh(std::vector<Vertex> const& vertices, std::vector<std::uint32_t> const& indices, std::vector<Texture> const& textures,
+Mesh::Mesh(std::vector<Vertex> const& vertices, std::vector<u32> const& indices, std::vector<Texture> const& textures,
            DrawType const draw_type, std::shared_ptr<Material> const& material, DrawFunctionType const draw_function)
     : vertices(vertices), indices(indices), textures(textures), material(material), m_draw_type(draw_type), m_draw_function(draw_function)
 {
@@ -78,9 +78,9 @@ BoundingBox Mesh::calculate_adjusted_bounding_box(glm::mat4 const& model_matrix)
         min[1] = max[1] = translation.y;
         min[2] = max[2] = translation.z;
 
-        for (uint32_t i = 0; i < 3; ++i)
+        for (u32 i = 0; i < 3; ++i)
         {
-            for (uint32_t k = 0; k < 3; ++k)
+            for (u32 k = 0; k < 3; ++k)
             {
                 float a = rotation[i][k] * bounds.min[k];
                 float b = rotation[i][k] * bounds.max[k];

@@ -7,7 +7,7 @@ class MeshFactory;
 class MeshGL final : public Mesh
 {
 public:
-    MeshGL(AK::Badge<MeshFactory>, std::vector<Vertex> const& vertices, std::vector<std::uint32_t> const& indices,
+    MeshGL(AK::Badge<MeshFactory>, std::vector<Vertex> const& vertices, std::vector<u32> const& indices,
            std::vector<Texture> const& textures, DrawType const draw_type, std::shared_ptr<Material> const& material,
            DrawFunctionType const draw_function);
 
@@ -15,14 +15,14 @@ public:
     ~MeshGL() override;
 
     virtual void draw() const override;
-    virtual void draw(uint32_t const size, void const* offset) const override;
-    virtual void draw_instanced(int32_t const size) const override;
+    virtual void draw(u32 const size, void const* offset) const override;
+    virtual void draw_instanced(i32 const size) const override;
 
     virtual void bind_textures() const override;
     virtual void unbind_textures() const override;
 
 private:
-    uint32_t m_draw_typeGL = 0;
+    u32 m_draw_typeGL = 0;
 
-    uint32_t m_VAO = 0, m_VBO = 0, m_EBO = 0;
+    u32 m_VAO = 0, m_VBO = 0, m_EBO = 0;
 };

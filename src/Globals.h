@@ -7,12 +7,12 @@
 
 inline double delta_time;
 
-inline int32_t SKYBOX_RENDER_ORDER = 100;
+inline i32 SKYBOX_RENDER_ORDER = 100;
 
 struct MeshData
 {
     std::vector<Vertex> vertices;
-    std::vector<uint32_t> indices;
+    std::vector<u32> indices;
     std::vector<Texture> textures;
 };
 

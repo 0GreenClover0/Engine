@@ -92,7 +92,7 @@ void Game::initialize()
     auto const grass_material = Material::create(instanced_shader, 101, true, true);
 
     auto const grass_parent = Entity::create("Grass");
-    for (uint32_t i = 0; i < 10000; ++i)
+    for (u32 i = 0; i < 10000; ++i)
     {
         auto const grass = Entity::create("Grass");
         grass->transform->set_parent(grass_parent->transform);
@@ -158,7 +158,7 @@ void Game::initialize()
 
     float house_x = 0.0f;
     float house_z = 0.0f;
-    for (int32_t i = 0; i < 40000; ++i)
+    for (i32 i = 0; i < 40000; ++i)
     {
         auto const house = CommonEntities::create_cube("House" + std::to_string(i), "./res/textures/container.png", "./res/textures/container_specular.png", cube_material);
         house->transform->set_parent(root->transform);

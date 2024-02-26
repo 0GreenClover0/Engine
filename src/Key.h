@@ -1,12 +1,12 @@
 #pragma once
 
-#include <cstdint>
+#include "AK/Types.h"
 
 struct Key
 {
-    explicit Key(int32_t const key);
+    explicit Key(i32 const key);
 
-    int32_t key;
+    i32 key;
 
     [[nodiscard]] bool get_key() const;
     [[nodiscard]] bool get_key_down() const;
@@ -18,7 +18,7 @@ private:
     friend class Input;
 };
 
-inline Key::Key(int32_t const key)
+inline Key::Key(i32 const key)
 {
     this->key = key;
 }
