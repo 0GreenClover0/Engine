@@ -69,8 +69,12 @@ std::shared_ptr<Mesh> Grass::create_blade() const
     std::vector<Texture> textures;
 
     std::vector<Texture> diffuse_maps = {};
+    TextureSettings texture_settings = {};
+    texture_settings.wrap_mode_x = TextureWrapMode::ClampToEdge;
+    texture_settings.wrap_mode_y = TextureWrapMode::ClampToEdge;
+
     if (!diffuse_texture_path.empty())
-        diffuse_maps.emplace_back(TextureLoader::get_instance()->load_texture(diffuse_texture_path, TextureType::Diffuse));
+        diffuse_maps.emplace_back(TextureLoader::get_instance()->load_texture(diffuse_texture_path, TextureType::Diffuse, texture_settings));
 
     textures.insert(textures.end(), diffuse_maps.begin(), diffuse_maps.end());
 

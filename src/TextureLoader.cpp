@@ -1,6 +1,18 @@
 #include "TextureLoader.h"
 
-Texture TextureLoader::load_texture(std::string const& path, TextureType type)
+#include <cassert>
+
+Texture TextureLoader::load_texture(std::string const& path, TextureType const type, TextureSettings const& settings)
 {
-    return { texture_from_file(path), type, path };
+    auto const [id, width, height, number_of_components] = texture_from_file(path, settings);
+    return { id, width, height, number_of_components , type, path };
+}
+
+Texture TextureLoader::load_cubemap(std::vector<std::string> const& paths, TextureType const type,
+                                    TextureSettings const& settings)
+{
+    assert(paths.size() > 0);
+
+    auto const [id, width, height, number_of_components] = cubemap_from_files(paths, settings);
+    return { id, width, height, number_of_components , type, paths[0] };
 }
