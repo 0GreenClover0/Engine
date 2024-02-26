@@ -18,12 +18,12 @@ public:
     virtual ~Shader() = default;
 
     void virtual use() const = 0;
-    void virtual set_bool(std::string const& name, bool value) const = 0;
-    void virtual set_int(std::string const& name, i32 value) const = 0;
-    void virtual set_float(std::string const& name, float value) const = 0;
-    void virtual set_vec3(std::string const& name, glm::vec3 value) const = 0;
-    void virtual set_vec4(std::string const& name, glm::vec4 value) const = 0;
-    void virtual set_mat4(std::string const& name, glm::mat4 value) const = 0;
+    void virtual set_bool(std::string const& name, bool const value) const = 0;
+    void virtual set_int(std::string const& name, i32 const value) const = 0;
+    void virtual set_float(std::string const& name, float const value) const = 0;
+    void virtual set_vec3(std::string const& name, glm::vec3 const value) const = 0;
+    void virtual set_vec4(std::string const& name, glm::vec4 const value) const = 0;
+    void virtual set_mat4(std::string const& name, glm::mat4 const value) const = 0;
 
     std::vector<std::shared_ptr<Material>> materials;
 

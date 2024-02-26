@@ -15,12 +15,12 @@ public:
                       std::string const& fragment_path);
 
     void virtual use() const override;
-    void virtual set_bool(std::string const& name, bool value) const override;
-    void virtual set_int(std::string const& name, i32 value) const override;
-    void virtual set_float(std::string const& name, float value) const override;
-    void virtual set_vec3(std::string const& name, glm::vec3 value) const override;
-    void virtual set_vec4(std::string const& name, glm::vec4 value) const override;
-    void virtual set_mat4(std::string const& name, glm::mat4 value) const override;
+    void virtual set_bool(std::string const& name, bool const value) const override;
+    void virtual set_int(std::string const& name, i32 const value) const override;
+    void virtual set_float(std::string const& name, float const value) const override;
+    void virtual set_vec3(std::string const& name, glm::vec3 const value) const override;
+    void virtual set_vec4(std::string const& name, glm::vec4 const value) const override;
+    void virtual set_mat4(std::string const& name, glm::mat4 const value) const override;
 
 private:
     i32 virtual attach(char const* path, i32 type) const override;
