@@ -15,7 +15,7 @@ struct BoundingBox
 
     BoundingBox() = default;
 
-    BoundingBox(glm::vec3 min, glm::vec3 max);
+    BoundingBox(glm::vec3 const min, glm::vec3 const max);
 
     BoundingBox(glm::vec3 const center, float const x, float const y, float const z);
 

@@ -1,6 +1,6 @@
 #include "Bounds.h"
 
-BoundingBox::BoundingBox(glm::vec3 min, glm::vec3 max) : min(min), max(max)
+BoundingBox::BoundingBox(glm::vec3 const min, glm::vec3 const max) : min(min), max(max)
 {
     center = (max + min) * 0.5f;
     extents = (max - min) * 0.5f;
