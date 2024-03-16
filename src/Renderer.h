@@ -36,6 +36,8 @@ public:
 
     void virtual begin_frame() const;
     void render() const;
+    void virtual end_frame() const;
+    void virtual present() const;
 
     static std::shared_ptr<Renderer> get_instance()
     {
@@ -45,9 +47,10 @@ public:
     enum class RendererApi
     {
         OpenGL,
+        DirectX11,
     };
 
-    inline static RendererApi renderer_api;
+    inline static RendererApi renderer_api = RendererApi::OpenGL;
 
     bool wireframe_mode_active = false;
 
