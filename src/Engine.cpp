@@ -16,27 +16,36 @@
 #include "Input.h"
 #include "MainScene.h"
 #include "Renderer.h"
+#include "RendererDX11.h"
 #include "RendererGL.h"
 #include "Window.h"
 #include "Game/Game.h"
+#include "imgui_impl/imgui_impl_dx11.h"
 
 i32 Engine::initialize()
 {
     if (auto const result = initialize_thirdparty_before_renderer(); result != 0)
         return result;
 
-    if (Renderer::renderer_api == Renderer::RendererApi::OpenGL)
+    switch (Renderer::renderer_api)
     {
+    case Renderer::RendererApi::OpenGL:
         static_cast<void>(RendererGL::create());
-    }
-    else
-    {
+        break;
+    case Renderer::RendererApi::DirectX11:
+        static_cast<void>(RendererDX11::create());
+        break;
+    default:
         std::unreachable();
     }
 
-    InternalMeshData::initialize();
     if (auto const result = initialize_thirdparty_after_renderer(); result != 0)
         return result;
+
+    if (Renderer::renderer_api == Renderer::RendererApi::OpenGL)
+        InternalMeshData::initialize();
+    else if (Renderer::renderer_api == Renderer::RendererApi::DirectX11)
+        std::cout << "TODO: Initialize internal mesh data in DX11 API." << "\n";
 
     return 0;
 }
@@ -84,7 +93,18 @@ void Engine::run()
         Input::input->update_keys();
 
         // Start the Dear ImGui frame
-        ImGui_ImplOpenGL3_NewFrame();
+        switch (Renderer::renderer_api)
+        {
+        case Renderer::RendererApi::OpenGL:
+            ImGui_ImplOpenGL3_NewFrame();
+            break;
+        case Renderer::RendererApi::DirectX11:
+            ImGui_ImplDX11_NewFrame();
+            break;
+        default:
+            std::unreachable();
+        }
+
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
@@ -110,18 +130,43 @@ void Engine::run()
 
         Renderer::get_instance()->render();
 
+        Renderer::get_instance()->end_frame();
+
 
         ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-        glfwMakeContextCurrent(window->get_glfw_window());
-        glfwSwapBuffers(window->get_glfw_window());
+        switch (Renderer::renderer_api)
+        {
+        case Renderer::RendererApi::OpenGL:
+            ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+            glfwMakeContextCurrent(window->get_glfw_window());
+            glfwSwapBuffers(window->get_glfw_window());
+            break;
+        case Renderer::RendererApi::DirectX11:
+            ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+            break;
+        default:
+            std::unreachable();
+        }
+
+        Renderer::get_instance()->present();
     }
 }
 
 void Engine::clean_up()
 {
-    ImGui_ImplOpenGL3_Shutdown();
+    switch (Renderer::renderer_api)
+    {
+    case Renderer::RendererApi::OpenGL:
+        ImGui_ImplOpenGL3_Shutdown();
+        break;
+    case Renderer::RendererApi::DirectX11:
+        ImGui_ImplDX11_Shutdown();
+        break;
+    default:
+        std::unreachable();
+    }
+
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
 
@@ -215,8 +260,23 @@ void Engine::setup_imgui(GLFWwindow* glfw_window)
 
     // GL 4.3 + GLSL 430
     auto const glsl_version = "#version 430";
-    ImGui_ImplGlfw_InitForOpenGL(glfw_window, true);
-    ImGui_ImplOpenGL3_Init(glsl_version);
+
+    switch (Renderer::renderer_api)
+    {
+    case Renderer::RendererApi::OpenGL:
+        ImGui_ImplGlfw_InitForOpenGL(glfw_window, true);
+        ImGui_ImplOpenGL3_Init(glsl_version);
+        break;
+    case Renderer::RendererApi::DirectX11:
+    {
+        std::shared_ptr<RendererDX11> const renderer_dx = std::dynamic_pointer_cast<RendererDX11>(Renderer::get_instance());
+        ImGui_ImplGlfw_InitForOther(glfw_window, true);
+        ImGui_ImplDX11_Init(renderer_dx->get_device(), renderer_dx->get_device_context());
+        break;
+    }
+    default:
+        std::unreachable();
+    }
 
     // Setup style
     ImGui::StyleColorsDark();
