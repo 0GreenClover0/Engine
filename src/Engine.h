@@ -28,7 +28,8 @@ public:
 
     inline static std::shared_ptr<Window> window;
 private:
-    static i32 initialize_thirdparty();
+    static i32 initialize_thirdparty_before_renderer();
+    static i32 initialize_thirdparty_after_renderer();
 
     static i32 setup_glfw();
     static std::shared_ptr<Window> create_window();

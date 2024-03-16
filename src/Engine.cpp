@@ -22,7 +22,7 @@
 
 i32 Engine::initialize()
 {
-    if (auto const result = initialize_thirdparty(); result != 0)
+    if (auto const result = initialize_thirdparty_before_renderer(); result != 0)
         return result;
 
     if (Renderer::renderer_api == Renderer::RendererApi::OpenGL)
@@ -35,6 +35,8 @@ i32 Engine::initialize()
     }
 
     InternalMeshData::initialize();
+    if (auto const result = initialize_thirdparty_after_renderer(); result != 0)
+        return result;
 
     return 0;
 }
@@ -142,7 +144,7 @@ std::shared_ptr<Window> Engine::create_window()
     return new_window;
 }
 
-i32 Engine::initialize_thirdparty()
+i32 Engine::initialize_thirdparty_before_renderer()
 {
     if (setup_glfw() != 0)
         return 1;
@@ -156,15 +158,24 @@ i32 Engine::initialize_thirdparty()
     auto const input_system = std::make_shared<Input>(window);
     Input::set_input(input_system);
 
-    if (setup_glad() != 0)
-        return 3;
+    // TODO: Move this to RendererGL?
+    if (Renderer::renderer_api == Renderer::RendererApi::OpenGL)
+    {
+        if (setup_glad() != 0)
+            return 3;
+    }
 
     srand(static_cast<u32>(glfwGetTime()));
 
-    setup_imgui(window->get_glfw_window());
-
     if (setup_miniaudio() != 0)
         return 4;
+
+    return 0;
+}
+
+i32 Engine::initialize_thirdparty_after_renderer()
+{
+    setup_imgui(window->get_glfw_window());
 
     return 0;
 }
