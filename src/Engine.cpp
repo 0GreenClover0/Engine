@@ -132,14 +132,14 @@ void Engine::clean_up()
 std::shared_ptr<Window> Engine::create_window()
 {
     // Create window with graphics context
-    auto new_window = std::make_shared<Window>(Renderer::screen_width, Renderer::screen_height, 4);
-
-    // Enable vsync
-    glfwSwapInterval(enable_vsync);
-
-    // Capture mouse
-    if (enable_mouse_capture)
-        glfwSetInputMode(new_window->get_glfw_window(), GLFW_CURSOR, GLFW_CURSOR_DISABLED); 
+    auto new_window = std::make_shared<Window>(
+        Renderer::renderer_api,
+        Renderer::screen_width,
+        Renderer::screen_height,
+        4,
+        enable_vsync,
+        enable_mouse_capture
+    );
 
     return new_window;
 }
