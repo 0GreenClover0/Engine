@@ -32,7 +32,7 @@ std::string Terrain::get_name() const
 
 void Terrain::draw() const
 {
-    assert(meshes.size() == 1);
+    assert(m_meshes.size() == 1);
 
     if (m_use_gpu)
     {

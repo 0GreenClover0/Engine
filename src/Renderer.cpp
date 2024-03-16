@@ -18,8 +18,6 @@ void Renderer::initialize()
 {
     initialize_global_renderer_settings();
 
-    m_frustum_culling_shader = ShaderFactory::create("./res/shaders/frustum_culling.glsl");
-
     // TODO: GPU instancing on one material currently supports only the first mesh that was bound to the material.
     size_t max_size = 0;
     for (auto const& material : m_instanced_materials)
@@ -81,7 +79,7 @@ void Renderer::register_light(std::shared_ptr<Light> const& light)
     else if (auto const potential_directional_light = std::dynamic_pointer_cast<DirectionalLight>(light))
     {
         // Don't assert here
-        assert(directional_light == nullptr);
+        assert(m_directional_light == nullptr);
 
         m_directional_light = potential_directional_light;
     }

@@ -6,17 +6,20 @@
 #include "Camera.h"
 #include "Entity.h"
 #include "MeshGL.h"
+#include "ShaderFactory.h"
 #include "TextureLoaderGL.h"
 
 std::shared_ptr<RendererGL> RendererGL::create()
 {
     auto renderer = std::make_shared<RendererGL>(AK::Badge<RendererGL> {});
 
-    assert(instance == nullptr);
+    assert(m_instance == nullptr);
 
     set_instance(renderer);
 
     TextureLoaderGL::create();
+
+    renderer->m_frustum_culling_shader = ShaderFactory::create("./res/shaders/frustum_culling.glsl");
 
     return renderer;
 }
