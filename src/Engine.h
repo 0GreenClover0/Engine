@@ -1,6 +1,8 @@
 #pragma once
 
 #include <glad/glad.h> // Initialize with gladLoadGL()
+#include <d3d11.h>
+#pragma comment(lib, "d3d11.lib")
 
 #include <GLFW/glfw3.h> // Include glfw3.h after our OpenGL definitions
 
