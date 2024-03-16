@@ -1,5 +1,7 @@
 #pragma once
 
+#include <glad/glad.h>
+
 #include "Renderer.h"
 #include "AK/Badge.h"
 
@@ -17,6 +19,8 @@ private:
     virtual void initialize_global_renderer_settings() override;
     virtual void initialize_buffers(size_t const max_size) override;
     virtual void perform_frustum_culling(std::shared_ptr<Material> const& material) const override;
+
+    std::shared_ptr<Shader> m_frustum_culling_shader = {};
 
     GLuint m_gpu_instancing_ssbo = {};
     GLuint m_bounding_boxes_ssbo = {};

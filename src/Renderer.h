@@ -3,7 +3,6 @@
 #include <imgui.h>
 #include <set>
 
-#include <glad/glad.h>
 #include <glm/mat4x4.hpp>
 
 #include "DirectionalLight.h"
@@ -72,15 +71,13 @@ protected:
     void virtual initialize_buffers(size_t const max_size) = 0;
     void virtual perform_frustum_culling(std::shared_ptr<Material> const& material) const = 0;
 
-    std::shared_ptr<Shader> m_frustum_culling_shader = {};
+    inline static std::shared_ptr<Renderer> m_instance;
 
 private:
     void draw(std::shared_ptr<Material> const& material, glm::mat4 const& projection_view) const;
     void draw_instanced(std::shared_ptr<Material> const& material, glm::mat4 const& projection_view, glm::mat4 const& projection_view_no_translation) const;
 
     void set_shader_uniforms(std::shared_ptr<Shader> const& shader, glm::mat4 const& projection_view, glm::mat4 const& projection_view_no_translation) const;
-
-    inline static std::shared_ptr<Renderer> m_instance;
 
     inline static std::vector<std::shared_ptr<PointLight>> m_point_lights = {};
     inline static std::vector<std::shared_ptr<SpotLight>> m_spot_lights = {};
