@@ -225,7 +225,10 @@ std::vector<Texture> Model::load_material_textures(aiMaterial const* material, a
         auto file_path = std::string(str.C_Str());
         file_path = m_directory + '/' + file_path;
 
-        Texture texture = TextureLoader::get_instance()->load_texture(file_path, type_name);
+        TextureSettings settings = {};
+        settings.flip_vertically = false;
+
+        Texture texture = TextureLoader::get_instance()->load_texture(file_path, type_name, settings);
         textures.push_back(texture);
         m_loaded_textures.push_back(texture);
     }
