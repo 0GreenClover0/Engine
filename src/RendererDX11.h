@@ -11,6 +11,11 @@ public:
 
     ~RendererDX11() override = default;
 
+    static std::shared_ptr<RendererDX11> get_instance_dx11()
+    {
+        return m_instance_dx11;
+    }
+
     virtual void begin_frame() const override;
     virtual void end_frame() const override;
     virtual void present() const override;
@@ -28,6 +33,13 @@ private:
     void cleanup_device_d3d();
     void create_render_target();
     void cleanup_render_target();
+
+    static void set_instance_dx11(std::shared_ptr<RendererDX11> const& renderer)
+    {
+        m_instance_dx11 = renderer;
+    }
+
+    inline static std::shared_ptr<RendererDX11> m_instance_dx11;
 
     ID3D11Device* g_pd3dDevice = nullptr;
     ID3D11DeviceContext* g_pd3dDeviceContext = nullptr;
