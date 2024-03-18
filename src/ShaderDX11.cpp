@@ -19,7 +19,6 @@ ShaderDX11::ShaderDX11(AK::Badge<ShaderFactory>, std::string const& vertex_path,
     : Shader(vertex_path, fragment_path)
 {
     ID3DBlob* vs_blob;
-    ID3D11VertexShader* vertex_shader;
 
     {
         ID3DBlob* shader_compile_errors_blob;
@@ -32,7 +31,7 @@ ShaderDX11::ShaderDX11(AK::Badge<ShaderFactory>, std::string const& vertex_path,
             char const* error_string = nullptr;
             if (h_result == HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND))
             {
-                error_string = "Error. ShaderDX file not found.";
+                error_string = "Error. Vertex shader file not found.";
             }
             else if (shader_compile_errors_blob)
             {
@@ -44,9 +43,48 @@ ShaderDX11::ShaderDX11(AK::Badge<ShaderFactory>, std::string const& vertex_path,
             return;
         }
 
-        h_result = dynamic_pointer_cast<RendererDX11>(Renderer::get_instance())->get_device()->CreateVertexShader(vs_blob->GetBufferPointer(), vs_blob->GetBufferSize(), nullptr, &vertex_shader);
+        h_result = RendererDX11::get_instance_dx11()->get_device()->CreateVertexShader(vs_blob->GetBufferPointer(), vs_blob->GetBufferSize(), nullptr, &m_vertex_shader);
 
-        // FIXME: Check for result
+        if (FAILED(h_result))
+        {
+            std::cout << "Error. Vertex shader creation failed." << "\n";
+            return;
+        }
+    }
+
+    ID3DBlob* ps_blob;
+
+    {
+        ID3DBlob* shader_compile_errors_blob;
+
+        std::wstring const pixel_path_final = std::wstring(fragment_path.begin(), fragment_path.end());
+        HRESULT h_result = D3DCompileFromFile(pixel_path_final.c_str(), nullptr, nullptr, "ps_main", "ps_5_0", 0, 0, &ps_blob, &shader_compile_errors_blob);
+
+        if (FAILED(h_result))
+        {
+            const char* error_string = nullptr;
+
+            if (h_result == HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND))
+            {
+                error_string = "Error. Fragment shader file not found.";
+            }
+            else if (shader_compile_errors_blob)
+            {
+                error_string = static_cast<const char*>(shader_compile_errors_blob->GetBufferPointer());
+                shader_compile_errors_blob->Release();
+            }
+
+            std::cout << error_string << "\n";
+            return;
+        }
+
+        h_result = RendererDX11::get_instance_dx11()->get_device()->CreatePixelShader(ps_blob->GetBufferPointer(), ps_blob->GetBufferSize(), nullptr, &m_pixel_shader);
+
+        if (FAILED(h_result))
+        {
+            std::cout << "Error. Fragment shader creation failed." << "\n";
+            return;
+        }
     }
 }
 
@@ -64,6 +102,9 @@ ShaderDX11::ShaderDX11(AK::Badge<ShaderFactory>, std::string const& vertex_path,
 
 void ShaderDX11::use() const
 {
+    auto const instance = RendererDX11::get_instance_dx11();
+    instance->get_device_context()->VSSetShader(m_vertex_shader, nullptr, 0);
+    instance->get_device_context()->PSSetShader(m_pixel_shader, nullptr, 0);
 }
 
 void ShaderDX11::set_bool(std::string const& name, bool const value) const

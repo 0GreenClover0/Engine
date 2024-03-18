@@ -1,5 +1,7 @@
 #pragma once
 
+#include <d3d11.h>
+
 #include "Shader.h"
 #include "AK/Badge.h"
 
@@ -24,4 +26,7 @@ public:
 
 private:
     i32 virtual attach(char const* path, i32 type) const override;
+
+    ID3D11VertexShader* m_vertex_shader = nullptr;
+    ID3D11PixelShader* m_pixel_shader = nullptr;
 };
