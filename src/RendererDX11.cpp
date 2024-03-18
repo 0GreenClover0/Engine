@@ -9,6 +9,7 @@ std::shared_ptr<RendererDX11> RendererDX11::create()
     assert(m_instance == nullptr);
 
     set_instance(renderer);
+    set_instance_dx11(renderer);
 
     if (!renderer->create_device_d3d(Engine::window->get_win32_window()))
     {
