@@ -1,6 +1,7 @@
 #include "RendererDX11.h"
 
 #include <iostream>
+#include "TextureLoaderDX11.h"
 
 std::shared_ptr<RendererDX11> RendererDX11::create()
 {
@@ -16,8 +17,7 @@ std::shared_ptr<RendererDX11> RendererDX11::create()
         std::cout << "DirectX11: Error occurred while creating a d3d device." << "\n";
     }
 
-    // TODO: Texture loader
-    //TextureLoaderGL::create();
+    TextureLoaderDX11::create();
 
     return renderer;
 }
