@@ -14,6 +14,7 @@ public:
     virtual void begin_frame() const override;
     virtual void end_frame() const override;
     virtual void present() const override;
+    
 
     [[nodiscard]] ID3D11Device* get_device() const;
     [[nodiscard]] ID3D11DeviceContext* get_device_context() const;
