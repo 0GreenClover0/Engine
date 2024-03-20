@@ -1,5 +1,6 @@
 #include "MeshFactory.h"
 
+#include "MeshDX11.h"
 #include "MeshGL.h"
 #include "Renderer.h"
 
@@ -7,11 +8,21 @@ std::shared_ptr<Mesh> MeshFactory::create(std::vector<Vertex> const& vertices, s
                                           std::vector<Texture> const& textures, DrawType const draw_type,
                                           std::shared_ptr<Material> const& material, DrawFunctionType const draw_function)
 {
-    if (Renderer::renderer_api == Renderer::RendererApi::OpenGL)
+    switch (Renderer::renderer_api)
     {
-        auto mesh = std::make_shared<MeshGL>(AK::Badge<MeshFactory> {}, vertices, indices, textures, draw_type, material, draw_function);
-        return mesh;
-    }
+    case Renderer::RendererApi::OpenGL:
+        {
+            auto mesh = std::make_shared<MeshGL>(AK::Badge<MeshFactory> {}, vertices, indices, textures, draw_type, material, draw_function);
+            return mesh;
+        }
 
-    std::unreachable();
+    case Renderer::RendererApi::DirectX11:
+        {
+            auto mesh = std::make_shared<MeshDX11>(AK::Badge<MeshFactory> {}, vertices, indices, textures, draw_type, material, draw_function);
+            return mesh;
+        }
+
+    default:
+        std::unreachable();
+    }
 }
