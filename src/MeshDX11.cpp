@@ -55,14 +55,14 @@ MeshDX11::MeshDX11(AK::Badge<MeshFactory>, std::vector<Vertex> const& vertices, 
     assert(SUCCEEDED(h_result));
 }
 
-MeshDX11::MeshDX11(MeshDX11&& mesh) noexcept : Mesh(mesh.vertices, mesh.indices, mesh.textures, mesh.m_draw_type, mesh.material, mesh.m_draw_function)
+MeshDX11::MeshDX11(MeshDX11&& mesh) noexcept : Mesh(mesh.m_vertices, mesh.m_indices, mesh.m_textures, mesh.m_draw_type, mesh.material, mesh.m_draw_function)
 {
     m_vertex_buffer = mesh.m_vertex_buffer;
     mesh.m_vertex_buffer = nullptr;
 
-    mesh.vertices.clear();
-    mesh.indices.clear();
-    mesh.textures.clear();
+    mesh.m_vertices.clear();
+    mesh.m_indices.clear();
+    mesh.m_textures.clear();
 }
 
 MeshDX11::~MeshDX11()
@@ -72,9 +72,9 @@ MeshDX11::~MeshDX11()
         m_vertex_buffer->Release();
     }
 
-    vertices.clear();
-    indices.clear();
-    textures.clear();
+    m_vertices.clear();
+    m_indices.clear();
+    m_textures.clear();
 }
 
 void MeshDX11::draw() const
@@ -83,7 +83,7 @@ void MeshDX11::draw() const
 
     device_context->IASetPrimitiveTopology(m_primitive_topology);
     device_context->IASetVertexBuffers(0, 1, &m_vertex_buffer, &m_stride, &m_offset);
-    device_context->Draw(vertices.size(), 0);
+    device_context->Draw(m_vertices.size(), 0);
 }
 
 void MeshDX11::draw(u32 const size, void const* offset) const

@@ -77,7 +77,7 @@ MeshGL::MeshGL(AK::Badge<MeshFactory>, std::vector<Vertex> const& vertices, std:
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-MeshGL::MeshGL(MeshGL&& mesh) noexcept : Mesh(mesh.vertices, mesh.indices, mesh.textures, mesh.m_draw_type, mesh.material, mesh.m_draw_function)
+MeshGL::MeshGL(MeshGL&& mesh) noexcept : Mesh(mesh.m_vertices, mesh.m_indices, mesh.m_textures, mesh.m_draw_type, mesh.material, mesh.m_draw_function)
 {
     m_VAO = mesh.m_VAO;
     m_VBO = mesh.m_VBO;
@@ -87,21 +87,21 @@ MeshGL::MeshGL(MeshGL&& mesh) noexcept : Mesh(mesh.vertices, mesh.indices, mesh.
     mesh.m_VBO = 0;
     mesh.m_EBO = 0;
 
-    mesh.vertices.clear();
-    mesh.indices.clear();
-    mesh.textures.clear();
+    mesh.m_vertices.clear();
+    mesh.m_indices.clear();
+    mesh.m_textures.clear();
 }
 
 MeshGL::~MeshGL()
 {
-    for (auto const& texture : textures)
+    for (auto const& texture : m_textures)
     {
         glDeleteTextures(1, &texture.id);
     }
 
-    vertices.clear();
-    indices.clear();
-    textures.clear();
+    m_vertices.clear();
+    m_indices.clear();
+    m_textures.clear();
 
     glDeleteBuffers(1, &m_EBO);
     glDeleteBuffers(1, &m_VBO);
@@ -116,9 +116,9 @@ void MeshGL::draw() const
     glBindVertexArray(m_VAO);
 
     if (m_draw_function == DrawFunctionType::NotIndexed)
-        glDrawArrays(m_draw_typeGL, 0, static_cast<i32>(vertices.size()));
+        glDrawArrays(m_draw_typeGL, 0, static_cast<i32>(m_vertices.size()));
     else
-        glDrawElements(m_draw_typeGL, static_cast<i32>(indices.size()), GL_UNSIGNED_INT, 0);
+        glDrawElements(m_draw_typeGL, static_cast<i32>(m_indices.size()), GL_UNSIGNED_INT, 0);
 
     glBindVertexArray(0);
 
@@ -151,7 +151,7 @@ void MeshGL::draw_instanced(i32 const size) const
 
     glBindVertexArray(m_VAO);
     glDrawElementsInstanced(
-        GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, (void*)0, size
+        GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, (void*)0, size
     );
 
     unbind_textures();
@@ -163,34 +163,34 @@ void MeshGL::bind_textures() const
     u32 specular_number = 1;
     u32 height_number = 1;
 
-    for (u32 i = 0; i < textures.size(); ++i)
+    for (u32 i = 0; i < m_textures.size(); ++i)
     {
         glActiveTexture(GL_TEXTURE0 + i);
 
         std::string number;
         std::string name = "material.";
 
-        if (textures[i].type == TextureType::Diffuse)
+        if (m_textures[i].type == TextureType::Diffuse)
         {
             name += "texture_diffuse";
             number = std::to_string(diffuse_number++);
         }
-        else if (textures[i].type == TextureType::Specular)
+        else if (m_textures[i].type == TextureType::Specular)
         {
             name += "texture_specular";
             number = std::to_string(specular_number++);
         }
-        else if (textures[i].type == TextureType::Heightmap)
+        else if (m_textures[i].type == TextureType::Heightmap)
         {
             name += "texture_height";
             number = std::to_string(height_number++);
         }
 
         material->shader->set_int(name + number, i);
-        glBindTexture(GL_TEXTURE_2D, textures[i].id);
+        glBindTexture(GL_TEXTURE_2D, m_textures[i].id);
     }
 
-    if (textures.empty())
+    if (m_textures.empty())
     {
         glActiveTexture(GL_TEXTURE0);
 
