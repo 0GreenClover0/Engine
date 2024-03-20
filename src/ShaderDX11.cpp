@@ -48,6 +48,7 @@ ShaderDX11::ShaderDX11(AK::Badge<ShaderFactory>, std::string const& vertex_path,
         if (FAILED(h_result))
         {
             std::cout << "Error. Vertex shader creation failed." << "\n";
+            vs_blob->Release();
             return;
         }
     }
@@ -83,6 +84,7 @@ ShaderDX11::ShaderDX11(AK::Badge<ShaderFactory>, std::string const& vertex_path,
         if (FAILED(h_result))
         {
             std::cout << "Error. Fragment shader creation failed." << "\n";
+            ps_blob->Release();
             return;
         }
     }
