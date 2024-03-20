@@ -49,11 +49,6 @@ Window::Window(Renderer::RendererApi const renderer_api, i32 const screen_width,
 
         break;
     case Renderer::RendererApi::DirectX11:
-        if (enable_vsync)
-        {
-            std::cout << "TODO: vsync is currently not supported in DirectX11 backend." << "\n";
-        }
-
         if (enable_mouse_capture)
         {
             std::cout << "TODO: Enable mouse capture is currently not supported in DirectX11 backend." << "\n";
