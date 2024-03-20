@@ -136,8 +136,14 @@ void RendererDX11::cleanup_device_d3d()
 void RendererDX11::create_render_target()
 {
     ID3D11Texture2D* pBackBuffer;
-    g_pSwapChain->GetBuffer(0, IID_PPV_ARGS(&pBackBuffer));
-    g_pd3dDevice->CreateRenderTargetView(pBackBuffer, nullptr, &g_mainRenderTargetView);
+    HRESULT result = g_pSwapChain->GetBuffer(0, IID_PPV_ARGS(&pBackBuffer));
+
+    assert(SUCCEEDED(result));
+
+    result = g_pd3dDevice->CreateRenderTargetView(pBackBuffer, nullptr, &g_mainRenderTargetView);
+
+    assert(SUCCEEDED(result));
+
     pBackBuffer->Release();
 }
 
