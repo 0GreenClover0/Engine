@@ -152,6 +152,11 @@ void Renderer::present() const
 {
 }
 
+void Renderer::set_vsync(bool const enabled)
+{
+    vsync_enabled = enabled;
+}
+
 void Renderer::draw(std::shared_ptr<Material> const& material, glm::mat4 const& projection_view) const
 {
     material->shader->set_vec3("material.color", glm::vec3(material->color.x, material->color.y, material->color.z));

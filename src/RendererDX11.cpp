@@ -47,7 +47,7 @@ void RendererDX11::present() const
 {
     Renderer::present();
 
-    g_pSwapChain->Present(1, 0);
+    g_pSwapChain->Present(vsync_enabled, 0);
 }
 
 ID3D11Device* RendererDX11::get_device() const

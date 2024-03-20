@@ -39,6 +39,8 @@ i32 Engine::initialize()
         std::unreachable();
     }
 
+    Renderer::get_instance()->set_vsync(enable_vsync);
+
     if (auto const result = initialize_thirdparty_after_renderer(); result != 0)
         return result;
 
