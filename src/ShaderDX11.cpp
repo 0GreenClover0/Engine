@@ -1,5 +1,6 @@
 #include "ShaderDX11.h"
 
+#include <array>
 #include <d3d11.h>
 #include <d3dcommon.h>
 #include <d3dcompiler.h>
@@ -88,6 +89,17 @@ ShaderDX11::ShaderDX11(AK::Badge<ShaderFactory>, std::string const& vertex_path,
             return;
         }
     }
+
+    {
+        std::array<D3D11_INPUT_ELEMENT_DESC, 1> constexpr input_element_desc =
+        {
+            {{"POS", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0}}
+        };
+
+        HRESULT const h_result = RendererDX11::get_instance_dx11()->get_device()->CreateInputLayout(input_element_desc.data(), input_element_desc.size(), vs_blob->GetBufferPointer(), vs_blob->GetBufferSize(), &m_input_layout);
+        assert(SUCCEEDED(h_result));
+        vs_blob->Release();
+    }
 }
 
 ShaderDX11::ShaderDX11(AK::Badge<ShaderFactory>, std::string const& vertex_path, std::string const& fragment_path,
@@ -105,6 +117,7 @@ ShaderDX11::ShaderDX11(AK::Badge<ShaderFactory>, std::string const& vertex_path,
 void ShaderDX11::use() const
 {
     auto const instance = RendererDX11::get_instance_dx11();
+    instance->get_device_context()->IASetInputLayout(m_input_layout);
     instance->get_device_context()->VSSetShader(m_vertex_shader, nullptr, 0);
     instance->get_device_context()->PSSetShader(m_pixel_shader, nullptr, 0);
 }

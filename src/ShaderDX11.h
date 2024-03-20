@@ -27,6 +27,7 @@ public:
 private:
     i32 virtual attach(char const* path, i32 type) const override;
 
+    ID3D11InputLayout* m_input_layout = nullptr;
     ID3D11VertexShader* m_vertex_shader = nullptr;
     ID3D11PixelShader* m_pixel_shader = nullptr;
 };
