@@ -10,23 +10,23 @@
 
 Mesh::Mesh(std::vector<Vertex> const& vertices, std::vector<u32> const& indices, std::vector<Texture> const& textures,
            DrawType const draw_type, std::shared_ptr<Material> const& material, DrawFunctionType const draw_function)
-    : vertices(vertices), indices(indices), textures(textures), material(material), m_draw_type(draw_type), m_draw_function(draw_function)
+    : m_vertices(vertices), m_indices(indices), m_textures(textures), material(material), m_draw_type(draw_type), m_draw_function(draw_function)
 {
 }
 
 void Mesh::calculate_bounding_box()
 {
-    if (vertices.empty())
+    if (m_vertices.empty())
         return;
 
-    float lowest_x = vertices[0].position.x;
-    float lowest_y = vertices[0].position.y;
-    float lowest_z = vertices[0].position.z;
-    float highest_x = vertices[0].position.x;
-    float highest_y = vertices[0].position.y;
-    float highest_z = vertices[0].position.z;
+    float lowest_x = m_vertices[0].position.x;
+    float lowest_y = m_vertices[0].position.y;
+    float lowest_z = m_vertices[0].position.z;
+    float highest_x = m_vertices[0].position.x;
+    float highest_y = m_vertices[0].position.y;
+    float highest_z = m_vertices[0].position.z;
 
-    for (auto const& vertex : vertices)
+    for (auto const& vertex : m_vertices)
     {
         if (vertex.position.x < lowest_x)
             lowest_x = vertex.position.x;
