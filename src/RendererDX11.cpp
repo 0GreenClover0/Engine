@@ -30,15 +30,18 @@ RendererDX11::RendererDX11(AK::Badge<RendererDX11>)
 void RendererDX11::begin_frame() const
 {
     Renderer::begin_frame();
+
+    D3D11_VIEWPORT const viewport = { 0.0f, 0.0f, static_cast<float>(screen_width), static_cast<float>(screen_height), 0.0f, 1.0f };
+    g_pd3dDeviceContext->RSSetViewports(1, &viewport);
+
+    const float clear_color_with_alpha[4] = { clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w };
+    g_pd3dDeviceContext->OMSetRenderTargets(1, &g_mainRenderTargetView, nullptr);
+    g_pd3dDeviceContext->ClearRenderTargetView(g_mainRenderTargetView, clear_color_with_alpha);
 }
 
 void RendererDX11::end_frame() const
 {
     Renderer::end_frame();
-
-    const float clear_color_with_alpha[4] = { clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w };
-    g_pd3dDeviceContext->OMSetRenderTargets(1, &g_mainRenderTargetView, nullptr);
-    g_pd3dDeviceContext->ClearRenderTargetView(g_mainRenderTargetView, clear_color_with_alpha);
 }
 
 void RendererDX11::present() const
