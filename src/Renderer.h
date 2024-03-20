@@ -38,6 +38,8 @@ public:
     void virtual end_frame() const;
     void virtual present() const;
 
+    void set_vsync(bool const enabled);
+
     static std::shared_ptr<Renderer> get_instance()
     {
         return m_instance;
@@ -72,6 +74,8 @@ protected:
     void virtual perform_frustum_culling(std::shared_ptr<Material> const& material) const = 0;
 
     inline static std::shared_ptr<Renderer> m_instance;
+
+    bool vsync_enabled = false;
 
 private:
     void draw(std::shared_ptr<Material> const& material, glm::mat4 const& projection_view) const;
