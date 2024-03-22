@@ -6,6 +6,7 @@
 #include <glm/fwd.hpp>
 
 #include "AK/Types.h"
+#include "ConstantBufferTypes.h"
 
 class Material;
 
@@ -30,6 +31,7 @@ public:
 protected:
     explicit Shader(std::string const& compute_path);
     explicit Shader(std::string const& vertex_path, std::string const& fragment_path);
+    explicit Shader(std::string const& vertex_path, std::string const& fragment_path, ConstantBuffer constant_buffer);
     explicit Shader(std::string const& vertex_path, std::string const& fragment_path, std::string const& geometry_path);
     explicit Shader(std::string const& vertex_path, std::string const& tessellation_control_path, std::string const& tessellation_evaluation_path,
                     std::string const& fragment_path);

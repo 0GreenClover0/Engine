@@ -4,6 +4,7 @@
 
 #include "Shader.h"
 #include "AK/Badge.h"
+#include "ConstantBufferTypes.h"
 
 class ShaderFactory;
 
@@ -12,6 +13,7 @@ class ShaderDX11 final : public Shader
 public:
     explicit ShaderDX11(AK::Badge<ShaderFactory>, std::string const& compute_path);
     explicit ShaderDX11(AK::Badge<ShaderFactory>, std::string const& vertex_path, std::string const& fragment_path);
+    explicit ShaderDX11(AK::Badge<ShaderFactory>, std::string const& vertex_path, std::string const& fragment_path, ConstantBuffer constant_buffer);
     explicit ShaderDX11(AK::Badge<ShaderFactory>, std::string const& vertex_path, std::string const& fragment_path, std::string const& geometry_path);
     explicit ShaderDX11(AK::Badge<ShaderFactory>, std::string const& vertex_path, std::string const& tessellation_control_path, std::string const& tessellation_evaluation_path,
                         std::string const& fragment_path);
@@ -30,4 +32,5 @@ private:
     ID3D11InputLayout* m_input_layout = nullptr;
     ID3D11VertexShader* m_vertex_shader = nullptr;
     ID3D11PixelShader* m_pixel_shader = nullptr;
+    ID3D11Buffer* m_constant_buffer = nullptr;
 };
