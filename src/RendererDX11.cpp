@@ -1,6 +1,7 @@
 #include "RendererDX11.h"
 
 #include <iostream>
+#include "../build/src/TextureLoaderDX11.h"
 
 std::shared_ptr<RendererDX11> RendererDX11::create()
 {
@@ -17,7 +18,7 @@ std::shared_ptr<RendererDX11> RendererDX11::create()
     }
 
     // TODO: Texture loader
-    //TextureLoaderGL::create();
+    TextureLoaderDX11::create();
 
     return renderer;
 }
@@ -49,6 +50,7 @@ void RendererDX11::present() const
 
     g_pSwapChain->Present(vsync_enabled, 0);
 }
+
 
 ID3D11Device* RendererDX11::get_device() const
 {
