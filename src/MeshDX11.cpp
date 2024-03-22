@@ -40,25 +40,19 @@ MeshDX11::MeshDX11(AK::Badge<MeshFactory>, std::vector<Vertex> const& vertices, 
         std::unreachable();
     }
 
-    m_stride = sizeof(Vertex);
-    m_offset = 0;
+    ID3D11Device* device = RendererDX11::get_instance_dx11()->get_device();
 
-    D3D11_BUFFER_DESC vertex_buffer_desc = {};
-    vertex_buffer_desc.ByteWidth = vertices.size() * sizeof(Vertex);
-    vertex_buffer_desc.Usage = D3D11_USAGE_IMMUTABLE;
-    vertex_buffer_desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-
-    D3D11_SUBRESOURCE_DATA const vertex_subresource_data = { vertices.data() };
-
-    HRESULT const h_result = RendererDX11::get_instance_dx11()->get_device()->CreateBuffer(&vertex_buffer_desc, &vertex_subresource_data, &m_vertex_buffer);
-
-    assert(SUCCEEDED(h_result));
+    m_vertex_buffer = std::make_shared<VertexBufferDX11>(device, vertices.data(), vertices.size());
+    m_index_buffer = std::make_shared<IndexBufferDX11>(device, indices.data(), indices.size());
 }
 
 MeshDX11::MeshDX11(MeshDX11&& mesh) noexcept : Mesh(mesh.m_vertices, mesh.m_indices, mesh.m_textures, mesh.m_draw_type, mesh.material, mesh.m_draw_function)
 {
     m_vertex_buffer = mesh.m_vertex_buffer;
     mesh.m_vertex_buffer = nullptr;
+
+    m_index_buffer = mesh.m_index_buffer;
+    mesh.m_index_buffer = nullptr;
 
     mesh.m_vertices.clear();
     mesh.m_indices.clear();
@@ -67,11 +61,6 @@ MeshDX11::MeshDX11(MeshDX11&& mesh) noexcept : Mesh(mesh.m_vertices, mesh.m_indi
 
 MeshDX11::~MeshDX11()
 {
-    if (m_vertex_buffer != nullptr)
-    {
-        m_vertex_buffer->Release();
-    }
-
     m_vertices.clear();
     m_indices.clear();
     m_textures.clear();
@@ -81,9 +70,11 @@ void MeshDX11::draw() const
 {
     auto const device_context = RendererDX11::get_instance_dx11()->get_device_context();
 
+    u32 constexpr offset = 0;
     device_context->IASetPrimitiveTopology(m_primitive_topology);
-    device_context->IASetVertexBuffers(0, 1, &m_vertex_buffer, &m_stride, &m_offset);
-    device_context->Draw(m_vertices.size(), 0);
+    device_context->IASetVertexBuffers(0, 1, m_vertex_buffer->get_address_of(), m_vertex_buffer->stride_ptr(), &offset);
+    device_context->IASetIndexBuffer(m_index_buffer->get(), DXGI_FORMAT_R32_UINT, 0);
+    device_context->DrawIndexed(m_index_buffer->buffer_size(), 0, 0);
 }
 
 void MeshDX11::draw(u32 const size, void const* offset) const

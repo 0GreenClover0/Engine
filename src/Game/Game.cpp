@@ -49,22 +49,6 @@ void Game::initialize()
     m_camera->transform->set_parent(camera_parent->transform);
     player_input->camera_parent = camera_parent;
 
-    float constexpr vertices[] =
-    {
-        0.0f, 0.5f,
-        0.5f, -0.5f,
-        -0.5f, -0.5f
-    };
-
-    std::vector<Vertex> vertices_vec = {};
-    for (int i = 0; i < 6; i += 2)
-    {
-        Vertex vertex = {};
-        vertex.position = glm::vec3(vertices[i], vertices[i + 1], 0.0f);
-        vertices_vec.emplace_back(vertex);
-    }
-
-    auto mesh = MeshFactory::create(vertices_vec, {}, {}, DrawType::Triangles, standard_material, DrawFunctionType::NotIndexed);
-    auto const ent = Entity::create("Model");
-    ent->add_component<Model>(Model::create(mesh, standard_material));
+    const auto model = Entity::create("testmodel");
+    model->add_component(Model::create("./res/models/pyramid3/scene.gltf", standard_material));
 }
