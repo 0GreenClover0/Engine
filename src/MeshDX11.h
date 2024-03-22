@@ -1,8 +1,9 @@
 #pragma once
 
 #include <d3d11.h>
-
+#include "IndexBuffer.h"
 #include "Mesh.h"
+#include "VertexBuffer.h"
 
 class MeshFactory;
 
@@ -14,7 +15,7 @@ public:
              DrawFunctionType const draw_function);
 
     MeshDX11(MeshDX11&& mesh) noexcept;
-    ~MeshDX11() override;
+    // ~MeshDX11() override;
 
     void virtual draw() const override;
     void virtual draw(u32 const size, void const* offset) const override;
@@ -24,9 +25,9 @@ public:
     void virtual unbind_textures() const override;
 
 private:
-    ID3D11Buffer* m_vertex_buffer = nullptr;
-    D3D_PRIMITIVE_TOPOLOGY m_primitive_topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
-    u32 m_stride = 0;
-    u32 m_offset = 0;
+    VertexBuffer<Vertex> m_vertex_buffer;
+    IndexBuffer m_index_buffer;
+
+    D3D_PRIMITIVE_TOPOLOGY m_primitive_topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 };
