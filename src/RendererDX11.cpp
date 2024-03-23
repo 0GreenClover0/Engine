@@ -19,6 +19,8 @@ std::shared_ptr<RendererDX11> RendererDX11::create()
 
     TextureLoaderDX11::create();
 
+    glfwSetWindowSizeCallback(Engine::window->get_glfw_window(), on_window_resize);
+
     return renderer;
 }
 
