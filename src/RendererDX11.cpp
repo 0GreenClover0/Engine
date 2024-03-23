@@ -33,6 +33,8 @@ std::shared_ptr<RendererDX11> RendererDX11::create()
         std::cout << "Failed to initialize constant buffer." << "\n";
     }
 
+    glfwSetWindowSizeCallback(Engine::window->get_glfw_window(), on_window_resize);
+
     return renderer;
 }
 
