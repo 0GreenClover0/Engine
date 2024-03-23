@@ -117,7 +117,7 @@ void Renderer::render() const
     {
         shader->use();
 
-        set_shader_uniforms(shader, projection_view, projection_view_no_translation);
+        update_shader(shader, projection_view, projection_view_no_translation);
 
         for (auto const& material : shader->materials)
         {
@@ -135,7 +135,7 @@ void Renderer::render() const
     {
         material->shader->use();
 
-        set_shader_uniforms(material->shader, projection_view, projection_view_no_translation);
+        update_shader(material->shader, projection_view, projection_view_no_translation);
 
         if (material->is_gpu_instanced)
             draw_instanced(material, projection_view, projection_view_no_translation);
@@ -159,24 +159,11 @@ void Renderer::set_vsync(bool const enabled)
 
 void Renderer::draw(std::shared_ptr<Material> const& material, glm::mat4 const& projection_view) const
 {
-    material->shader->set_vec3("material.color", glm::vec3(material->color.x, material->color.y, material->color.z));
-    material->shader->set_float("material.specular", material->specular);
-    material->shader->set_float("material.shininess", material->shininess);
-
-    material->shader->set_float("radiusMultiplier", material->radius_multiplier);
-    material->shader->set_int("sector_count", material->sector_count);
-    material->shader->set_int("stack_count", material->stack_count);
+    update_material(material);
 
     for (auto const& drawable : material->drawables)
     {
-        if (material->needs_view_model)
-            material->shader->set_mat4("VM", Camera::get_main_camera()->get_view_matrix() * drawable->entity->transform->get_model_matrix());
-
-        if (material->needs_skybox)
-            Skybox::get_instance()->bind();
-
-        material->shader->set_mat4("PVM", projection_view * drawable->entity->transform->get_model_matrix());
-        material->shader->set_mat4("model", drawable->entity->transform->get_model_matrix());
+        update_object(drawable, material, projection_view);
 
         drawable->draw();
     }
@@ -223,75 +210,4 @@ void Renderer::draw_instanced(std::shared_ptr<Material> const& material, glm::ma
     shader->set_float("material.shininess", first_drawable->material()->shininess);
 
     first_drawable->draw_instanced(material->model_matrices.size());
-}
-
-void Renderer::set_shader_uniforms(std::shared_ptr<Shader> const& shader, glm::mat4 const& projection_view, glm::mat4 const& projection_view_no_translation) const
-{
-    // TODO: Ultimately we would probably want to cache the uniform location instead of retrieving them by name
-
-    shader->set_vec3("cameraPosition", Camera::get_main_camera()->get_position());
-    shader->set_mat4("PV", projection_view);
-    shader->set_mat4("PVnoTranslation", projection_view_no_translation);
-
-    // TODO: Choose only the closest lights
-
-    i32 enabled_light_count = 0;
-    for (u32 i = 0; i < m_point_lights.size(); ++i)
-    {
-        if (!m_point_lights[i]->enabled)
-            continue;
-
-        std::string light_element = std::format("pointLights[{}].", enabled_light_count);
-        shader->set_vec3(light_element + "position", m_point_lights[i]->entity->transform->get_local_position());
-
-        shader->set_vec3(light_element + "ambient", m_point_lights[i]->ambient);
-        shader->set_vec3(light_element + "diffuse", m_point_lights[i]->diffuse);
-        shader->set_vec3(light_element + "specular", m_point_lights[i]->specular);
-
-        shader->set_float(light_element + "constant", m_point_lights[i]->constant);
-        shader->set_float(light_element + "linear", m_point_lights[i]->linear);
-        shader->set_float(light_element + "quadratic", m_point_lights[i]->quadratic);
-
-        enabled_light_count++;
-    }
-
-    shader->set_int("pointLightCount", enabled_light_count > m_max_point_lights ? m_max_point_lights : enabled_light_count);
-
-    enabled_light_count = 0;
-    for (u32 i = 0; i < m_spot_lights.size(); ++i)
-    {
-        if (!m_spot_lights[i]->enabled)
-            continue;
-
-        std::string light_element = std::format("spotLights[{}].", enabled_light_count);
-        shader->set_vec3(light_element + "position", m_spot_lights[i]->entity->transform->get_local_position());
-        shader->set_vec3(light_element + "direction", m_spot_lights[i]->entity->transform->get_forward());
-
-        shader->set_vec3(light_element + "ambient", m_spot_lights[i]->ambient);
-        shader->set_vec3(light_element + "diffuse", m_spot_lights[i]->diffuse);
-        shader->set_vec3(light_element + "specular", m_spot_lights[i]->specular);
-
-        shader->set_float(light_element + "cutOff", m_spot_lights[i]->cut_off);
-        shader->set_float(light_element + "outerCutOff", m_spot_lights[i]->outer_cut_off);
-
-        shader->set_float(light_element + "constant", m_spot_lights[i]->constant);
-        shader->set_float(light_element + "linear", m_spot_lights[i]->linear);
-        shader->set_float(light_element + "quadratic", m_spot_lights[i]->quadratic);
-
-        enabled_light_count++;
-    }
-
-    shader->set_int("spotLightCount", enabled_light_count > m_max_spot_lights ? m_max_spot_lights : enabled_light_count);
-
-    bool const directional_light_on = m_directional_light != nullptr && m_directional_light->enabled;
-    if (directional_light_on)
-    {
-        shader->set_vec3("directionalLight.direction", m_directional_light->entity->transform->get_forward());
-
-        shader->set_vec3("directionalLight.ambient", m_directional_light->ambient);
-        shader->set_vec3("directionalLight.diffuse", m_directional_light->diffuse);
-        shader->set_vec3("directionalLight.specular", m_directional_light->specular);
-    }
-
-    shader->set_bool("directionalLightOn", directional_light_on);
 }

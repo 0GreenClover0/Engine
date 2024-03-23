@@ -60,6 +60,20 @@ ID3D11DeviceContext* RendererDX11::get_device_context() const
     return g_pd3dDeviceContext;
 }
 
+void RendererDX11::update_shader(std::shared_ptr<Shader> const& shader, glm::mat4 const& projection_view,
+                                 glm::mat4 const& projection_view_no_translation) const
+{
+}
+
+void RendererDX11::update_material(std::shared_ptr<Material> const& material) const
+{
+}
+
+void RendererDX11::update_object(std::shared_ptr<Drawable> const& drawable, std::shared_ptr<Material> const& material,
+                                 glm::mat4 const& projection_view) const
+{
+}
+
 void RendererDX11::initialize_global_renderer_settings()
 {
 }
