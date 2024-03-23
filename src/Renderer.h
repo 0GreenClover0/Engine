@@ -13,6 +13,7 @@
 #include "SpotLight.h"
 #include "Texture.h"
 #include "Vertex.h"
+#include "ConstantBufferTypes.h"
 
 class Renderer
 {

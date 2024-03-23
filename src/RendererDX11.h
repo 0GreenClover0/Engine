@@ -49,4 +49,5 @@ private:
     ID3D11DeviceContext* g_pd3dDeviceContext = nullptr;
     IDXGISwapChain* g_pSwapChain = nullptr;
     ID3D11RenderTargetView* g_mainRenderTargetView = nullptr;
+    ID3D11Buffer* m_constant_buffer_per_object = nullptr;
 };
