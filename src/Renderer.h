@@ -51,7 +51,7 @@ public:
         DirectX11,
     };
 
-    inline static RendererApi renderer_api = RendererApi::OpenGL;
+    inline static RendererApi renderer_api = RendererApi::DirectX11;
 
     bool wireframe_mode_active = false;
 
