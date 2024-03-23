@@ -13,6 +13,7 @@
 #include "SpotLight.h"
 #include "Texture.h"
 #include "Vertex.h"
+#include "ConstantBufferTypes.h"
 
 class Renderer
 {
@@ -68,6 +69,7 @@ protected:
     {
         m_instance = renderer;
     }
+
 
     void virtual update_shader(std::shared_ptr<Shader> const& shader, glm::mat4 const& projection_view, glm::mat4 const& projection_view_no_translation) const = 0;
     void virtual update_material(std::shared_ptr<Material> const& material) const = 0;
