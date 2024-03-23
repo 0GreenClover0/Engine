@@ -19,6 +19,20 @@ std::shared_ptr<RendererDX11> RendererDX11::create()
 
     TextureLoaderDX11::create();
 
+    D3D11_BUFFER_DESC desc;
+    desc.Usage = D3D11_USAGE_DYNAMIC;
+    desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    desc.MiscFlags = 0;
+    desc.ByteWidth = static_cast<UINT>(sizeof(ConstantBufferPerObject) + (16 - (sizeof(ConstantBufferPerObject) % 16)));
+    desc.StructureByteStride = 0;
+
+    HRESULT hr = renderer->get_device()->CreateBuffer(&desc, 0, &renderer->m_constant_buffer_per_object);
+    if (FAILED(hr))
+    {
+        std::cout << "Failed to initialize constant buffer." << "\n";
+    }
+
     return renderer;
 }
 
@@ -72,6 +86,18 @@ void RendererDX11::update_material(std::shared_ptr<Material> const& material) co
 void RendererDX11::update_object(std::shared_ptr<Drawable> const& drawable, std::shared_ptr<Material> const& material,
                                  glm::mat4 const& projection_view) const
 {
+    ConstantBufferPerObject data;
+    data.projection_view = projection_view;
+
+    D3D11_MAPPED_SUBRESOURCE mappedResource;
+    HRESULT hr = this->get_device_context()->Map(m_constant_buffer_per_object, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+    CopyMemory(mappedResource.pData, &data, sizeof(ConstantBufferPerObject));
+    this->get_device_context()->Unmap(m_constant_buffer_per_object, 0);
+    this->get_device_context()->VSSetConstantBuffers(0, 1, &m_constant_buffer_per_object);
+    if (FAILED(hr))
+    {
+        std::cout << "Failed to updated constant buffer." << "\n";
+    }
 }
 
 void RendererDX11::initialize_global_renderer_settings()
