@@ -27,13 +27,19 @@ std::shared_ptr<RendererDX11> RendererDX11::create()
     desc.ByteWidth = static_cast<UINT>(sizeof(ConstantBufferPerObject) + (16 - (sizeof(ConstantBufferPerObject) % 16)));
     desc.StructureByteStride = 0;
 
-    HRESULT hr = renderer->get_device()->CreateBuffer(&desc, 0, &renderer->m_constant_buffer_per_object);
+    HRESULT const hr = renderer->get_device()->CreateBuffer(&desc, 0, &renderer->m_constant_buffer_per_object);
     if (FAILED(hr))
     {
         std::cout << "Failed to initialize constant buffer." << "\n";
     }
 
     glfwSetWindowSizeCallback(Engine::window->get_glfw_window(), on_window_resize);
+
+    renderer->create_depth_stencil();
+    renderer->create_rasterizer_state();
+
+    D3D11_VIEWPORT const viewport = { 0.0f, 0.0f, static_cast<float>(screen_width), static_cast<float>(screen_height), 0.0f, 1.0f };
+    renderer->g_pd3dDeviceContext->RSSetViewports(1, &viewport);
 
     return renderer;
 }
@@ -45,13 +51,9 @@ RendererDX11::RendererDX11(AK::Badge<RendererDX11>)
 void RendererDX11::begin_frame() const
 {
     Renderer::begin_frame();
-
-    D3D11_VIEWPORT const viewport = { 0.0f, 0.0f, static_cast<float>(screen_width), static_cast<float>(screen_height), 0.0f, 1.0f };
-    g_pd3dDeviceContext->RSSetViewports(1, &viewport);
-
     const float clear_color_with_alpha[4] = { clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w };
-    g_pd3dDeviceContext->OMSetRenderTargets(1, &g_mainRenderTargetView, nullptr);
     g_pd3dDeviceContext->ClearRenderTargetView(g_mainRenderTargetView, clear_color_with_alpha);
+    g_pd3dDeviceContext->ClearDepthStencilView(m_depth_stencil_view, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 }
 
 void RendererDX11::end_frame() const
@@ -187,6 +189,54 @@ void RendererDX11::create_render_target()
     assert(SUCCEEDED(result));
 
     pBackBuffer->Release();
+}
+
+void RendererDX11::create_rasterizer_state()
+{
+    D3D11_RASTERIZER_DESC wfdesc;
+    ZeroMemory(&wfdesc, sizeof(D3D11_RASTERIZER_DESC));
+    wfdesc.FillMode = D3D11_FILL_SOLID;
+    wfdesc.CullMode = D3D11_CULL_NONE;
+    HRESULT const hr = g_pd3dDevice->CreateRasterizerState(&wfdesc, &g_rasterizer_state);
+
+    if (FAILED(hr))
+    {
+        std::cout << "Failed to create rasterizer state." << "\n";
+    }
+
+    g_pd3dDeviceContext->RSSetState(g_rasterizer_state);
+}
+
+void RendererDX11::create_depth_stencil()
+{
+    D3D11_TEXTURE2D_DESC depth_stencil_desc;
+    depth_stencil_desc.Width = screen_width;
+    depth_stencil_desc.Height = screen_height;
+    depth_stencil_desc.MipLevels = 1;
+    depth_stencil_desc.ArraySize = 1;
+    depth_stencil_desc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+    depth_stencil_desc.SampleDesc.Count = 1;
+    depth_stencil_desc.SampleDesc.Quality = 0;
+    depth_stencil_desc.Usage = D3D11_USAGE_DEFAULT;
+    depth_stencil_desc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+    depth_stencil_desc.CPUAccessFlags = 0;
+    depth_stencil_desc.MiscFlags = 0;
+
+    HRESULT hr = g_pd3dDevice->CreateTexture2D(&depth_stencil_desc, nullptr, &m_depth_stencil_buffer);
+
+    if (FAILED(hr))
+    {
+        std::cout << "Failed to create depth stencil texture." << "\n";
+    }
+
+    hr = g_pd3dDevice->CreateDepthStencilView(m_depth_stencil_buffer, nullptr, &m_depth_stencil_view);
+
+    if (FAILED(hr))
+    {
+        std::cout << "Failed to create depth stencil view." << "\n";
+    }
+
+    g_pd3dDeviceContext->OMSetRenderTargets(1, &g_mainRenderTargetView, m_depth_stencil_view);
 }
 
 void RendererDX11::cleanup_render_target()
