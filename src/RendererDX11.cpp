@@ -2,7 +2,8 @@
 
 #include <iostream>
 #include "TextureLoaderDX11.h"
-
+#include "Drawable.h"
+#include "Entity.h"
 std::shared_ptr<RendererDX11> RendererDX11::create()
 {
     auto renderer = std::make_shared<RendererDX11>(AK::Badge<RendererDX11> {});
@@ -90,7 +91,7 @@ void RendererDX11::update_object(std::shared_ptr<Drawable> const& drawable, std:
 {
     ConstantBufferPerObject data;
     data.projection_view = projection_view;
-
+    data.model = drawable->entity->transform->get_model_matrix();
     D3D11_MAPPED_SUBRESOURCE mappedResource;
     HRESULT hr = this->get_device_context()->Map(m_constant_buffer_per_object, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
     CopyMemory(mappedResource.pData, &data, sizeof(ConstantBufferPerObject));

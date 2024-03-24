@@ -10,6 +10,7 @@ struct ConstantBuffer
 struct ConstantBufferPerObject
 {
     glm::mat4 projection_view;
+    glm::mat4 model;
 };
 
 struct ConstantBufferSkybox : public ConstantBuffer
