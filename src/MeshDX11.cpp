@@ -4,6 +4,8 @@
 #include <iostream>
 
 #include "RendererDX11.h"
+#include <TextureLoader.h>
+#include <TextureLoaderDX11.h>
 
 MeshDX11::MeshDX11(AK::Badge<MeshFactory>, std::vector<Vertex> const& vertices, std::vector<u32> const& indices,
                    std::vector<Texture> const& textures, DrawType const draw_type, std::shared_ptr<Material> const& material,
@@ -68,6 +70,8 @@ MeshDX11::~MeshDX11()
 
 void MeshDX11::draw() const
 {
+    bind_textures();
+
     auto const device_context = RendererDX11::get_instance_dx11()->get_device_context();
 
     u32 constexpr offset = 0;
@@ -75,6 +79,8 @@ void MeshDX11::draw() const
     device_context->IASetVertexBuffers(0, 1, m_vertex_buffer->get_address_of(), m_vertex_buffer->stride_ptr(), &offset);
     device_context->IASetIndexBuffer(m_index_buffer->get(), DXGI_FORMAT_R32_UINT, 0);
     device_context->DrawIndexed(m_index_buffer->buffer_size(), 0, 0);
+
+    unbind_textures();
 }
 
 void MeshDX11::draw(u32 const size, void const* offset) const
@@ -87,8 +93,23 @@ void MeshDX11::draw_instanced(i32 const size) const
 
 void MeshDX11::bind_textures() const
 {
+    auto const device_context = RendererDX11::get_instance_dx11()->get_device_context();
+
+    for (u32 i = 0; i < m_textures.size(); ++i)
+    {
+        device_context->PSSetShaderResources(0, 1, &m_textures[i].shader_resource_view);
+        device_context->PSSetSamplers(0, 1, &m_textures[i].image_sampler_state);
+    }
 }
 
 void MeshDX11::unbind_textures() const
 {
+    auto const device_context = RendererDX11::get_instance_dx11()->get_device_context();
+
+    ID3D11ShaderResourceView* null_shader_resource_view = nullptr;
+    for (u32 i = 0; i < m_textures.size(); ++i)
+    {
+        device_context->PSSetShaderResources(0, 1, &null_shader_resource_view);
+        device_context->PSSetSamplers(0, 1, &m_textures[i].image_sampler_state);
+    }
 }

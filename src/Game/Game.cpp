@@ -49,6 +49,6 @@ void Game::initialize()
     m_camera->transform->set_parent(camera_parent->transform);
     player_input->camera_parent = camera_parent;
 
-    const auto model = Entity::create("testmodel");
+    auto const model = Entity::create("testmodel");
     model->add_component(Model::create("./res/models/pyramid3/scene.gltf", standard_material));
 }
