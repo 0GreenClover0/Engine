@@ -7,6 +7,7 @@ std::shared_ptr<TextureLoaderDX11> TextureLoaderDX11::create()
 {
     std::shared_ptr<TextureLoaderDX11> texture_loader = std::make_shared<TextureLoaderDX11>();
     set_instance(texture_loader);
+    texture_loader->texture_resources = std::vector<ID3D11ShaderResourceView*>();
     return texture_loader;
 }
 
@@ -18,8 +19,13 @@ void TextureLoaderDX11::clean_up() const
     if (g_image_sampler_state)
         g_image_sampler_state->Release();
 
-    if (g_image_shader_resource_view)
-        g_image_shader_resource_view->Release();
+    // fix this shit later (probably never but ok)
+    // I can't empty the vector afterwards, idk why, for now I leave it like this, what could go wrong :)
+    if (!texture_resources.empty()) {
+        for (int i = 0; i < texture_resources.size(); i++) {
+            texture_resources[i]->Release();
+        }
+    }
 }
 
 TextureData TextureLoaderDX11::texture_from_file(std::string const& path, TextureSettings const settings)
@@ -40,7 +46,7 @@ TextureData TextureLoaderDX11::texture_from_file(std::string const& path, Textur
 
     // Originally it was ImageWidth * 4, but if I understand it correctly, it's image width * number of channels
     // "SysMemPitch: The distance (in bytes) from the beginning of one line of a texture to the next line" - via microsoft
-    int const image_pitch = image_width * image_channels; 
+    int const image_pitch = image_width * image_desired_channels;
 
     D3D11_TEXTURE2D_DESC image_texture_desc = {};
     image_texture_desc.Width = image_width;
@@ -64,8 +70,9 @@ TextureData TextureLoaderDX11::texture_from_file(std::string const& path, Textur
     assert(SUCCEEDED(hr));
 
     free(image_data);
-
-    hr = device->CreateShaderResourceView(g_image_texture, nullptr, &g_image_shader_resource_view);
+    ID3D11ShaderResourceView* texture_resource = nullptr;
+    hr = device->CreateShaderResourceView(g_image_texture, nullptr, &texture_resource);
+    texture_resources.push_back(texture_resource);
 
     assert(SUCCEEDED(hr));
 
@@ -73,10 +80,9 @@ TextureData TextureLoaderDX11::texture_from_file(std::string const& path, Textur
 
     // To use TextureSettings here we would have to write a function to map TextureSettings to DX11's enums, idk if that's necessary for now though
     image_sampler_desc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-    image_sampler_desc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
-    image_sampler_desc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
-    image_sampler_desc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
-
+    image_sampler_desc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+    image_sampler_desc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+    image_sampler_desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
     image_sampler_desc.MipLODBias = 0.0f;
     image_sampler_desc.MaxAnisotropy = 1;
     image_sampler_desc.ComparisonFunc = D3D11_COMPARISON_NEVER;
@@ -84,7 +90,7 @@ TextureData TextureLoaderDX11::texture_from_file(std::string const& path, Textur
     image_sampler_desc.BorderColor[1] = 1.0f;
     image_sampler_desc.BorderColor[2] = 1.0f;
     image_sampler_desc.BorderColor[3] = 1.0f;
-    image_sampler_desc.MinLOD = -FLT_MAX;
+    image_sampler_desc.MinLOD = 0;
     image_sampler_desc.MaxLOD = FLT_MAX;
 
     hr = device->CreateSamplerState(&image_sampler_desc, &g_image_sampler_state);
@@ -93,7 +99,7 @@ TextureData TextureLoaderDX11::texture_from_file(std::string const& path, Textur
 
     TextureData texture_data;
     // TO DO: Figure out how id works in DX11 (apart from the fact that there are samplers registers in the shader)
-    texture_data.id = 0;
+    texture_data.id = texture_resources.size()-1;
     texture_data.height = image_height;
     texture_data.width = image_width;
     texture_data.number_of_components = image_desired_channels;

@@ -4,6 +4,8 @@
 #include <iostream>
 
 #include "RendererDX11.h"
+#include <TextureLoader.h>
+#include <TextureLoaderDX11.h>
 
 MeshDX11::MeshDX11(AK::Badge<MeshFactory>, std::vector<Vertex> const& vertices, std::vector<u32> const& indices,
                    std::vector<Texture> const& textures, DrawType const draw_type, std::shared_ptr<Material> const& material,
@@ -90,9 +92,18 @@ MeshDX11::MeshDX11(MeshDX11&& mesh) noexcept : Mesh(mesh.m_vertices, mesh.m_indi
 void MeshDX11::draw() const
 {
     auto const device_context = RendererDX11::get_instance_dx11()->get_device_context();
+    auto const loader = static_cast<TextureLoaderDX11*>(TextureLoader::get_instance().get());
+
 
     u32 constexpr offset = 0;
     device_context->IASetPrimitiveTopology(m_primitive_topology);
+    // this is stupid and I will fix it when I get a better grasp of the code // Hubert
+    if (m_textures.size() > 0)
+    {
+        device_context->PSSetShaderResources(0, 1, &loader->texture_resources[m_textures[0].id]);
+        device_context->PSSetSamplers(0, 1, &loader->g_image_sampler_state);
+    }
+
     device_context->IASetVertexBuffers(0, 1, m_vertex_buffer.get_address_of(), m_vertex_buffer.stride_ptr(), &offset);
     device_context->IASetIndexBuffer(m_index_buffer.get(), DXGI_FORMAT_R32_UINT, 0);
     device_context->DrawIndexed(m_index_buffer.buffer_size(), 0, 0);

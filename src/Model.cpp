@@ -237,9 +237,9 @@ std::vector<Texture> Model::load_material_textures(aiMaterial const* material, a
         TextureSettings settings = {};
         settings.flip_vertically = false;
 
-        /*Texture texture = TextureLoader::get_instance()->load_texture(file_path, type_name, settings);
+        Texture texture = TextureLoader::get_instance()->load_texture(file_path, type_name, settings);
         textures.push_back(texture);
-        m_loaded_textures.push_back(texture);*/
+        m_loaded_textures.push_back(texture);
     }
 
     return textures;

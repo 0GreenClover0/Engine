@@ -50,5 +50,7 @@ void Game::initialize()
     player_input->camera_parent = camera_parent;
 
     const auto model = Entity::create("testmodel");
-    model->add_component(Model::create("./res/models/skinning_test/man.gltf", standard_material));
+    model->add_component(Model::create("./res/models/moon/moon.obj", standard_material));
+    const auto model1 = Entity::create("testmodel");
+    model1->add_component(Model::create("./res/models/pyramid3/scene.gltf", standard_material));
 }
