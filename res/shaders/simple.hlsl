@@ -1,6 +1,7 @@
 cbuffer mycBuffer : register(b0)
 {
     float4x4 projection_view;
+    float4x4 world;
 };
 
 struct VS_Input
@@ -23,8 +24,9 @@ SamplerState ObjSamplerState;
 VS_Output vs_main(VS_Input input)
 {
     VS_Output output;
-    output.pos = mul(projection_view, float4(input.pos.xyz, 1.0f));
-    output.normal = mul(input.normal,input.pos);
+    float4x4 pvm = mul(projection_view, world);
+    output.pos = mul(pvm,float4(input.pos.xyz,1.0f));
+    output.normal = input.normal;
     output.UV = input.UV;
     return output;
 }
