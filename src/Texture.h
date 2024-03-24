@@ -41,12 +41,22 @@ struct TextureSettings
     bool flip_vertically = true;
 };
 
+struct ID3D11ShaderResourceView;
+struct ID3D11SamplerState;
+
 struct Texture
 {
+    // Only valid in OpenGL
     u32 id = 0;
+
     u32 width = 0;
     u32 height = 0;
     u32 number_of_components = 0;
     TextureType type = TextureType::None;
+
+    // Only valid in DX11
+    ID3D11ShaderResourceView* shader_resource_view = nullptr;
+    ID3D11SamplerState* image_sampler_state = nullptr;
+
     std::string path = {};
 };
