@@ -47,6 +47,67 @@ RendererDX11::RendererDX11(AK::Badge<RendererDX11>)
 {
 }
 
+void RendererDX11::on_window_resize(GLFWwindow* window, int width, int height)
+{
+        const auto dx11_renderer = get_instance_dx11();
+        dx11_renderer->get_device_context()->OMSetRenderTargets(0, 0, 0);
+        dx11_renderer->g_mainRenderTargetView->Release();
+        dx11_renderer->m_depth_stencil_view->Release();
+        dx11_renderer->screen_height = height;
+        dx11_renderer->screen_width = width;
+        HRESULT hr;
+        hr = dx11_renderer->g_pSwapChain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, 0);
+        if (FAILED(hr)) {
+            std::cout << "Failed to resize a  buffer!" << std::endl;
+        }
+        ID3D11Texture2D* pBuffer;
+        hr = dx11_renderer->g_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D),
+            (void**)&pBuffer);
+        if (FAILED(hr)) {
+            std::cout << "Failed to get a buffer!" << std::endl;
+        }
+        hr = dx11_renderer->get_device()->CreateRenderTargetView(pBuffer, NULL,
+            &dx11_renderer->g_mainRenderTargetView);
+        if (FAILED(hr)) {
+            std::cout << "Failed to create render target view!" << std::endl;
+        }
+        // Perform error handling here!
+        pBuffer->Release();
+        D3D11_TEXTURE2D_DESC depth_stencil_desc;
+        depth_stencil_desc.Width = screen_width;
+        depth_stencil_desc.Height = screen_height;
+        depth_stencil_desc.MipLevels = 1;
+        depth_stencil_desc.ArraySize = 1;
+        depth_stencil_desc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+        depth_stencil_desc.SampleDesc.Count = 1;
+        depth_stencil_desc.SampleDesc.Quality = 0;
+        depth_stencil_desc.Usage = D3D11_USAGE_DEFAULT;
+        depth_stencil_desc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+        depth_stencil_desc.CPUAccessFlags = 0;
+        depth_stencil_desc.MiscFlags = 0;
+        hr = dx11_renderer->g_pd3dDevice->CreateTexture2D(&depth_stencil_desc, NULL, &dx11_renderer->m_depth_stencil_buffer);
+        if (FAILED(hr))
+        {
+            std::cout << "Failed to create depth stencil texture." << "\n";
+        }
+        hr = dx11_renderer->g_pd3dDevice->CreateDepthStencilView(dx11_renderer->m_depth_stencil_buffer, NULL, &dx11_renderer->m_depth_stencil_view);
+        if (FAILED(hr))
+        {
+            std::cout << "Failed to create depth stencil view." << "\n";
+        }
+        dx11_renderer->g_pd3dDeviceContext->OMSetRenderTargets(1, &dx11_renderer->g_mainRenderTargetView, dx11_renderer->m_depth_stencil_view);
+
+        // Set up the viewport.
+        D3D11_VIEWPORT vp;
+        vp.Width = width;
+        vp.Height = height;
+        vp.MinDepth = 0.0f;
+        vp.MaxDepth = 1.0f;
+        vp.TopLeftX = 0;
+        vp.TopLeftY = 0;
+        dx11_renderer->g_pd3dDeviceContext->RSSetViewports(1, &vp);
+}
+
 void RendererDX11::begin_frame() const
 {
     Renderer::begin_frame();
