@@ -17,17 +17,7 @@ public:
     }
 
     // Recreating RenderTargetView every time the window is resized makes ImGui always keep its size
-    static void on_window_resize(GLFWwindow* window, int width, int height)
-    {
-        const auto dx11_renderer = get_instance_dx11();
-
-        dx11_renderer->g_mainRenderTargetView->Release();
-        dx11_renderer->g_pSwapChain->ResizeBuffers(0, LOWORD(width), HIWORD(height), DXGI_FORMAT_UNKNOWN, 0);
-        ID3D11Texture2D* pBackBuffer;
-        dx11_renderer->g_pSwapChain->GetBuffer(0, IID_PPV_ARGS(&pBackBuffer));
-        dx11_renderer->get_device()->CreateRenderTargetView(pBackBuffer, NULL, &dx11_renderer->g_mainRenderTargetView);
-        pBackBuffer->Release();
-    }
+    static void on_window_resize(GLFWwindow* window, int width, int height);
 
     virtual void begin_frame() const override;
     virtual void end_frame() const override;
