@@ -4,6 +4,8 @@
 #include "TextureLoaderDX11.h"
 #include "Drawable.h"
 #include "Entity.h"
+#include <Model.h>
+#include <Camera.h>
 std::shared_ptr<RendererDX11> RendererDX11::create()
 {
     auto renderer = std::make_shared<RendererDX11>(AK::Badge<RendererDX11> {});
@@ -27,13 +29,22 @@ std::shared_ptr<RendererDX11> RendererDX11::create()
     desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
     desc.MiscFlags = 0;
     desc.ByteWidth = static_cast<UINT>(sizeof(ConstantBufferPerObject) + (16 - (sizeof(ConstantBufferPerObject) % 16)));
-    desc.StructureByteStride = 0;
     HRESULT hr = renderer->get_device()->CreateBuffer(&desc, 0, &renderer->m_constant_buffer_per_object);
     if (FAILED(hr))
     {
         std::cout << "Failed to initialize constant buffer." << "\n";
     }
-
+    D3D11_BUFFER_DESC desc2;
+    desc2.Usage = D3D11_USAGE_DYNAMIC;
+    desc2.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    desc2.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    desc2.MiscFlags = 0;
+    desc2.ByteWidth = sizeof(ConstantBufferLight);
+    hr = renderer->get_device()->CreateBuffer(&desc2, 0, &renderer->m_constant_buffer_light);
+    if (FAILED(hr))
+    {
+        std::cout << "Failed to initialize constant buffer." << "\n";
+    }
    renderer->create_depth_stencil();
    renderer->create_rasterizer_state();
 
@@ -141,6 +152,30 @@ ID3D11DeviceContext* RendererDX11::get_device_context() const
 void RendererDX11::update_shader(std::shared_ptr<Shader> const& shader, glm::mat4 const& projection_view,
                                  glm::mat4 const& projection_view_no_translation) const
 {
+    ConstantBufferLight data;
+    data.point_lights.position = glm::vec4(m_point_lights[0]->entity->transform.get()->get_position(),1.0f);
+    data.point_lights.ambient = glm::vec4(m_point_lights[0]->ambient,1.0f);
+    data.point_lights.diffuse = glm::vec4(m_point_lights[0]->diffuse, 1.0f);
+    data.point_lights.specular = glm::vec4(m_point_lights[0]->specular, 1.0f);
+    data.point_lights.constant_linear_quadratic[0] = m_point_lights[0]->constant;
+    data.point_lights.constant_linear_quadratic[1] = m_point_lights[0]->linear;
+    data.point_lights.constant_linear_quadratic[2] = m_point_lights[0]->quadratic;
+    data.point_lights.constant_linear_quadratic[3] = 1.0f;
+    data.camera_pos = glm::vec4(Camera::get_main_camera().get()->entity->transform.get()->get_position(), 1.0f);
+    D3D11_MAPPED_SUBRESOURCE mappedResource;
+    HRESULT hr = this->get_device_context()->Map(m_constant_buffer_light, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+    if (FAILED(hr))
+    {
+        std::cout << "Failed to map constant buffer." << "\n";
+    }
+    CopyMemory(mappedResource.pData, &data, sizeof(ConstantBufferLight));
+    this->get_device_context()->Unmap(m_constant_buffer_light, 0);
+    this->get_device_context()->PSSetConstantBuffers(0, 1, &m_constant_buffer_light);
+    if (FAILED(hr))
+    {
+        std::cout << "Failed to updated constant buffer." << "\n";
+    }
+    
 }
 
 void RendererDX11::update_material(std::shared_ptr<Material> const& material) const

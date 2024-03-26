@@ -56,6 +56,7 @@ private:
     // new ones
     ID3D11RasterizerState* g_rasterizer_state = nullptr;
     ID3D11Buffer* m_constant_buffer_per_object = nullptr;
+    ID3D11Buffer* m_constant_buffer_light = nullptr;
     ID3D11DepthStencilView* m_depth_stencil_view = nullptr;
     ID3D11Texture2D* m_depth_stencil_buffer = nullptr;
 

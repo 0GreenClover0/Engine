@@ -24,9 +24,11 @@ Game::Game(std::shared_ptr<Window> const& window) : window(window)
 
 void Game::initialize()
 {
-    auto standard_shader = ShaderFactory::create("./res/shaders/simple.hlsl", "./res/shaders/simple.hlsl");
+    auto standard_shader = ShaderFactory::create("./res/shaders/lit.hlsl", "./res/shaders/lit.hlsl");
+    auto plain_shader = ShaderFactory::create("./res/shaders/simple.hlsl", "./res/shaders/simple.hlsl");
 
     auto const standard_material = Material::create(standard_shader);
+    auto const plain_material = Material::create(plain_shader);
 
     m_camera = Entity::create("Camera");
     m_camera->transform->set_local_position(glm::vec3(0.0f, 0.0f, 10.0f));
@@ -53,4 +55,18 @@ void Game::initialize()
     model->add_component(Model::create("./res/models/moon/moon.obj", standard_material));
     const auto model1 = Entity::create("testmodel");
     model1->add_component(Model::create("./res/models/pyramid3/scene.gltf", standard_material));
+    model1->transform->set_local_position(glm::vec3(0.0f, 0.0f, 5.0f));
+    model->transform->set_parent(model1->transform);
+
+
+    auto const light = Entity::create("Point light");
+    light->add_component(Model::create("./res/models/moon/moon.obj", plain_material));
+    light->transform->set_local_position(glm::vec3(2.0f, 2.0f, 2.0f));
+    light->add_component<PointLight>(PointLight::create());
+    light->get_component<PointLight>()->ambient = glm::vec3(0.1f);
+    light->get_component<PointLight>()->diffuse = glm::vec3(0.8f);
+    light->get_component<PointLight>()->specular = glm::vec3(0.8f);
+    light->get_component<PointLight>()->constant = 1.0f;
+    light->get_component<PointLight>()->linear = 0.09f;
+    light->get_component<PointLight>()->quadratic = 0.032f;
 }
