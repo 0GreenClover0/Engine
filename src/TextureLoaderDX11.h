@@ -15,4 +15,5 @@ private:
     virtual TextureData cubemap_from_files(std::vector<std::string> const& paths, TextureSettings const settings) override;
 
     static D3D11_TEXTURE_ADDRESS_MODE convert_wrap_mode(TextureWrapMode const wrap_mode);
+    static D3D11_FILTER convert_filtering_mode(TextureFiltering const texture_filtering_min, TextureFiltering const texture_filtering_mag, TextureFiltering const texture_filtering_mipmap);
 };

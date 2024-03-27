@@ -59,7 +59,7 @@ TextureData TextureLoaderDX11::texture_from_file(std::string const& path, Textur
 
     D3D11_SAMPLER_DESC image_sampler_desc = {};
 
-    image_sampler_desc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+    image_sampler_desc.Filter = convert_filtering_mode(settings.filtering_min, settings.filtering_max, settings.filtering_mipmap);
     image_sampler_desc.AddressU = convert_wrap_mode(settings.wrap_mode_x);
     image_sampler_desc.AddressV = convert_wrap_mode(settings.wrap_mode_y);
     image_sampler_desc.AddressW = convert_wrap_mode(settings.wrap_mode_z);
@@ -109,4 +109,81 @@ D3D11_TEXTURE_ADDRESS_MODE TextureLoaderDX11::convert_wrap_mode(TextureWrapMode 
     default:
         std::unreachable();
     }
+}
+
+D3D11_FILTER TextureLoaderDX11::convert_filtering_mode(TextureFiltering const texture_filtering_min,
+                                                       TextureFiltering const texture_filtering_mag,
+                                                       TextureFiltering const texture_filtering_mipmap)
+{
+    if (texture_filtering_min == TextureFiltering::Nearest)
+    {
+        if (texture_filtering_mag == TextureFiltering::Nearest)
+        {
+            if (texture_filtering_mipmap == TextureFiltering::Nearest)
+            {
+                return D3D11_FILTER_MIN_MAG_MIP_POINT;
+            }
+
+            if (texture_filtering_mipmap == TextureFiltering::Linear)
+            {
+                return D3D11_FILTER_MIN_MAG_POINT_MIP_LINEAR;
+            }
+
+            std::unreachable();
+        }
+
+        if (texture_filtering_mag == TextureFiltering::Linear)
+        {
+            if (texture_filtering_mipmap == TextureFiltering::Nearest)
+            {
+                return D3D11_FILTER_MIN_POINT_MAG_LINEAR_MIP_POINT;
+            }
+
+            if (texture_filtering_mipmap == TextureFiltering::Linear)
+            {
+                return D3D11_FILTER_MIN_POINT_MAG_MIP_LINEAR;
+            }
+
+            std::unreachable();
+        }
+
+        std::unreachable();
+    }
+
+    if (texture_filtering_min == TextureFiltering::Linear)
+    {
+        if (texture_filtering_mag == TextureFiltering::Nearest)
+        {
+            if (texture_filtering_mipmap == TextureFiltering::Nearest)
+            {
+                return D3D11_FILTER_MIN_LINEAR_MAG_MIP_POINT;
+            }
+
+            if (texture_filtering_mipmap == TextureFiltering::Linear)
+            {
+                return D3D11_FILTER_MIN_LINEAR_MAG_POINT_MIP_LINEAR;
+            }
+
+            std::unreachable();
+        }
+
+        if (texture_filtering_mag == TextureFiltering::Linear)
+        {
+            if (texture_filtering_mipmap == TextureFiltering::Nearest)
+            {
+                return D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT;
+            }
+
+            if (texture_filtering_mipmap == TextureFiltering::Linear)
+            {
+                return D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+            }
+
+            std::unreachable();
+        }
+
+        std::unreachable();
+    }
+
+    std::unreachable();
 }
