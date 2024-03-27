@@ -22,12 +22,9 @@ enum class TextureWrapMode
 
 enum class TextureFiltering
 {
+    None,
     Nearest,
     Linear,
-    NearestMipmapNearest,
-    LinearMipmapNearest,
-    NearestMipmapLinear,
-    LinearMipmapLinear
 };
 
 struct TextureSettings
@@ -35,8 +32,9 @@ struct TextureSettings
     TextureWrapMode wrap_mode_x = TextureWrapMode::Repeat;
     TextureWrapMode wrap_mode_y = TextureWrapMode::Repeat;
     TextureWrapMode wrap_mode_z = TextureWrapMode::Repeat;
-    TextureFiltering filtering_min = TextureFiltering::LinearMipmapLinear;
+    TextureFiltering filtering_min = TextureFiltering::Linear;
     TextureFiltering filtering_max = TextureFiltering::Linear;
+    TextureFiltering filtering_mipmap = TextureFiltering::Linear;
     bool generate_mipmaps = true;
     bool flip_vertically = true;
 };
