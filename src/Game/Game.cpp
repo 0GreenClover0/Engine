@@ -7,7 +7,7 @@
 #include "Cube.h"
 #include "DirectionalLight.h"
 #include "Entity.h"
-#include "Grass.h"
+#include "Sprite.h"
 #include "MeshFactory.h"
 #include "Model.h"
 #include "PointLight.h"
@@ -25,11 +25,13 @@ Game::Game(std::shared_ptr<Window> const& window) : window(window)
 void Game::initialize()
 {
     auto standard_shader = ShaderFactory::create("./res/shaders/simple.hlsl", "./res/shaders/simple.hlsl");
+    auto ui_shader = ShaderFactory::create("./res/shaders/ui.hlsl", "./res/shaders/ui.hlsl");
 
     auto const standard_material = Material::create(standard_shader);
+    auto const ui_material = Material::create(ui_shader);
 
     m_camera = Entity::create("Camera");
-    m_camera->transform->set_local_position(glm::vec3(0.0f, 0.0f, 10.0f));
+    m_camera->transform->set_local_position(glm::vec3(0.0f, 0.0f, 0.0f));
 
     m_camera->add_component<SoundListener>(SoundListener::create());
 
@@ -51,4 +53,10 @@ void Game::initialize()
 
     auto const model = Entity::create("testmodel");
     model->add_component(Model::create("./res/models/pyramid3/scene.gltf", standard_material));
+    model->transform->set_local_position(glm::vec3(0.0f, 0.0f, -5.0f));
+    
+    auto const sprite = Entity::create("testSprite");
+
+    sprite->add_component<Sprite>(Sprite::create(ui_material, "./res/textures/grass.png"));
+    sprite->transform->set_local_scale({ 0.5f, 0.5f, 1.0f });
 }
