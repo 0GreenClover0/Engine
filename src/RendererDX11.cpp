@@ -165,11 +165,11 @@ void RendererDX11::update_material(std::shared_ptr<Material> const& material) co
 void RendererDX11::update_object(std::shared_ptr<Drawable> const& drawable, std::shared_ptr<Material> const& material,
                                  glm::mat4 const& projection_view) const
 {
-    ConstantBufferPerObject data;
+    ConstantBufferPerObject data = {};
     data.projection_view = projection_view;
     data.model = drawable->entity->transform->get_model_matrix();
     D3D11_MAPPED_SUBRESOURCE mappedResource;
-    HRESULT hr = get_device_context()->Map(m_constant_buffer_per_object, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+    HRESULT const hr = get_device_context()->Map(m_constant_buffer_per_object, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 
     if (FAILED(hr))
     {
@@ -183,6 +183,23 @@ void RendererDX11::update_object(std::shared_ptr<Drawable> const& drawable, std:
 
 void RendererDX11::initialize_global_renderer_settings()
 {
+    ID3D11BlendState* blend_state = nullptr;
+    D3D11_BLEND_DESC blend_desc = {};
+
+    blend_desc.RenderTarget[0].BlendEnable = true;
+    blend_desc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+    blend_desc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+    blend_desc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+    blend_desc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+    blend_desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+    blend_desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+    blend_desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+    HRESULT const hr = get_device()->CreateBlendState(&blend_desc, &blend_state);
+
+    assert(SUCCEEDED(hr));
+
+    get_device_context()->OMSetBlendState(blend_state, 0, 0xffffffff);
 }
 
 void RendererDX11::initialize_buffers(size_t const max_size)
