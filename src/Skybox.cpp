@@ -27,6 +27,7 @@ void Skybox::load_textures()
         TextureWrapMode::ClampToEdge,
         TextureFiltering::Linear,
         TextureFiltering::Linear,
+        TextureFiltering::None,
         false,
         false
     };

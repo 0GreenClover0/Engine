@@ -71,6 +71,7 @@ std::shared_ptr<Mesh> Terrain::create_terrain_from_height_map_gpu() const
         TextureWrapMode::Repeat,
         TextureFiltering::Linear,
         TextureFiltering::Linear,
+        TextureFiltering::None,
         true,
         false,
     };

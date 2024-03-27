@@ -65,8 +65,8 @@ TextureData TextureLoaderGL::texture_from_file(std::string const& path, TextureS
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, convert_wrap_mode(settings.wrap_mode_x));
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, convert_wrap_mode(settings.wrap_mode_y));
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, convert_filtering_mode(settings.filtering_min));
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, convert_filtering_mode(settings.filtering_max));
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, convert_filtering_mode(settings.filtering_min, settings.filtering_mipmap));
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, convert_filtering_mode(settings.filtering_max, settings.filtering_mipmap));
 
     glBindTexture(GL_TEXTURE_2D, 0);
     
@@ -113,8 +113,8 @@ TextureData TextureLoaderGL::cubemap_from_files(std::vector<std::string> const& 
         stbi_image_free(data);
     }
 
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, convert_filtering_mode(settings.filtering_min));
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, convert_filtering_mode(settings.filtering_max));
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, convert_filtering_mode(settings.filtering_min, settings.filtering_mipmap));
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, convert_filtering_mode(settings.filtering_max, settings.filtering_mipmap));
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, convert_wrap_mode(settings.wrap_mode_x));
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, convert_wrap_mode(settings.wrap_mode_y));
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, convert_wrap_mode(settings.wrap_mode_z));
@@ -141,22 +141,47 @@ GLint TextureLoaderGL::convert_wrap_mode(TextureWrapMode const wrap_mode)
     }
 }
 
-GLint TextureLoaderGL::convert_filtering_mode(TextureFiltering const texture_filtering)
+GLint TextureLoaderGL::convert_filtering_mode(TextureFiltering const texture_filtering, TextureFiltering const mipmap_filtering)
 {
     switch (texture_filtering)
     {
     case TextureFiltering::Linear:
-        return GL_LINEAR;
+        if (mipmap_filtering == TextureFiltering::None)
+        {
+            return GL_LINEAR;
+        }
+
+        if (mipmap_filtering == TextureFiltering::Nearest)
+        {
+            return GL_LINEAR_MIPMAP_NEAREST;
+        }
+
+        if (mipmap_filtering == TextureFiltering::Linear)
+        {
+            return GL_LINEAR_MIPMAP_LINEAR;
+        }
+
+        std::unreachable();
+
     case TextureFiltering::Nearest:
-        return GL_NEAREST;
-    case TextureFiltering::LinearMipmapLinear:
-        return GL_LINEAR_MIPMAP_LINEAR;
-    case TextureFiltering::LinearMipmapNearest:
-        return GL_LINEAR_MIPMAP_NEAREST;
-    case TextureFiltering::NearestMipmapLinear:
-        return GL_NEAREST_MIPMAP_LINEAR;
-    case TextureFiltering::NearestMipmapNearest:
-        return GL_NEAREST_MIPMAP_NEAREST;
+        if (mipmap_filtering == TextureFiltering::None)
+        {
+            return GL_NEAREST;
+        }
+
+        if (mipmap_filtering == TextureFiltering::Nearest)
+        {
+            return GL_NEAREST_MIPMAP_NEAREST;
+        }
+
+        if (mipmap_filtering == TextureFiltering::Linear)
+        {
+            return  GL_NEAREST_MIPMAP_LINEAR;
+        }
+
+        std::unreachable();
+
+    case TextureFiltering::None:
     default:
         std::unreachable();
     }
