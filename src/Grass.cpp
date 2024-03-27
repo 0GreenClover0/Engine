@@ -51,12 +51,24 @@ void Grass::prepare()
 
 std::shared_ptr<Mesh> Grass::create_blade() const
 {
+    float width = 0.5f;
+    float height = 0.5f;
+
     std::vector<Vertex> const vertices =
     {
-        { glm::vec3(-1.0f, -1.0f, 0.0f), {}, { 0.0f, 0.0f } }, // bottom left
-        { glm::vec3(1.0f, -1.0f, 0.0f), {}, { 1.0f, 0.0f } },  // bottom right
-        { glm::vec3(1.0f, 1.0f, 0.0f), {}, { 1.0f, 1.0f } },   // top right
-        { glm::vec3(-1.0f, 1.0f, 0.0f), {}, { 0.0f, 1.0f } },  // top left
+        //New grass
+
+        { glm::vec3(-width / 2, -height / 2, 0.0f), {}, { 0.0f, 0.0f } }, // bottom left
+        { glm::vec3(width / 2, -height / 2, 0.0f), {}, { 1.0f, 0.0f } },  // bottom right
+        { glm::vec3(width / 2, height / 2, 0.0f), {}, { 1.0f, 1.0f } },   // top right
+        { glm::vec3(-width / 2, height / 2, 0.0f), {}, { 0.0f, 1.0f } },  // top left
+
+        //Old grass
+        // 
+        //{ glm::vec3(-1.0f, -1.0f, 0.0f), {}, { 0.0f, 0.0f } }, // bottom left
+        //{ glm::vec3(1.0f, -1.0f, 0.0f), {}, { 1.0f, 0.0f } },  // bottom right
+        //{ glm::vec3(1.0f, 1.0f, 0.0f), {}, { 1.0f, 1.0f } },   // top right
+        //{ glm::vec3(-1.0f, 1.0f, 0.0f), {}, { 0.0f, 1.0f } },  // top left
     };
 
     std::vector<u32> const indices =

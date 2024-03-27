@@ -24,6 +24,8 @@ public:
     glm::vec3 get_position() const;
     glm::mat4 get_projection();
 
+    glm::mat4 get_ortho();
+
     float get_near_plane() const;
     void set_near_plane(float const value);
 

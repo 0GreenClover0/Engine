@@ -17,6 +17,11 @@ glm::mat4 Camera::get_projection()
     return m_projection;
 }
 
+glm::mat4 Camera::get_ortho()
+{
+    return glm::ortho(-0.5f, 0.5f, -0.5f, 0.5f);
+}
+
 float Camera::get_near_plane() const
 {
     return m_near_plane;
