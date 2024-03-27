@@ -59,11 +59,10 @@ TextureData TextureLoaderDX11::texture_from_file(std::string const& path, Textur
 
     D3D11_SAMPLER_DESC image_sampler_desc = {};
 
-    // To use TextureSettings here we would have to write a function to map TextureSettings to DX11's enums, idk if that's necessary for now though
     image_sampler_desc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-    image_sampler_desc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-    image_sampler_desc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-    image_sampler_desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+    image_sampler_desc.AddressU = convert_wrap_mode(settings.wrap_mode_x);
+    image_sampler_desc.AddressV = convert_wrap_mode(settings.wrap_mode_y);
+    image_sampler_desc.AddressW = convert_wrap_mode(settings.wrap_mode_z);
     image_sampler_desc.MipLODBias = 0.0f;
     image_sampler_desc.MaxAnisotropy = 1;
     image_sampler_desc.ComparisonFunc = D3D11_COMPARISON_NEVER;
@@ -93,4 +92,21 @@ TextureData TextureLoaderDX11::texture_from_file(std::string const& path, Textur
 TextureData TextureLoaderDX11::cubemap_from_files(std::vector<std::string> const& paths, TextureSettings const settings)
 {
     return {};
+}
+
+D3D11_TEXTURE_ADDRESS_MODE TextureLoaderDX11::convert_wrap_mode(TextureWrapMode const wrap_mode)
+{
+    switch (wrap_mode)
+    {
+    case TextureWrapMode::Repeat:
+        return D3D11_TEXTURE_ADDRESS_WRAP;
+    case TextureWrapMode::ClampToEdge:
+        return D3D11_TEXTURE_ADDRESS_CLAMP;
+    case TextureWrapMode::ClampToBorder:
+        return D3D11_TEXTURE_ADDRESS_BORDER;
+    case TextureWrapMode::MirroredRepeat:
+        return D3D11_TEXTURE_ADDRESS_MIRROR;
+    default:
+        std::unreachable();
+    }
 }
