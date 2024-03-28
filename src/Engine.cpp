@@ -112,14 +112,8 @@ void Engine::run()
 
         ImGuiWindowFlags window_flags = 0;
         window_flags |= ImGuiWindowFlags_MenuBar;
-
-        ImGui::Begin("Debug", &debug_open, window_flags);
-        ImGui::Checkbox("Polygon mode", &polygon_mode);
-        ImGui::Text("Application average %.3f ms/frame", frame_per_second);
-
-        editor.draw_scene_save();
-        ImGui::End();
-
+        
+        editor.draw_debug_window(&debug_open, window_flags, &polygon_mode, frame_per_second);
         editor.draw_scene_hierarchy();
         editor.draw_inspector();
 

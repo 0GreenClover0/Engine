@@ -13,6 +13,7 @@ public:
     explicit Editor(std::shared_ptr<Scene> const& scene) : m_open_scene(scene) { }
 
     void set_scene(std::shared_ptr<Scene> const& scene);
+    void draw_debug_window(bool* debug_open, int const window_flags, bool* polygon_mode, double const frame_per_second) const;
     void draw_inspector() const;
     void draw_scene_hierarchy();
     void draw_scene_save() const;
