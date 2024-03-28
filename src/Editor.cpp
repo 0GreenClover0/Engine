@@ -13,6 +13,15 @@ void Editor::set_scene(std::shared_ptr<Scene> const& scene)
     m_open_scene = scene;
 }
 
+void Editor::draw_debug_window(bool* debug_open, int const window_flags, bool* polygon_mode, double const frame_per_second) const
+{
+    ImGui::Begin("Debug", debug_open, window_flags);
+    ImGui::Checkbox("Polygon mode", polygon_mode);
+    ImGui::Text("Application average %.3f ms/frame", frame_per_second);
+    draw_scene_save();
+    ImGui::End();
+}
+
 void Editor::draw_scene_hierarchy()
 {
     ImGui::Begin("Hierarchy");
