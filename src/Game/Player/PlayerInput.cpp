@@ -33,7 +33,17 @@ void PlayerInput::update()
             glfwSetInputMode(window->get_glfw_window(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
         }
     }
-
+    if (Input::input->get_key_down(GLFW_KEY_SPACE))
+    {
+        if (glfwGetInputMode(window->get_glfw_window(), GLFW_CURSOR) == GLFW_CURSOR_DISABLED)
+        {
+            glfwSetInputMode(window->get_glfw_window(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        }
+        else
+        {
+            glfwSetInputMode(window->get_glfw_window(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        }
+    }
     if (!m_terminator_mode)
     {
         process_input();
