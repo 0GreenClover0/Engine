@@ -259,6 +259,8 @@ void Engine::setup_imgui(GLFWwindow* glfw_window)
     // Setup Dear ImGui binding
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
     // GL 4.3 + GLSL 430
     auto const glsl_version = "#version 430";
