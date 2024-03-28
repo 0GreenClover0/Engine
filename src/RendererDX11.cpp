@@ -125,6 +125,8 @@ void RendererDX11::on_window_resize(GLFWwindow* window, int width, int height)
 
 void RendererDX11::begin_frame() const
 {
+    // This function could be called like an event, instead is called every frame (could slow down, but I do not think so).
+    RendererDX11::get_instance_dx11()->create_rasterizer_state();
     Renderer::begin_frame();
     const float clear_color_with_alpha[4] = { clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w };
     g_pd3dDeviceContext->ClearRenderTargetView(g_mainRenderTargetView, clear_color_with_alpha);
@@ -270,7 +272,14 @@ void RendererDX11::create_rasterizer_state()
 {
     D3D11_RASTERIZER_DESC wfdesc;
     ZeroMemory(&wfdesc, sizeof(D3D11_RASTERIZER_DESC));
-    wfdesc.FillMode = D3D11_FILL_SOLID;
+    if (wireframe_mode_active)
+    {
+        wfdesc.FillMode = D3D11_FILL_WIREFRAME;
+    }
+    else 
+    {
+        wfdesc.FillMode = D3D11_FILL_SOLID;
+    }
     wfdesc.CullMode = D3D11_CULL_NONE;
     HRESULT const hr = g_pd3dDevice->CreateRasterizerState(&wfdesc, &g_rasterizer_state);
 
