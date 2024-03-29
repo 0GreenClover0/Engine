@@ -8,6 +8,11 @@ void Scene::add_child(std::shared_ptr<Entity> const& entity)
     entities.emplace_back(entity);
 }
 
+void Scene::remove_child(std::shared_ptr<Entity> const& entity)
+{
+    AK::swap_and_erase(entities, entity);
+}
+
 void Scene::add_component_to_awake(std::shared_ptr<Component> const& component)
 {
     components_to_awake.emplace_back(component);
@@ -47,6 +52,7 @@ void Scene::run_frame()
         for (auto const& component : components_to_awake)
         {
             component->awake();
+            component->has_been_awaken = true;
         }
 
         components_to_awake.clear();

@@ -13,6 +13,8 @@ public:
     static std::shared_ptr<Entity> create(std::string const& name = "Entity");
     static std::shared_ptr<Entity> create(std::string const& guid, std::string const& name);
 
+    void destroy_immediate();
+
     template <class T>
     std::shared_ptr<T> add_component()
     {
@@ -34,6 +36,7 @@ public:
         if (MainScene::get_instance()->is_running)
         {
             component->awake();
+            component->has_been_awaken = true;
         }
         else
         {
@@ -63,6 +66,7 @@ public:
         if (MainScene::get_instance()->is_running)
         {
             component->awake();
+            component->has_been_awaken = true;
         }
         else
         {
@@ -93,6 +97,7 @@ public:
         if (MainScene::get_instance()->is_running)
         {
             component->awake();
+            component->has_been_awaken = true;
         }
         else
         {
