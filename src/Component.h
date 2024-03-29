@@ -20,6 +20,7 @@ public:
     std::shared_ptr<Entity> entity;
 
     bool enabled = true;
+    bool has_been_awaken = false;
     bool has_been_started = false;
 
     void set_can_tick(bool const value);

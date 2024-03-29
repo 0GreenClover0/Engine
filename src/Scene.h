@@ -11,6 +11,7 @@ class Scene
 public:
     Scene() = default;
     void add_child(std::shared_ptr<Entity> const& entity);
+    void remove_child(std::shared_ptr<Entity> const& entity);
 
     void add_component_to_awake(std::shared_ptr<Component> const& component);
     void remove_component_to_awake(std::shared_ptr<Component> const& component);

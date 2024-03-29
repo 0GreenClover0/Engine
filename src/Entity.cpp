@@ -32,3 +32,24 @@ std::shared_ptr<Entity> Entity::create(std::string const& guid, std::string cons
     MainScene::get_instance()->add_child(entity);
     return entity;
 }
+
+void Entity::destroy_immediate()
+{
+    MainScene::get_instance()->remove_child(shared_from_this());
+
+    for (u32 i = 0; i < components.size(); ++i)
+    {
+        if (!components[i]->has_been_awaken)
+        {
+            MainScene::get_instance()->remove_component_to_awake(components[i]);
+        }
+
+        if (!components[i]->has_been_started)
+        {
+            MainScene::get_instance()->remove_component_to_start(components[i]);
+        }
+
+        components[i]->set_can_tick(false);
+        components[i]->entity = nullptr;
+    }
+}
