@@ -14,11 +14,21 @@ add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES})
 target_compile_definitions(${PROJECT_NAME} PRIVATE GLFW_INCLUDE_NONE)
 target_compile_definitions(${PROJECT_NAME} PRIVATE LIBRARY_SUFFIX="")
 
+# Set FW1 directories
+get_filename_component(PARENT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/.." ABSOLUTE)
+set(FW1_DIR "${PARENT_DIR}/thirdparty/FW1")
+set(FW1_SOURCE_DIR ${FW1_DIR} CACHE INTERNAL "")
+
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
                                                   ${glad_SOURCE_DIR}
                                                   ${stb_image_SOURCE_DIR}
                                                   ${imgui_SOURCE_DIR}
-                                                  ${miniaudio_SOURCE_DIR})
+                                                  ${miniaudio_SOURCE_DIR}
+                                                  ${FW1_SOURCE_DIR})
+
+add_library(FW1 STATIC IMPORTED)
+set_target_properties(FW1 PROPERTIES IMPORTED_LOCATION ${FW1_DIR}/FW1FontWrapper.lib)
+target_link_libraries(${PROJECT_NAME} FW1)
 
 target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} glad)
@@ -31,7 +41,15 @@ target_link_libraries(${PROJECT_NAME} glm::glm)
 target_link_libraries(${PROJECT_NAME} yaml-cpp)
 target_link_libraries(${PROJECT_NAME} miniaudio)
 
-add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD 
+# Copy FW1FontWrapper.dll to output directory after build
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy
+        "${FW1_DIR}/FW1FontWrapper.dll"
+        $<TARGET_FILE_DIR:${PROJECT_NAME}>
+    COMMENT "Copying FW1FontWrapper.dll to output directory"
+)
+
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
                    COMMAND ${CMAKE_COMMAND} -E create_symlink
                    ${CMAKE_SOURCE_DIR}/res
                    ${CMAKE_CURRENT_BINARY_DIR}/res)
