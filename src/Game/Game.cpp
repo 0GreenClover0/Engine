@@ -8,9 +8,12 @@
 #include "DirectionalLight.h"
 #include "Entity.h"
 #include "Sprite.h"
+#include "ExampleDynamicText.h"
+#include "Grass.h"
 #include "MeshFactory.h"
 #include "Model.h"
 #include "PointLight.h"
+#include "ScreenText.h"
 #include "ShaderFactory.h"
 #include "Sound.h"
 #include "SoundListener.h"
@@ -59,4 +62,7 @@ void Game::initialize()
 
     sprite->add_component<Sprite>(Sprite::create(ui_material, "./res/textures/grass.png"));
     sprite->transform->set_local_scale({ 0.5f, 0.5f, 1.0f });
+
+    auto const text = Entity::create("text");
+    std::shared_ptr<ExampleDynamicText> const edt = text->add_component<ExampleDynamicText>();
 }
