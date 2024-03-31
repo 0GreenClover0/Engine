@@ -11,7 +11,7 @@ public:
     ~Drawable() override = default;
 
     virtual void initialize() override;
-    virtual std::string get_name() const override = 0;
+    virtual std::string get_name() const override;
 
     std::shared_ptr<Material> material();
 
