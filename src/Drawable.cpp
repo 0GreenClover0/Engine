@@ -31,6 +31,11 @@ void Drawable::initialize()
     adjust_bounding_box();
 }
 
+std::string Drawable::get_name() const
+{
+    return Component::get_name();
+}
+
 std::shared_ptr<Material> Drawable::material()
 {
     return m_material;
