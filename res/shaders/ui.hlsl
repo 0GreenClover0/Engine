@@ -11,11 +11,18 @@ struct VS_Output
     float2 UV : TEXCOORD;
 };
 
-cbuffer mycBuffer : register(b0)
+cbuffer VS_Buffer : register(b0)
 {
     float4x4 projection_view;
     float4x4 world;
     float4x4 projection;
+};
+
+cbuffer FS_Buffer : register(b1)
+{
+    float red;
+    float green;
+    float blue;
 };
 
 Texture2D UITexture;
