@@ -55,7 +55,7 @@ void Game::initialize()
     m_camera->transform->set_parent(camera_parent->transform);
     player_input->camera_parent = camera_parent;
 
-    auto const model = Entity::create("testmodel");
+    auto const model = Entity::create("testmodel1");
     model->add_component(Model::create("./res/models/pyramid3/scene.gltf", standard_material));
     model->transform->set_local_position(glm::vec3(0.0f, 0.0f, -5.0f));
 
@@ -68,4 +68,8 @@ void Game::initialize()
     auto const transparent = Entity::create("transparent_grass");
     std::shared_ptr<Sprite> const grass = transparent->add_component<Sprite>(Sprite::create(ui_material, "./res/textures/grass.png"));
     transparent->transform->set_local_scale(glm::vec3(0.2f, 0.2f, 0.2f));
+
+    auto const model2 = Entity::create("testmodel2");
+    model2->add_component(Model::create("./res/models/pyramid3/scene.gltf", standard_material));
+    model2->transform->set_parent(model->transform);
 }

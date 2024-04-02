@@ -57,6 +57,10 @@ void PlayerInput::update()
 void PlayerInput::process_input() const
 {
     float const current_speed = camera_speed * delta_time;
+
+    if (!Input::input->get_key(GLFW_MOUSE_BUTTON_RIGHT))
+        return;
+
     if (Input::input->get_key(GLFW_KEY_W))
         camera_entity->transform->set_local_position(camera_entity->transform->get_local_position() += current_speed * m_camera->get_front());
 
@@ -69,10 +73,10 @@ void PlayerInput::process_input() const
     if (Input::input->get_key(GLFW_KEY_D))
         camera_entity->transform->set_local_position(camera_entity->transform->get_local_position() += glm::normalize(glm::cross(m_camera->get_front(), m_camera->get_up())) * current_speed);
 
-    if (Input::input->get_key(GLFW_KEY_Q))
+    if (Input::input->get_key(GLFW_KEY_E))
         camera_entity->transform->set_local_position(camera_entity->transform->get_local_position() += current_speed * glm::vec3(0.0f, 1.0f, 0.0f));
 
-    if (Input::input->get_key(GLFW_KEY_E))
+    if (Input::input->get_key(GLFW_KEY_Q))
         camera_entity->transform->set_local_position(camera_entity->transform->get_local_position() -= current_speed * glm::vec3(0.0f, 1.0f, 0.0f));
 }
 
@@ -113,6 +117,9 @@ void PlayerInput::mouse_callback(double const x, double const y)
     double y_offset = m_last_mouse_position.y - y;
     m_last_mouse_position.x = x;
     m_last_mouse_position.y = y;
+
+    if (!Input::input->get_key(GLFW_MOUSE_BUTTON_RIGHT))
+        return;
 
     x_offset *= m_sensitivity;
     y_offset *= m_sensitivity;
