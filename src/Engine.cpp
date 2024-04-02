@@ -2,8 +2,11 @@
 
 #include <utility>
 
+#include <ImGuizmo.h>
 #include <imgui_impl/imgui_impl_glfw.h>
 #include <imgui_impl/imgui_impl_opengl3.h>
+#include "imgui_impl/imgui_impl_dx11.h"
+
 #include <spdlog/spdlog.h>
 
 #define STB_IMAGE_IMPLEMENTATION
@@ -20,7 +23,6 @@
 #include "RendererGL.h"
 #include "Window.h"
 #include "Game/Game.h"
-#include "imgui_impl/imgui_impl_dx11.h"
 
 i32 Engine::initialize()
 {
@@ -109,10 +111,12 @@ void Engine::run()
 
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
+        ImGuizmo::BeginFrame();
 
         ImGuiWindowFlags window_flags = 0;
         window_flags |= ImGuiWindowFlags_MenuBar;
         
+        editor.handle_input();
         editor.draw_debug_window(&debug_open, window_flags, &polygon_mode, frame_per_second);
         editor.draw_scene_hierarchy();
         editor.draw_inspector();

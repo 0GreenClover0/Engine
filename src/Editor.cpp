@@ -1,11 +1,15 @@
 #include "Editor.h"
 
-#include <imgui.h>
+#include <glm/gtc/type_ptr.inl>
 #include <glm/gtx/string_cast.hpp>
+#include <imgui.h>
 #include <ImGuizmo.h>
 
 #include "Entity.h"
+#include "Camera.h"
 #include "SceneSerializer.h"
+#include "Engine.h"
+#include "Input.h"
 
 namespace Editor
 {
@@ -73,28 +77,23 @@ void Editor::draw_inspector() const
         return;
     }
 
+    auto const camera = Camera::get_main_camera();
     auto const entity = m_selected_entity.lock();
 
     ImGui::Text("Transform");
     ImGui::Spacing();
 
-    float position[] = { entity->transform->get_local_position().x, entity->transform->get_local_position().y, entity->transform->get_local_position().z };
-    ImGui::InputFloat3("Position", position);
+    glm::vec3 position = entity->transform->get_local_position();
+    ImGui::InputFloat3("Position", glm::value_ptr(position));
+    entity->transform->set_local_position(position);
 
-    auto const new_position = glm::vec3(position[0], position[1], position[2]);
-    entity->transform->set_local_position(new_position);
+    glm::vec3 rotation = entity->transform->get_euler_angles();
+    ImGui::InputFloat3("Rotation", glm::value_ptr(rotation));
+    entity->transform->set_euler_angles(rotation);
 
-    float rotation[] = { entity->transform->get_euler_angles().x, entity->transform->get_euler_angles().y, entity->transform->get_euler_angles().z };
-    ImGui::InputFloat3("Rotation", rotation);
-
-    auto const new_rotation = glm::vec3(rotation[0], rotation[1], rotation[2]);
-    entity->transform->set_euler_angles(new_rotation);
-
-    float scale[] = { entity->transform->get_local_scale().x, entity->transform->get_local_scale().y, entity->transform->get_local_scale().z };
-    ImGui::InputFloat3("Scale", scale);
-
-    auto const new_scale = glm::vec3(scale[0], scale[1], scale[2]);
-    entity->transform->set_local_scale(new_scale);
+    glm::vec3 scale = entity->transform->get_local_scale();
+    ImGui::InputFloat3("Scale", glm::value_ptr(scale));
+    entity->transform->set_local_scale(scale);
 
     for (auto const& component : entity->components)
     {
@@ -106,6 +105,53 @@ void Editor::draw_inspector() const
         component->draw_editor();
 
         ImGui::Spacing();
+    }
+
+    // GIZMOS CODE
+    ImGuiIO const& io = ImGui::GetIO();
+    ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
+
+    bool was_transform_changed = false;
+    glm::mat4 global_model = entity->transform->get_model_matrix();
+    switch (m_operation_type)
+    {
+    case GuizmoOperationType::Translate:
+        was_transform_changed = ImGuizmo::Manipulate(glm::value_ptr(camera->get_view_matrix()), glm::value_ptr(camera->get_projection()), ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::MODE::LOCAL, glm::value_ptr(global_model), nullptr, nullptr);
+        break;
+    case GuizmoOperationType::Scale:
+        was_transform_changed = ImGuizmo::Manipulate(glm::value_ptr(camera->get_view_matrix()), glm::value_ptr(camera->get_projection()), ImGuizmo::OPERATION::SCALE, ImGuizmo::MODE::LOCAL, glm::value_ptr(global_model), nullptr, nullptr);
+        break;
+    case GuizmoOperationType::Rotate:
+        was_transform_changed = ImGuizmo::Manipulate(glm::value_ptr(camera->get_view_matrix()), glm::value_ptr(camera->get_projection()), ImGuizmo::OPERATION::ROTATE, ImGuizmo::MODE::LOCAL, glm::value_ptr(global_model), nullptr, nullptr);
+        break;
+    case GuizmoOperationType::None:
+    default:
+        break;
+    }
+
+    if (was_transform_changed)
+    {
+        glm::mat4 local = global_model;
+
+        auto const parent = entity->transform->parent.lock();
+        if (parent != nullptr)
+        {
+            local = glm::inverse(parent->get_model_matrix()) * local;
+        }
+
+        ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(local), glm::value_ptr(position), glm::value_ptr(rotation), glm::value_ptr(scale));
+        if (m_operation_type == GuizmoOperationType::Translate)
+        {
+            entity->transform->set_local_position(position);
+        }
+        else if (m_operation_type == GuizmoOperationType::Rotate)
+        {
+            entity->transform->set_euler_angles(rotation);
+        }
+        else if (m_operation_type == GuizmoOperationType::Scale)
+        {
+            entity->transform->set_local_scale(scale);
+        }
     }
 
     ImGui::End();
@@ -145,6 +191,31 @@ bool Editor::load_scene() const
     auto const scene_serializer = std::make_shared<SceneSerializer>(m_open_scene);
 
     return scene_serializer->deserialize("./res/scenes/scene.txt");
+}
+
+void Editor::handle_input()
+{
+    auto const input = Input::input;
+
+    if (input->get_key_down(GLFW_KEY_W))
+    {
+        m_operation_type = GuizmoOperationType::Translate;
+    }
+
+    if (input->get_key_down(GLFW_KEY_R))
+    {
+        m_operation_type = GuizmoOperationType::Scale;
+    }
+
+    if (input->get_key_down(GLFW_KEY_E))
+    {
+        m_operation_type = GuizmoOperationType::Rotate;
+    }
+
+    if (input->get_key_down(GLFW_KEY_G))
+    {
+        m_operation_type = GuizmoOperationType::None;
+    }
 }
 
 }
