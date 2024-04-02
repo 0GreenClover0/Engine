@@ -57,6 +57,10 @@ void PlayerInput::update()
 void PlayerInput::process_input() const
 {
     float const current_speed = camera_speed * delta_time;
+
+    if (!Input::input->get_key(GLFW_MOUSE_BUTTON_RIGHT))
+        return;
+
     if (Input::input->get_key(GLFW_KEY_W))
         camera_entity->transform->set_local_position(camera_entity->transform->get_local_position() += current_speed * m_camera->get_front());
 
@@ -113,6 +117,9 @@ void PlayerInput::mouse_callback(double const x, double const y)
     double y_offset = m_last_mouse_position.y - y;
     m_last_mouse_position.x = x;
     m_last_mouse_position.y = y;
+
+    if (!Input::input->get_key(GLFW_MOUSE_BUTTON_RIGHT))
+        return;
 
     x_offset *= m_sensitivity;
     y_offset *= m_sensitivity;

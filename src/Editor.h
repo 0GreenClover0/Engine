@@ -6,6 +6,13 @@
 namespace Editor
 {
 
+enum class GuizmoOperationType {
+    Translate,
+    Rotate,
+    Scale,
+    None
+};
+
 class Editor
 {
 public:
@@ -17,6 +24,7 @@ public:
     void draw_inspector() const;
     void draw_scene_hierarchy();
     void draw_scene_save() const;
+    void handle_input();
 
 private:
     void draw_entity_recursively(std::shared_ptr<Transform> const& transform);
@@ -25,6 +33,8 @@ private:
 
     std::weak_ptr<Entity> m_selected_entity;
     std::shared_ptr<Scene> m_open_scene;
+
+    GuizmoOperationType m_operation_type = GuizmoOperationType::Translate;
 };
 
 }
