@@ -111,6 +111,7 @@ void Engine::run()
 
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
+        editor.set_docking_space();
         ImGuizmo::BeginFrame();
 
         ImGuiWindowFlags window_flags = 0;
