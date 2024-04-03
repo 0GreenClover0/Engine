@@ -65,6 +65,26 @@ MeshDX11::~MeshDX11()
 {
     m_vertices.clear();
     m_indices.clear();
+
+    // FIXME: Managing lifetime of models and textures should be handled in ResourceManager
+    for (auto const& texture : m_textures)
+    {
+        if (texture.image_sampler_state)
+        {
+            texture.image_sampler_state->Release();
+        }
+
+        if (texture.shader_resource_view)
+        {
+            texture.shader_resource_view->Release();
+        }
+
+        if (texture.texture_2d)
+        {
+            texture.texture_2d->Release();
+        }
+    }
+
     m_textures.clear();
 }
 
