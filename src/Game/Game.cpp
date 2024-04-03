@@ -28,8 +28,11 @@ Game::Game(std::shared_ptr<Window> const& window) : window(window)
 
 void Game::initialize()
 {
-    auto standard_shader = ShaderFactory::create("./res/shaders/simple.hlsl", "./res/shaders/simple.hlsl");
+    auto const standard_shader = ShaderFactory::create("./res/shaders/simple.hlsl", "./res/shaders/simple.hlsl");
     auto const standard_material = Material::create(standard_shader);
+
+    auto const ui_shader = ShaderFactory::create("./res/shaders/ui.hlsl", "./res/shaders/ui.hlsl");
+    auto const ui_material = Material::create(ui_shader, 1);
 
     m_camera = Entity::create("Camera");
     m_camera->transform->set_local_position(glm::vec3(0.0f, 0.0f, 0.0f));
@@ -61,4 +64,8 @@ void Game::initialize()
 
     auto const bar = Entity::create("bar");
     std::shared_ptr<ExampleUIBar> const eub = bar->add_component<ExampleUIBar>();
+
+    auto const transparent = Entity::create("transparent_grass");
+    std::shared_ptr<Sprite> const grass = transparent->add_component<Sprite>(Sprite::create(ui_material, "./res/textures/grass.png"));
+    transparent->transform->set_local_scale(glm::vec3(0.2f, 0.2f, 0.2f));
 }
