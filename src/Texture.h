@@ -39,6 +39,7 @@ struct TextureSettings
     bool flip_vertically = true;
 };
 
+struct ID3D11Texture2D;
 struct ID3D11ShaderResourceView;
 struct ID3D11SamplerState;
 
@@ -53,6 +54,7 @@ struct Texture
     TextureType type = TextureType::None;
 
     // Only valid in DX11
+    ID3D11Texture2D* texture_2d = nullptr;
     ID3D11ShaderResourceView* shader_resource_view = nullptr;
     ID3D11SamplerState* image_sampler_state = nullptr;
 
