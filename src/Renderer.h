@@ -27,6 +27,7 @@ public:
     void unregister_shader(std::shared_ptr<Shader> const& shader);
 
     void register_drawable(std::shared_ptr<Drawable> const& drawable);
+    void unregister_drawable(std::shared_ptr<Drawable> const& drawable);
 
     void register_material(std::shared_ptr<Material> const& material);
     void unregister_material(std::shared_ptr<Material> const& material);

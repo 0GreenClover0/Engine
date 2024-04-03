@@ -7,6 +7,10 @@ void Component::initialize()
 {
 }
 
+void Component::uninitialize()
+{
+}
+
 void Component::awake()
 {
 }
