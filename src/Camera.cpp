@@ -41,7 +41,7 @@ void Camera::set_far_plane(float const value)
 
 void Camera::set_width(float const value)
 {
-    if (glm::epsilonNotEqual(value, m_width, 0.0001f))
+    if (glm::epsilonNotEqual(value, m_width, 0.0001f) && glm::epsilonNotEqual(value, 0.0f, 0.0001f))
     {
         m_dirty = true;
         m_width = value;
@@ -50,7 +50,7 @@ void Camera::set_width(float const value)
 
 void Camera::set_height(float const value)
 {
-    if (glm::epsilonNotEqual(value, m_height, 0.0001f))
+    if (glm::epsilonNotEqual(value, m_height, 0.0001f) && glm::epsilonNotEqual(value, 0.0f, 0.0001f))
     {
         m_dirty = true;
         m_height = value;
