@@ -20,7 +20,7 @@ public:
         components.emplace_back(component);
         component->entity = shared_from_this();
 
-        MainScene::get_instance()->components_to_start.emplace_back(component);
+        MainScene::get_instance()->add_component_to_start(component);
 
         // Initialization for internal components
         component->initialize();
@@ -37,7 +37,7 @@ public:
         }
         else
         {
-            MainScene::get_instance()->components_to_awake.emplace_back(component);
+            MainScene::get_instance()->add_component_to_awake(component);
         }
 
         return component;
@@ -49,7 +49,7 @@ public:
         components.emplace_back(component);
         component->entity = shared_from_this();
 
-        MainScene::get_instance()->components_to_start.emplace_back(component);
+        MainScene::get_instance()->add_component_to_start(component);
 
         // Initialization for internal components
         component->initialize();
@@ -66,7 +66,7 @@ public:
         }
         else
         {
-            MainScene::get_instance()->components_to_awake.emplace_back(component);
+            MainScene::get_instance()->add_component_to_awake(component);
         }
 
         return component;
@@ -79,7 +79,7 @@ public:
         components.emplace_back(component);
         component->entity = shared_from_this();
 
-        MainScene::get_instance()->components_to_start.emplace_back(component);
+        MainScene::get_instance()->add_component_to_start(component);
 
         // Initialization for internal components
         component->initialize();
@@ -96,7 +96,7 @@ public:
         }
         else
         {
-            MainScene::get_instance()->components_to_awake.emplace_back(component);
+            MainScene::get_instance()->add_component_to_awake(component);
         }
 
         return component;
