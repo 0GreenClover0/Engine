@@ -8,6 +8,34 @@ void Scene::add_child(std::shared_ptr<Entity> const& entity)
     entities.emplace_back(entity);
 }
 
+void Scene::add_component_to_awake(std::shared_ptr<Component> const& component)
+{
+    components_to_awake.emplace_back(component);
+}
+
+void Scene::remove_component_to_awake(std::shared_ptr<Component> const& component)
+{
+    // We don't want to change the order of the components Awakes
+    if (auto const position = std::ranges::find(components_to_awake, component); position != components_to_awake.end())
+    {
+        components_to_awake.erase(position);
+    }
+}
+
+void Scene::add_component_to_start(std::shared_ptr<Component> const& component)
+{
+    components_to_start.emplace_back(component);
+}
+
+void Scene::remove_component_to_start(std::shared_ptr<Component> const& component)
+{
+    // We don't want to change the order of the components Starts
+    if (auto const position = std::ranges::find(components_to_start, component); position != components_to_start.end())
+    {
+        components_to_start.erase(position);
+    }
+}
+
 void Scene::run_frame()
 {
     // Call Awake on every component that was constructed before running the first frame
