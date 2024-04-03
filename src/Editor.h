@@ -25,6 +25,7 @@ public:
     void draw_scene_hierarchy();
     void draw_scene_save() const;
     void handle_input();
+    void set_docking_space() const;
 
 private:
     void draw_entity_recursively(std::shared_ptr<Transform> const& transform);

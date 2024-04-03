@@ -218,4 +218,9 @@ void Editor::handle_input()
     }
 }
 
+void Editor::set_docking_space() const
+{
+    ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
+}
+
 }
