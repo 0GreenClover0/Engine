@@ -9,6 +9,8 @@ class IndexBufferDX11
 public:
     IndexBufferDX11(ID3D11Device* device, u32 const* data, u32 const indices_count);
 
+    ~IndexBufferDX11();
+
     [[nodiscard]] ID3D11Buffer* get() const;
 
     [[nodiscard]] ID3D11Buffer* const* get_address_of() const;

@@ -18,6 +18,12 @@ IndexBufferDX11::IndexBufferDX11(ID3D11Device* device, u32 const* data, u32 cons
     assert(SUCCEEDED(hr));
 }
 
+IndexBufferDX11::~IndexBufferDX11()
+{
+    if (m_buffer)
+        m_buffer->Release();
+}
+
 ID3D11Buffer* IndexBufferDX11::get() const
 {
     return m_buffer;
