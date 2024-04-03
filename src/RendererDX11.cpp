@@ -56,7 +56,6 @@ void RendererDX11::on_window_resize(GLFWwindow* window, int width, int height)
     auto const renderer = get_instance_dx11();
     renderer->get_device_context()->OMSetRenderTargets(0, 0, 0);
     renderer->g_mainRenderTargetView->Release();
-    renderer->m_depth_stencil_view->Release();
     renderer->screen_height = height;
     renderer->screen_width = width;
 
@@ -85,33 +84,7 @@ void RendererDX11::on_window_resize(GLFWwindow* window, int width, int height)
 
     // Perform error handling here!
     pBuffer->Release();
-    D3D11_TEXTURE2D_DESC depth_stencil_desc;
-    depth_stencil_desc.Width = screen_width;
-    depth_stencil_desc.Height = screen_height;
-    depth_stencil_desc.MipLevels = 1;
-    depth_stencil_desc.ArraySize = 1;
-    depth_stencil_desc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-    depth_stencil_desc.SampleDesc.Count = 1;
-    depth_stencil_desc.SampleDesc.Quality = 0;
-    depth_stencil_desc.Usage = D3D11_USAGE_DEFAULT;
-    depth_stencil_desc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-    depth_stencil_desc.CPUAccessFlags = 0;
-    depth_stencil_desc.MiscFlags = 0;
-    hr = renderer->g_pd3dDevice->CreateTexture2D(&depth_stencil_desc, NULL, &renderer->m_depth_stencil_buffer);
-
-    if (FAILED(hr))
-    {
-        std::cout << "Failed to create depth stencil texture." << "\n";
-    }
-
-    hr = renderer->g_pd3dDevice->CreateDepthStencilView(renderer->m_depth_stencil_buffer, NULL, &renderer->m_depth_stencil_view);
-
-    if (FAILED(hr))
-    {
-        std::cout << "Failed to create depth stencil view." << "\n";
-    }
-
-    renderer->g_pd3dDeviceContext->OMSetRenderTargets(1, &renderer->g_mainRenderTargetView, renderer->m_depth_stencil_view);
+    renderer->create_depth_stencil();
 
     // Set up the viewport.
     D3D11_VIEWPORT vp;
@@ -312,6 +285,15 @@ void RendererDX11::create_rasterizer_state()
 
 void RendererDX11::create_depth_stencil()
 {
+    if (m_depth_stencil_buffer != nullptr)
+    {
+        m_depth_stencil_buffer->Release();
+        m_depth_stencil_buffer = nullptr;
+    }
+    if (m_depth_stencil_view != nullptr) {
+        m_depth_stencil_view->Release();
+        m_depth_stencil_view = nullptr;
+    }
     D3D11_TEXTURE2D_DESC depth_stencil_desc;
     depth_stencil_desc.Width = screen_width;
     depth_stencil_desc.Height = screen_height;
