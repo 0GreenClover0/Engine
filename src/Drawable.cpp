@@ -23,8 +23,6 @@ BoundingBox Drawable::get_adjusted_bounding_box(glm::mat4 const& model_matrix) c
 
 void Drawable::initialize()
 {
-    entity->drawables.emplace_back(this);
-
     Renderer::get_instance()->register_drawable(std::dynamic_pointer_cast<Drawable>(shared_from_this()));
 
     calculate_bounding_box();
