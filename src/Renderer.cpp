@@ -47,6 +47,11 @@ void Renderer::register_drawable(std::shared_ptr<Drawable> const& drawable)
     drawable->material()->drawables.emplace_back(drawable);
 }
 
+void Renderer::unregister_drawable(std::shared_ptr<Drawable> const& drawable)
+{
+    AK::swap_and_erase(drawable->material()->drawables, drawable);
+}
+
 void Renderer::register_material(std::shared_ptr<Material> const& material)
 {
     if (material->is_gpu_instanced)

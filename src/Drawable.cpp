@@ -29,6 +29,11 @@ void Drawable::initialize()
     adjust_bounding_box();
 }
 
+void Drawable::uninitialize()
+{
+    Renderer::get_instance()->unregister_drawable(std::dynamic_pointer_cast<Drawable>(shared_from_this()));
+}
+
 std::string Drawable::get_name() const
 {
     return Component::get_name();

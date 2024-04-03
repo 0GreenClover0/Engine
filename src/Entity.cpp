@@ -50,6 +50,7 @@ void Entity::destroy_immediate()
         }
 
         components[i]->set_can_tick(false);
+        components[i]->uninitialize();
         components[i]->entity = nullptr;
     }
 }

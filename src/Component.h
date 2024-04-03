@@ -10,6 +10,8 @@ public:
     virtual ~Component() = default;
 
     virtual void initialize();
+    virtual void uninitialize();
+
     virtual void awake();
     virtual void start();
     virtual void update();
