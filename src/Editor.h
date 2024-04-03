@@ -17,7 +17,7 @@ class Editor
 {
 public:
     Editor() = default;
-    explicit Editor(std::shared_ptr<Scene> const& scene) : m_open_scene(scene) { }
+    explicit Editor(std::shared_ptr<Scene> const& scene);
 
     void set_scene(std::shared_ptr<Scene> const& scene);
     void draw_debug_window(bool* debug_open, int const window_flags, bool* polygon_mode, double const frame_per_second) const;
@@ -31,6 +31,7 @@ private:
     void draw_entity_recursively(std::shared_ptr<Transform> const& transform);
     void save_scene() const;
     bool load_scene() const;
+    void set_style() const;
 
     std::weak_ptr<Entity> m_selected_entity;
     std::shared_ptr<Scene> m_open_scene;
