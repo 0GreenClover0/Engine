@@ -24,7 +24,8 @@ target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
                                                   ${stb_image_SOURCE_DIR}
                                                   ${imgui_SOURCE_DIR}
                                                   ${miniaudio_SOURCE_DIR}
-                                                  ${FW1_SOURCE_DIR})
+                                                  ${FW1_SOURCE_DIR}
+                                                  ${imguizmo_SOURCE_DIR})
 
 add_library(FW1 STATIC IMPORTED)
 set_target_properties(FW1 PROPERTIES IMPORTED_LOCATION ${FW1_DIR}/FW1FontWrapper.lib)
@@ -40,6 +41,7 @@ target_link_libraries(${PROJECT_NAME} spdlog)
 target_link_libraries(${PROJECT_NAME} glm::glm)
 target_link_libraries(${PROJECT_NAME} yaml-cpp)
 target_link_libraries(${PROJECT_NAME} miniaudio)
+target_link_libraries(${PROJECT_NAME} imguizmo)
 
 # Copy FW1FontWrapper.dll to output directory after build
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD

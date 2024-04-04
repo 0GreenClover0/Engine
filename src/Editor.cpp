@@ -2,6 +2,7 @@
 
 #include <imgui.h>
 #include <glm/gtx/string_cast.hpp>
+#include <ImGuizmo.h>
 
 #include "Entity.h"
 #include "SceneSerializer.h"
