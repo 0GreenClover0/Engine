@@ -61,7 +61,7 @@ void RendererGL::update_shader(std::shared_ptr<Shader> const& shader, glm::mat4 
     i32 enabled_light_count = 0;
     for (u32 i = 0; i < m_point_lights.size(); ++i)
     {
-        if (!m_point_lights[i]->enabled)
+        if (!m_point_lights[i]->enabled())
             continue;
 
         std::string light_element = std::format("pointLights[{}].", enabled_light_count);
@@ -83,7 +83,7 @@ void RendererGL::update_shader(std::shared_ptr<Shader> const& shader, glm::mat4 
     enabled_light_count = 0;
     for (u32 i = 0; i < m_spot_lights.size(); ++i)
     {
-        if (!m_spot_lights[i]->enabled)
+        if (!m_spot_lights[i]->enabled())
             continue;
 
         std::string light_element = std::format("spotLights[{}].", enabled_light_count);
@@ -106,7 +106,7 @@ void RendererGL::update_shader(std::shared_ptr<Shader> const& shader, glm::mat4 
 
     shader->set_int("spotLightCount", enabled_light_count > m_max_spot_lights ? m_max_spot_lights : enabled_light_count);
 
-    bool const directional_light_on = m_directional_light != nullptr && m_directional_light->enabled;
+    bool const directional_light_on = m_directional_light != nullptr && m_directional_light->enabled();
     if (directional_light_on)
     {
         shader->set_vec3("directionalLight.direction", m_directional_light->entity->transform->get_forward());

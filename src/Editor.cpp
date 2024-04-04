@@ -105,7 +105,9 @@ void Editor::draw_inspector() const
         ImGui::Text(component->get_name().c_str());
         ImGui::Spacing();
 
-        ImGui::Checkbox("Enabled", &component->enabled);
+        bool enabled = component->enabled();
+        ImGui::Checkbox("Enabled", &enabled);
+        component->set_enabled(enabled);
 
         component->draw_editor();
 
