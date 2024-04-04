@@ -15,19 +15,24 @@ public:
     virtual void awake();
     virtual void start();
     virtual void update();
+    virtual void on_enabled();
+    virtual void on_disabled();
 
     virtual std::string get_name() const;
     virtual void draw_editor();
 
     std::shared_ptr<Entity> entity;
 
-    bool enabled = true;
     bool has_been_awaken = false;
     bool has_been_started = false;
 
     void set_can_tick(bool const value);
     bool get_can_tick() const;
 
+    void set_enabled(bool const value);
+    bool enabled() const;
+
 private:
+    bool m_enabled = true;
     bool m_can_tick = false;
 };
