@@ -14,6 +14,9 @@ public:
     virtual void uninitialize() override;
     virtual std::string get_name() const override;
 
+    virtual void on_enabled() override;
+    virtual void on_disabled() override;
+
     std::shared_ptr<Material> material();
 
     virtual void draw() const = 0;
