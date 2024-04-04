@@ -51,5 +51,8 @@ void Input::update_keys()
 
 bool Input::is_key_pressed(i32 const key) const
 {
+    if (key < 8)
+        return glfwGetMouseButton(m_window->get_glfw_window(), key) == GLFW_PRESS;
+
     return glfwGetKey(m_window->get_glfw_window(), key) == GLFW_PRESS;
 }
