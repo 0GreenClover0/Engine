@@ -23,7 +23,10 @@ BoundingBox Drawable::get_adjusted_bounding_box(glm::mat4 const& model_matrix) c
 
 void Drawable::initialize()
 {
-    Renderer::get_instance()->register_drawable(std::dynamic_pointer_cast<Drawable>(shared_from_this()));
+    if (enabled())
+    {
+        Renderer::get_instance()->register_drawable(std::dynamic_pointer_cast<Drawable>(shared_from_this()));
+    }
 
     calculate_bounding_box();
     adjust_bounding_box();
@@ -37,6 +40,16 @@ void Drawable::uninitialize()
 std::string Drawable::get_name() const
 {
     return Component::get_name();
+}
+
+void Drawable::on_enabled()
+{
+    Renderer::get_instance()->register_drawable(std::dynamic_pointer_cast<Drawable>(shared_from_this()));
+}
+
+void Drawable::on_disabled()
+{
+    Renderer::get_instance()->unregister_drawable(std::dynamic_pointer_cast<Drawable>(shared_from_this()));
 }
 
 std::shared_ptr<Material> Drawable::material()
