@@ -17,7 +17,7 @@ void PlayerInput::awake()
 
 void PlayerInput::update()
 {
-    if (Input::input->get_key_down(GLFW_KEY_T))
+    if (Input::input->get_key_down(GLFW_KEY_P))
     {
         m_terminator_mode = !m_terminator_mode;
         camera_entity->transform->set_local_position(glm::vec3(0.0f, 2.5f, 4.0f));

@@ -16,6 +16,7 @@ Input::Input(std::shared_ptr<Window> const& window) : m_window(window)
     m_keys.insert(std::pair<i32, Key>(GLFW_KEY_D, GLFW_KEY_D));
     m_keys.insert(std::pair<i32, Key>(GLFW_KEY_Q, GLFW_KEY_Q));
     m_keys.insert(std::pair<i32, Key>(GLFW_KEY_E, GLFW_KEY_E));
+    m_keys.insert(std::pair<i32, Key>(GLFW_KEY_P, GLFW_KEY_P));
     m_keys.insert(std::pair<i32, Key>(GLFW_KEY_T, GLFW_KEY_T));
     m_keys.insert(std::pair<i32, Key>(GLFW_KEY_SPACE, GLFW_KEY_SPACE));
 }
