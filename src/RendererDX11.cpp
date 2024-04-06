@@ -61,21 +61,11 @@ void RendererDX11::on_window_resize(GLFWwindow* window, i32 const width, i32 con
     renderer->screen_height = height;
     renderer->screen_width = width;
 
-    HRESULT hr = renderer->g_pSwapChain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, 0);
+    HRESULT const hr = renderer->g_pSwapChain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, 0);
 
     assert(SUCCEEDED(hr));
 
-    ID3D11Texture2D* p_buffer;
-    hr = renderer->g_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void **>(&p_buffer));
-
-    assert(SUCCEEDED(hr));
-
-    hr = renderer->get_device()->CreateRenderTargetView(p_buffer, nullptr, &renderer->g_mainRenderTargetView);
-
-    assert(SUCCEEDED(hr));
-
-    p_buffer->Release();
-
+    renderer->create_render_target();
     renderer->create_depth_stencil();
 
     auto const viewport = create_viewport(width, height);
