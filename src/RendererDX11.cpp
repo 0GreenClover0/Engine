@@ -6,6 +6,8 @@
 #include "Entity.h"
 #include "Camera.h"
 
+#include <array>
+
 std::shared_ptr<RendererDX11> RendererDX11::create()
 {
     auto renderer = std::make_shared<RendererDX11>(AK::Badge<RendererDX11> {});
@@ -30,11 +32,9 @@ std::shared_ptr<RendererDX11> RendererDX11::create()
     desc.ByteWidth = static_cast<UINT>(sizeof(ConstantBufferPerObject) + (16 - (sizeof(ConstantBufferPerObject) % 16)));
     desc.StructureByteStride = 0;
 
-    HRESULT const hr = renderer->get_device()->CreateBuffer(&desc, 0, &renderer->m_constant_buffer_per_object);
-    if (FAILED(hr))
-    {
-        std::cout << "Failed to initialize constant buffer." << "\n";
-    }
+    HRESULT const hr = renderer->get_device()->CreateBuffer(&desc, nullptr, &renderer->m_constant_buffer_per_object);
+
+    assert(SUCCEEDED(hr));
 
     glfwSetWindowSizeCallback(Engine::window->get_glfw_window(), on_window_resize);
 
@@ -51,39 +51,31 @@ RendererDX11::RendererDX11(AK::Badge<RendererDX11>)
 {
 }
 
-void RendererDX11::on_window_resize(GLFWwindow* window, int width, int height)
+void RendererDX11::on_window_resize(GLFWwindow* window, i32 const width, i32 const height)
 {
     auto const renderer = get_instance_dx11();
-    renderer->get_device_context()->OMSetRenderTargets(0, 0, 0);
+
+    renderer->get_device_context()->OMSetRenderTargets(0, nullptr, nullptr);
     renderer->g_mainRenderTargetView->Release();
+
     renderer->screen_height = height;
     renderer->screen_width = width;
 
-    HRESULT hr;
-    hr = renderer->g_pSwapChain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, 0);
+    HRESULT hr = renderer->g_pSwapChain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, 0);
 
-    if (FAILED(hr))
-    {
-        std::cout << "Failed to resize a  buffer!" << std::endl;
-    }
+    assert(SUCCEEDED(hr));
 
-    ID3D11Texture2D* pBuffer;
-    hr = renderer->g_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&pBuffer);
+    ID3D11Texture2D* p_buffer;
+    hr = renderer->g_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void **>(&p_buffer));
 
-    if (FAILED(hr))
-    {
-        std::cout << "Failed to get a buffer!" << std::endl;
-    }
+    assert(SUCCEEDED(hr));
 
-    hr = renderer->get_device()->CreateRenderTargetView(pBuffer, NULL, &renderer->g_mainRenderTargetView);
+    hr = renderer->get_device()->CreateRenderTargetView(p_buffer, nullptr, &renderer->g_mainRenderTargetView);
 
-    if (FAILED(hr))
-    {
-        std::cout << "Failed to create render target view!" << std::endl;
-    }
+    assert(SUCCEEDED(hr));
 
-    // Perform error handling here!
-    pBuffer->Release();
+    p_buffer->Release();
+
     renderer->create_depth_stencil();
 
     // Set up the viewport.
@@ -100,7 +92,7 @@ void RendererDX11::on_window_resize(GLFWwindow* window, int width, int height)
 void RendererDX11::begin_frame() const
 {
     // This function could be called like an event, instead is called every frame (could slow down, but I do not think so).
-    RendererDX11::get_instance_dx11()->create_rasterizer_state();
+    get_instance_dx11()->create_rasterizer_state();
     Renderer::begin_frame();
     const float clear_color_with_alpha[4] = { clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w };
     g_pd3dDeviceContext->ClearRenderTargetView(g_mainRenderTargetView, clear_color_with_alpha);
@@ -145,15 +137,14 @@ void RendererDX11::update_object(std::shared_ptr<Drawable> const& drawable, std:
     data.projection_view = projection_view;
     data.model = drawable->entity->transform->get_model_matrix();
     data.projection = Camera::get_main_camera()->get_projection();
-    D3D11_MAPPED_SUBRESOURCE mappedResource;
-    HRESULT const hr = get_device_context()->Map(m_constant_buffer_per_object, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 
-    if (FAILED(hr))
-    {
-        std::cout << "Failed to updated constant buffer." << "\n";
-    }
+    D3D11_MAPPED_SUBRESOURCE mapped_resource;
+    HRESULT const hr = get_device_context()->Map(m_constant_buffer_per_object, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped_resource);
 
-    CopyMemory(mappedResource.pData, &data, sizeof(ConstantBufferPerObject));
+    assert(SUCCEEDED(hr));
+
+    CopyMemory(mapped_resource.pData, &data, sizeof(ConstantBufferPerObject));
+
     get_device_context()->Unmap(m_constant_buffer_per_object, 0);
     get_device_context()->VSSetConstantBuffers(0, 1, &m_constant_buffer_per_object);
 }
@@ -176,7 +167,8 @@ void RendererDX11::initialize_global_renderer_settings()
 
     assert(SUCCEEDED(hr));
 
-    get_device_context()->OMSetBlendState(blend_state, 0, 0xffffffff);
+    std::array constexpr blend_factor = { 0.0f, 0.0f, 0.0f, 0.0f };
+    get_device_context()->OMSetBlendState(blend_state, blend_factor.data(), 0xffffffff);
 }
 
 void RendererDX11::initialize_buffers(size_t const max_size)
@@ -189,8 +181,7 @@ void RendererDX11::perform_frustum_culling(std::shared_ptr<Material> const& mate
 
 bool RendererDX11::create_device_d3d(HWND const hwnd)
 {
-    DXGI_SWAP_CHAIN_DESC sd;
-    ZeroMemory(&sd, sizeof(sd));
+    DXGI_SWAP_CHAIN_DESC sd = {};
     sd.BufferCount = 2;
     sd.BufferDesc.Width = 0;
     sd.BufferDesc.Height = 0;
@@ -213,7 +204,22 @@ bool RendererDX11::create_device_d3d(HWND const hwnd)
         D3D_FEATURE_LEVEL_10_0
     };
 
-    if (auto const result = D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, create_device_flags, feature_level_array, 2, D3D11_SDK_VERSION, &sd, &g_pSwapChain, &g_pd3dDevice, &feature_level, &g_pd3dDeviceContext); result != S_OK)
+    HRESULT const hr = D3D11CreateDeviceAndSwapChain(
+        nullptr,
+        D3D_DRIVER_TYPE_HARDWARE,
+        nullptr,
+        create_device_flags,
+        feature_level_array,
+        2,
+        D3D11_SDK_VERSION,
+        &sd,
+        &g_pSwapChain,
+        &g_pd3dDevice,
+        &feature_level,
+        &g_pd3dDeviceContext
+    );
+
+    if (FAILED(hr))
     {
         return false;
     }
@@ -248,22 +254,21 @@ void RendererDX11::cleanup_device_d3d()
 
 void RendererDX11::create_render_target()
 {
-    ID3D11Texture2D* pBackBuffer;
-    HRESULT result = g_pSwapChain->GetBuffer(0, IID_PPV_ARGS(&pBackBuffer));
+    ID3D11Texture2D* p_back_buffer;
+    HRESULT result = g_pSwapChain->GetBuffer(0, IID_PPV_ARGS(&p_back_buffer));
 
     assert(SUCCEEDED(result));
 
-    result = g_pd3dDevice->CreateRenderTargetView(pBackBuffer, nullptr, &g_mainRenderTargetView);
+    result = g_pd3dDevice->CreateRenderTargetView(p_back_buffer, nullptr, &g_mainRenderTargetView);
 
     assert(SUCCEEDED(result));
 
-    pBackBuffer->Release();
+    p_back_buffer->Release();
 }
 
 void RendererDX11::create_rasterizer_state()
 {
-    D3D11_RASTERIZER_DESC wfdesc;
-    ZeroMemory(&wfdesc, sizeof(D3D11_RASTERIZER_DESC));
+    D3D11_RASTERIZER_DESC wfdesc = {};
     if (wireframe_mode_active)
     {
         wfdesc.FillMode = D3D11_FILL_WIREFRAME;
@@ -273,12 +278,10 @@ void RendererDX11::create_rasterizer_state()
         wfdesc.FillMode = D3D11_FILL_SOLID;
     }
     wfdesc.CullMode = D3D11_CULL_NONE;
+
     HRESULT const hr = g_pd3dDevice->CreateRasterizerState(&wfdesc, &g_rasterizer_state);
 
-    if (FAILED(hr))
-    {
-        std::cout << "Failed to create rasterizer state." << "\n";
-    }
+    assert(SUCCEEDED(hr));
 
     g_pd3dDeviceContext->RSSetState(g_rasterizer_state);
 }
@@ -290,11 +293,14 @@ void RendererDX11::create_depth_stencil()
         m_depth_stencil_buffer->Release();
         m_depth_stencil_buffer = nullptr;
     }
-    if (m_depth_stencil_view != nullptr) {
+
+    if (m_depth_stencil_view != nullptr)
+    {
         m_depth_stencil_view->Release();
         m_depth_stencil_view = nullptr;
     }
-    D3D11_TEXTURE2D_DESC depth_stencil_desc;
+
+    D3D11_TEXTURE2D_DESC depth_stencil_desc = {};
     depth_stencil_desc.Width = screen_width;
     depth_stencil_desc.Height = screen_height;
     depth_stencil_desc.MipLevels = 1;
@@ -309,17 +315,11 @@ void RendererDX11::create_depth_stencil()
 
     HRESULT hr = g_pd3dDevice->CreateTexture2D(&depth_stencil_desc, nullptr, &m_depth_stencil_buffer);
 
-    if (FAILED(hr))
-    {
-        std::cout << "Failed to create depth stencil texture." << "\n";
-    }
+    assert(SUCCEEDED(hr));
 
     hr = g_pd3dDevice->CreateDepthStencilView(m_depth_stencil_buffer, nullptr, &m_depth_stencil_view);
 
-    if (FAILED(hr))
-    {
-        std::cout << "Failed to create depth stencil view." << "\n";
-    }
+    assert(SUCCEEDED(hr));
 
     g_pd3dDeviceContext->OMSetRenderTargets(1, &g_mainRenderTargetView, m_depth_stencil_view);
 }

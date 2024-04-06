@@ -17,7 +17,7 @@ public:
     }
 
     // Recreating RenderTargetView every time the window is resized makes ImGui always keep its size
-    static void on_window_resize(GLFWwindow* window, int width, int height);
+    static void on_window_resize(GLFWwindow* window, i32 const width, i32 const height);
 
     virtual void begin_frame() const override;
     virtual void end_frame() const override;
