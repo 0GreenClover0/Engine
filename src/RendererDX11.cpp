@@ -41,7 +41,7 @@ std::shared_ptr<RendererDX11> RendererDX11::create()
     renderer->create_depth_stencil();
     renderer->create_rasterizer_state();
 
-    D3D11_VIEWPORT const viewport = { 0.0f, 0.0f, static_cast<float>(screen_width), static_cast<float>(screen_height), 0.0f, 1.0f };
+    auto const viewport = create_viewport(screen_width, screen_height);
     renderer->g_pd3dDeviceContext->RSSetViewports(1, &viewport);
 
     return renderer;
@@ -78,15 +78,8 @@ void RendererDX11::on_window_resize(GLFWwindow* window, i32 const width, i32 con
 
     renderer->create_depth_stencil();
 
-    // Set up the viewport.
-    D3D11_VIEWPORT vp;
-    vp.Width = width;
-    vp.Height = height;
-    vp.MinDepth = 0.0f;
-    vp.MaxDepth = 1.0f;
-    vp.TopLeftX = 0;
-    vp.TopLeftY = 0;
-    renderer->g_pd3dDeviceContext->RSSetViewports(1, &vp);
+    auto const viewport = create_viewport(width, height);
+    renderer->g_pd3dDeviceContext->RSSetViewports(1, &viewport);
 }
 
 void RendererDX11::begin_frame() const
@@ -177,6 +170,18 @@ void RendererDX11::initialize_buffers(size_t const max_size)
 
 void RendererDX11::perform_frustum_culling(std::shared_ptr<Material> const& material) const
 {
+}
+
+D3D11_VIEWPORT RendererDX11::create_viewport(i32 const width, i32 const height)
+{
+    return {
+        0.0f,
+        0.0f,
+        static_cast<float>(width),
+        static_cast<float>(height),
+        0.0f,
+        1.0f
+    };
 }
 
 bool RendererDX11::create_device_d3d(HWND const hwnd)
