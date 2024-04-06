@@ -36,6 +36,7 @@ private:
     virtual void initialize_buffers(size_t const max_size) override;
     virtual void perform_frustum_culling(std::shared_ptr<Material> const& material) const override;
 
+    [[nodiscard]] static D3D11_VIEWPORT create_viewport(i32 const width, i32 const height);
     [[nodiscard]] bool create_device_d3d(HWND const hwnd);
     void cleanup_device_d3d();
     void create_render_target();
