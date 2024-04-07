@@ -10,12 +10,23 @@
 #include "SceneSerializer.h"
 #include "Engine.h"
 #include "Input.h"
+#include "RendererDX11.h"
 
 namespace Editor
 {
 Editor::Editor(std::shared_ptr<Scene> const& scene) : m_open_scene(scene)
 {
     set_style();
+
+    m_debug_window.flags |= ImGuiWindowFlags_MenuBar;
+    m_last_second = glfwGetTime();
+}
+
+void Editor::draw()
+{
+    draw_debug_window();
+    draw_scene_hierarchy();
+    draw_inspector();
 }
 
 void Editor::set_scene(std::shared_ptr<Scene> const& scene)
@@ -23,18 +34,30 @@ void Editor::set_scene(std::shared_ptr<Scene> const& scene)
     m_open_scene = scene;
 }
 
-void Editor::draw_debug_window(bool* debug_open, int const window_flags, bool* polygon_mode, double const frame_per_second) const
+void Editor::draw_debug_window()
 {
-    ImGui::Begin("Debug", debug_open, window_flags);
-    ImGui::Checkbox("Polygon mode", polygon_mode);
-    ImGui::Text("Application average %.3f ms/frame", frame_per_second);
+    m_current_time = glfwGetTime();
+    m_frame_count += 1;
+
+    if (m_current_time - m_last_second >= 1.0)
+    {
+        m_average_ms_per_frame = 1000.0 / static_cast<double>(m_frame_count);
+        m_frame_count = 0;
+        m_last_second = glfwGetTime();
+    }
+
+    ImGui::Begin("Debug", &m_debug_window.open, m_debug_window.flags);
+    ImGui::Checkbox("Polygon mode", &m_polygon_mode_active);
+    ImGui::Text("Application average %.3f ms/frame", m_average_ms_per_frame);
     draw_scene_save();
     ImGui::End();
+
+    Renderer::get_instance()->wireframe_mode_active = m_polygon_mode_active;
 }
 
 void Editor::draw_scene_hierarchy()
 {
-    ImGui::Begin("Hierarchy");
+    ImGui::Begin("Hierarchy", &m_hierarchy_window.open, m_hierarchy_window.flags);
 
     // Draw every entity without a parent, and draw its children recursively
     for (auto const& entity : m_open_scene->entities)
@@ -72,9 +95,9 @@ void Editor::draw_entity_recursively(std::shared_ptr<Transform> const& transform
     ImGui::TreePop();
 }
 
-void Editor::draw_inspector() const
+void Editor::draw_inspector()
 {
-    ImGui::Begin("Inspector");
+    ImGui::Begin("Inspector", &m_inspector_window.open, m_inspector_window.flags);
 
     if (m_selected_entity.expired())
     {
