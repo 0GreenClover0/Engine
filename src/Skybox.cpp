@@ -5,7 +5,7 @@
 #include <glad/glad.h>
 
 #include "Globals.h"
-#include "TextureLoader.h"
+#include "ResourceManager.h"
 
 Skybox::Skybox(std::shared_ptr<Material> const& material, std::vector<std::string> const& face_paths) : Drawable(material), m_face_paths(face_paths)
 {
@@ -32,7 +32,7 @@ void Skybox::load_textures()
         false
     };
 
-    m_texture = TextureLoader::get_instance()->load_cubemap(m_face_paths, TextureType::None, texture_settings);
+    m_texture = ResourceManager::get_instance().load_cubemap(m_face_paths, TextureType::None, texture_settings);
 }
 
 void Skybox::set_instance(std::shared_ptr<Skybox> const& skybox)

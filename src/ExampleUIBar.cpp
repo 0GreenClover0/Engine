@@ -4,7 +4,7 @@
 #include <imgui.h>
 
 #include "Entity.h"
-#include "ShaderFactory.h"
+#include "ResourceManager.h"
 
 std::shared_ptr<ExampleUIBar> ExampleUIBar::create()
 {
@@ -15,7 +15,7 @@ void ExampleUIBar::awake()
 {
     set_can_tick(true);
 
-    auto const ui_shader = ShaderFactory::create("./res/shaders/ui.hlsl", "./res/shaders/ui.hlsl");
+    auto const ui_shader = ResourceManager::get_instance().load_shader("./res/shaders/ui.hlsl", "./res/shaders/ui.hlsl");
     auto const ui_material = Material::create(ui_shader);
 
     m_sprite_background = Entity::create("Background Sprite");

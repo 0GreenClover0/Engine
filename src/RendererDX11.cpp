@@ -10,6 +10,8 @@
 
 #include <array>
 
+#include "ResourceManager.h"
+
 std::shared_ptr<RendererDX11> RendererDX11::create()
 {
     auto renderer = std::make_shared<RendererDX11>(AK::Badge<RendererDX11> {});
@@ -60,7 +62,7 @@ std::shared_ptr<RendererDX11> RendererDX11::create()
     renderer->m_shadow_map_viewport = create_viewport(SHADOW_MAP_SIZE, SHADOW_MAP_SIZE);
 
     renderer->setup_shadow_mapping();
-    renderer->m_shadow_shader = ShaderFactory::create("./res/shaders/shadow_mapping.hlsl", "./res/shaders/shadow_mapping.hlsl");
+    renderer->m_shadow_shader = ResourceManager::get_instance().load_shader("./res/shaders/shadow_mapping.hlsl", "./res/shaders/shadow_mapping.hlsl");
 
     return renderer;
 }

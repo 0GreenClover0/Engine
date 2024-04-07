@@ -6,6 +6,7 @@
 #include "Camera.h"
 #include "Entity.h"
 #include "MeshGL.h"
+#include "ResourceManager.h"
 #include "ShaderFactory.h"
 #include "Skybox.h"
 #include "TextureLoaderGL.h"
@@ -20,7 +21,7 @@ std::shared_ptr<RendererGL> RendererGL::create()
 
     TextureLoaderGL::create();
 
-    renderer->m_frustum_culling_shader = ShaderFactory::create("./res/shaders/frustum_culling.glsl");
+    renderer->m_frustum_culling_shader = ResourceManager::get_instance().load_shader("./res/shaders/frustum_culling.glsl");
 
     return renderer;
 }

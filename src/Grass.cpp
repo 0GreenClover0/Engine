@@ -2,6 +2,7 @@
 
 #include "Globals.h"
 #include "MeshFactory.h"
+#include "ResourceManager.h"
 #include "TextureLoader.h"
 
 std::shared_ptr<Grass> Grass::create()
@@ -82,9 +83,9 @@ std::shared_ptr<Mesh> Grass::create_blade() const
     texture_settings.wrap_mode_y = TextureWrapMode::ClampToEdge;
 
     if (!m_diffuse_texture_path.empty())
-        diffuse_maps.emplace_back(TextureLoader::get_instance()->load_texture(m_diffuse_texture_path, TextureType::Diffuse, texture_settings));
+        diffuse_maps.emplace_back(ResourceManager::get_instance().load_texture(m_diffuse_texture_path, TextureType::Diffuse, texture_settings));
 
     textures.insert(textures.end(), diffuse_maps.begin(), diffuse_maps.end());
 
-    return MeshFactory::create(vertices, indices, textures, m_draw_type, material);
+    return ResourceManager::get_instance().load_mesh(m_meshes.size(), m_diffuse_texture_path, vertices, indices, textures, m_draw_type, material);
 }

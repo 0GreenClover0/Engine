@@ -7,14 +7,12 @@
 
 #include <imgui.h>
 
-#include <glad/glad.h>
-
 #include "Entity.h"
 #include "Globals.h"
 #include "Mesh.h"
 #include "MeshFactory.h"
+#include "ResourceManager.h"
 #include "Texture.h"
-#include "TextureLoader.h"
 #include "Vertex.h"
 #include "AK/Types.h"
 
@@ -98,11 +96,6 @@ BoundingBox Model::get_adjusted_bounding_box(glm::mat4 const& model_matrix) cons
         return m_meshes[0]->get_adjusted_bounding_box(model_matrix);
 
     return {};
-}
-
-Model::Model(std::string const& model_path, std::shared_ptr<Material> const& material)
-    : Drawable(material), model_path(model_path)
-{
 }
 
 Model::Model(std::shared_ptr<Material> const& material) : Drawable(material)
@@ -229,7 +222,7 @@ std::shared_ptr<Mesh> Model::proccess_mesh(aiMesh const* mesh, aiScene const* sc
     std::vector<std::shared_ptr<Texture>> specular_maps = load_material_textures(assimp_material, aiTextureType_SPECULAR, TextureType::Specular);
     textures.insert(textures.end(), specular_maps.begin(), specular_maps.end());
 
-    return MeshFactory::create(vertices, indices, textures, m_draw_type, material);
+    return ResourceManager::get_instance().load_mesh(m_meshes.size(), model_path, vertices, indices, textures, m_draw_type, material);
 }
 
 std::vector<std::shared_ptr<Texture>> Model::load_material_textures(aiMaterial const* material, aiTextureType const type, TextureType const type_name)
@@ -262,7 +255,7 @@ std::vector<std::shared_ptr<Texture>> Model::load_material_textures(aiMaterial c
         TextureSettings settings = {};
         settings.flip_vertically = false;
 
-        std::shared_ptr<Texture> texture = TextureLoader::get_instance()->load_texture(file_path, type_name, settings);
+        std::shared_ptr<Texture> texture = ResourceManager::get_instance().load_texture(file_path, type_name, settings);
         textures.push_back(texture);
         m_loaded_textures.push_back(texture);
     }
