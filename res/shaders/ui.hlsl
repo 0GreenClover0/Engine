@@ -13,7 +13,7 @@ struct VS_Output
 
 cbuffer VS_Buffer : register(b0)
 {
-    float4x4 projection_view;
+    float4x4 projection_view_model;
     float4x4 world;
     float4x4 projection;
 };
