@@ -3,7 +3,7 @@
 #include <iostream>
 
 #include "Model.h"
-#include "ShaderFactory.h"
+#include "ResourceManager.h"
 #include "TextureLoader.h"
 
 namespace InternalMeshData
@@ -11,7 +11,7 @@ namespace InternalMeshData
 
 void light_initialize()
 {
-    default_shader = ShaderFactory::create("./res/shaders/lit.hlsl", "./res/shaders/lit.hlsl");
+    default_shader = ResourceManager::get_instance().load_shader("./res/shaders/lit.hlsl", "./res/shaders/lit.hlsl");
     default_material = Material::create(default_shader);
 }
 
@@ -136,7 +136,7 @@ void initialize()
     }
 
     // Load white texture
-    white_texture = TextureLoader::get_instance()->load_texture("./res/textures/white.jpg", TextureType::Diffuse);
+    white_texture = ResourceManager::get_instance().load_texture("./res/textures/white.jpg", TextureType::Diffuse);
 }
 
 }

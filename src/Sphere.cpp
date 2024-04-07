@@ -1,15 +1,14 @@
 #include "Sphere.h"
 
-#include "Globals.h"
-
-#include <iostream>
-#include <glm/trigonometric.hpp>
+#include <sstream>
 #include <glm/ext/scalar_constants.hpp>
 #include <utility>
 
+#include "Globals.h"
+#include "Entity.h"
 #include "MeshFactory.h"
 #include "Model.h"
-#include "TextureLoader.h"
+#include "ResourceManager.h"
 #include "Vertex.h"
 
 std::shared_ptr<Sphere> Sphere::create()
@@ -20,11 +19,17 @@ std::shared_ptr<Sphere> Sphere::create()
 }
 
 std::shared_ptr<Sphere> Sphere::create(float radius, u32 sectors, u32 stacks, std::string const& texture_path,
-                                       std::shared_ptr<Material> const &material)
+                                       std::shared_ptr<Material> const& material)
 {
     auto sphere = std::make_shared<Sphere>(AK::Badge<Sphere> {}, radius, sectors, stacks, texture_path, material);
 
     return sphere;
+}
+
+void Sphere::start()
+{
+    Model::start();
+    entity->transform->set_local_scale(glm::vec3(radius, radius, radius));
 }
 
 Sphere::Sphere(AK::Badge<Sphere>, std::shared_ptr<Material> const& material) : Model(material)
@@ -66,7 +71,7 @@ void Sphere::reprepare()
 std::shared_ptr<Mesh> Sphere::create_sphere() const
 {
     auto constexpr PI = glm::pi<float>();
-    float const length_inverse = 1.0f / radius;
+    float const length_inverse = 1.0f;
 
     std::vector<Vertex> vertices;
     std::vector<u32> indices;
@@ -84,14 +89,20 @@ std::shared_ptr<Mesh> Sphere::create_sphere() const
         indices.push_back(1);
         indices.push_back(2);
 
-        std::vector diffuse_maps = { TextureLoader::get_instance()->load_texture(texture_path, TextureType::Diffuse) };
-        textures.insert(textures.end(), diffuse_maps.begin(), diffuse_maps.end());
+        if (!texture_path.empty())
+        {
+            std::vector diffuse_maps = { ResourceManager::get_instance().load_texture(texture_path, TextureType::Diffuse) };
+            textures.insert(textures.end(), diffuse_maps.begin(), diffuse_maps.end());
+        }
 
         material->radius_multiplier = radius;
         material->sector_count = sector_count;
         material->stack_count = stack_count;
 
-        return MeshFactory::create(vertices, indices, textures, m_draw_type, material);
+        std::stringstream stream;
+        stream << std::to_string(stack_count) << "|" << std::to_string(sector_count) << "SPHERE";
+
+        return ResourceManager::get_instance().load_mesh(m_meshes.size(), stream.str(), vertices, indices, textures, m_draw_type, material);
     }
 
     for (u32 x = 0; x <= stack_count; ++x)
@@ -138,9 +149,11 @@ std::shared_ptr<Mesh> Sphere::create_sphere() const
 
     if (!texture_path.empty())
     {
-        std::vector diffuse_maps = { TextureLoader::get_instance()->load_texture(texture_path, TextureType::Diffuse) };
+        std::vector diffuse_maps = { ResourceManager::get_instance().load_texture(texture_path, TextureType::Diffuse) };
         textures.insert(textures.end(), diffuse_maps.begin(), diffuse_maps.end());
     }
 
-    return MeshFactory::create(vertices, indices, textures, m_draw_type, material);
+    std::stringstream stream;
+    stream << std::to_string(stack_count) << "|" << std::to_string(sector_count) << "SPHERE";
+    return ResourceManager::get_instance().load_mesh(m_meshes.size(), stream.str(), vertices, indices, textures, m_draw_type, material);
 }

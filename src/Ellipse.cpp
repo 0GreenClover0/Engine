@@ -6,16 +6,17 @@
 #include <glm/ext/scalar_constants.hpp>
 
 #include "MeshFactory.h"
+#include "ResourceManager.h"
 
-std::shared_ptr<Ellipse> Ellipse::create()
+std::shared_ptr<class Ellipse> Ellipse::create()
 {
     auto ellipse = std::make_shared<Ellipse>(AK::Badge<Ellipse> {});
 
     return ellipse;
 }
 
-std::shared_ptr<Ellipse> Ellipse::create(float const center_x, float const center_z, float const radius_x,
-                                         float const radius_z, i32 const segment_count, std::shared_ptr<Material> const &material)
+std::shared_ptr<class Ellipse> Ellipse::create(float const center_x, float const center_z, float const radius_x,
+                                               float const radius_z, i32 const segment_count, std::shared_ptr<Material> const &material)
 {
     auto ellipse = std::make_shared<Ellipse>(AK::Badge<Ellipse> {}, center_x, center_z, radius_x, radius_z, segment_count, material);
 
@@ -66,5 +67,5 @@ std::shared_ptr<Mesh> Ellipse::create_ellipse() const
         vertices.emplace_back(vertex);
     }
 
-    return MeshFactory::create(vertices, {}, {}, m_draw_type, material, DrawFunctionType::NotIndexed);
+    return ResourceManager::get_instance().load_mesh(m_meshes.size(), "ELLIPSE", vertices, {}, {}, m_draw_type, material, DrawFunctionType::NotIndexed);
 }

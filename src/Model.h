@@ -4,14 +4,14 @@
 
 #include <assimp/material.h>
 
+#include "Texture.h"
+#include "Mesh.h"
+#include "AK/Badge.h"
+
 struct aiMaterial;
 struct aiMesh;
 struct aiScene;
 struct aiNode;
-
-#include "Texture.h"
-#include "Mesh.h"
-#include "AK/Badge.h"
 
 class Model : public Drawable
 {
@@ -42,14 +42,12 @@ public:
     std::string model_path = "";
 
 protected:
-    explicit Model(std::string const& model_path, std::shared_ptr<Material> const& material);
     explicit Model(std::shared_ptr<Material> const& material);
 
     DrawType m_draw_type = DrawType::Triangles;
     std::vector<std::shared_ptr<Mesh>> m_meshes = {};
 
 private:
-
     void load_model(std::string const& path);
     void proccess_node(aiNode const* node, aiScene const* scene);
     std::shared_ptr<Mesh> proccess_mesh(aiMesh const* mesh, aiScene const* scene);

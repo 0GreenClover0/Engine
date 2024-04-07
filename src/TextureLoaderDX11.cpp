@@ -10,10 +10,6 @@ std::shared_ptr<TextureLoaderDX11> TextureLoaderDX11::create()
     return texture_loader;
 }
 
-void TextureLoaderDX11::clean_up() const
-{
-}
-
 TextureData TextureLoaderDX11::texture_from_file(std::string const& path, TextureSettings const settings)
 {
     auto const device = RendererDX11::get_instance_dx11()->get_device();

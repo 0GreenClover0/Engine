@@ -1,11 +1,12 @@
 #include "ScreenText.h"
 #include "RendererDX11.h"
+#include "ResourceManager.h"
 #include "ShaderFactory.h"
 #include <glm/gtc/type_ptr.inl>
 
 std::shared_ptr<ScreenText> ScreenText::create()
 {
-    auto const ui_shader = ShaderFactory::create("./res/shaders/ui.hlsl", "./res/shaders/ui.hlsl");
+    auto const ui_shader = ResourceManager::get_instance().load_shader("./res/shaders/ui.hlsl", "./res/shaders/ui.hlsl");
     auto const ui_material = Material::create(ui_shader);
     auto text = std::make_shared<ScreenText>(AK::Badge<ScreenText> {}, ui_material);
 
@@ -28,7 +29,7 @@ ScreenText::ScreenText(AK::Badge<ScreenText>, std::wstring const& content, glm::
     : Drawable(nullptr), text(content), position(position), font_size(font_size), color(color),
       flags(flags | FW1_RESTORESTATE) // Restore DX11 state by default
 {
-    auto const ui_shader = ShaderFactory::create("./res/shaders/ui.hlsl", "./res/shaders/ui.hlsl");
+    auto const ui_shader = ResourceManager::get_instance().load_shader("./res/shaders/ui.hlsl", "./res/shaders/ui.hlsl");
     auto const ui_material = Material::create(ui_shader);
     material = ui_material;
 }

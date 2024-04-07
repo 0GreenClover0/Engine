@@ -4,7 +4,7 @@
 #include <stb_image.h>
 
 #include "MeshFactory.h"
-#include "TextureLoader.h"
+#include "ResourceManager.h"
 
 std::shared_ptr<Terrain> Terrain::create(std::shared_ptr<Material> const& material, bool const use_gpu, std::string const& height_map_path)
 {
@@ -76,12 +76,12 @@ std::shared_ptr<Mesh> Terrain::create_terrain_from_height_map_gpu() const
         false,
     };
 
-    std::shared_ptr<Texture> const heightmap = TextureLoader::get_instance()->load_texture(m_height_map_path, TextureType::Heightmap, texture_settings);
+    std::shared_ptr<Texture> const heightmap = ResourceManager::get_instance().load_texture(m_height_map_path, TextureType::Heightmap, texture_settings);
 
     if (heightmap->id == 0)
     {
         std::cout << "Height map failed to load at path: " << m_height_map_path << '\n';
-        return MeshFactory::create({}, {}, {}, m_draw_type, material);
+        return ResourceManager::get_instance().load_mesh(m_meshes.size(), m_height_map_path, {}, {}, {}, m_draw_type, material);
     }
 
     i32 const width = heightmap->width;
@@ -152,7 +152,7 @@ std::shared_ptr<Mesh> Terrain::create_terrain_from_height_map_gpu() const
         }
     }
 
-    return MeshFactory::create(vertices, {}, textures, m_draw_type, material, DrawFunctionType::NotIndexed);
+    return ResourceManager::get_instance().load_mesh(m_meshes.size(), m_height_map_path, vertices, {}, textures, m_draw_type, material, DrawFunctionType::NotIndexed);
 }
 
 std::shared_ptr<Mesh> Terrain::create_terrain_from_height_map()
@@ -166,7 +166,7 @@ std::shared_ptr<Mesh> Terrain::create_terrain_from_height_map()
     {
         std::cout << "Height map failed to load at path: " << m_height_map_path << '\n';
         stbi_image_free(data);
-        return MeshFactory::create({}, {}, {}, m_draw_type, material);
+        return ResourceManager::get_instance().load_mesh(m_meshes.size(), m_height_map_path, {}, {}, {}, m_draw_type, material);
     }
 
     std::vector<Vertex> vertices = {};
@@ -206,5 +206,5 @@ std::shared_ptr<Mesh> Terrain::create_terrain_from_height_map()
     m_strips_count = height - 1;
     m_vertices_per_strip = width * 2;
 
-    return MeshFactory::create(vertices, indices, {}, m_draw_type, material);
+    return ResourceManager::get_instance().load_mesh(m_meshes.size(), m_height_map_path, vertices, indices, {}, m_draw_type, material);
 }

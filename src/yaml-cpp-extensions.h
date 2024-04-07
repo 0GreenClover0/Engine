@@ -1,5 +1,7 @@
 #pragma once
 
+#include "ResourceManager.h"
+
 #include <xstring>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
@@ -125,11 +127,11 @@ namespace YAML
 
             if (geometry_path.empty())
             {
-                rhs = ShaderFactory::create(vertex_path, fragment_path);
+                rhs = ResourceManager::get_instance().load_shader(vertex_path, fragment_path);
             }
             else
             {
-                rhs = ShaderFactory::create(vertex_path, fragment_path, geometry_path);
+                rhs = ResourceManager::get_instance().load_shader(vertex_path, fragment_path, geometry_path);
             }
 
             return true;
