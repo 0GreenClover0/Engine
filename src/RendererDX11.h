@@ -25,6 +25,7 @@ public:
 
     [[nodiscard]] ID3D11Device* get_device() const;
     [[nodiscard]] ID3D11DeviceContext* get_device_context() const;
+    [[nodiscard]] ID3D11ShaderResourceView* get_render_texture_view() const;
 
 protected:
     virtual void update_shader(std::shared_ptr<Shader> const& shader, glm::mat4 const& projection_view, glm::mat4 const& projection_view_no_translation) const override;
@@ -41,8 +42,11 @@ private:
     void cleanup_device_d3d();
     void create_render_target();
     void cleanup_render_target();
+    void create_render_texture();
+    void cleanup_render_texture();
     void create_rasterizer_state();
     void create_depth_stencil();
+    void cleanup_depth_stencil();
     static void set_instance_dx11(std::shared_ptr<RendererDX11> const& renderer)
     {
         m_instance_dx11 = renderer;
@@ -54,9 +58,14 @@ private:
     ID3D11DeviceContext* g_pd3dDeviceContext = nullptr;
     IDXGISwapChain* g_pSwapChain = nullptr;
     ID3D11RenderTargetView* g_mainRenderTargetView = nullptr;
+    ID3D11RenderTargetView* g_textureRenderTargetView = nullptr;
 
     ID3D11RasterizerState* g_rasterizer_state = nullptr;
     ID3D11Buffer* m_constant_buffer_per_object = nullptr;
     ID3D11DepthStencilView* m_depth_stencil_view = nullptr;
     ID3D11Texture2D* m_depth_stencil_buffer = nullptr;
+    ID3D11Texture2D* m_render_target_texture = nullptr;
+    ID3D11ShaderResourceView* m_render_target_texture_view = nullptr;
+
+    inline static DXGI_FORMAT m_render_target_format = DXGI_FORMAT_R32G32B32A32_FLOAT;
 };

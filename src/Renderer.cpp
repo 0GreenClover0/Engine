@@ -157,6 +157,11 @@ void Renderer::present() const
 {
 }
 
+void Renderer::switch_rendering_to_texture()
+{
+    m_render_to_texture = !m_render_to_texture;
+}
+
 void Renderer::set_vsync(bool const enabled)
 {
     vsync_enabled = enabled;

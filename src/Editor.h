@@ -33,7 +33,10 @@ public:
     void set_docking_space() const;
 
 private:
+    void switch_rendering_to_editor();
+
     void draw_debug_window();
+    void draw_game();
     void draw_inspector();
     void draw_scene_hierarchy();
     void draw_scene_save() const;
@@ -43,10 +46,14 @@ private:
     bool load_scene() const;
     void set_style() const;
 
+    glm::vec2 m_game_position = {};
+    glm::vec2 m_game_size = {};
+
     std::weak_ptr<Entity> m_selected_entity;
     std::shared_ptr<Scene> m_open_scene;
 
     EditorWindow m_debug_window = {};
+    EditorWindow m_game_window = {};
     EditorWindow m_inspector_window = {};
     EditorWindow m_hierarchy_window = {};
 
@@ -55,6 +62,8 @@ private:
     double m_current_time = 0.0;
     double m_last_second = 0.0;
     double m_average_ms_per_frame = 0.0;
+
+    bool m_rendering_to_editor = true;
 
     GuizmoOperationType m_operation_type = GuizmoOperationType::Translate;
 };
