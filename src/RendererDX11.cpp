@@ -4,6 +4,7 @@
 #include "TextureLoaderDX11.h"
 #include "Drawable.h"
 #include "Entity.h"
+#include "Model.h"
 #include "Camera.h"
 
 #include <array>
@@ -32,14 +33,25 @@ std::shared_ptr<RendererDX11> RendererDX11::create()
     desc.ByteWidth = static_cast<UINT>(sizeof(ConstantBufferPerObject) + (16 - (sizeof(ConstantBufferPerObject) % 16)));
     desc.StructureByteStride = 0;
 
-    HRESULT const hr = renderer->get_device()->CreateBuffer(&desc, nullptr, &renderer->m_constant_buffer_per_object);
+    HRESULT hr = renderer->get_device()->CreateBuffer(&desc, nullptr, &renderer->m_constant_buffer_per_object);
 
     assert(SUCCEEDED(hr));
 
     glfwSetWindowSizeCallback(Engine::window->get_glfw_window(), on_window_resize);
 
-    renderer->create_rasterizer_state();
+    D3D11_BUFFER_DESC light_buffer_desc = {};
+    light_buffer_desc.Usage = D3D11_USAGE_DYNAMIC;
+    light_buffer_desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    light_buffer_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    light_buffer_desc.MiscFlags = 0;
+    light_buffer_desc.ByteWidth = sizeof(ConstantBufferLight);
+
+    hr = renderer->get_device()->CreateBuffer(&light_buffer_desc, nullptr, &renderer->m_constant_buffer_light);
+
+    assert(SUCCEEDED(hr));
+
     renderer->create_depth_stencil();
+    renderer->create_rasterizer_state();
 
     auto const viewport = create_viewport(screen_width, screen_height);
     renderer->g_pd3dDeviceContext->RSSetViewports(1, &viewport);
@@ -137,7 +149,8 @@ void RendererDX11::update_object(std::shared_ptr<Drawable> const& drawable, std:
                                  glm::mat4 const& projection_view) const
 {
     ConstantBufferPerObject data = {};
-    data.projection_view = projection_view;
+    glm::mat4 const model = drawable->entity->transform->get_model_matrix();
+    data.projection_view_model = projection_view * model;
     data.model = drawable->entity->transform->get_model_matrix();
     data.projection = Camera::get_main_camera()->get_projection();
 
@@ -150,6 +163,8 @@ void RendererDX11::update_object(std::shared_ptr<Drawable> const& drawable, std:
 
     get_device_context()->Unmap(m_constant_buffer_per_object, 0);
     get_device_context()->VSSetConstantBuffers(0, 1, &m_constant_buffer_per_object);
+    
+    set_light_buffer(drawable);
 }
 
 void RendererDX11::initialize_global_renderer_settings()
@@ -192,6 +207,91 @@ D3D11_VIEWPORT RendererDX11::create_viewport(i32 const width, i32 const height)
         0.0f,
         1.0f
     };
+}
+
+void RendererDX11::set_light_buffer(std::shared_ptr<Drawable> const& drawable) const
+{
+    ConstantBufferLight light_data = {};
+
+    if (m_directional_light != nullptr)
+    {
+        light_data.directional_light.direction = m_directional_light->entity->transform->get_forward();
+        light_data.directional_light.ambient = m_directional_light->ambient;
+        light_data.directional_light.diffuse = m_directional_light->diffuse;
+        light_data.directional_light.specular = m_directional_light->specular;
+    }
+
+    i32 num_point_lights;
+    if (m_point_lights.size() < MAX_POINT_LIGHTS)
+    {
+        num_point_lights = m_point_lights.size();
+    }
+    else
+    {
+        num_point_lights = MAX_POINT_LIGHTS;
+
+        // Sort lights by distance
+        std::ranges::sort(m_point_lights, [drawable](std::shared_ptr<PointLight> const& a, std::shared_ptr<PointLight> const& b) {
+            return glm::length(drawable->entity->transform->get_position() - a->entity->transform->get_position()) <
+                   glm::length(drawable->entity->transform->get_position() - b->entity->transform->get_position());
+        });
+    }
+
+    for (i32 i = 0; i < num_point_lights; i++)
+    {
+        light_data.point_lights[i].position = m_point_lights[i]->entity->transform->get_position();
+        light_data.point_lights[i].ambient = m_point_lights[i]->ambient;
+        light_data.point_lights[i].diffuse = m_point_lights[i]->diffuse;
+        light_data.point_lights[i].specular = m_point_lights[i]->specular;
+        light_data.point_lights[i].constant = m_point_lights[i]->constant;
+        light_data.point_lights[i].linear = m_point_lights[i]->linear;
+        light_data.point_lights[i].quadratic = m_point_lights[i]->quadratic;
+    }
+
+    i32 num_spot_lights;
+    if (m_spot_lights.size() < MAX_SPOT_LIGHTS)
+    {
+        num_spot_lights = m_spot_lights.size();
+    }
+    else
+    {
+        num_spot_lights = MAX_SPOT_LIGHTS;
+
+        // Sort lights by distance
+        std::ranges::sort(m_spot_lights, [drawable](std::shared_ptr<SpotLight> const& a, std::shared_ptr<SpotLight> const& b) {
+            return glm::length(drawable->entity->transform->get_position() - a->entity->transform->get_position()) <
+                   glm::length(drawable->entity->transform->get_position() - b->entity->transform->get_position());
+        });
+    }
+
+    for (i32 i = 0; i < num_spot_lights; i++)
+    {
+        light_data.spot_lights[i].position = m_spot_lights[i]->entity->transform->get_position();
+        light_data.spot_lights[i].direction = m_spot_lights[i]->entity->transform->get_forward();
+        light_data.spot_lights[i].cut_off = m_spot_lights[i]->cut_off;
+        light_data.spot_lights[i].outer_cut_off = m_spot_lights[i]->outer_cut_off;
+
+        light_data.spot_lights[i].constant = m_spot_lights[i]->constant;
+        light_data.spot_lights[i].linear = m_spot_lights[i]->linear;
+        light_data.spot_lights[i].quadratic = m_spot_lights[i]->quadratic;
+
+        light_data.spot_lights[i].ambient = m_spot_lights[i]->ambient;
+        light_data.spot_lights[i].diffuse = m_spot_lights[i]->diffuse;
+        light_data.spot_lights[i].specular = m_spot_lights[i]->specular;
+    }
+
+    light_data.camera_pos = Camera::get_main_camera()->entity->transform->get_position();
+    light_data.number_of_point_lights = num_point_lights;
+    light_data.number_of_spot_lights = num_spot_lights;
+
+    D3D11_MAPPED_SUBRESOURCE mapped_light_buffer_resource = {};
+    HRESULT const hr = get_device_context()->Map(m_constant_buffer_light, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped_light_buffer_resource);
+
+    assert(SUCCEEDED(hr));
+
+    CopyMemory(mapped_light_buffer_resource.pData, &light_data, sizeof(ConstantBufferLight));
+    get_device_context()->Unmap(m_constant_buffer_light, 0);
+    get_device_context()->PSSetConstantBuffers(0, 1, &m_constant_buffer_light);
 }
 
 bool RendererDX11::create_device_d3d(HWND const hwnd)

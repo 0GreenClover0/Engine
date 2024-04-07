@@ -38,6 +38,8 @@ private:
     virtual void perform_frustum_culling(std::shared_ptr<Material> const& material) const override;
 
     [[nodiscard]] static D3D11_VIEWPORT create_viewport(i32 const width, i32 const height);
+    void set_light_buffer(std::shared_ptr<Drawable> const& drawable) const;
+
     [[nodiscard]] bool create_device_d3d(HWND const hwnd);
     void cleanup_device_d3d();
     void create_render_target();
@@ -61,6 +63,7 @@ private:
     ID3D11RenderTargetView* g_textureRenderTargetView = nullptr;
 
     ID3D11RasterizerState* g_rasterizer_state = nullptr;
+    ID3D11Buffer* m_constant_buffer_light = nullptr;
     ID3D11Buffer* m_constant_buffer_per_object = nullptr;
     ID3D11DepthStencilView* m_depth_stencil_view = nullptr;
     ID3D11Texture2D* m_depth_stencil_buffer = nullptr;
