@@ -40,6 +40,8 @@ public:
     void virtual end_frame() const;
     void virtual present() const;
 
+    void switch_rendering_to_texture();
+
     void set_vsync(bool const enabled);
 
     static std::shared_ptr<Renderer> get_instance()
@@ -82,8 +84,8 @@ protected:
     inline static std::shared_ptr<Renderer> m_instance;
 
     bool vsync_enabled = false;
+    bool m_render_to_texture = true;
 
-protected:
     inline static std::vector<std::shared_ptr<PointLight>> m_point_lights = {};
     inline static std::vector<std::shared_ptr<SpotLight>> m_spot_lights = {};
     inline static std::shared_ptr<DirectionalLight> m_directional_light = {};

@@ -24,8 +24,12 @@ Editor::Editor(std::shared_ptr<Scene> const& scene) : m_open_scene(scene)
 
 void Editor::draw()
 {
+    if (!m_rendering_to_editor)
+        return;
+
     draw_debug_window();
     draw_scene_hierarchy();
+    draw_game();
     draw_inspector();
 }
 
@@ -53,6 +57,83 @@ void Editor::draw_debug_window()
     ImGui::End();
 
     Renderer::get_instance()->wireframe_mode_active = m_polygon_mode_active;
+}
+
+void Editor::draw_game()
+{
+    ImGui::Begin("Scene", &m_game_window.open, m_game_window.flags);
+
+    auto vec2 = ImGui::GetContentRegionAvail();
+    m_game_size = { vec2.x, vec2.y };
+
+    vec2 = ImGui::GetWindowPos();
+    m_game_position = { vec2.x, vec2.y };
+
+    if (Renderer::renderer_api == Renderer::RendererApi::DirectX11)
+    {
+        ImGui::Image(RendererDX11::get_instance_dx11()->get_render_texture_view(), ImVec2(m_game_size.x, m_game_size.y));
+    }
+
+    if (m_selected_entity.expired())
+    {
+        ImGui::End();
+        return;
+    }
+
+    auto const camera = Camera::get_main_camera();
+    auto const entity = m_selected_entity.lock();
+
+    ImGuizmo::SetDrawlist();
+
+    ImGuizmo::SetRect(m_game_position.x, m_game_position.y, m_game_size.x, m_game_size.y);
+
+    bool was_transform_changed = false;
+    glm::mat4 global_model = entity->transform->get_model_matrix();
+    switch (m_operation_type)
+    {
+    case GuizmoOperationType::Translate:
+        was_transform_changed = ImGuizmo::Manipulate(glm::value_ptr(camera->get_view_matrix()), glm::value_ptr(camera->get_projection()), ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::MODE::LOCAL, glm::value_ptr(global_model), nullptr, nullptr);
+        break;
+    case GuizmoOperationType::Scale:
+        was_transform_changed = ImGuizmo::Manipulate(glm::value_ptr(camera->get_view_matrix()), glm::value_ptr(camera->get_projection()), ImGuizmo::OPERATION::SCALE, ImGuizmo::MODE::LOCAL, glm::value_ptr(global_model), nullptr, nullptr);
+        break;
+    case GuizmoOperationType::Rotate:
+        was_transform_changed = ImGuizmo::Manipulate(glm::value_ptr(camera->get_view_matrix()), glm::value_ptr(camera->get_projection()), ImGuizmo::OPERATION::ROTATE, ImGuizmo::MODE::LOCAL, glm::value_ptr(global_model), nullptr, nullptr);
+        break;
+    case GuizmoOperationType::None:
+    default:
+        break;
+    }
+
+    if (was_transform_changed)
+    {
+        glm::mat4 local = global_model;
+
+        auto const parent = entity->transform->parent.lock();
+        if (parent != nullptr)
+        {
+            local = glm::inverse(parent->get_model_matrix()) * local;
+        }
+
+        glm::vec3 position;
+        glm::vec3 rotation;
+        glm::vec3 scale;
+        ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(local), glm::value_ptr(position), glm::value_ptr(rotation), glm::value_ptr(scale));
+        if (m_operation_type == GuizmoOperationType::Translate)
+        {
+            entity->transform->set_local_position(position);
+        }
+        else if (m_operation_type == GuizmoOperationType::Rotate)
+        {
+            entity->transform->set_euler_angles(rotation);
+        }
+        else if (m_operation_type == GuizmoOperationType::Scale)
+        {
+            entity->transform->set_local_scale(scale);
+        }
+    }
+
+    ImGui::End();
 }
 
 void Editor::draw_scene_hierarchy()
@@ -135,53 +216,6 @@ void Editor::draw_inspector()
         component->draw_editor();
 
         ImGui::Spacing();
-    }
-
-    // GIZMOS CODE
-    ImGuiIO const& io = ImGui::GetIO();
-    ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
-
-    bool was_transform_changed = false;
-    glm::mat4 global_model = entity->transform->get_model_matrix();
-    switch (m_operation_type)
-    {
-    case GuizmoOperationType::Translate:
-        was_transform_changed = ImGuizmo::Manipulate(glm::value_ptr(camera->get_view_matrix()), glm::value_ptr(camera->get_projection()), ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::MODE::LOCAL, glm::value_ptr(global_model), nullptr, nullptr);
-        break;
-    case GuizmoOperationType::Scale:
-        was_transform_changed = ImGuizmo::Manipulate(glm::value_ptr(camera->get_view_matrix()), glm::value_ptr(camera->get_projection()), ImGuizmo::OPERATION::SCALE, ImGuizmo::MODE::LOCAL, glm::value_ptr(global_model), nullptr, nullptr);
-        break;
-    case GuizmoOperationType::Rotate:
-        was_transform_changed = ImGuizmo::Manipulate(glm::value_ptr(camera->get_view_matrix()), glm::value_ptr(camera->get_projection()), ImGuizmo::OPERATION::ROTATE, ImGuizmo::MODE::LOCAL, glm::value_ptr(global_model), nullptr, nullptr);
-        break;
-    case GuizmoOperationType::None:
-    default:
-        break;
-    }
-
-    if (was_transform_changed)
-    {
-        glm::mat4 local = global_model;
-
-        auto const parent = entity->transform->parent.lock();
-        if (parent != nullptr)
-        {
-            local = glm::inverse(parent->get_model_matrix()) * local;
-        }
-
-        ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(local), glm::value_ptr(position), glm::value_ptr(rotation), glm::value_ptr(scale));
-        if (m_operation_type == GuizmoOperationType::Translate)
-        {
-            entity->transform->set_local_position(position);
-        }
-        else if (m_operation_type == GuizmoOperationType::Rotate)
-        {
-            entity->transform->set_euler_angles(rotation);
-        }
-        else if (m_operation_type == GuizmoOperationType::Scale)
-        {
-            entity->transform->set_local_scale(scale);
-        }
     }
 
     ImGui::End();
@@ -311,6 +345,11 @@ void Editor::handle_input()
 {
     auto const input = Input::input;
 
+    if (input->get_key_down(GLFW_KEY_F1))
+    {
+        switch_rendering_to_editor();
+    }
+
     if (input->get_key_down(GLFW_KEY_W))
     {
         m_operation_type = GuizmoOperationType::Translate;
@@ -335,6 +374,12 @@ void Editor::handle_input()
 void Editor::set_docking_space() const
 {
     ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
+}
+
+void Editor::switch_rendering_to_editor()
+{
+    Renderer::get_instance()->switch_rendering_to_texture();
+    m_rendering_to_editor = !m_rendering_to_editor;
 }
 
 }

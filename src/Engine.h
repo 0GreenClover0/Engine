@@ -27,6 +27,7 @@ public:
     inline static ma_engine audio_engine;
 
     inline static std::shared_ptr<Window> window;
+
 private:
     static i32 initialize_thirdparty_before_renderer();
     static i32 initialize_thirdparty_after_renderer();

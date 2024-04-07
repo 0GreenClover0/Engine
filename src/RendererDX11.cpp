@@ -38,8 +38,8 @@ std::shared_ptr<RendererDX11> RendererDX11::create()
 
     glfwSetWindowSizeCallback(Engine::window->get_glfw_window(), on_window_resize);
 
-    renderer->create_depth_stencil();
     renderer->create_rasterizer_state();
+    renderer->create_depth_stencil();
 
     auto const viewport = create_viewport(screen_width, screen_height);
     renderer->g_pd3dDeviceContext->RSSetViewports(1, &viewport);
@@ -55,16 +55,18 @@ void RendererDX11::on_window_resize(GLFWwindow* window, i32 const width, i32 con
 {
     auto const renderer = get_instance_dx11();
 
-    renderer->get_device_context()->OMSetRenderTargets(0, nullptr, nullptr);
-    renderer->g_mainRenderTargetView->Release();
+    renderer->cleanup_depth_stencil();
+    renderer->cleanup_render_target();
+    renderer->cleanup_render_texture();
 
     renderer->screen_height = height;
     renderer->screen_width = width;
 
-    HRESULT const hr = renderer->g_pSwapChain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, 0);
+    HRESULT const hr = renderer->g_pSwapChain->ResizeBuffers(0, width, height, DXGI_FORMAT_UNKNOWN, 0);
 
     assert(SUCCEEDED(hr));
 
+    renderer->create_render_texture();
     renderer->create_render_target();
     renderer->create_depth_stencil();
 
@@ -77,14 +79,27 @@ void RendererDX11::begin_frame() const
     // This function could be called like an event, instead is called every frame (could slow down, but I do not think so).
     get_instance_dx11()->create_rasterizer_state();
     Renderer::begin_frame();
-    const float clear_color_with_alpha[4] = { clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w };
+
+    if (m_render_to_texture)
+    {
+        g_pd3dDeviceContext->OMSetRenderTargets(1, &g_textureRenderTargetView, m_depth_stencil_view);
+    }
+    else
+    {
+        g_pd3dDeviceContext->OMSetRenderTargets(1, &g_mainRenderTargetView, m_depth_stencil_view);
+    }
+
+    float const clear_color_with_alpha[4] = { clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w };
     g_pd3dDeviceContext->ClearRenderTargetView(g_mainRenderTargetView, clear_color_with_alpha);
+    g_pd3dDeviceContext->ClearRenderTargetView(g_textureRenderTargetView, clear_color_with_alpha);
     g_pd3dDeviceContext->ClearDepthStencilView(m_depth_stencil_view, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 }
 
 void RendererDX11::end_frame() const
 {
     Renderer::end_frame();
+
+    g_pd3dDeviceContext->OMSetRenderTargets(1, &g_mainRenderTargetView, m_depth_stencil_view);
 }
 
 void RendererDX11::present() const
@@ -102,6 +117,11 @@ ID3D11Device* RendererDX11::get_device() const
 ID3D11DeviceContext* RendererDX11::get_device_context() const
 {
     return g_pd3dDeviceContext;
+}
+
+ID3D11ShaderResourceView* RendererDX11::get_render_texture_view() const
+{
+    return m_render_target_texture_view;
 }
 
 void RendererDX11::update_shader(std::shared_ptr<Shader> const& shader, glm::mat4 const& projection_view,
@@ -219,6 +239,7 @@ bool RendererDX11::create_device_d3d(HWND const hwnd)
         return false;
     }
 
+    create_render_texture();
     create_render_target();
 
     return true;
@@ -226,7 +247,9 @@ bool RendererDX11::create_device_d3d(HWND const hwnd)
 
 void RendererDX11::cleanup_device_d3d()
 {
+    cleanup_depth_stencil();
     cleanup_render_target();
+    cleanup_render_texture();
 
     if (g_pSwapChain)
     {
@@ -250,13 +273,13 @@ void RendererDX11::cleanup_device_d3d()
 void RendererDX11::create_render_target()
 {
     ID3D11Texture2D* p_back_buffer;
-    HRESULT result = g_pSwapChain->GetBuffer(0, IID_PPV_ARGS(&p_back_buffer));
+    HRESULT hr = g_pSwapChain->GetBuffer(0, IID_PPV_ARGS(&p_back_buffer));
 
-    assert(SUCCEEDED(result));
+    assert(SUCCEEDED(hr));
 
-    result = g_pd3dDevice->CreateRenderTargetView(p_back_buffer, nullptr, &g_mainRenderTargetView);
+    hr = g_pd3dDevice->CreateRenderTargetView(p_back_buffer, nullptr, &g_mainRenderTargetView);
 
-    assert(SUCCEEDED(result));
+    assert(SUCCEEDED(hr));
 
     p_back_buffer->Release();
 }
@@ -283,18 +306,6 @@ void RendererDX11::create_rasterizer_state()
 
 void RendererDX11::create_depth_stencil()
 {
-    if (m_depth_stencil_buffer != nullptr)
-    {
-        m_depth_stencil_buffer->Release();
-        m_depth_stencil_buffer = nullptr;
-    }
-
-    if (m_depth_stencil_view != nullptr)
-    {
-        m_depth_stencil_view->Release();
-        m_depth_stencil_view = nullptr;
-    }
-
     D3D11_TEXTURE2D_DESC depth_stencil_desc = {};
     depth_stencil_desc.Width = screen_width;
     depth_stencil_desc.Height = screen_height;
@@ -319,11 +330,82 @@ void RendererDX11::create_depth_stencil()
     g_pd3dDeviceContext->OMSetRenderTargets(1, &g_mainRenderTargetView, m_depth_stencil_view);
 }
 
+void RendererDX11::cleanup_depth_stencil()
+{
+    if (m_depth_stencil_buffer != nullptr)
+    {
+        m_depth_stencil_buffer->Release();
+        m_depth_stencil_buffer = nullptr;
+    }
+
+    if (m_depth_stencil_view != nullptr)
+    {
+        m_depth_stencil_view->Release();
+        m_depth_stencil_view = nullptr;
+    }
+}
+
 void RendererDX11::cleanup_render_target()
 {
     if (g_mainRenderTargetView)
     {
         g_mainRenderTargetView->Release();
         g_mainRenderTargetView = nullptr;
+    }
+}
+
+void RendererDX11::create_render_texture()
+{
+    if (m_render_target_texture)
+        m_render_target_texture->Release();
+
+    D3D11_TEXTURE2D_DESC render_texture_desc = {};
+    render_texture_desc.Width = screen_width;
+    render_texture_desc.Height = screen_height;
+    render_texture_desc.MipLevels = 1;
+    render_texture_desc.ArraySize = 1;
+    render_texture_desc.Format = m_render_target_format;
+    render_texture_desc.SampleDesc.Count = 1;
+    render_texture_desc.Usage = D3D11_USAGE_DEFAULT;
+    render_texture_desc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+    render_texture_desc.CPUAccessFlags = 0;
+    render_texture_desc.MiscFlags = 0;
+
+    HRESULT hr = get_device()->CreateTexture2D(&render_texture_desc, nullptr, &m_render_target_texture);
+
+    assert(SUCCEEDED(hr));
+
+    D3D11_SHADER_RESOURCE_VIEW_DESC shader_resource_view_desc = {};
+    shader_resource_view_desc.Format = render_texture_desc.Format;
+    shader_resource_view_desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+    shader_resource_view_desc.Texture2D.MipLevels = 1;
+    shader_resource_view_desc.Texture2D.MostDetailedMip = 0;
+
+    hr = get_device()->CreateShaderResourceView(m_render_target_texture, &shader_resource_view_desc, &m_render_target_texture_view);
+
+    assert(SUCCEEDED(hr));
+
+    D3D11_RENDER_TARGET_VIEW_DESC render_target_view_desc = {};
+    render_target_view_desc.Format = m_render_target_format;
+    render_target_view_desc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+    render_target_view_desc.Texture2D.MipSlice = 0;
+
+    hr = g_pd3dDevice->CreateRenderTargetView(m_render_target_texture, &render_target_view_desc, &g_textureRenderTargetView);
+
+    assert(SUCCEEDED(hr));
+}
+
+void RendererDX11::cleanup_render_texture()
+{
+    if (m_render_target_texture_view)
+    {
+        m_render_target_texture_view->Release();
+        m_render_target_texture_view = nullptr;
+    }
+
+    if (g_textureRenderTargetView)
+    {
+        g_textureRenderTargetView->Release();
+        g_textureRenderTargetView = nullptr;
     }
 }
