@@ -248,3 +248,7 @@ void ShaderGL::set_mat4(std::string const& name, glm::mat4 const value) const
 {
     glUniformMatrix4fv(glGetUniformLocation(program_id, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
 }
+
+void ShaderGL::load_shader()
+{
+}
