@@ -19,12 +19,29 @@ ShaderDX11::ShaderDX11(AK::Badge<ShaderFactory>, std::string const& compute_path
 ShaderDX11::ShaderDX11(AK::Badge<ShaderFactory>, std::string const& vertex_path, std::string const& fragment_path)
     : Shader(vertex_path, fragment_path)
 {
-    ID3DBlob* vs_blob;
+    load_shader();
+}
 
+ShaderDX11::ShaderDX11(AK::Badge<ShaderFactory>, std::string const& vertex_path, std::string const& fragment_path,
+                       std::string const& geometry_path) : Shader(vertex_path, fragment_path, geometry_path)
+{
+}
+
+ShaderDX11::ShaderDX11(AK::Badge<ShaderFactory>, std::string const& vertex_path,
+                       std::string const& tessellation_control_path, std::string const& tessellation_evaluation_path,
+                       std::string const& fragment_path)
+    : Shader(vertex_path, tessellation_control_path, tessellation_evaluation_path, fragment_path)
+{
+}
+
+void ShaderDX11::load_shader()
+{
+    // Load vertex shader
+    ID3DBlob* vs_blob;
     {
         ID3DBlob* shader_compile_errors_blob;
 
-        std::wstring const vertex_path_final = std::wstring(vertex_path.begin(), vertex_path.end());
+        std::wstring const vertex_path_final = std::wstring(m_vertex_path.begin(), m_vertex_path.end());
         HRESULT hr = D3DCompileFromFile(vertex_path_final.c_str(), nullptr, nullptr, "vs_main", "vs_5_0", 0, 0, &vs_blob, &shader_compile_errors_blob);
 
         if (FAILED(hr))
@@ -54,12 +71,12 @@ ShaderDX11::ShaderDX11(AK::Badge<ShaderFactory>, std::string const& vertex_path,
         }
     }
 
+    // Load pixel shader
     ID3DBlob* ps_blob;
-
     {
         ID3DBlob* shader_compile_errors_blob;
 
-        std::wstring const pixel_path_final = std::wstring(fragment_path.begin(), fragment_path.end());
+        std::wstring const pixel_path_final = std::wstring(m_fragment_path.begin(), m_fragment_path.end());
         HRESULT hr = D3DCompileFromFile(pixel_path_final.c_str(), nullptr, nullptr, "ps_main", "ps_5_0", 0, 0, &ps_blob, &shader_compile_errors_blob);
 
         if (FAILED(hr))
@@ -106,18 +123,6 @@ ShaderDX11::ShaderDX11(AK::Badge<ShaderFactory>, std::string const& vertex_path,
     }
 }
 
-ShaderDX11::ShaderDX11(AK::Badge<ShaderFactory>, std::string const& vertex_path, std::string const& fragment_path,
-                       std::string const& geometry_path) : Shader(vertex_path, fragment_path, geometry_path)
-{
-}
-
-ShaderDX11::ShaderDX11(AK::Badge<ShaderFactory>, std::string const& vertex_path,
-                       std::string const& tessellation_control_path, std::string const& tessellation_evaluation_path,
-                       std::string const& fragment_path)
-    : Shader(vertex_path, tessellation_control_path, tessellation_evaluation_path, fragment_path)
-{
-}
-
 void ShaderDX11::use() const
 {
     auto const instance = RendererDX11::get_instance_dx11();
@@ -154,3 +159,4 @@ i32 ShaderDX11::attach(char const* path, i32 type) const
 {
     return 0;
 }
+

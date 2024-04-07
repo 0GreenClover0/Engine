@@ -24,6 +24,7 @@ public:
     void virtual set_vec3(std::string const& name, glm::vec3 const value) const = 0;
     void virtual set_vec4(std::string const& name, glm::vec4 const value) const = 0;
     void virtual set_mat4(std::string const& name, glm::mat4 const value) const = 0;
+    void virtual load_shader() = 0;
 
     std::vector<std::shared_ptr<Material>> materials;
 

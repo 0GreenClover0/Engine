@@ -41,6 +41,7 @@ public:
     void virtual present() const;
 
     void switch_rendering_to_texture();
+    void reload_shaders() const;
 
     void set_vsync(bool const enabled);
 
@@ -59,7 +60,7 @@ public:
 
     bool wireframe_mode_active = false;
 
-    inline static ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+    inline static ImVec4 clear_color = ImVec4(0.2f, 0.2f, 0.2f, 1.00f);
 
     inline static i32 screen_width = 1280;
     inline static i32 screen_height = 720;

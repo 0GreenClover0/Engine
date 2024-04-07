@@ -162,6 +162,14 @@ void Renderer::switch_rendering_to_texture()
     m_render_to_texture = !m_render_to_texture;
 }
 
+void Renderer::reload_shaders() const
+{
+    for (u32 i = 0; i < m_shaders.size(); i++)
+    {
+        m_shaders[i]->load_shader();
+    }
+}
+
 void Renderer::set_vsync(bool const enabled)
 {
     vsync_enabled = enabled;

@@ -369,6 +369,11 @@ void Editor::handle_input()
     {
         m_operation_type = GuizmoOperationType::None;
     }
+
+    if (input->get_key_down(GLFW_KEY_F5))
+    {
+        Renderer::get_instance()->reload_shaders();
+    }
 }
 
 void Editor::set_docking_space() const

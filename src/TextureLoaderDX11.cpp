@@ -79,7 +79,6 @@ TextureData TextureLoaderDX11::texture_from_file(std::string const& path, Textur
     assert(SUCCEEDED(hr));
 
     TextureData texture_data;
-    // TO DO: Figure out how id works in DX11 (apart from the fact that there are samplers registers in the shader)
     texture_data.id = 0;
     texture_data.texture_2d = image_texture;
     texture_data.shader_resource_view = texture_resource;

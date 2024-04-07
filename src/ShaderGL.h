@@ -21,6 +21,7 @@ public:
     void virtual set_vec3(std::string const& name, glm::vec3 const value) const override;
     void virtual set_vec4(std::string const& name, glm::vec4 const value) const override;
     void virtual set_mat4(std::string const& name, glm::mat4 const value) const override;
+    void virtual load_shader() override;
 
 private:
     i32 virtual attach(char const* path, i32 type) const override;
