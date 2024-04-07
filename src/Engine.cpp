@@ -68,12 +68,6 @@ void Engine::run()
 {
     Renderer::get_instance()->initialize();
 
-    bool debug_open = true;
-    bool polygon_mode = false;
-
-    i32 nb_frames = 0;
-    double frame_per_second = 0.0;
-    double last_time = glfwGetTime();
     double last_frame = 0.0; // Time of last frame
 
     Editor::Editor editor(MainScene::get_instance());
@@ -84,14 +78,6 @@ void Engine::run()
         double const current_frame = glfwGetTime();
         delta_time = current_frame - last_frame;
         last_frame = current_frame;
-
-        nb_frames++;
-        if (current_frame - last_time >= 1.0)
-        {
-            frame_per_second = 1000.0 / static_cast<double>(nb_frames);
-            nb_frames = 0;
-            last_time = glfwGetTime();
-        }
 
         glfwPollEvents();
         Input::input->update_keys();
@@ -114,16 +100,9 @@ void Engine::run()
         editor.set_docking_space();
         ImGuizmo::BeginFrame();
 
-        ImGuiWindowFlags window_flags = 0;
-        window_flags |= ImGuiWindowFlags_MenuBar;
-        
         editor.handle_input();
-        editor.draw_debug_window(&debug_open, window_flags, &polygon_mode, frame_per_second);
-        editor.draw_scene_hierarchy();
-        editor.draw_inspector();
+        editor.draw();
 
-
-        Renderer::get_instance()->wireframe_mode_active = polygon_mode;
 
         Renderer::get_instance()->begin_frame();
 
