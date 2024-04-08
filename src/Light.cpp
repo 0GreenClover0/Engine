@@ -31,3 +31,13 @@ std::string Light::get_name() const
     std::string const name = typeid(decltype(*this)).name();
     return name.substr(6);
 }
+
+void Light::on_enabled()
+{
+    Renderer::get_instance()->register_light(std::static_pointer_cast<Light>(shared_from_this()));
+}
+
+void Light::on_disabled()
+{
+    Renderer::get_instance()->unregister_light(std::static_pointer_cast<Light>(shared_from_this()));
+}

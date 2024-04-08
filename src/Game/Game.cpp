@@ -63,7 +63,7 @@ void Game::initialize()
     auto const model = Entity::create("testmodel1");
     model->add_component(Model::create("./res/models/pyramid3/scene.gltf", standard_material));
     model->transform->set_local_position(glm::vec3(0.0f, 0.0f, -5.0f));
-
+    
     auto const text = Entity::create("text");
     std::shared_ptr<ExampleDynamicText> const edt = text->add_component<ExampleDynamicText>();
 
@@ -91,7 +91,7 @@ void Game::initialize()
     point_light_component->linear = 0.09f;
     point_light_component->quadratic = 0.032f;
 
-   
+
     auto const spot_light = Entity::create("Spot light");
     spot_light->add_component(std::make_shared<Sphere>(0.1f, 10, 10, "./res/textures/container.png", light_source_material));
     spot_light->transform->set_local_position(glm::vec3(0.0f, 0.0f, -10.0f));
@@ -106,7 +106,7 @@ void Game::initialize()
     spot_light_component->quadratic = 0.032f;
     spot_light_component->cut_off = glm::cos(glm::radians(12.5f));
     spot_light_component->outer_cut_off = glm::cos(glm::radians(15.0f));
-    
+
 
     auto const directional_light = Entity::create("Directional light");
     directional_light->add_component(std::make_shared<Sphere>(0.1f, 10, 10, "./res/textures/container.png", light_source_material));
