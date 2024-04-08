@@ -94,7 +94,18 @@ void Renderer::register_light(std::shared_ptr<Light> const& light)
 
 void Renderer::unregister_light(std::shared_ptr<Light> const& light)
 {
-    AK::swap_and_erase(m_lights, light);
+    if (auto const potential_point_light = std::dynamic_pointer_cast<PointLight>(light))
+    {
+        AK::swap_and_erase(m_point_lights, potential_point_light);
+    }
+    else if (auto const potential_spot_light = std::dynamic_pointer_cast<SpotLight>(light))
+    {
+        AK::swap_and_erase(m_spot_lights, potential_spot_light);
+    }
+    else if (auto const potential_directional_light = std::dynamic_pointer_cast<DirectionalLight>(light))
+    {
+        m_directional_light = nullptr;
+    }
 }
 
 void Renderer::begin_frame() const
