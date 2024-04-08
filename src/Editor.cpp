@@ -206,16 +206,20 @@ void Editor::draw_inspector()
 
     for (auto const& component : entity->components)
     {
-        ImGui::Text(component->get_name().c_str());
+        ImGui::Spacing();
+        bool const component_open = ImGui::TreeNode(component->get_name().c_str());
         ImGui::Spacing();
 
-        bool enabled = component->enabled();
-        ImGui::Checkbox("Enabled", &enabled);
-        component->set_enabled(enabled);
+        if (component_open)
+        {
+            bool enabled = component->enabled();
+            ImGui::Checkbox("Enabled", &enabled);
+            component->set_enabled(enabled);
 
-        component->draw_editor();
+            component->draw_editor();
 
-        ImGui::Spacing();
+            ImGui::TreePop();
+        }
     }
 
     ImGui::End();
