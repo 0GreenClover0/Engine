@@ -85,8 +85,8 @@ void Game::initialize()
 
     auto const point_light_component = point_light->add_component<PointLight>(PointLight::create());
     point_light_component->ambient = glm::vec3(0.05f);
-    point_light_component->diffuse = glm::vec3(0.2f);
-    point_light_component->specular = glm::vec3(0.2f);
+    point_light_component->diffuse = glm::vec3(0.9f);
+    point_light_component->specular = glm::vec3(0.8f);
     point_light_component->constant = 1.0f;
     point_light_component->linear = 0.09f;
     point_light_component->quadratic = 0.032f;
