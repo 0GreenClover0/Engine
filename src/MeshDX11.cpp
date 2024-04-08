@@ -117,8 +117,8 @@ void MeshDX11::bind_textures() const
 
     for (u32 i = 0; i < m_textures.size(); ++i)
     {
-        device_context->PSSetShaderResources(0, 1, &m_textures[i].shader_resource_view);
-        device_context->PSSetSamplers(0, 1, &m_textures[i].image_sampler_state);
+        device_context->PSSetShaderResources(i, 1, &m_textures[i].shader_resource_view);
+        device_context->PSSetSamplers(i, 1, &m_textures[i].image_sampler_state);
     }
 }
 
@@ -127,9 +127,11 @@ void MeshDX11::unbind_textures() const
     auto const device_context = RendererDX11::get_instance_dx11()->get_device_context();
 
     ID3D11ShaderResourceView* null_shader_resource_view = nullptr;
+    ID3D11SamplerState* null_sampler_state = nullptr;
+
     for (u32 i = 0; i < m_textures.size(); ++i)
     {
-        device_context->PSSetShaderResources(0, 1, &null_shader_resource_view);
-        device_context->PSSetSamplers(0, 1, &m_textures[i].image_sampler_state);
+        device_context->PSSetShaderResources(i, 1, &null_shader_resource_view);
+        device_context->PSSetSamplers(i, 1, &null_sampler_state);
     }
 }
