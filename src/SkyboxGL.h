@@ -2,9 +2,11 @@
 
 #include "Skybox.h"
 #include "AK/Types.h"
+#include "Serialization.h"
 
 class SkyboxFactory;
 
+NON_SERIALIZED
 class SkyboxGL final : public Skybox
 {
 public:

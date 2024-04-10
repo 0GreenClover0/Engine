@@ -3,6 +3,7 @@
 #include "Component.h"
 #include "Engine.h"
 #include "Sprite.h"
+#include "Serialization.h"
 
 class ExampleUIBar final : public Component
 {
@@ -11,9 +12,11 @@ public:
 
     virtual void awake() override;
     virtual void update() override;
+    virtual void draw_editor() override;
+
+    float value = 0.0f;
 
 private:
     std::shared_ptr<Entity> m_sprite_background = nullptr;
     std::shared_ptr<Entity> m_sprite_value = nullptr;
-    float m_value = 0.0f;
 };
