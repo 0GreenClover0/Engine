@@ -2,7 +2,9 @@
 
 #include "Model.h"
 #include "AK/Badge.h"
+#include "Serialization.h"
 
+NON_SERIALIZED
 class Grass final : public Model
 {
 public:

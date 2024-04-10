@@ -4,16 +4,22 @@
 #include <iostream>
 #include <yaml-cpp/yaml.h>
 
-#include "Cube.h"
-#include "Ellipse.h"
 #include "Entity.h"
-#include "Model.h"
 #include "ShaderFactory.h"
-#include "Sphere.h"
 #include "yaml-cpp-extensions.h"
+// # Put new header here
 
 SceneSerializer::SceneSerializer(std::shared_ptr<Scene> const& scene) : m_scene(scene)
 {
+}
+
+void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_ptr<Component> const& component)
+{
+    // # Auto serialization start
+    {
+        std::cout << "Error. Serialization of component " << component->get_name() << " failed." << "\n";
+    }
+    // # Put new serialization here
 }
 
 void SceneSerializer::serialize_entity(YAML::Emitter& out, std::shared_ptr<Entity> const& entity)
@@ -42,52 +48,28 @@ void SceneSerializer::serialize_entity(YAML::Emitter& out, std::shared_ptr<Entit
     out << YAML::BeginSeq; // Components
     for (auto const& component : entity->components)
     {
-        if (auto const model = std::dynamic_pointer_cast<Model>(component); model != nullptr)
+        if (false)
         {
-            if (auto const ellipse = std::dynamic_pointer_cast<class Ellipse>(component); ellipse != nullptr)
-            {
-                out << YAML::BeginMap; // ModelComponent
-                out << YAML::Key << "ComponentName" << YAML::Value << "EllipseComponent";
-
-                out << YAML::Key << "CenterX" << YAML::Value << ellipse->m_center_x;
-                out << YAML::Key << "CenterZ" << YAML::Value << ellipse->m_center_z;
-                out << YAML::Key << "RadiusX" << YAML::Value << ellipse->m_radius_x;
-                out << YAML::Key << "RadiusZ" << YAML::Value << ellipse->m_radius_z;
-                out << YAML::Key << "SegmentCount" << YAML::Value << ellipse->m_segment_count;
-            }
-            else if (auto const sphere = std::dynamic_pointer_cast<Sphere>(component); sphere != nullptr)
-            {
-                out << YAML::BeginMap; // ModelComponent
-                out << YAML::Key << "ComponentName" << YAML::Value << "SphereComponent";
-
-                out << YAML::Key << "Radius" << YAML::Value << sphere->m_radius;
-                out << YAML::Key << "Sectors" << YAML::Value << sphere->sector_count;
-                out << YAML::Key << "Stacks" << YAML::Value << sphere->stack_count;
-                out << YAML::Key << "TexturePath" << YAML::Value << sphere->m_texture_path;
-            }
-            else if (auto const cube = std::dynamic_pointer_cast<class Cube>(component); cube != nullptr)
-            {
-                out << YAML::BeginMap; // ModelComponent
-                out << YAML::Key << "ComponentName" << YAML::Value << "CubeComponent";
-
-                out << YAML::Key << "TexturePath" << YAML::Value << cube->m_diffuse_texture_path;
-            }
-            else
-            {
-                out << YAML::BeginMap; // ModelComponent
-                out << YAML::Key << "ComponentName" << YAML::Value << "ModelComponent";
-            }
-
-            out << YAML::Key << "ModelPath" << YAML::Value << model->m_model_path;
-
-            out << YAML::Key << "Material" << YAML::Value << model->material;
-
-            out << YAML::EndMap; // ModelComponent
+            // Custom serialization here
+        }
+        else
+        {
+            auto_serialize_component(out, component);
         }
     }
     out << YAML::EndSeq; // Components
 
     out << YAML::EndMap; // Entity
+}
+
+void SceneSerializer::auto_deserialize_component(YAML::Node const& component, std::shared_ptr<Entity> const& deserialized_entity) const
+{
+    auto component_name = component["ComponentName"].as<std::string>();
+    // # Auto deserialization start
+    {
+        std::cout << "Error. Deserialization of component " << component_name << " failed." << "\n";
+    }
+    // # Put new deserialization here
 }
 
 std::shared_ptr<Entity> SceneSerializer::deserialize_entity(YAML::Node const& entity) const
@@ -128,41 +110,13 @@ std::shared_ptr<Entity> SceneSerializer::deserialize_entity(YAML::Node const& en
     {
         YAML::Node const& component = *it;
         auto component_name = component["ComponentName"].as<std::string>();
-        if (component_name == "EllipseComponent")
+        if (false)
         {
-            deserialized_entity->add_component<class Ellipse>(Ellipse::create(
-                component["CenterX"].as<float>(),
-                component["CenterZ"].as<float>(),
-                component["RadiusX"].as<float>(),
-                component["RadiusZ"].as<float>(),
-                component["SegmentCount"].as<i32>(),
-                component["Material"].as<std::shared_ptr<Material>>()
-            ));
+            // Custom deserialization here
         }
-        else if (component_name == "SphereComponent")
+        else
         {
-            deserialized_entity->add_component<Sphere>(Sphere::create(
-                component["Radius"].as<float>(),
-                component["Sectors"].as<u32>(),
-                component["Stacks"].as<u32>(),
-                component["TexturePath"].as<std::string>(),
-                component["Material"].as<std::shared_ptr<Material>>()
-            ));
-        }
-        else if (component_name == "CubeComponent")
-        {
-            deserialized_entity->add_component<Cube>(
-                Cube::create(component["TexturePath"].as<std::string>(), component["Material"].as<std::shared_ptr<Material>>())
-            );
-        }
-        else if (component_name == "ModelComponent")
-        {
-            deserialized_entity->add_component<Model>(
-                Model::create(
-                    component["ModelPath"].as<std::string>(),
-                    component["Material"].as<std::shared_ptr<Material>>()
-                )
-            );
+            auto_deserialize_component(component, deserialized_entity);
         }
     }
 
