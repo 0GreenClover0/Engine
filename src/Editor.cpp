@@ -1,5 +1,6 @@
 #include "Editor.h"
 
+#include <filesystem>
 #include <glm/gtc/type_ptr.inl>
 #include <glm/gtx/string_cast.hpp>
 #include <imgui.h>
@@ -20,6 +21,8 @@ Editor::Editor(std::shared_ptr<Scene> const& scene) : m_open_scene(scene)
 
     m_debug_window.flags |= ImGuiWindowFlags_MenuBar;
     m_last_second = glfwGetTime();
+
+    load_assets();
 }
 
 void Editor::draw()
@@ -27,6 +30,7 @@ void Editor::draw()
     if (!m_rendering_to_editor)
         return;
 
+    draw_content_browser();
     draw_debug_window();
     draw_scene_hierarchy();
     draw_game();
@@ -57,6 +61,18 @@ void Editor::draw_debug_window()
     ImGui::End();
 
     Renderer::get_instance()->wireframe_mode_active = m_polygon_mode_active;
+}
+
+void Editor::draw_content_browser()
+{
+    ImGui::Begin("Content", &m_content_browser_window.open, m_content_browser_window.flags);
+
+    for (auto const& asset : m_assets)
+    {
+        ImGui::Selectable(asset.path.c_str());
+    }
+
+    ImGui::End();
 }
 
 void Editor::draw_game()
@@ -174,6 +190,19 @@ void Editor::draw_entity_recursively(std::shared_ptr<Transform> const& transform
     }
 
     ImGui::TreePop();
+}
+
+void Editor::load_assets()
+{
+    for (auto const& entry : std::filesystem::recursive_directory_iterator(content_path))
+    {
+        if (std::ranges::find(m_known_model_formats, entry.path().extension().string()) != m_known_model_formats.end())
+        {
+            m_assets.emplace_back(entry.path().string(), AssetType::Model);
+        }
+
+        // TODO: Load other assets...
+    }
 }
 
 void Editor::draw_inspector()
