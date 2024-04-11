@@ -18,6 +18,8 @@ public:
     virtual void on_enabled();
     virtual void on_disabled();
 
+    void destroy_immediate();
+
     virtual std::string get_name() const;
     virtual void draw_editor();
 
