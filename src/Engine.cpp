@@ -47,9 +47,15 @@ i32 Engine::initialize()
         return result;
 
     if (Renderer::renderer_api == Renderer::RendererApi::OpenGL)
+    {
+        InternalMeshData::light_initialize();
         InternalMeshData::initialize();
+    }
     else if (Renderer::renderer_api == Renderer::RendererApi::DirectX11)
+    {
+        InternalMeshData::light_initialize();
         std::cout << "TODO: Initialize internal mesh data in DX11 API." << "\n";
+    }
 
     return 0;
 }

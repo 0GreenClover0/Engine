@@ -3,10 +3,17 @@
 #include <iostream>
 
 #include "Model.h"
+#include "ShaderFactory.h"
 #include "TextureLoader.h"
 
 namespace InternalMeshData
 {
+
+void light_initialize()
+{
+    default_shader = ShaderFactory::create("./res/shaders/lit.hlsl", "./res/shaders/lit.hlsl");
+    default_material = Material::create(default_shader);
+}
 
 void initialize()
 {
