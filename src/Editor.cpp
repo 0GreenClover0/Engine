@@ -6,12 +6,21 @@
 #include <imgui.h>
 #include <ImGuizmo.h>
 
-#include "Entity.h"
 #include "Camera.h"
-#include "SceneSerializer.h"
+#include "ComponentList.h"
+#include "Cube.h"
 #include "Engine.h"
+#include "Entity.h"
+#include "Grass.h"
 #include "Input.h"
 #include "RendererDX11.h"
+#include "SceneSerializer.h"
+#include "ScreenText.h"
+#include "Sound.h"
+#include "SoundListener.h"
+#include "Sphere.h"
+#include "Sprite.h"
+#include "Game/Player/PlayerInput.h"
 
 namespace Editor
 {
@@ -249,6 +258,19 @@ void Editor::draw_inspector()
 
             ImGui::TreePop();
         }
+    }
+
+    if (ImGui::BeginListBox("##empty", ImVec2(-FLT_MIN, 0.0f)))
+    {
+        if constexpr (false)
+            ;
+#define ENUMERATE_COMPONENT(name, ui_name)                       \
+        else if (ImGui::Button(ui_name, ImVec2(-FLT_MIN, 20)))   \
+            entity->add_component<##name>(##name::create());
+        ENUMERATE_COMPONENTS
+#undef ENUMERATE_COMPONENT
+
+        ImGui::EndListBox();
     }
 
     ImGui::End();
