@@ -9,6 +9,7 @@
 #include "Camera.h"
 #include "ComponentList.h"
 #include "Cube.h"
+#include "Debug.h"
 #include "Engine.h"
 #include "Entity.h"
 #include "Grass.h"
@@ -67,6 +68,39 @@ void Editor::draw_debug_window()
     ImGui::Checkbox("Polygon mode", &m_polygon_mode_active);
     ImGui::Text("Application average %.3f ms/frame", m_average_ms_per_frame);
     draw_scene_save();
+
+    std::string const log_count = "Logs " + std::to_string(Debug::debug_messages.size());
+    ImGui::Text(log_count.c_str());
+    ImGui::BeginListBox("Logs", ImVec2(-FLT_MIN, 0.0f));
+
+    ImGuiListClipper clipper;
+    clipper.Begin(Debug::debug_messages.size());
+    while (clipper.Step())
+    {
+        for (int i = clipper.DisplayStart; i < clipper.DisplayEnd; i++)
+        {
+            switch (Debug::debug_messages[i].type)
+            {
+            case DebugType::Log:
+                ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 255, 255, 255));
+                break;
+            case DebugType::Warning:
+                ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 250, 0, 255));
+                break;
+            case DebugType::Error:
+                ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 55, 0, 255));
+                break;
+            default:
+                std::unreachable();
+            }
+
+            ImGui::Text(Debug::debug_messages[i].text.c_str());
+            ImGui::PopStyleColor();
+        }
+    }
+
+    ImGui::EndListBox();
+
     ImGui::End();
 
     Renderer::get_instance()->wireframe_mode_active = m_polygon_mode_active;
