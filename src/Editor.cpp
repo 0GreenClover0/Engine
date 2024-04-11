@@ -246,7 +246,8 @@ void Editor::draw_inspector()
     for (auto const& component : components_copy)
     {
         ImGui::Spacing();
-        bool const component_open = ImGui::TreeNode(component->get_name().c_str());
+        std::string guid = "##" + component->guid;
+        bool const component_open = ImGui::TreeNode((component->get_name() + guid).c_str());
         ImGui::Spacing();
 
         if (component_open)
