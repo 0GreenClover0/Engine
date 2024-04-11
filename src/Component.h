@@ -7,6 +7,7 @@ class Entity;
 class Component : public std::enable_shared_from_this<Component>
 {
 public:
+    Component();
     virtual ~Component() = default;
 
     virtual void initialize();
@@ -33,6 +34,8 @@ public:
 
     void set_enabled(bool const value);
     bool enabled() const;
+
+    std::string guid;
 
 private:
     bool m_enabled = true;
