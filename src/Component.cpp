@@ -6,6 +6,11 @@
 
 #include <imgui.h>
 
+Component::Component()
+{
+    guid = AK::generate_guid();
+}
+
 void Component::initialize()
 {
 }
