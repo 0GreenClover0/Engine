@@ -6,6 +6,17 @@
 #include "Globals.h"
 #include "Input.h"
 
+std::shared_ptr<PlayerInput> PlayerInput::create()
+{
+    auto player_input = std::make_shared<PlayerInput>(AK::Badge<PlayerInput> {});
+
+    return player_input;
+}
+
+PlayerInput::PlayerInput(AK::Badge<PlayerInput>)
+{
+}
+
 void PlayerInput::awake()
 {
     m_camera = camera_entity->get_component<Camera>();

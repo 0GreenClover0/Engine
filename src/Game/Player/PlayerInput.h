@@ -9,14 +9,18 @@ class Entity;
 class PlayerInput final : public Component
 {
 public:
+    static std::shared_ptr<PlayerInput> create();
+
+    explicit PlayerInput(AK::Badge<PlayerInput>);
+
+    virtual void awake() override;
+    virtual void update() override;
+
     std::shared_ptr<Entity> camera_entity;
     std::shared_ptr<Window> window;
 
     float player_speed = 5.0f;
     float camera_speed = 12.5f;
-
-    virtual void awake() override;
-    virtual void update() override;
 
     std::shared_ptr<Entity> player;
     std::shared_ptr<Entity> player_model;

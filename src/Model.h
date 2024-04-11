@@ -16,11 +16,11 @@ struct aiNode;
 class Model : public Drawable
 {
 public:
+    static std::shared_ptr<Model> create();
     static std::shared_ptr<Model> create(std::string const& model_path, std::shared_ptr<Material> const& material);
     static std::shared_ptr<Model> create(std::shared_ptr<Mesh> mesh, std::shared_ptr<Material> const& material);
     static std::shared_ptr<Model> create(std::shared_ptr<Material> const& material);
 
-    Model() = delete;
     explicit Model(AK::Badge<Model>, std::string const& model_path, std::shared_ptr<Material> const& material);
     explicit Model(AK::Badge<Model>, std::shared_ptr<Material> const& material);
 

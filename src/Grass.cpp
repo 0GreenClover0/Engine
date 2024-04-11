@@ -1,7 +1,16 @@
 #include "Grass.h"
 
+#include "Globals.h"
 #include "MeshFactory.h"
 #include "TextureLoader.h"
+
+std::shared_ptr<Grass> Grass::create()
+{
+    auto grass = std::make_shared<Grass>(AK::Badge<Grass> {}, default_material);
+    grass->prepare();
+
+    return grass;
+}
 
 std::shared_ptr<Grass> Grass::create(std::shared_ptr<Material> const& material)
 {

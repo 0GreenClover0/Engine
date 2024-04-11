@@ -1,5 +1,7 @@
 #include "Sphere.h"
 
+#include "Globals.h"
+
 #include <iostream>
 #include <glm/trigonometric.hpp>
 #include <glm/ext/scalar_constants.hpp>
@@ -10,7 +12,29 @@
 #include "TextureLoader.h"
 #include "Vertex.h"
 
-Sphere::Sphere(float const radius, u32 const sectors, u32 const stacks, std::string texture_path, std::shared_ptr<Material> const& material)
+std::shared_ptr<Sphere> Sphere::create()
+{
+    auto sphere = std::make_shared<Sphere>(AK::Badge<Sphere> {}, default_material);
+
+    return sphere;
+}
+
+std::shared_ptr<Sphere> Sphere::create(float radius, u32 sectors, u32 stacks, std::string const& texture_path,
+                                       std::shared_ptr<Material> const &material)
+{
+    auto sphere = std::make_shared<Sphere>(AK::Badge<Sphere> {}, radius, sectors, stacks, texture_path, material);
+
+    return sphere;
+}
+
+Sphere::Sphere(AK::Badge<Sphere>, std::shared_ptr<Material> const& material) : Model(material)
+{
+    m_draw_type = DrawType::TriangleStrip;
+    Sphere::prepare();
+}
+
+Sphere::Sphere(AK::Badge<Sphere>, float const radius, u32 const sectors, u32 const stacks, std::string const& texture_path,
+               std::shared_ptr<Material> const& material)
     : Model(material), sector_count(sectors), stack_count(stacks), m_texture_path(std::move(texture_path)), m_radius(radius)
 {
     m_draw_type = DrawType::TriangleStrip;

@@ -5,7 +5,11 @@
 class Sphere final : public Model
 {
 public:
-    Sphere(float radius, u32 sectors, u32 stacks, std::string texture_path, std::shared_ptr<Material> const& material);
+    static std::shared_ptr<Sphere> create();
+    static std::shared_ptr<Sphere> create(float radius, u32 sectors, u32 stacks, std::string const& texture_path, std::shared_ptr<Material> const& material);
+
+    explicit Sphere(AK::Badge<Sphere>, std::shared_ptr<Material> const& material);
+    Sphere(AK::Badge<Sphere>, float radius, u32 sectors, u32 stacks, std::string const& texture_path, std::shared_ptr<Material> const& material);
 
     virtual std::string get_name() const override;
 
@@ -15,16 +19,16 @@ public:
 
     [[nodiscard]] std::shared_ptr<Mesh> create_sphere() const;
 
-    u32 sector_count;
-    u32 stack_count;
+    u32 sector_count = 0;
+    u32 stack_count = 0;
 
     inline static bool use_geometry_shader = false;
 
 private:
     [[nodiscard]] Texture load_texture() const;
 
-    std::string m_texture_path;
-    float m_radius;
+    std::string m_texture_path = "";
+    float m_radius = 5.0f;
 
     friend class SceneSerializer;
 };

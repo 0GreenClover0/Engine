@@ -49,7 +49,7 @@ void Game::initialize()
     m_camera_comp->set_fov(glm::radians(60.0f));
 
     auto const player = Entity::create("Player");
-    auto const player_input = player->add_component<PlayerInput>();
+    auto const player_input = player->add_component<PlayerInput>(PlayerInput::create());
     player_input->set_can_tick(true);
     player_input->camera_entity = m_camera;
     player_input->player = player;
@@ -80,7 +80,7 @@ void Game::initialize()
 
 
     auto const point_light = Entity::create("Point light");
-    point_light->add_component(std::make_shared<Sphere>(0.1f, 10, 10, "./res/textures/container.png", light_source_material));
+    point_light->add_component(Sphere::create(0.1f, 10, 10, "./res/textures/container.png", light_source_material));
     point_light->transform->set_local_position(glm::vec3(2.0f, 2.0f, 2.0f));
 
     auto const point_light_component = point_light->add_component<PointLight>(PointLight::create());
@@ -93,7 +93,7 @@ void Game::initialize()
 
 
     auto const spot_light = Entity::create("Spot light");
-    spot_light->add_component(std::make_shared<Sphere>(0.1f, 10, 10, "./res/textures/container.png", light_source_material));
+    spot_light->add_component(Sphere::create(0.1f, 10, 10, "./res/textures/container.png", light_source_material));
     spot_light->transform->set_local_position(glm::vec3(0.0f, 0.0f, -10.0f));
     spot_light->transform->set_euler_angles(glm::vec3(180.0f, 0.0f, 0.0f));
 
@@ -109,7 +109,7 @@ void Game::initialize()
 
 
     auto const directional_light = Entity::create("Directional light");
-    directional_light->add_component(std::make_shared<Sphere>(0.1f, 10, 10, "./res/textures/container.png", light_source_material));
+    directional_light->add_component(Sphere::create(0.1f, 10, 10, "./res/textures/container.png", light_source_material));
     directional_light->transform->set_local_position({ 0.0f, 0.0f, 1.0f });
 
     auto const directional_light_component = directional_light->add_component<DirectionalLight>(DirectionalLight::create());
