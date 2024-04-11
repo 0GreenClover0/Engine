@@ -25,6 +25,16 @@ void Camera::uninitialize()
     Renderer::get_instance()->unregister_camera(std::dynamic_pointer_cast<Camera>(shared_from_this()));
 }
 
+void Camera::set_main_camera(std::shared_ptr<Camera> const& camera)
+{
+    m_main_camera = camera;
+}
+
+std::shared_ptr<Camera> Camera::get_main_camera()
+{
+    return m_main_camera;
+}
+
 glm::vec3 Camera::get_position() const
 {
     return entity->transform->get_position();

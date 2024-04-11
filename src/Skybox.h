@@ -16,15 +16,8 @@ public:
     virtual void draw() const override = 0;
     void virtual bind() = 0;
 
-    static void set_instance(std::shared_ptr<Skybox> const& skybox)
-    {
-        m_instance = skybox;
-    }
-
-    static std::shared_ptr<Skybox> get_instance()
-    {
-        return m_instance;
-    }
+    static void set_instance(std::shared_ptr<Skybox> const& skybox);
+    static std::shared_ptr<Skybox> get_instance();
 
     Skybox(Skybox const&) = delete;
     void operator=(Skybox const&) = delete;

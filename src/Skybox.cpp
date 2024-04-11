@@ -35,3 +35,13 @@ void Skybox::load_textures()
     auto const [id, width, height, number_of_components, type, texture_2d, resource, sampler, path] = TextureLoader::get_instance()->load_cubemap(m_face_paths, TextureType::None, texture_settings);
     m_texture_id = id;
 }
+
+void Skybox::set_instance(std::shared_ptr<Skybox> const& skybox)
+{
+    m_instance = skybox;
+}
+
+std::shared_ptr<Skybox> Skybox::get_instance()
+{
+    return m_instance;
+}
