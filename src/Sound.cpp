@@ -5,6 +5,15 @@
 
 // TODO: Add an option to load sounds from files at the start of the game
 
+std::shared_ptr<Sound> Sound::create()
+{
+    auto sound = std::make_shared<Sound>(AK::Badge<Sound> {});
+
+    sound->set_can_tick(true);
+
+    return sound;
+}
+
 std::shared_ptr<Sound> Sound::create(std::string const& path)
 {
     std::shared_ptr<Sound> sound = std::make_shared<Sound>(AK::Badge<Sound> {});

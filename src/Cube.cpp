@@ -6,6 +6,14 @@
 #include "MeshFactory.h"
 #include "TextureLoader.h"
 
+std::shared_ptr<Cube> Cube::create()
+{
+    auto cube = std::make_shared<Cube>(AK::Badge<Cube> {}, default_material);
+    cube->prepare();
+
+    return cube;
+}
+
 std::shared_ptr<Cube> Cube::create(std::shared_ptr<Material> const& material, bool const big_cube)
 {
     auto cube = std::make_shared<Cube>(AK::Badge<Cube> {}, material);

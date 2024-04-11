@@ -10,6 +10,7 @@
 class Sound final : public Component
 {
 public:
+    static std::shared_ptr<Sound> create();
     static std::shared_ptr<Sound> create(std::string const& path);
     static std::shared_ptr<Sound> create(std::string const& path, glm::vec3 const direction, float const rolloff = 0.5f,
                                          ma_attenuation_model const attenuation = ma_attenuation_model_inverse);

@@ -1,7 +1,16 @@
 #include "Sprite.h"
 
+#include "Globals.h"
 #include "MeshFactory.h"
 #include "TextureLoader.h"
+
+std::shared_ptr<Sprite> Sprite::create()
+{
+    auto sprite = std::make_shared<Sprite>(AK::Badge<Sprite> {}, default_material);
+    sprite->prepare();
+
+    return sprite;
+}
 
 std::shared_ptr<Sprite> Sprite::create(std::shared_ptr<Material> const& material)
 {

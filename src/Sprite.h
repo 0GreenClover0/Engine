@@ -6,6 +6,7 @@
 class Sprite final : public Model
 {
 public:
+    static std::shared_ptr<Sprite> create();
     static std::shared_ptr<Sprite> create(std::shared_ptr<Material> const& material);
     static std::shared_ptr<Sprite> create(std::shared_ptr<Material> const& material, std::string const& diffuse_texture_path);
 

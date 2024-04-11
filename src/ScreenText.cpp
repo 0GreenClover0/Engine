@@ -2,7 +2,28 @@
 #include "RendererDX11.h"
 #include "ShaderFactory.h"
 
-ScreenText::ScreenText(std::wstring const& content, glm::vec2 const& position, float const font_size, u32 const color, u16 const flags)
+std::shared_ptr<ScreenText> ScreenText::create()
+{
+    auto const ui_shader = ShaderFactory::create("./res/shaders/ui.hlsl", "./res/shaders/ui.hlsl");
+    auto const ui_material = Material::create(ui_shader);
+    auto text = std::make_shared<ScreenText>(AK::Badge<ScreenText> {}, ui_material);
+
+    return text;
+}
+
+std::shared_ptr<ScreenText> ScreenText::create(std::wstring const &content, glm::vec2 const &position,
+    float const font_size, u32 const color, u16 const flags)
+{
+    auto text = std::make_shared<ScreenText>(AK::Badge<ScreenText> {}, content, position, font_size, color, flags);
+
+    return text;
+}
+
+ScreenText::ScreenText(AK::Badge<ScreenText>, std::shared_ptr<Material> const& material) : Drawable(material)
+{
+}
+
+ScreenText::ScreenText(AK::Badge<ScreenText>, std::wstring const& content, glm::vec2 const& position, float const font_size, u32 const color, u16 const flags)
     : Drawable(nullptr), m_text(content), m_position(position), m_font_size(font_size), m_color(color),
       m_flags(flags | FW1_RESTORESTATE) // Restore DX11 state by default
 {

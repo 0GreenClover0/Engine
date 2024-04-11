@@ -187,13 +187,13 @@ std::shared_ptr<Entity> SceneSerializer::deserialize_entity(YAML::Node const& en
         else if (component_name == "SphereComponent")
         {
             auto material = deserialize_material_instance(component["Material"]);
-            deserialized_entity->add_component<Sphere>(
+            deserialized_entity->add_component<Sphere>(Sphere::create(
                 component["Radius"].as<float>(),
                 component["Sectors"].as<u32>(),
                 component["Stacks"].as<u32>(),
                 component["TexturePath"].as<std::string>(),
                 material
-            );
+            ));
         }
         else if (component_name == "CubeComponent")
         {

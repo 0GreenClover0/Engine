@@ -8,12 +8,20 @@
 #include <glad/glad.h>
 
 #include "Entity.h"
+#include "Globals.h"
 #include "Mesh.h"
 #include "MeshFactory.h"
 #include "Texture.h"
 #include "TextureLoader.h"
 #include "Vertex.h"
 #include "AK/Types.h"
+
+std::shared_ptr<Model> Model::create()
+{
+    auto model = std::make_shared<Model>(AK::Badge<Model> {}, default_material);
+
+    return model;
+}
 
 std::shared_ptr<Model> Model::create(std::string const& model_path, std::shared_ptr<Material> const& material)
 {

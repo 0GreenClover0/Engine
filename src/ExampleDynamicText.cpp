@@ -7,7 +7,7 @@ void ExampleDynamicText::awake()
     set_can_tick(true);
 
     // This is example usage of ScreenText.
-    m_foo = entity->add_component<ScreenText>(m_example, glm::vec2(0, 0), 128, 0xff0099ff, FW1_CENTER | FW1_VCENTER);
+    m_foo = entity->add_component<ScreenText>(ScreenText::create(m_example, glm::vec2(0, 0), 128, 0xff0099ff, FW1_CENTER | FW1_VCENTER));
 }
 
 void ExampleDynamicText::update()
