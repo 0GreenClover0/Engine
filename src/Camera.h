@@ -11,15 +11,9 @@
 class Camera final : public Component
 {
 public:
-    static void set_main_camera(std::shared_ptr<Camera> const& camera)
-    {
-        m_main_camera = camera;
-    }
+    static void set_main_camera(std::shared_ptr<Camera> const& camera);
 
-    static std::shared_ptr<Camera> get_main_camera()
-    {
-        return m_main_camera;
-    }
+    static std::shared_ptr<Camera> get_main_camera();
 
     virtual void initialize() override;
     virtual void uninitialize() override;
