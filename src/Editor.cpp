@@ -242,7 +242,8 @@ void Editor::draw_inspector()
     ImGui::InputFloat3("Scale", glm::value_ptr(scale));
     entity->transform->set_local_scale(scale);
 
-    for (auto const& component : entity->components)
+    auto const components_copy = entity->components;
+    for (auto const& component : components_copy)
     {
         ImGui::Spacing();
         bool const component_open = ImGui::TreeNode(component->get_name().c_str());

@@ -13,6 +13,8 @@ std::shared_ptr<Light> Light::create()
 
 void Light::draw_editor()
 {
+    Component::draw_editor();
+
     float diffuse_color[] = { diffuse.x, diffuse.y, diffuse.z };
     ImGui::ColorEdit3("Diffuse color", diffuse_color);
     diffuse = glm::vec3(diffuse_color[0], diffuse_color[1], diffuse_color[2]);
