@@ -64,7 +64,14 @@ void Editor::draw_debug_window()
         m_last_second = glfwGetTime();
     }
 
-    ImGui::Begin("Debug", &m_debug_window.open, m_debug_window.flags);
+    bool const open = ImGui::Begin("Debug", &m_debug_window.open, m_debug_window.flags);
+
+    if (!open)
+    {
+        ImGui::End();
+        return;
+    }
+
     ImGui::Checkbox("Polygon mode", &m_polygon_mode_active);
     ImGui::Text("Application average %.3f ms/frame", m_average_ms_per_frame);
     draw_scene_save();
@@ -108,7 +115,13 @@ void Editor::draw_debug_window()
 
 void Editor::draw_content_browser()
 {
-    ImGui::Begin("Content", &m_content_browser_window.open, m_content_browser_window.flags);
+    bool const open = ImGui::Begin("Content", &m_content_browser_window.open, m_content_browser_window.flags);
+
+    if (!open)
+    {
+        ImGui::End();
+        return;
+    }
 
     for (auto const& asset : m_assets)
     {
@@ -120,7 +133,13 @@ void Editor::draw_content_browser()
 
 void Editor::draw_game()
 {
-    ImGui::Begin("Scene", &m_game_window.open, m_game_window.flags);
+    bool const open = ImGui::Begin("Scene", &m_game_window.open, m_game_window.flags);
+
+    if (!open)
+    {
+        ImGui::End();
+        return;
+    }
 
     auto vec2 = ImGui::GetContentRegionAvail();
     m_game_size = { vec2.x, vec2.y };
@@ -197,7 +216,13 @@ void Editor::draw_game()
 
 void Editor::draw_scene_hierarchy()
 {
-    ImGui::Begin("Hierarchy", &m_hierarchy_window.open, m_hierarchy_window.flags);
+    bool const open = ImGui::Begin("Hierarchy", &m_hierarchy_window.open, m_hierarchy_window.flags);
+
+    if (!open)
+    {
+        ImGui::End();
+        return;
+    }
 
     // Draw every entity without a parent, and draw its children recursively
     for (auto const& entity : m_open_scene->entities)
@@ -250,9 +275,9 @@ void Editor::load_assets()
 
 void Editor::draw_inspector()
 {
-    ImGui::Begin("Inspector", &m_inspector_window.open, m_inspector_window.flags);
+    bool const open = ImGui::Begin("Inspector", &m_inspector_window.open, m_inspector_window.flags);
 
-    if (m_selected_entity.expired())
+    if (!open || m_selected_entity.expired())
     {
         ImGui::End();
         return;
