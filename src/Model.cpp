@@ -18,6 +18,8 @@
 #include "Vertex.h"
 #include "AK/Types.h"
 
+#include <filesystem>
+
 std::shared_ptr<Model> Model::create()
 {
     auto model = std::make_shared<Model>(AK::Badge<Model> {}, default_material);
@@ -161,7 +163,8 @@ void Model::load_model(std::string const& path)
         return;
     }
 
-    m_directory = path.substr(0, path.find_last_of('/'));
+    std::filesystem::path const filesystem_path = path;
+    m_directory = filesystem_path.parent_path().string();
 
     proccess_node(scene->mRootNode, scene);
 }
