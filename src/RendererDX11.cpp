@@ -78,6 +78,11 @@ void RendererDX11::on_window_resize(GLFWwindow* window, i32 const width, i32 con
 
     assert(SUCCEEDED(hr));
 
+    if (width == 0 || height == 0)
+    {
+        return;
+    }
+
     renderer->create_render_texture();
     renderer->create_render_target();
     renderer->create_depth_stencil();
