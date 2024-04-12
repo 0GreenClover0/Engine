@@ -125,7 +125,10 @@ void Editor::draw_content_browser()
 
     for (auto const& asset : m_assets)
     {
-        ImGui::Selectable(asset.path.c_str());
+        if (ImGui::Selectable(asset.path.c_str()))
+        {
+            ImGui::SetClipboardText(asset.path.c_str());
+        }
     }
 
     ImGui::End();
