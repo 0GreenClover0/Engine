@@ -5,6 +5,8 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+#include <imgui.h>
+
 #include <glad/glad.h>
 
 #include "Entity.h"
@@ -54,6 +56,18 @@ Model::Model(AK::Badge<Model>, std::string const& model_path, std::shared_ptr<Ma
 
 Model::Model(AK::Badge<Model>, std::shared_ptr<Material> const& material) : Drawable(material)
 {
+}
+
+void Model::draw_editor()
+{
+    Drawable::draw_editor();
+
+    m_model_path.reserve(255);
+
+    if (ImGui::InputText("Model Path", m_model_path.data(), 255, ImGuiInputTextFlags_EnterReturnsTrue))
+    {
+        reprepare();
+    }
 }
 
 void Model::calculate_bounding_box()
