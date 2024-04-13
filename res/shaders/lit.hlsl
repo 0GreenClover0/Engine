@@ -48,6 +48,7 @@ cbuffer object_buffer : register(b0)
 {
     float4x4 projection_view_model;
     float4x4 model;
+    float4x4 light_projection_view_model;
 };
 
 struct VS_Input
@@ -63,10 +64,13 @@ struct VS_Output
     float3 normal : NORMAL;
     float3 world_pos : POSITION;
     float2 UV : TEXCOORD;
+    float4 light_space_pos : TEXCOORD1;
 };
 
-Texture2D obj_texture;
-SamplerState obj_sampler_state;
+Texture2D obj_texture : register(t0);
+Texture2D shadow_map : register(t1);
+SamplerState obj_sampler_state : register(s0);
+SamplerState shadow_map_sampler : register(s1);
 
 VS_Output vs_main(VS_Input input)
 {
@@ -75,12 +79,12 @@ VS_Output vs_main(VS_Input input)
     output.world_pos = mul(model, float4(input.pos, 1.0f));
     output.UV = input.UV;
     output.normal = normalize(mul(input.normal, (float3x3)model));
-    output.pixel_pos = mul(projection_view_model, float4(input.pos.xyz, 1.0f));
-
+    output.pixel_pos = mul(projection_view_model, float4(input.pos, 1.0f));
+    output.light_space_pos = mul(light_projection_view_model, float4(input.pos, 1.0f));
     return output;
 }
 
-float3 calculate_directional_light(DirectionalLight light, float3 normal, float3 view_dir, float3 diffuse_texture)
+float3 calculate_directional_light(DirectionalLight light, float3 normal, float3 view_dir, float3 diffuse_texture, float4 light_space_pos)
 {
     float3 light_direction = normalize(-light.direction);
 
@@ -95,7 +99,23 @@ float3 calculate_directional_light(DirectionalLight light, float3 normal, float3
     float3 ambient = light.ambient * diffuse_texture; // We should be sampling diffuse map
     float3 diffuse = light.diffuse * diff * diffuse_texture; // We should be sampling diffuse map
     float3 specular = light.specular * spec * diffuse_texture; // We should be sampling specular map
-    return ambient + diffuse + specular;
+
+    light_space_pos.xyz /= light_space_pos.w;
+    float depth = light_space_pos.z;
+
+    if (depth > 1.0f)
+    {
+        return ambient + diffuse + specular;
+    }
+
+    light_space_pos.x = light_space_pos.x / 2.0f + 0.5f;
+    light_space_pos.y = -light_space_pos.y / 2.0f + 0.5f;
+    float closest_depth = shadow_map.Sample(shadow_map_sampler, light_space_pos.xy).r;
+
+    float bias = max(0.005f * (1.0f - dot(normal, light.direction)), 0.005f);
+    float shadow = closest_depth < (depth - bias) ? 1.0f : 0.0f;
+
+    return ambient + (1.0f - shadow) * (diffuse + specular);
 }
 
 float3 calculate_point_light(PointLight light, float3 normal, float3 pixel_pos, float3 view_dir, float3 diffuse_texture)
@@ -155,7 +175,7 @@ float4 ps_main(VS_Output input) : SV_TARGET
     float3 view_dir = normalize(camera_pos.xyz - input.world_pos.xyz);
     float3 diffuse_texture = obj_texture.Sample(obj_sampler_state, input.UV).rgb;
 
-    float3 result = calculate_directional_light(directonal_light, norm, view_dir, diffuse_texture);
+    float3 result = calculate_directional_light(directonal_light, norm, view_dir, diffuse_texture, input.light_space_pos);
 
     for (int i = 0; i < number_of_point_lights; i++)
     {

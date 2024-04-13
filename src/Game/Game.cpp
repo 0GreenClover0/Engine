@@ -62,7 +62,7 @@ void Game::initialize()
 
     auto const model = Entity::create("testmodel1");
     model->add_component(Model::create("./res/models/pyramid3/scene.gltf", standard_material));
-    model->transform->set_local_position(glm::vec3(0.0f, 0.0f, -5.0f));
+    model->transform->set_local_position(glm::vec3(0.0f, 2.0f, 0.0f));
     
     auto const text = Entity::create("text");
     std::shared_ptr<ExampleDynamicText> const edt = text->add_component<ExampleDynamicText>();
@@ -77,8 +77,8 @@ void Game::initialize()
     auto const model2 = Entity::create("testmodel2");
     model2->add_component(Model::create("./res/models/pyramid3/scene.gltf", standard_material));
     model2->transform->set_parent(model->transform);
-
-
+    
+    /*
     auto const point_light = Entity::create("Point light");
     point_light->add_component(Sphere::create(0.1f, 10, 10, "./res/textures/container.png", light_source_material));
     point_light->transform->set_local_position(glm::vec3(2.0f, 2.0f, 2.0f));
@@ -106,14 +106,19 @@ void Game::initialize()
     spot_light_component->quadratic = 0.032f;
     spot_light_component->cut_off = glm::cos(glm::radians(12.5f));
     spot_light_component->outer_cut_off = glm::cos(glm::radians(15.0f));
-
+    */
 
     auto const directional_light = Entity::create("Directional light");
     directional_light->add_component(Sphere::create(0.1f, 10, 10, "./res/textures/container.png", light_source_material));
-    directional_light->transform->set_local_position({ 0.0f, 0.0f, 1.0f });
+    directional_light->transform->set_local_position({ 0.0f, 14.0f, 0.0f });
+    directional_light->transform->set_euler_angles({ -90.0f, 0.0f, 0.0f });
 
     auto const directional_light_component = directional_light->add_component<DirectionalLight>(DirectionalLight::create());
-    directional_light_component->ambient = glm::vec3(0.05f);
-    directional_light_component->diffuse = glm::vec3(0.4f);
+
+    directional_light_component->ambient = glm::vec3(0.4f);
+    directional_light_component->diffuse = glm::vec3(0.9f);
     directional_light_component->specular = glm::vec3(0.5f);
+
+    auto const floor = Entity::create("Floor");
+    floor->add_component<Model>(Model::create("./res/models/hubert/floor.gltf", standard_material));
 }

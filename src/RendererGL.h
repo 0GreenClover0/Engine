@@ -14,6 +14,7 @@ public:
     ~RendererGL() override = default;
 
     virtual void begin_frame() const override;
+    virtual void render_shadow_map() const override;
 
 protected:
     virtual void update_shader(std::shared_ptr<Shader> const& shader, glm::mat4 const& projection_view, glm::mat4 const& projection_view_no_translation) const override;

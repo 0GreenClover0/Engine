@@ -111,6 +111,7 @@ void Renderer::unregister_light(std::shared_ptr<Light> const& light)
 void Renderer::begin_frame() const
 {
     glfwGetFramebufferSize(Engine::window->get_glfw_window(), &screen_width, &screen_height);
+    render_shadow_map();
 
     // Update camera
     if (Camera::get_main_camera() != nullptr)

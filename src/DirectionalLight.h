@@ -1,5 +1,7 @@
 #pragma once
 
+#include <glm/glm.hpp>
+
 #include "Light.h"
 #include "AK/Badge.h"
 
@@ -13,4 +15,11 @@ public:
     virtual std::string get_name() const override;
 
     explicit DirectionalLight(AK::Badge<DirectionalLight> badge) : Light() { }
+
+    glm::mat4 get_projection_view_matrix();
+
+private:
+    // Matrices used for shadow mapping
+    glm::mat4 m_projection_view_matrix = {};
+    glm::mat4 m_last_model_matrix = {};
 };
