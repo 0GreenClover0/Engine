@@ -6,6 +6,7 @@
 #include "Entity.h"
 #include "Model.h"
 #include "Camera.h"
+#include "ShaderFactory.h"
 
 #include <array>
 
@@ -55,6 +56,9 @@ std::shared_ptr<RendererDX11> RendererDX11::create()
 
     auto const viewport = create_viewport(screen_width, screen_height);
     renderer->g_pd3dDeviceContext->RSSetViewports(1, &viewport);
+
+    renderer->setup_shadow_mapping();
+    renderer->m_shadow_shader = ShaderFactory::create("./res/shaders/shadow_mapping.hlsl", "./res/shaders/shadow_mapping.hlsl");
 
     return renderer;
 }
@@ -141,9 +145,95 @@ ID3D11ShaderResourceView* RendererDX11::get_render_texture_view() const
     return m_render_target_texture_view;
 }
 
+void RendererDX11::render_shadow_map() const
+{
+    bind_dsv_for_shadow_mapping();
+    m_shadow_shader->use();
+
+    for (auto const& shader : m_shaders)
+    {
+        for (auto const& material : shader->materials)
+        {
+            if (material->is_gpu_instanced)
+            {
+                // GPU instancing is not implemented in DX11
+                std::unreachable();
+            }
+            else
+            {
+                draw(material, m_directional_light->get_projection_view_matrix());
+            }
+        }
+    }
+    auto const viewport = create_viewport(screen_width, screen_height);
+    g_pd3dDeviceContext->RSSetViewports(1, &viewport);
+}
+
+void RendererDX11::setup_shadow_mapping()
+{
+    D3D11_TEXTURE2D_DESC shadow_texture_desc = {};
+    shadow_texture_desc.Width = shadow_map_size;
+    shadow_texture_desc.Height = shadow_map_size;
+    shadow_texture_desc.MipLevels = 1;
+    shadow_texture_desc.ArraySize = 1;
+    shadow_texture_desc.Format = DXGI_FORMAT_R24G8_TYPELESS;
+    shadow_texture_desc.SampleDesc.Count = 1;
+    shadow_texture_desc.SampleDesc.Quality = 0;
+    shadow_texture_desc.Usage = D3D11_USAGE_DEFAULT;
+    shadow_texture_desc.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
+    shadow_texture_desc.CPUAccessFlags = 0;
+    shadow_texture_desc.MiscFlags = 0;
+
+    HRESULT hr = get_device()->CreateTexture2D(&shadow_texture_desc, nullptr, &m_shadow_texture);
+    assert(SUCCEEDED(hr));
+
+    D3D11_DEPTH_STENCIL_VIEW_DESC shadow_depth_stencil_view_desc = {};
+    shadow_depth_stencil_view_desc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+    shadow_depth_stencil_view_desc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+    shadow_depth_stencil_view_desc.Texture2D.MipSlice = 0;
+    shadow_depth_stencil_view_desc.Flags = 0;
+    hr = get_device()->CreateDepthStencilView(m_shadow_texture, &shadow_depth_stencil_view_desc, &m_shadow_depth_stencil_view);
+    assert(SUCCEEDED(hr));
+
+    D3D11_SHADER_RESOURCE_VIEW_DESC shadow_shader_resource_view_desc = {};
+    shadow_shader_resource_view_desc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
+    shadow_shader_resource_view_desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+    shadow_shader_resource_view_desc.Texture2D.MostDetailedMip = 0;
+    shadow_shader_resource_view_desc.Texture2D.MipLevels = shadow_texture_desc.MipLevels;
+    hr = get_device()->CreateShaderResourceView(m_shadow_texture, &shadow_shader_resource_view_desc, &m_shadow_shader_resource_view);
+    assert(SUCCEEDED(hr));
+
+    D3D11_SAMPLER_DESC shadow_sampler_desc = {};
+    shadow_sampler_desc.Filter = D3D11_FILTER_COMPARISON_MIN_MAG_MIP_LINEAR;
+    shadow_sampler_desc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+    shadow_sampler_desc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+    shadow_sampler_desc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+    shadow_sampler_desc.MipLODBias = 0.0f;
+    shadow_sampler_desc.MaxAnisotropy = 1;
+    shadow_sampler_desc.ComparisonFunc = D3D11_COMPARISON_LESS_EQUAL;
+    shadow_sampler_desc.BorderColor[0] = 0.0f;
+    shadow_sampler_desc.BorderColor[1] = 0.0f;
+    shadow_sampler_desc.BorderColor[2] = 0.0f;
+    shadow_sampler_desc.BorderColor[3] = 0.0f;
+    shadow_sampler_desc.MinLOD = 0;
+    shadow_sampler_desc.MaxLOD = FLT_MAX;
+    hr = get_device()->CreateSamplerState(&shadow_sampler_desc, &m_shadow_sampler_state);
+    assert(SUCCEEDED(hr));
+}
+
+void RendererDX11::bind_dsv_for_shadow_mapping() const
+{
+    auto const viewport = create_viewport(shadow_map_size, shadow_map_size);
+    get_device_context()->RSSetViewports(1, &viewport);
+    get_device_context()->OMSetRenderTargets(1, &g_emptyRenderTargetView, m_shadow_depth_stencil_view);
+    get_device_context()->ClearDepthStencilView(m_shadow_depth_stencil_view, D3D11_CLEAR_DEPTH, 1.0f, 0);
+}
+
 void RendererDX11::update_shader(std::shared_ptr<Shader> const& shader, glm::mat4 const& projection_view,
                                  glm::mat4 const& projection_view_no_translation) const
 {
+    g_pd3dDeviceContext->PSSetShaderResources(1, 1, &m_shadow_shader_resource_view);
+    g_pd3dDeviceContext->PSSetSamplers(1, 1, &m_shadow_sampler_state);
 }
 
 void RendererDX11::update_material(std::shared_ptr<Material> const& material) const
@@ -157,11 +247,10 @@ void RendererDX11::update_object(std::shared_ptr<Drawable> const& drawable, std:
     glm::mat4 const model = drawable->entity->transform->get_model_matrix();
     data.projection_view_model = projection_view * model;
     data.model = drawable->entity->transform->get_model_matrix();
-    data.projection = Camera::get_main_camera()->get_projection();
+    data.light_projection_view_model = m_directional_light->get_projection_view_matrix() * model;
 
     D3D11_MAPPED_SUBRESOURCE mapped_resource;
     HRESULT const hr = get_device_context()->Map(m_constant_buffer_per_object, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped_resource);
-
     assert(SUCCEEDED(hr));
 
     CopyMemory(mapped_resource.pData, &data, sizeof(ConstantBufferPerObject));

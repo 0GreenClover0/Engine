@@ -48,6 +48,10 @@ void RendererGL::begin_frame() const
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
+void RendererGL::render_shadow_map() const
+{
+}
+
 void RendererGL::update_shader(std::shared_ptr<Shader> const& shader, glm::mat4 const& projection_view, glm::mat4 const& projection_view_no_translation) const
 {
     // TODO: Ultimately we would probably want to cache the uniform location instead of retrieving them by name

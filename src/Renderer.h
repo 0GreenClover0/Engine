@@ -81,6 +81,7 @@ protected:
     void virtual initialize_global_renderer_settings() = 0;
     void virtual initialize_buffers(size_t const max_size) = 0;
     void virtual perform_frustum_culling(std::shared_ptr<Material> const& material) const = 0;
+    virtual void render_shadow_map() const = 0;
 
     inline static std::shared_ptr<Renderer> m_instance;
 
@@ -96,10 +97,15 @@ protected:
     i32 m_max_point_lights = 4;
     i32 m_max_spot_lights = 4;
 
-private:
     void draw(std::shared_ptr<Material> const& material, glm::mat4 const& projection_view) const;
     void draw_instanced(std::shared_ptr<Material> const& material, glm::mat4 const& projection_view, glm::mat4 const& projection_view_no_translation) const;
 
+    std::vector<std::shared_ptr<Shader>> m_shaders = {};
+    std::vector<std::shared_ptr<Light>> m_lights = {};
+    std::vector<std::shared_ptr<Material>> m_instanced_materials = {};
+    std::shared_ptr<Shader> m_shadow_shader = nullptr;
+
+private:
     struct MaterialWithOrder
     {
         i32 render_order;
@@ -111,9 +117,6 @@ private:
         }
     };
 
-    std::vector<std::shared_ptr<Light>> m_lights = {};
-    std::vector<std::shared_ptr<Shader>> m_shaders = {};
-    std::vector<std::shared_ptr<Material>> m_instanced_materials = {};
 
     std::multiset<MaterialWithOrder> m_custom_render_order_materials = {};
 };

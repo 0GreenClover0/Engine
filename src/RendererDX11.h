@@ -54,6 +54,10 @@ private:
         m_instance_dx11 = renderer;
     }
 
+    void setup_shadow_mapping();
+    void bind_dsv_for_shadow_mapping() const;
+    virtual void render_shadow_map() const override;
+
     inline static std::shared_ptr<RendererDX11> m_instance_dx11;
 
     ID3D11Device* g_pd3dDevice = nullptr;
@@ -61,6 +65,7 @@ private:
     IDXGISwapChain* g_pSwapChain = nullptr;
     ID3D11RenderTargetView* g_mainRenderTargetView = nullptr;
     ID3D11RenderTargetView* g_textureRenderTargetView = nullptr;
+    ID3D11RenderTargetView* g_emptyRenderTargetView = nullptr;
 
     ID3D11RasterizerState* g_rasterizer_state = nullptr;
     ID3D11Buffer* m_constant_buffer_light = nullptr;
@@ -69,6 +74,14 @@ private:
     ID3D11Texture2D* m_depth_stencil_buffer = nullptr;
     ID3D11Texture2D* m_render_target_texture = nullptr;
     ID3D11ShaderResourceView* m_render_target_texture_view = nullptr;
+
+    // Shadow mapping variables
+    ID3D11Texture2D* m_shadow_texture = nullptr;
+    ID3D11DepthStencilView* m_shadow_depth_stencil_view = nullptr;
+    ID3D11ShaderResourceView* m_shadow_shader_resource_view = nullptr;
+    ID3D11SamplerState* m_shadow_sampler_state = nullptr;
+
+    float const shadow_map_size = 1024.0f;
 
     inline static DXGI_FORMAT m_render_target_format = DXGI_FORMAT_R32G32B32A32_FLOAT;
 };
