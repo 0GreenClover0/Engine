@@ -110,10 +110,23 @@ float3 calculate_directional_light(DirectionalLight light, float3 normal, float3
 
     light_space_pos.x = light_space_pos.x / 2.0f + 0.5f;
     light_space_pos.y = -light_space_pos.y / 2.0f + 0.5f;
-    float closest_depth = shadow_map.Sample(shadow_map_sampler, light_space_pos.xy).r;
-
+    float shadow = 0.0f;
     float bias = max(0.005f * (1.0f - dot(normal, light.direction)), 0.005f);
-    float shadow = closest_depth < (depth - bias) ? 1.0f : 0.0f;
+
+    // Reference for PCF implementation:
+    // https://learnopengl.com/Advanced-Lighting/Shadows/Shadow-Mapping
+    float2 map_size;
+    shadow_map.GetDimensions(map_size.x, map_size.y);
+    float2 texel_size = 1.0 / map_size;
+    for (int x = -1; x <= 1; x++)
+    {
+        for (int y = -1; y <= 1; y++)
+        {
+            float pcf_depth = shadow_map.Sample(shadow_map_sampler, light_space_pos.xy + float2(x, y) * texel_size).r;
+            shadow += depth - bias > pcf_depth ? 1.0 : 0.0;
+        }
+    }
+    shadow /= 9.0;
 
     return ambient + (1.0f - shadow) * (diffuse + specular);
 }
