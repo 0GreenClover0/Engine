@@ -2,9 +2,11 @@
 
 #include "Scene.h"
 
-class MainScene : public Scene
+class MainScene final : public Scene
 {
 public:
+    virtual ~MainScene() = default;
+
     static void set_instance(std::shared_ptr<Scene> const& scene)
     {
         m_instance = scene;
