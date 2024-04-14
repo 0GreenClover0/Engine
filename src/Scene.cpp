@@ -3,6 +3,15 @@
 #include "AK/AK.h"
 #include "Entity.h"
 
+void Scene::unload()
+{
+    // NOTE: This doesn't unload all the shaders, materials that were loaded and might be stored in ex. the Renderer
+    for (i32 i = entities.size() - 1; i >= 0; --i)
+    {
+        entities[i]->destroy_immediate();
+    }
+}
+
 void Scene::add_child(std::shared_ptr<Entity> const& entity)
 {
     entities.emplace_back(entity);

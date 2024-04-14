@@ -10,6 +10,9 @@ class Scene
 {
 public:
     Scene() = default;
+
+    virtual void unload();
+
     void add_child(std::shared_ptr<Entity> const& entity);
     void remove_child(std::shared_ptr<Entity> const& entity);
 
