@@ -21,6 +21,9 @@ public:
     static void run();
     static void clean_up();
 
+    static bool is_game_running();
+    static void set_game_running(bool const is_running);
+
     inline static bool enable_vsync = false;
     inline static bool enable_mouse_capture = true;
 
@@ -41,4 +44,6 @@ private:
     static void setup_imgui(GLFWwindow* glfw_window);
 
     static i32 setup_miniaudio();
+
+    inline static bool m_is_game_running = false;
 };
