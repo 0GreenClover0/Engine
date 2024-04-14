@@ -18,6 +18,7 @@
 #include "Globals.h"
 #include "Input.h"
 #include "MainScene.h"
+#include "PhysicsEngine.h"
 #include "Renderer.h"
 #include "RendererDX11.h"
 #include "RendererGL.h"
@@ -42,6 +43,8 @@ i32 Engine::initialize()
     }
 
     Renderer::get_instance()->set_vsync(enable_vsync);
+
+    PhysicsEngine::get_instance()->initialize();
 
     if (auto const result = initialize_thirdparty_after_renderer(); result != 0)
         return result;
@@ -113,6 +116,8 @@ void Engine::run()
 
 
         Renderer::get_instance()->begin_frame();
+
+        PhysicsEngine::get_instance()->update_physics();
 
         if (m_is_game_running)
         {
