@@ -76,6 +76,7 @@ private:
     ID3D11ShaderResourceView* m_render_target_texture_view = nullptr;
 
     // Shadow mapping variables
+    ID3D11RasterizerState* g_shadow_rasterizer_state = nullptr;
     ID3D11Texture2D* m_shadow_texture = nullptr;
     ID3D11DepthStencilView* m_shadow_depth_stencil_view = nullptr;
     ID3D11ShaderResourceView* m_shadow_shader_resource_view = nullptr;

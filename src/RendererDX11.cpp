@@ -166,6 +166,7 @@ void RendererDX11::render_shadow_map() const
         }
     }
     auto const viewport = create_viewport(screen_width, screen_height);
+    g_pd3dDeviceContext->RSSetState(g_rasterizer_state);
     g_pd3dDeviceContext->RSSetViewports(1, &viewport);
 }
 
@@ -219,11 +220,19 @@ void RendererDX11::setup_shadow_mapping()
     shadow_sampler_desc.MaxLOD = FLT_MAX;
     hr = get_device()->CreateSamplerState(&shadow_sampler_desc, &m_shadow_sampler_state);
     assert(SUCCEEDED(hr));
+
+    D3D11_RASTERIZER_DESC shadow_rasterizer_state_desc = {};
+    shadow_rasterizer_state_desc.CullMode = D3D11_CULL_FRONT;
+    shadow_rasterizer_state_desc.FrontCounterClockwise = true;
+    shadow_rasterizer_state_desc.FillMode = D3D11_FILL_SOLID;
+    hr = g_pd3dDevice->CreateRasterizerState(&shadow_rasterizer_state_desc, &g_shadow_rasterizer_state);
+    assert(SUCCEEDED(hr));
 }
 
 void RendererDX11::bind_dsv_for_shadow_mapping() const
 {
     auto const viewport = create_viewport(shadow_map_size, shadow_map_size);
+    get_device_context()->RSSetState(g_shadow_rasterizer_state);
     get_device_context()->RSSetViewports(1, &viewport);
     get_device_context()->OMSetRenderTargets(1, &g_emptyRenderTargetView, m_shadow_depth_stencil_view);
     get_device_context()->ClearDepthStencilView(m_shadow_depth_stencil_view, D3D11_CLEAR_DEPTH, 1.0f, 0);
@@ -489,7 +498,8 @@ void RendererDX11::create_rasterizer_state()
     {
         wfdesc.FillMode = D3D11_FILL_SOLID;
     }
-    wfdesc.CullMode = D3D11_CULL_NONE;
+    wfdesc.CullMode = D3D11_CULL_BACK;
+    wfdesc.FrontCounterClockwise = true;
 
     HRESULT const hr = g_pd3dDevice->CreateRasterizerState(&wfdesc, &g_rasterizer_state);
 
