@@ -21,6 +21,8 @@ public:
         return m_main_camera;
     }
 
+    virtual void uninitialize() override;
+
     glm::vec3 get_position() const;
     glm::mat4 get_projection();
 
