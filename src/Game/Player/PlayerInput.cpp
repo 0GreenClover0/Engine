@@ -84,10 +84,10 @@ void PlayerInput::process_input() const
     if (Input::input->get_key(GLFW_KEY_D))
         camera_entity->transform->set_local_position(camera_entity->transform->get_local_position() += glm::normalize(glm::cross(m_camera->get_front(), m_camera->get_up())) * current_speed);
 
-    if (Input::input->get_key(GLFW_KEY_Q))
+    if (Input::input->get_key(GLFW_KEY_E))
         camera_entity->transform->set_local_position(camera_entity->transform->get_local_position() += current_speed * glm::vec3(0.0f, 1.0f, 0.0f));
 
-    if (Input::input->get_key(GLFW_KEY_E))
+    if (Input::input->get_key(GLFW_KEY_Q))
         camera_entity->transform->set_local_position(camera_entity->transform->get_local_position() -= current_speed * glm::vec3(0.0f, 1.0f, 0.0f));
 }
 
