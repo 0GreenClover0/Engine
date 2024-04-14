@@ -112,7 +112,10 @@ void Engine::run()
 
         Renderer::get_instance()->begin_frame();
 
-        MainScene::get_instance()->run_frame();
+        if (m_is_game_running)
+        {
+            MainScene::get_instance()->run_frame();
+        }
 
         Renderer::get_instance()->render();
 
@@ -158,6 +161,28 @@ void Engine::clean_up()
 
     glfwDestroyWindow(window->get_glfw_window());
     glfwTerminate();
+}
+
+bool Engine::is_game_running()
+{
+    return m_is_game_running;
+}
+
+void Engine::set_game_running(bool const is_running)
+{
+    if (is_running == m_is_game_running)
+        return;
+
+    if (m_is_game_running)
+    {
+        MainScene::get_instance()->unload();
+
+        MainScene::set_instance(nullptr);
+
+        create_game();
+    }
+
+    m_is_game_running = is_running;
 }
 
 std::shared_ptr<Window> Engine::create_window()

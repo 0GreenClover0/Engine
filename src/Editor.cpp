@@ -30,6 +30,7 @@ Editor::Editor(std::shared_ptr<Scene> const& scene) : m_open_scene(scene)
     set_style();
 
     m_debug_window.flags |= ImGuiWindowFlags_MenuBar;
+    m_game_window.flags |= ImGuiWindowFlags_MenuBar;
     m_last_second = glfwGetTime();
 
     load_assets();
@@ -136,12 +137,52 @@ void Editor::draw_content_browser()
 
 void Editor::draw_game()
 {
-    bool const open = ImGui::Begin("Scene", &m_game_window.open, m_game_window.flags);
+    bool open = false;
+    if (Engine::is_game_running())
+    {
+        open = ImGui::Begin("Game", &m_game_window.open, m_game_window.flags);
+    }
+    else
+    {
+        open = ImGui::Begin("Scene", &m_game_window.open, m_game_window.flags);
+    }
 
     if (!open)
     {
         ImGui::End();
         return;
+    }
+
+    if (ImGui::BeginMenuBar())
+    {
+        bool const is_game_running = Engine::is_game_running();
+        if (is_game_running)
+        {
+            ImGui::PushStyleColor(ImGuiCol_Button, IM_COL32(120, 120, 0, 150));
+        }
+        else
+        {
+            ImGui::PushStyleColor(ImGuiCol_Button, IM_COL32(0, 0, 0, 50));
+        }
+
+        if (ImGui::Button("Play", ImVec2(50.0f, 20.0f)))
+        {
+            if (is_game_running)
+            {
+                m_open_scene = nullptr;
+            }
+
+            Engine::set_game_running(!is_game_running);
+
+            if (is_game_running)
+            {
+                m_open_scene = MainScene::get_instance();
+            }
+        }
+
+        ImGui::PopStyleColor();
+
+        ImGui::EndMenuBar();
     }
 
     auto vec2 = ImGui::GetContentRegionAvail();
@@ -348,7 +389,14 @@ void Editor::draw_scene_save() const
         {
             if (ImGui::MenuItem("Save scene"))
             {
-                save_scene();
+                if (Engine::is_game_running())
+                {
+                    Debug::log("Game is currently running. Scene has not been saved.", DebugType::Error);
+                }
+                else
+                {
+                    save_scene();
+                }
             }
 
             if (ImGui::MenuItem("Load scene"))
