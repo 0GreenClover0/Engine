@@ -22,6 +22,13 @@ std::shared_ptr<SoundListener> SoundListener::create()
     return sound_listener;
 }
 
+void SoundListener::uninitialize()
+{
+    Component::uninitialize();
+
+    instance = nullptr;
+}
+
 void SoundListener::update()
 {
     glm::vec3 const position = entity->transform->get_position();
