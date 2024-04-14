@@ -5,6 +5,16 @@
 
 #include "Entity.h"
 
+void Camera::uninitialize()
+{
+    Component::uninitialize();
+
+    if (m_main_camera == shared_from_this())
+    {
+        m_main_camera = nullptr;
+    }
+}
+
 glm::vec3 Camera::get_position() const
 {
     return entity->transform->get_position();
