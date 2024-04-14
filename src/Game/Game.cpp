@@ -3,6 +3,7 @@
 #include <glm/gtc/random.hpp>
 
 #include "Camera.h"
+#include "Collider2D.h"
 #include "CommonEntities.h"
 #include "Cube.h"
 #include "DirectionalLight.h"
@@ -60,10 +61,6 @@ void Game::initialize()
     m_camera->transform->set_parent(camera_parent->transform);
     player_input->camera_parent = camera_parent;
 
-    auto const model = Entity::create("testmodel1");
-    model->add_component(Model::create("./res/models/pyramid3/scene.gltf", standard_material));
-    model->transform->set_local_position(glm::vec3(0.0f, 2.0f, 0.0f));
-    
     auto const text = Entity::create("text");
     std::shared_ptr<ExampleDynamicText> const edt = text->add_component<ExampleDynamicText>();
 
@@ -73,16 +70,13 @@ void Game::initialize()
     auto const transparent = Entity::create("transparent_grass");
     std::shared_ptr<Sprite> const grass = transparent->add_component<Sprite>(Sprite::create(ui_material, "./res/textures/grass.png"));
     transparent->transform->set_local_scale(glm::vec3(0.2f, 0.2f, 0.2f));
+    transparent->transform->set_local_position(glm::vec3(0.8f, -0.8f, 0.0f));
 
-    auto const model2 = Entity::create("testmodel2");
-    model2->add_component(Model::create("./res/models/pyramid3/scene.gltf", standard_material));
-    model2->transform->set_parent(model->transform);
-    
-    /*
     auto const point_light = Entity::create("Point light");
     point_light->add_component(Sphere::create(0.1f, 10, 10, "./res/textures/container.png", light_source_material));
     point_light->transform->set_local_position(glm::vec3(2.0f, 2.0f, 2.0f));
 
+    /*
     auto const point_light_component = point_light->add_component<PointLight>(PointLight::create());
     point_light_component->ambient = glm::vec3(0.05f);
     point_light_component->diffuse = glm::vec3(0.9f);
@@ -90,7 +84,6 @@ void Game::initialize()
     point_light_component->constant = 1.0f;
     point_light_component->linear = 0.09f;
     point_light_component->quadratic = 0.032f;
-
 
     auto const spot_light = Entity::create("Spot light");
     spot_light->add_component(Sphere::create(0.1f, 10, 10, "./res/textures/container.png", light_source_material));
@@ -121,4 +114,25 @@ void Game::initialize()
 
     auto const floor = Entity::create("Floor");
     floor->add_component<Model>(Model::create("./res/models/hubert/floor.gltf", standard_material));
+    floor->transform->set_local_position(glm::vec3(4, 0, 2));
+
+    auto const collider_test = Entity::create("collider_test");
+    collider_test->add_component(Collider2D::create(ColliderType2D::Circle, 1.0f));
+    collider_test->add_component(Sphere::create(1, 12, 12, "./res/textures/stone.jpg", standard_material));
+    collider_test->transform->set_local_position(glm::vec3(4, 2, 2));
+
+    auto const collider_test2 = Entity::create("collider_test2");
+    collider_test2->transform->set_local_position(glm::vec3(2, 2, -2));
+    collider_test2->add_component(Collider2D::create(ColliderType2D::Circle, 1.0f));
+    collider_test2->add_component(Sphere::create(1, 12, 12, "./res/textures/stone.jpg", standard_material));
+
+    auto const rect1 = Entity::create("rect1");
+    rect1->add_component(Model::create("./res/models/pyramid3/scene.gltf", standard_material));
+    rect1->add_component(Collider2D::create(ColliderType2D::Rectangle, glm::vec2(1.95f, 1.95f)));
+    rect1->transform->set_local_position(glm::vec3(-4, 2, -4));
+
+    auto const rect2 = Entity::create("rect2");
+    rect2->add_component(Model::create("./res/models/pyramid3/scene.gltf", standard_material));
+    rect2->transform->set_local_position(glm::vec3(6, 2, 0));
+    rect2->add_component(Collider2D::create(ColliderType2D::Rectangle, glm::vec2(1.95f, 1.95f)));
 }
