@@ -20,6 +20,7 @@ class Debug
 {
 public:
     static void log(std::string const& message, DebugType type = DebugType::Log);
+    static void clear();
 
     inline static std::vector<DebugMessage> debug_messages = {};
 };

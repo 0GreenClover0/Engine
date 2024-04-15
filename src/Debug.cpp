@@ -21,3 +21,8 @@ void Debug::log(std::string const& message, DebugType type)
 
     debug_messages.emplace_back(type, prefix + message);
 }
+
+void Debug::clear()
+{
+    debug_messages.clear();
+}
