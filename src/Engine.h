@@ -13,6 +13,11 @@
 #include "Window.h"
 #include "AK/Types.h"
 
+namespace Editor
+{
+class Editor;
+}
+
 class Engine
 {
 public:
@@ -46,4 +51,5 @@ private:
     static i32 setup_miniaudio();
 
     inline static bool m_is_game_running = false;
+    inline static std::shared_ptr<Editor::Editor> m_editor;
 };

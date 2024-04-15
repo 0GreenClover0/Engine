@@ -25,7 +25,8 @@
 
 namespace Editor
 {
-Editor::Editor(std::shared_ptr<Scene> const& scene) : m_open_scene(scene)
+
+Editor::Editor(AK::Badge<Editor>)
 {
     set_style();
 
@@ -34,6 +35,13 @@ Editor::Editor(std::shared_ptr<Scene> const& scene) : m_open_scene(scene)
     m_last_second = glfwGetTime();
 
     load_assets();
+}
+
+std::shared_ptr<Editor> Editor::create()
+{
+    auto editor = std::make_shared<Editor>(AK::Badge<Editor> {});
+
+    return editor;
 }
 
 void Editor::draw()
