@@ -7,6 +7,8 @@
 
 #include <array>
 
+class Camera;
+
 namespace Editor
 {
 
@@ -70,6 +72,22 @@ private:
     void save_scene() const;
     bool load_scene() const;
     void set_style() const;
+
+    void camera_input() const;
+    void non_camera_input();
+
+    void mouse_callback(double const x, double const y);
+
+    glm::dvec2 m_last_mouse_position = glm::dvec2(1280.0 / 2.0, 720.0 / 2.0);
+    float m_yaw = 0.0f;
+    float m_pitch = 10.0f;
+    bool m_mouse_just_entered = true;
+    double m_sensitivity = 0.1;
+    float m_camera_speed = 12.5f;
+
+    std::shared_ptr<Entity> m_camera_entity;
+    std::shared_ptr<Camera> m_editor_camera;
+    std::shared_ptr<Camera> m_scene_camera;
 
     std::vector<Asset> m_assets = {};
 

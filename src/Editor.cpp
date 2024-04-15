@@ -12,6 +12,7 @@
 #include "Debug.h"
 #include "Engine.h"
 #include "Entity.h"
+#include "Globals.h"
 #include "Grass.h"
 #include "Input.h"
 #include "RendererDX11.h"
@@ -35,11 +36,20 @@ Editor::Editor(AK::Badge<Editor>)
     m_last_second = glfwGetTime();
 
     load_assets();
+
+    m_camera_entity = Entity::create_internal("Editor Camera");
+    m_editor_camera = m_camera_entity->add_component_internal<Camera>(Camera::create());
+    m_editor_camera->set_fov(glm::radians(60.0f));
+
+    if (!Engine::is_game_running())
+        Camera::set_main_camera(m_editor_camera);
 }
 
 std::shared_ptr<Editor> Editor::create()
 {
     auto editor = std::make_shared<Editor>(AK::Badge<Editor> {});
+
+    Input::input->on_set_cursor_pos_event.attach(&Editor::mouse_callback, editor);
 
     return editor;
 }
@@ -185,6 +195,11 @@ void Editor::draw_game()
             if (is_game_running)
             {
                 m_open_scene = MainScene::get_instance();
+                Camera::set_main_camera(m_editor_camera);
+            }
+            else
+            {
+                Renderer::get_instance()->choose_main_camera(m_editor_camera);
             }
         }
 
@@ -516,6 +531,78 @@ void Editor::set_style() const
     style.TabRounding = 4;
 }
 
+void Editor::camera_input() const
+{
+    float const current_speed = m_camera_speed * delta_time;
+
+    if (Input::input->get_key(GLFW_KEY_W))
+        m_camera_entity->transform->set_local_position(m_camera_entity->transform->get_local_position() += current_speed * m_editor_camera->get_front());
+
+    if (Input::input->get_key(GLFW_KEY_S))
+        m_camera_entity->transform->set_local_position(m_camera_entity->transform->get_local_position() -= current_speed * m_editor_camera->get_front());
+
+    if (Input::input->get_key(GLFW_KEY_A))
+        m_camera_entity->transform->set_local_position(m_camera_entity->transform->get_local_position() -= glm::normalize(glm::cross(m_editor_camera->get_front(), m_editor_camera->get_up())) * current_speed);
+
+    if (Input::input->get_key(GLFW_KEY_D))
+        m_camera_entity->transform->set_local_position(m_camera_entity->transform->get_local_position() += glm::normalize(glm::cross(m_editor_camera->get_front(), m_editor_camera->get_up())) * current_speed);
+
+    if (Input::input->get_key(GLFW_KEY_Q))
+        m_camera_entity->transform->set_local_position(m_camera_entity->transform->get_local_position() += current_speed * glm::vec3(0.0f, 1.0f, 0.0f));
+
+    if (Input::input->get_key(GLFW_KEY_E))
+        m_camera_entity->transform->set_local_position(m_camera_entity->transform->get_local_position() -= current_speed * glm::vec3(0.0f, 1.0f, 0.0f));
+}
+
+void Editor::non_camera_input()
+{
+    if (Input::input->get_key_down(GLFW_KEY_W))
+    {
+        m_operation_type = GuizmoOperationType::Translate;
+    }
+
+    if (Input::input->get_key_down(GLFW_KEY_R))
+    {
+        m_operation_type = GuizmoOperationType::Scale;
+    }
+
+    if (Input::input->get_key_down(GLFW_KEY_E))
+    {
+        m_operation_type = GuizmoOperationType::Rotate;
+    }
+
+    if (Input::input->get_key_down(GLFW_KEY_G))
+    {
+        m_operation_type = GuizmoOperationType::None;
+    }
+}
+
+void Editor::mouse_callback(double const x, double const y)
+{
+    if (m_mouse_just_entered)
+    {
+        m_last_mouse_position.x = x;
+        m_last_mouse_position.y = y;
+        m_mouse_just_entered = false;
+    }
+
+    double x_offset = x - m_last_mouse_position.x;
+    double y_offset = m_last_mouse_position.y - y;
+    m_last_mouse_position.x = x;
+    m_last_mouse_position.y = y;
+
+    if (!Input::input->get_key(GLFW_MOUSE_BUTTON_RIGHT))
+        return;
+
+    x_offset *= m_sensitivity;
+    y_offset *= m_sensitivity;
+
+    m_yaw += x_offset;
+    m_pitch = glm::clamp(m_pitch + y_offset, -89.0, 89.0);
+
+    m_camera_entity->transform->set_euler_angles(glm::vec3(m_pitch, -m_yaw, 0.0f));
+}
+
 void Editor::handle_input()
 {
     auto const input = Input::input;
@@ -525,29 +612,18 @@ void Editor::handle_input()
         switch_rendering_to_editor();
     }
 
-    if (input->get_key_down(GLFW_KEY_W))
-    {
-        m_operation_type = GuizmoOperationType::Translate;
-    }
-
-    if (input->get_key_down(GLFW_KEY_R))
-    {
-        m_operation_type = GuizmoOperationType::Scale;
-    }
-
-    if (input->get_key_down(GLFW_KEY_E))
-    {
-        m_operation_type = GuizmoOperationType::Rotate;
-    }
-
-    if (input->get_key_down(GLFW_KEY_G))
-    {
-        m_operation_type = GuizmoOperationType::None;
-    }
-
     if (input->get_key_down(GLFW_KEY_F5))
     {
         Renderer::get_instance()->reload_shaders();
+    }
+
+    if (!input->get_key(GLFW_MOUSE_BUTTON_RIGHT))
+    {
+        non_camera_input();
+    }
+    else
+    {
+        camera_input();
     }
 }
 
