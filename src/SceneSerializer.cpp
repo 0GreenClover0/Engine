@@ -175,14 +175,14 @@ std::shared_ptr<Entity> SceneSerializer::deserialize_entity(YAML::Node const& en
         if (component_name == "EllipseComponent")
         {
             auto material = deserialize_material_instance(component["Material"]);
-            deserialized_entity->add_component<class Ellipse>(
+            deserialized_entity->add_component<class Ellipse>(Ellipse::create(
                 component["CenterX"].as<float>(),
                 component["CenterZ"].as<float>(),
                 component["RadiusX"].as<float>(),
                 component["RadiusZ"].as<float>(),
                 component["SegmentCount"].as<i32>(),
                 material
-            );
+            ));
         }
         else if (component_name == "SphereComponent")
         {
