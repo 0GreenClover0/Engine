@@ -4,6 +4,14 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "Entity.h"
+#include "Renderer.h"
+
+void Camera::initialize()
+{
+    Component::initialize();
+
+    Renderer::get_instance()->register_camera(std::dynamic_pointer_cast<Camera>(shared_from_this()));
+}
 
 void Camera::uninitialize()
 {
@@ -13,6 +21,8 @@ void Camera::uninitialize()
     {
         m_main_camera = nullptr;
     }
+
+    Renderer::get_instance()->unregister_camera(std::dynamic_pointer_cast<Camera>(shared_from_this()));
 }
 
 glm::vec3 Camera::get_position() const

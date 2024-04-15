@@ -15,6 +15,8 @@
 #include "Vertex.h"
 #include "ConstantBufferTypes.h"
 
+class Camera;
+
 class Renderer
 {
 public:
@@ -34,6 +36,9 @@ public:
 
     void register_light(std::shared_ptr<Light> const& light);
     void unregister_light(std::shared_ptr<Light> const& light);
+
+    void register_camera(std::shared_ptr<Camera> const& camera);
+    void unregister_camera(std::shared_ptr<Camera> const& camera);
 
     void virtual begin_frame() const;
     void render() const;
@@ -119,4 +124,6 @@ private:
 
 
     std::multiset<MaterialWithOrder> m_custom_render_order_materials = {};
+
+    std::vector<std::shared_ptr<Camera>> m_cameras = {};
 };

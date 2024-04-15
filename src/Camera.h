@@ -21,6 +21,7 @@ public:
         return m_main_camera;
     }
 
+    virtual void initialize() override;
     virtual void uninitialize() override;
 
     glm::vec3 get_position() const;
