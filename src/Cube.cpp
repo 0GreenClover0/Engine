@@ -50,13 +50,13 @@ Cube::Cube(AK::Badge<Cube>, std::shared_ptr<Material> const& material) : Model(m
 }
 
 Cube::Cube(AK::Badge<Cube>, std::string const& diffuse_texture_path, std::shared_ptr<Material> const& material)
-    : Model(material), m_diffuse_texture_path(diffuse_texture_path)
+    : Model(material), diffuse_texture_path(diffuse_texture_path)
 {
     m_draw_type = DrawType::Triangles;
 }
 
 Cube::Cube(AK::Badge<Cube>, std::string const& diffuse_texture_path, std::string const& specular_texture_path, std::shared_ptr<Material> const& material)
-    : Model(material), m_diffuse_texture_path(diffuse_texture_path), m_specular_texture_path(specular_texture_path)
+    : Model(material), diffuse_texture_path(diffuse_texture_path), specular_texture_path(specular_texture_path)
 {
     m_draw_type = DrawType::Triangles;
 }
@@ -98,12 +98,12 @@ std::shared_ptr<Mesh> Cube::create_cube() const
     std::vector<Texture> textures;
 
     std::vector<Texture> diffuse_maps = {};
-    if (!m_diffuse_texture_path.empty())
-        diffuse_maps.emplace_back(TextureLoader::get_instance()->load_texture(m_diffuse_texture_path, TextureType::Diffuse));
+    if (!diffuse_texture_path.empty())
+        diffuse_maps.emplace_back(TextureLoader::get_instance()->load_texture(diffuse_texture_path, TextureType::Diffuse));
 
     std::vector<Texture> specular_maps = {};
-    if (!m_specular_texture_path.empty())
-        specular_maps.emplace_back(TextureLoader::get_instance()->load_texture(m_specular_texture_path, TextureType::Specular));
+    if (!specular_texture_path.empty())
+        specular_maps.emplace_back(TextureLoader::get_instance()->load_texture(specular_texture_path, TextureType::Specular));
 
     textures.insert(textures.end(), diffuse_maps.begin(), diffuse_maps.end());
     textures.insert(textures.end(), specular_maps.begin(), specular_maps.end());

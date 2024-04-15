@@ -39,6 +39,8 @@ public:
     virtual void adjust_bounding_box() override;
     virtual BoundingBox get_adjusted_bounding_box(glm::mat4 const& model_matrix) const override;
 
+    std::string model_path = "";
+
 protected:
     explicit Model(std::string const& model_path, std::shared_ptr<Material> const& material);
     explicit Model(std::shared_ptr<Material> const& material);
@@ -54,7 +56,6 @@ private:
     std::vector<Texture> load_material_textures(aiMaterial const* material, aiTextureType type, TextureType const type_name);
 
     std::string m_directory;
-    std::string m_model_path;
     std::vector<Texture> m_loaded_textures;
 
     friend class SceneSerializer;

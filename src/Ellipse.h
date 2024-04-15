@@ -15,14 +15,14 @@ public:
 
     virtual std::string get_name() const override;
 
+    float center_x = 0.0f;
+    float center_z = 0.0f;
+    float radius_x = 5.0f;
+    float radius_z = 5.0f;
+    i32 segment_count = 40;
+
 private:
     [[nodiscard]] std::shared_ptr<Mesh> create_ellipse() const;
-
-    float m_center_x = 0.0f;
-    float m_center_z = 0.0f;
-    float m_radius_x = 5.0f;
-    float m_radius_z = 5.0f;
-    i32 m_segment_count = 40;
 
     friend class SceneSerializer;
 };

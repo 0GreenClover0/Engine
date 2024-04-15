@@ -1,6 +1,7 @@
 #include "ScreenText.h"
 #include "RendererDX11.h"
 #include "ShaderFactory.h"
+#include <glm/gtc/type_ptr.inl>
 
 std::shared_ptr<ScreenText> ScreenText::create()
 {
@@ -24,8 +25,8 @@ ScreenText::ScreenText(AK::Badge<ScreenText>, std::shared_ptr<Material> const& m
 }
 
 ScreenText::ScreenText(AK::Badge<ScreenText>, std::wstring const& content, glm::vec2 const& position, float const font_size, u32 const color, u16 const flags)
-    : Drawable(nullptr), m_text(content), m_position(position), m_font_size(font_size), m_color(color),
-      m_flags(flags | FW1_RESTORESTATE) // Restore DX11 state by default
+    : Drawable(nullptr), text(content), position(position), font_size(font_size), color(color),
+      flags(flags | FW1_RESTORESTATE) // Restore DX11 state by default
 {
     auto const ui_shader = ShaderFactory::create("./res/shaders/ui.hlsl", "./res/shaders/ui.hlsl");
     auto const ui_material = Material::create(ui_shader);
@@ -65,13 +66,13 @@ void ScreenText::start()
         DWRITE_FONT_WEIGHT_NORMAL,
         DWRITE_FONT_STYLE_NORMAL,
         DWRITE_FONT_STRETCH_NORMAL,
-        m_font_size,                     // Font size
+        font_size,                     // Font size
         L"en-US",                        // Locale
         &m_d_write_text_format
     );
     assert(SUCCEEDED(hr));
 
-    hr = m_d_write_factory->CreateTextLayout(m_text.data(), m_text.size(), m_d_write_text_format, 2048, 2048, &m_d_write_text_layout);
+    hr = m_d_write_factory->CreateTextLayout(text.data(), text.size(), m_d_write_text_format, 2048, 2048, &m_d_write_text_layout);
     assert(SUCCEEDED(hr));
 
     DWRITE_TEXT_METRICS text_metrics = {};
@@ -80,8 +81,8 @@ void ScreenText::start()
     assert(SUCCEEDED(hr));
 
     hr = m_d_write_factory->CreateTextLayout(
-        m_text.data(),         // Text to be laid out
-        m_text.size(),         // Length of the text
+        text.data(),         // Text to be laid out
+        text.size(),         // Length of the text
         m_d_write_text_format, // Text format
         text_metrics.width,    // Use measured text width
         text_metrics.height,   // Use measured text height
@@ -93,7 +94,7 @@ void ScreenText::start()
     tr.length = 256;
     tr.startPosition = 0;
 
-    hr = m_d_write_text_layout->SetFontSize(m_font_size, tr);
+    hr = m_d_write_text_layout->SetFontSize(font_size, tr);
     assert(SUCCEEDED(hr));
 
     hr = m_d_write_text_layout->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER);
@@ -113,10 +114,10 @@ void ScreenText::draw() const
     m_font_wrapper->DrawTextLayout(
         RendererDX11::get_instance_dx11()->get_device_context(),
         m_d_write_text_layout,
-        m_position.x,
-        m_position.y,
-        m_color,
-        m_flags
+        position.x,
+        position.y,
+        color,
+        flags
     );
 }
 
@@ -126,9 +127,14 @@ std::string ScreenText::get_name() const
     return name.substr(6);
 }
 
+void ScreenText::draw_editor()
+{
+    ImGui::DragFloat2("Position", glm::value_ptr(position));
+}
+
 void ScreenText::set_text(std::wstring const& new_content)
 {
-    m_text = new_content;
+    text = new_content;
 
     // Update the DirectWrite text layout if necessary
     if (m_d_write_text_layout != nullptr)
@@ -152,8 +158,8 @@ void ScreenText::set_text(std::wstring const& new_content)
     m_d_write_text_layout = nullptr;
 
     hr = m_d_write_factory->CreateTextLayout(
-        m_text.data(),
-        m_text.size(),
+        text.data(),
+        text.size(),
         m_d_write_text_format,
         text_metrics.width,
         text_metrics.height,
