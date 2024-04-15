@@ -29,6 +29,17 @@ std::shared_ptr<Entity> Entity::create(std::string const& guid, std::string cons
     return entity;
 }
 
+// Entity that is not tied to any scene
+std::shared_ptr<Entity> Entity::create_internal(std::string const &name)
+{
+    auto entity = std::make_shared<Entity>(AK::Badge<Entity> {}, name);
+    entity->guid = AK::generate_guid();
+    std::hash<std::string> constexpr hasher;
+    entity->hashed_guid = hasher(entity->guid);
+    entity->transform = std::make_shared<Transform>(entity);
+    return entity;
+}
+
 void Entity::destroy_immediate()
 {
     MainScene::get_instance()->remove_child(shared_from_this());

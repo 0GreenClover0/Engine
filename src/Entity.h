@@ -13,6 +13,9 @@ public:
     static std::shared_ptr<Entity> create(std::string const& name = "Entity");
     static std::shared_ptr<Entity> create(std::string const& guid, std::string const& name);
 
+    // Entity that is not tied to any scene
+    static std::shared_ptr<Entity> create_internal(std::string const& name = "Entity");
+
     void destroy_immediate();
 
     template <class T>
@@ -103,6 +106,20 @@ public:
         {
             MainScene::get_instance()->add_component_to_awake(component);
         }
+
+        return component;
+    }
+
+    // Component that is not tied to any scene.
+    // It will not be awaken, started or updated. Only initialized.
+    template <class T>
+    std::shared_ptr<T> add_component_internal(std::shared_ptr<T> component)
+    {
+        components.emplace_back(component);
+        component->entity = shared_from_this();
+
+        // Initialization for internal components
+        component->initialize();
 
         return component;
     }
