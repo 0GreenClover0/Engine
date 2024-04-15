@@ -3,6 +3,7 @@
 #include "Scene.h"
 #include "Transform.h"
 #include "AK/Types.h"
+#include "AK/Badge.h"
 
 #include <array>
 
@@ -44,7 +45,9 @@ public:
 class Editor
 {
 public:
-    explicit Editor(std::shared_ptr<Scene> const& scene);
+    static std::shared_ptr<Editor> create();
+
+    explicit Editor(AK::Badge<Editor>);
 
     void draw();
     void set_scene(std::shared_ptr<Scene> const& scene);

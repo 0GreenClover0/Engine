@@ -57,6 +57,8 @@ i32 Engine::initialize()
         std::cout << "TODO: Initialize internal mesh data in DX11 API." << "\n";
     }
 
+    m_editor = Editor::Editor::create();
+
     return 0;
 }
 
@@ -64,6 +66,8 @@ void Engine::create_game()
 {
     auto const main_scene = std::make_shared<Scene>();
     MainScene::set_instance(main_scene);
+
+    m_editor->set_scene(main_scene);
 
     // Custom initialization code
     auto const game = std::make_shared<Game>(window);
@@ -75,8 +79,6 @@ void Engine::run()
     Renderer::get_instance()->initialize();
 
     double last_frame = 0.0; // Time of last frame
-
-    Editor::Editor editor(MainScene::get_instance());
 
     // Main loop
     while (!glfwWindowShouldClose(window->get_glfw_window()))
@@ -103,11 +105,11 @@ void Engine::run()
 
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
-        editor.set_docking_space();
+        m_editor->set_docking_space();
         ImGuizmo::BeginFrame();
 
-        editor.handle_input();
-        editor.draw();
+        m_editor->handle_input();
+        m_editor->draw();
 
 
         Renderer::get_instance()->begin_frame();
