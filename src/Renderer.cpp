@@ -118,6 +118,18 @@ void Renderer::unregister_camera(std::shared_ptr<Camera> const &camera)
     AK::swap_and_erase(m_cameras, camera);
 }
 
+void Renderer::choose_main_camera(std::shared_ptr<Camera> const& exclude) const
+{
+    for (auto const& camera : m_cameras)
+    {
+        if (camera == exclude)
+            continue;
+
+        Camera::set_main_camera(camera);
+        break;
+    }
+}
+
 void Renderer::begin_frame() const
 {
     glfwGetFramebufferSize(Engine::window->get_glfw_window(), &screen_width, &screen_height);

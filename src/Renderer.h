@@ -40,6 +40,8 @@ public:
     void register_camera(std::shared_ptr<Camera> const& camera);
     void unregister_camera(std::shared_ptr<Camera> const& camera);
 
+    void choose_main_camera(std::shared_ptr<Camera> const& exclude = nullptr) const;
+
     void virtual begin_frame() const;
     void render() const;
     void virtual end_frame() const;
