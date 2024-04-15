@@ -108,6 +108,16 @@ void Renderer::unregister_light(std::shared_ptr<Light> const& light)
     }
 }
 
+void Renderer::register_camera(std::shared_ptr<Camera> const &camera)
+{
+    m_cameras.emplace_back(camera);
+}
+
+void Renderer::unregister_camera(std::shared_ptr<Camera> const &camera)
+{
+    AK::swap_and_erase(m_cameras, camera);
+}
+
 void Renderer::begin_frame() const
 {
     glfwGetFramebufferSize(Engine::window->get_glfw_window(), &screen_width, &screen_height);
