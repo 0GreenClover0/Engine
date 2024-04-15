@@ -34,7 +34,7 @@ Sprite::Sprite(AK::Badge<Sprite>, std::shared_ptr<Material> const& material) : M
 }
 
 Sprite::Sprite(AK::Badge<Sprite>, std::shared_ptr<Material> const& material, std::string const& diffuse_texture_path)
-    : Model(material), m_diffuse_texture_path(diffuse_texture_path)
+    : Model(material), diffuse_texture_path(diffuse_texture_path)
 {
     m_draw_type = DrawType::Triangles;
 }
@@ -82,8 +82,8 @@ std::shared_ptr<Mesh> Sprite::create_sprite() const
     texture_settings.wrap_mode_x = TextureWrapMode::ClampToEdge;
     texture_settings.wrap_mode_y = TextureWrapMode::ClampToEdge;
 
-    if (!m_diffuse_texture_path.empty())
-        diffuse_maps.emplace_back(TextureLoader::get_instance()->load_texture(m_diffuse_texture_path, TextureType::Diffuse, texture_settings));
+    if (!diffuse_texture_path.empty())
+        diffuse_maps.emplace_back(TextureLoader::get_instance()->load_texture(diffuse_texture_path, TextureType::Diffuse, texture_settings));
 
     textures.insert(textures.end(), diffuse_maps.begin(), diffuse_maps.end());
 

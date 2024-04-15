@@ -17,9 +17,9 @@ public:
 
     virtual void prepare() override;
 
+    std::string diffuse_texture_path = "";
+
 private:
     [[nodiscard]] std::shared_ptr<Mesh> create_sprite() const;
-
-    std::string m_diffuse_texture_path;
 };
 

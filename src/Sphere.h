@@ -21,14 +21,13 @@ public:
 
     u32 sector_count = 0;
     u32 stack_count = 0;
+    std::string texture_path = "";
+    float radius = 5.0f;
 
     inline static bool use_geometry_shader = false;
 
 private:
     [[nodiscard]] Texture load_texture() const;
-
-    std::string m_texture_path = "";
-    float m_radius = 5.0f;
 
     friend class SceneSerializer;
 };

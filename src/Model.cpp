@@ -52,7 +52,7 @@ std::shared_ptr<Model> Model::create(std::shared_ptr<Mesh> mesh, std::shared_ptr
 }
 
 Model::Model(AK::Badge<Model>, std::string const& model_path, std::shared_ptr<Material> const& material)
-    : Drawable(material), m_model_path(model_path)
+    : Drawable(material), model_path(model_path)
 {
 }
 
@@ -64,9 +64,9 @@ void Model::draw_editor()
 {
     Drawable::draw_editor();
 
-    m_model_path.reserve(255);
+    model_path.reserve(255);
 
-    if (ImGui::InputText("Model Path", m_model_path.data(), 255, ImGuiInputTextFlags_EnterReturnsTrue))
+    if (ImGui::InputText("Model Path", model_path.data(), 255, ImGuiInputTextFlags_EnterReturnsTrue))
     {
         reprepare();
     }
@@ -101,7 +101,7 @@ BoundingBox Model::get_adjusted_bounding_box(glm::mat4 const& model_matrix) cons
 }
 
 Model::Model(std::string const& model_path, std::shared_ptr<Material> const& material)
-    : Drawable(material), m_model_path(model_path)
+    : Drawable(material), model_path(model_path)
 {
 }
 
@@ -137,7 +137,7 @@ void Model::prepare()
         m_material->first_drawable = std::dynamic_pointer_cast<Drawable>(shared_from_this());
     }
 
-    load_model(m_model_path);
+    load_model(model_path);
 }
 
 void Model::reset()

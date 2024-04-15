@@ -35,7 +35,7 @@ Sphere::Sphere(AK::Badge<Sphere>, std::shared_ptr<Material> const& material) : M
 
 Sphere::Sphere(AK::Badge<Sphere>, float const radius, u32 const sectors, u32 const stacks, std::string const& texture_path,
                std::shared_ptr<Material> const& material)
-    : Model(material), sector_count(sectors), stack_count(stacks), m_texture_path(std::move(texture_path)), m_radius(radius)
+    : Model(material), sector_count(sectors), stack_count(stacks), texture_path(std::move(texture_path)), radius(radius)
 {
     m_draw_type = DrawType::TriangleStrip;
     Sphere::prepare();
@@ -66,7 +66,7 @@ void Sphere::reprepare()
 std::shared_ptr<Mesh> Sphere::create_sphere() const
 {
     auto constexpr PI = glm::pi<float>();
-    float const length_inverse = 1.0f / m_radius;
+    float const length_inverse = 1.0f / radius;
 
     std::vector<Vertex> vertices;
     std::vector<u32> indices;
@@ -84,10 +84,10 @@ std::shared_ptr<Mesh> Sphere::create_sphere() const
         indices.push_back(1);
         indices.push_back(2);
 
-        std::vector<Texture> diffuse_maps = { TextureLoader::get_instance()->load_texture(m_texture_path, TextureType::Diffuse) };
+        std::vector<Texture> diffuse_maps = { TextureLoader::get_instance()->load_texture(texture_path, TextureType::Diffuse) };
         textures.insert(textures.end(), diffuse_maps.begin(), diffuse_maps.end());
 
-        m_material->radius_multiplier = m_radius;
+        m_material->radius_multiplier = radius;
         m_material->sector_count = sector_count;
         m_material->stack_count = stack_count;
 
@@ -101,9 +101,9 @@ std::shared_ptr<Mesh> Sphere::create_sphere() const
             float const x_segment = static_cast<float>(x) / static_cast<float>(stack_count);
             float const y_segment = static_cast<float>(y) / static_cast<float>(sector_count);
 
-            float const x_position = m_radius * glm::cos(x_segment * 2.0f * PI) * glm::sin(y_segment * PI);
-            float const y_position = m_radius * glm::cos(y_segment * PI);
-            float const z_position = m_radius * glm::sin(x_segment * 2.0f * PI) * glm::sin(y_segment * PI);
+            float const x_position = radius * glm::cos(x_segment * 2.0f * PI) * glm::sin(y_segment * PI);
+            float const y_position = radius * glm::cos(y_segment * PI);
+            float const z_position = radius * glm::sin(x_segment * 2.0f * PI) * glm::sin(y_segment * PI);
 
             Vertex vertex = {};
             vertex.position = glm::vec3(x_position, y_position, z_position);
@@ -136,7 +136,7 @@ std::shared_ptr<Mesh> Sphere::create_sphere() const
         odd_row = !odd_row;
     }
 
-    std::vector<Texture> diffuse_maps = { TextureLoader::get_instance()->load_texture(m_texture_path, TextureType::Diffuse) };
+    std::vector<Texture> diffuse_maps = { TextureLoader::get_instance()->load_texture(texture_path, TextureType::Diffuse) };
     textures.insert(textures.end(), diffuse_maps.begin(), diffuse_maps.end());
 
     return MeshFactory::create(vertices, indices, textures, m_draw_type, m_material);

@@ -19,19 +19,20 @@ public:
     virtual void start() override;
     virtual void draw() const override;
     virtual std::string get_name() const override;
+    virtual void draw_editor() override;
 
     // Only content of the text component is now dynamically updated.
     void set_text(std::wstring const& new_content);
 
+    // Text properties
+    std::wstring text = {};
+    glm::vec2 position = {};
+    float font_size = 128;
+    u32 color = 0;
+    u16 flags = 0; //  Stores flags such as FW1_CENTER | FW1_VCENTER. FW1_RESTORESTATE is set by default.
+
 private:
     static D3D11_VIEWPORT get_viewport();
-
-    // Text properties
-    std::wstring m_text = {};
-    glm::vec2 m_position = {};
-    float m_font_size = 128;
-    u32 m_color = 0;
-    u16 m_flags = 0; //  Stores flags such as FW1_CENTER | FW1_VCENTER. FW1_RESTORESTATE is set by default.
 
     // DWrite and FW1 variables
     IFW1Factory* m_FW1_factory = nullptr;
