@@ -31,4 +31,6 @@ public:
 
 protected:
     std::shared_ptr<Material> m_material;
+
+    friend class SceneSerializer;
 };
