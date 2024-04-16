@@ -1,8 +1,11 @@
 #pragma once
+
 #include <memory>
 #include <sstream>
 #include <random>
 #include <string>
+
+#include <glm/glm.hpp>
 
 #include "Types.h"
 
@@ -39,6 +42,16 @@ inline std::string generate_hex(u32 const length)
         ss << (hex.length() < 2 ? '0' + hex : hex);
     }
     return ss.str();
+}
+
+inline glm::vec3 convert_2d_to_3d(glm::vec2 const& v)
+{
+    return { v.x, 0, v.y };
+}
+
+inline glm::vec2 convert_3d_to_2d(glm::vec3 const& v)
+{
+    return { v.x, v.z };
 }
 
 inline std::string generate_guid()
