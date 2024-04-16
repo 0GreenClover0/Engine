@@ -142,6 +142,7 @@ ID3D11ShaderResourceView* RendererDX11::get_render_texture_view() const
 void RendererDX11::render_shadow_map() const
 {
     bind_dsv_for_shadow_mapping();
+
     m_shadow_shader->use();
 
     for (auto const& shader : m_shaders)
