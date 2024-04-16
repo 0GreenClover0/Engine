@@ -133,7 +133,6 @@ void Renderer::choose_main_camera(std::shared_ptr<Camera> const& exclude) const
 void Renderer::begin_frame() const
 {
     glfwGetFramebufferSize(Engine::window->get_glfw_window(), &screen_width, &screen_height);
-    render_shadow_map();
 
     // Update camera
     if (Camera::get_main_camera() != nullptr)
@@ -147,6 +146,8 @@ void Renderer::render() const
 {
     if (Camera::get_main_camera() == nullptr)
         return;
+
+    render_shadow_map();
 
     bind_for_render_frame();
 
