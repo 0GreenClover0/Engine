@@ -23,6 +23,4 @@ public:
 
 private:
     [[nodiscard]] std::shared_ptr<Mesh> create_ellipse() const;
-
-    friend class SceneSerializer;
 };

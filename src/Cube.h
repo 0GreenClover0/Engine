@@ -29,6 +29,4 @@ private:
 
     // TODO: This is a hack to make texture coordinates work nicely on a largely scaled cube. There should be a proper way to fix this
     bool m_big_cube = false;
-
-    friend class SceneSerializer;
 };

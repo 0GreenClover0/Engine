@@ -57,6 +57,4 @@ private:
 
     std::string m_directory;
     std::vector<Texture> m_loaded_textures;
-
-    friend class SceneSerializer;
 };

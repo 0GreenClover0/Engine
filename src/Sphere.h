@@ -28,6 +28,4 @@ public:
 
 private:
     [[nodiscard]] Texture load_texture() const;
-
-    friend class SceneSerializer;
 };
