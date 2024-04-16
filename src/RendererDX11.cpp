@@ -54,8 +54,10 @@ std::shared_ptr<RendererDX11> RendererDX11::create()
     renderer->create_depth_stencil();
     renderer->create_rasterizer_state();
 
-    auto const viewport = create_viewport(screen_width, screen_height);
-    renderer->g_pd3dDeviceContext->RSSetViewports(1, &viewport);
+    renderer->m_viewport = create_viewport(screen_width, screen_height);
+    renderer->g_pd3dDeviceContext->RSSetViewports(1, &renderer->m_viewport);
+
+    renderer->m_shadow_map_viewport = create_viewport(SHADOW_MAP_SIZE, SHADOW_MAP_SIZE);
 
     renderer->setup_shadow_mapping();
     renderer->m_shadow_shader = ShaderFactory::create("./res/shaders/shadow_mapping.hlsl", "./res/shaders/shadow_mapping.hlsl");
@@ -91,24 +93,16 @@ void RendererDX11::on_window_resize(GLFWwindow* window, i32 const width, i32 con
     renderer->create_render_target();
     renderer->create_depth_stencil();
 
-    auto const viewport = create_viewport(width, height);
-    renderer->g_pd3dDeviceContext->RSSetViewports(1, &viewport);
+    renderer->m_viewport = create_viewport(width, height);
+    renderer->g_pd3dDeviceContext->RSSetViewports(1, &renderer->m_viewport);
 }
 
 void RendererDX11::begin_frame() const
 {
     // This function could be called like an event, instead is called every frame (could slow down, but I do not think so).
     get_instance_dx11()->create_rasterizer_state();
-    Renderer::begin_frame();
 
-    if (m_render_to_texture)
-    {
-        g_pd3dDeviceContext->OMSetRenderTargets(1, &g_textureRenderTargetView, m_depth_stencil_view);
-    }
-    else
-    {
-        g_pd3dDeviceContext->OMSetRenderTargets(1, &g_mainRenderTargetView, m_depth_stencil_view);
-    }
+    Renderer::begin_frame();
 
     float const clear_color_with_alpha[4] = { clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w };
     g_pd3dDeviceContext->ClearRenderTargetView(g_mainRenderTargetView, clear_color_with_alpha);
@@ -165,16 +159,28 @@ void RendererDX11::render_shadow_map() const
             }
         }
     }
-    auto const viewport = create_viewport(screen_width, screen_height);
+}
+
+void RendererDX11::bind_for_render_frame() const
+{
     g_pd3dDeviceContext->RSSetState(g_rasterizer_state);
-    g_pd3dDeviceContext->RSSetViewports(1, &viewport);
+    g_pd3dDeviceContext->RSSetViewports(1, &m_viewport);
+
+    if (m_render_to_texture)
+    {
+        g_pd3dDeviceContext->OMSetRenderTargets(1, &g_textureRenderTargetView, m_depth_stencil_view);
+    }
+    else
+    {
+        g_pd3dDeviceContext->OMSetRenderTargets(1, &g_mainRenderTargetView, m_depth_stencil_view);
+    }
 }
 
 void RendererDX11::setup_shadow_mapping()
 {
     D3D11_TEXTURE2D_DESC shadow_texture_desc = {};
-    shadow_texture_desc.Width = shadow_map_size;
-    shadow_texture_desc.Height = shadow_map_size;
+    shadow_texture_desc.Width = static_cast<float>(SHADOW_MAP_SIZE);
+    shadow_texture_desc.Height = static_cast<float>(SHADOW_MAP_SIZE);
     shadow_texture_desc.MipLevels = 1;
     shadow_texture_desc.ArraySize = 1;
     shadow_texture_desc.Format = DXGI_FORMAT_R24G8_TYPELESS;
@@ -231,9 +237,8 @@ void RendererDX11::setup_shadow_mapping()
 
 void RendererDX11::bind_dsv_for_shadow_mapping() const
 {
-    auto const viewport = create_viewport(shadow_map_size, shadow_map_size);
     get_device_context()->RSSetState(g_shadow_rasterizer_state);
-    get_device_context()->RSSetViewports(1, &viewport);
+    get_device_context()->RSSetViewports(1, &m_shadow_map_viewport);
     get_device_context()->OMSetRenderTargets(1, &g_emptyRenderTargetView, m_shadow_depth_stencil_view);
     get_device_context()->ClearDepthStencilView(m_shadow_depth_stencil_view, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }

@@ -54,11 +54,15 @@ private:
         m_instance_dx11 = renderer;
     }
 
+    void virtual bind_for_render_frame() const override;
     void setup_shadow_mapping();
     void bind_dsv_for_shadow_mapping() const;
     virtual void render_shadow_map() const override;
 
     inline static std::shared_ptr<RendererDX11> m_instance_dx11;
+
+    D3D11_VIEWPORT m_viewport = {};
+    D3D11_VIEWPORT m_shadow_map_viewport = {};
 
     ID3D11Device* g_pd3dDevice = nullptr;
     ID3D11DeviceContext* g_pd3dDeviceContext = nullptr;
@@ -82,7 +86,7 @@ private:
     ID3D11ShaderResourceView* m_shadow_shader_resource_view = nullptr;
     ID3D11SamplerState* m_shadow_sampler_state = nullptr;
 
-    float const shadow_map_size = 1024.0f;
+    static float constexpr SHADOW_MAP_SIZE = 1024.0f;
 
     inline static DXGI_FORMAT m_render_target_format = DXGI_FORMAT_R32G32B32A32_FLOAT;
 };

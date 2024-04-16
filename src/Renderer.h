@@ -90,6 +90,8 @@ protected:
     void virtual perform_frustum_culling(std::shared_ptr<Material> const& material) const = 0;
     virtual void render_shadow_map() const = 0;
 
+    virtual void bind_for_render_frame() const;
+
     inline static std::shared_ptr<Renderer> m_instance;
 
     bool vsync_enabled = false;
