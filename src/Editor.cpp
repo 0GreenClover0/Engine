@@ -424,7 +424,14 @@ void Editor::draw_scene_save() const
 
             if (ImGui::MenuItem("Load scene"))
             {
-                load_scene();
+                MainScene::get_instance()->unload();
+
+                bool const loaded = load_scene();
+
+                if (!loaded)
+                {
+                    Debug::log("Could not load a scene.", DebugType::Error);
+                }
             }
 
             ImGui::EndMenu();
