@@ -547,10 +547,10 @@ void Editor::camera_input() const
     if (Input::input->get_key(GLFW_KEY_D))
         m_camera_entity->transform->set_local_position(m_camera_entity->transform->get_local_position() += glm::normalize(glm::cross(m_editor_camera->get_front(), m_editor_camera->get_up())) * current_speed);
 
-    if (Input::input->get_key(GLFW_KEY_Q))
+    if (Input::input->get_key(GLFW_KEY_E))
         m_camera_entity->transform->set_local_position(m_camera_entity->transform->get_local_position() += current_speed * glm::vec3(0.0f, 1.0f, 0.0f));
 
-    if (Input::input->get_key(GLFW_KEY_E))
+    if (Input::input->get_key(GLFW_KEY_Q))
         m_camera_entity->transform->set_local_position(m_camera_entity->transform->get_local_position() -= current_speed * glm::vec3(0.0f, 1.0f, 0.0f));
 }
 
