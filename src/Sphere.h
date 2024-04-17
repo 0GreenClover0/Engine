@@ -19,8 +19,8 @@ public:
 
     [[nodiscard]] std::shared_ptr<Mesh> create_sphere() const;
 
-    u32 sector_count = 0;
-    u32 stack_count = 0;
+    u32 sector_count = 10;
+    u32 stack_count = 10;
     std::string texture_path = "";
     float radius = 5.0f;
 
