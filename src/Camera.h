@@ -46,6 +46,14 @@ public:
     explicit Camera(AK::Badge<Camera>);
     explicit Camera(AK::Badge<Camera>, float const width, float const height, float const fov);
 
+    float width = 1280.0f;
+    float height = 720.0f;
+
+    float fov = 1.0f;
+
+    float near_plane = 0.1f;
+    float far_plane = 1000000.0f;
+
 private:
     void update_internals();
     void update_frustum();
@@ -55,14 +63,6 @@ private:
     glm::mat4 m_projection = {};
 
     bool m_dirty = true;
-
-    float m_width = 0.0f;
-    float m_height = 0.0f;
-
-    float m_fov = 0.0f;
-
-    float m_near_plane = 0.1f;
-    float m_far_plane = 1000000.0f;
 
     glm::vec3 m_last_frustum_position = {};
 
