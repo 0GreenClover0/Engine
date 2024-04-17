@@ -3,6 +3,11 @@
 #include "GLFW/glfw3.h"
 #include "ShaderFactory.h"
 
+std::shared_ptr<ExampleUIBar> ExampleUIBar::create()
+{
+    return std::make_shared<ExampleUIBar>();
+}
+
 void ExampleUIBar::awake()
 {
     set_can_tick(true);

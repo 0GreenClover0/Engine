@@ -7,6 +7,8 @@
 class ExampleDynamicText final : public Component
 {
 public:
+    static std::shared_ptr<ExampleDynamicText> create();
+
     virtual void awake() override;
     virtual void update() override;
 
