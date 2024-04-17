@@ -2,6 +2,11 @@
 #include "Entity.h"
 #include "GLFW/glfw3.h"
 
+std::shared_ptr<ExampleDynamicText> ExampleDynamicText::create()
+{
+    return std::make_shared<ExampleDynamicText>();
+}
+
 void ExampleDynamicText::awake()
 {
     set_can_tick(true);

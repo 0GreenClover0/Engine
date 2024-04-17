@@ -7,6 +7,8 @@
 class ExampleUIBar final : public Component
 {
 public:
+    static std::shared_ptr<ExampleUIBar> create();
+
     virtual void awake() override;
     virtual void update() override;
 

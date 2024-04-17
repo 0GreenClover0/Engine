@@ -62,10 +62,10 @@ void Game::initialize()
     player_input->camera_parent = camera_parent;
 
     auto const text = Entity::create("text");
-    std::shared_ptr<ExampleDynamicText> const edt = text->add_component<ExampleDynamicText>();
+    std::shared_ptr<ExampleDynamicText> const edt = text->add_component(ExampleDynamicText::create());
 
     auto const bar = Entity::create("bar");
-    std::shared_ptr<ExampleUIBar> const eub = bar->add_component<ExampleUIBar>();
+    std::shared_ptr<ExampleUIBar> const eub = bar->add_component(ExampleUIBar::create());
 
     auto const transparent = Entity::create("transparent_grass");
     std::shared_ptr<Sprite> const grass = transparent->add_component<Sprite>(Sprite::create(ui_material, "./res/textures/grass.png"));
