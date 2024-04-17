@@ -136,8 +136,11 @@ std::shared_ptr<Mesh> Sphere::create_sphere() const
         odd_row = !odd_row;
     }
 
-    std::vector<Texture> diffuse_maps = { TextureLoader::get_instance()->load_texture(texture_path, TextureType::Diffuse) };
-    textures.insert(textures.end(), diffuse_maps.begin(), diffuse_maps.end());
+    if (!texture_path.empty())
+    {
+        std::vector<Texture> diffuse_maps = { TextureLoader::get_instance()->load_texture(texture_path, TextureType::Diffuse) };
+        textures.insert(textures.end(), diffuse_maps.begin(), diffuse_maps.end());
+    }
 
     return MeshFactory::create(vertices, indices, textures, m_draw_type, m_material);
 }
