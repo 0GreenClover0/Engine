@@ -182,6 +182,16 @@ float3 calculate_spot_light(SpotLight light, float3 normal, float3 pixel_pos, fl
     return attenuation * intensity * (ambient + specular + diffuse);
 }
 
+float4 gamma_correction(float3 color)
+{
+    // If screen is too bright it might be because DirectX can do gamma correction by itself
+    // However, it works only in fullscreen
+    // so keep that in mind just in case
+    float gamma_factor = 1.0f / 2.2f;
+    float3 sRGB_color = float3(pow(color.x, gamma_factor), pow(color.y, gamma_factor), pow(color.z, gamma_factor));
+    return float4(sRGB_color.xyz, 1.0f);
+}
+
 float4 ps_main(VS_Output input) : SV_TARGET
 {
     float3 norm = normalize(input.normal);
@@ -199,6 +209,6 @@ float4 ps_main(VS_Output input) : SV_TARGET
     {
         result += calculate_spot_light(spot_lights[j], norm, input.world_pos, view_dir, diffuse_texture);
     }
-
-    return float4(result, 1.0f);
+    
+    return gamma_correction(result);
 }
