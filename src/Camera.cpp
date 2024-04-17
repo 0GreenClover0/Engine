@@ -49,48 +49,48 @@ glm::mat4 Camera::get_projection()
 
 float Camera::get_near_plane() const
 {
-    return m_near_plane;
+    return near_plane;
 }
 
 void Camera::set_near_plane(float const value)
 {
     m_dirty = true;
-    m_near_plane = value;
+    near_plane = value;
 }
 
 float Camera::get_far_plane() const
 {
-    return m_far_plane;
+    return far_plane;
 }
 
 void Camera::set_far_plane(float const value)
 {
     m_dirty = true;
-    m_far_plane = value;
+    far_plane = value;
 }
 
 void Camera::set_width(float const value)
 {
-    if (glm::epsilonNotEqual(value, m_width, 0.0001f) && glm::epsilonNotEqual(value, 0.0f, 0.0001f))
+    if (glm::epsilonNotEqual(value, width, 0.0001f) && glm::epsilonNotEqual(value, 0.0f, 0.0001f))
     {
         m_dirty = true;
-        m_width = value;
+        width = value;
     }
 }
 
 void Camera::set_height(float const value)
 {
-    if (glm::epsilonNotEqual(value, m_height, 0.0001f) && glm::epsilonNotEqual(value, 0.0f, 0.0001f))
+    if (glm::epsilonNotEqual(value, height, 0.0001f) && glm::epsilonNotEqual(value, 0.0f, 0.0001f))
     {
         m_dirty = true;
-        m_height = value;
+        height = value;
     }
 }
 
 void Camera::set_fov(float const value)
 {
     m_dirty = true;
-    m_fov = value;
+    fov = value;
 }
 
 glm::vec3 Camera::get_front() const
@@ -205,7 +205,7 @@ Camera::Camera(AK::Badge<Camera>)
 {
 }
 
-Camera::Camera(AK::Badge<Camera>, float const width, float const height, float const fov) : m_width(width), m_height(height), m_fov(fov)
+Camera::Camera(AK::Badge<Camera>, float const width, float const height, float const fov) : width(width), height(height), fov(fov)
 {
 }
 
@@ -213,7 +213,7 @@ void Camera::update_internals()
 {
     if (m_dirty)
     {
-        m_projection = glm::perspective(m_fov, m_width / m_height, m_near_plane, m_far_plane);
+        m_projection = glm::perspective(fov, width / height, near_plane, far_plane);
 
         update_frustum();
     }
