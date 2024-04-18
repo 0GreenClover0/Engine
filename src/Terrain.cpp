@@ -81,7 +81,7 @@ std::shared_ptr<Mesh> Terrain::create_terrain_from_height_map_gpu() const
     if (heightmap.id == 0)
     {
         std::cout << "Height map failed to load at path: " << m_height_map_path << '\n';
-        return MeshFactory::create({}, {}, {}, m_draw_type, m_material);
+        return MeshFactory::create({}, {}, {}, m_draw_type, material);
     }
 
     i32 const width = heightmap.width;
@@ -152,7 +152,7 @@ std::shared_ptr<Mesh> Terrain::create_terrain_from_height_map_gpu() const
         }
     }
 
-    return MeshFactory::create(vertices, {}, textures, m_draw_type, m_material, DrawFunctionType::NotIndexed);
+    return MeshFactory::create(vertices, {}, textures, m_draw_type, material, DrawFunctionType::NotIndexed);
 }
 
 std::shared_ptr<Mesh> Terrain::create_terrain_from_height_map()
@@ -166,7 +166,7 @@ std::shared_ptr<Mesh> Terrain::create_terrain_from_height_map()
     {
         std::cout << "Height map failed to load at path: " << m_height_map_path << '\n';
         stbi_image_free(data);
-        return MeshFactory::create({}, {}, {}, m_draw_type, m_material);
+        return MeshFactory::create({}, {}, {}, m_draw_type, material);
     }
 
     std::vector<Vertex> vertices = {};
@@ -206,5 +206,5 @@ std::shared_ptr<Mesh> Terrain::create_terrain_from_height_map()
     m_strips_count = height - 1;
     m_vertices_per_strip = width * 2;
 
-    return MeshFactory::create(vertices, indices, {}, m_draw_type, m_material);
+    return MeshFactory::create(vertices, indices, {}, m_draw_type, material);
 }

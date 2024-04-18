@@ -66,5 +66,5 @@ std::shared_ptr<Mesh> Ellipse::create_ellipse() const
         vertices.emplace_back(vertex);
     }
 
-    return MeshFactory::create(vertices, {}, {}, m_draw_type, m_material, DrawFunctionType::NotIndexed);
+    return MeshFactory::create(vertices, {}, {}, m_draw_type, material, DrawFunctionType::NotIndexed);
 }

@@ -3,9 +3,8 @@
 #include "Entity.h"
 #include "Renderer.h"
 
-Drawable::Drawable(std::shared_ptr<Material> const& material)
+Drawable::Drawable(std::shared_ptr<Material> const& material) : material(material)
 {
-    m_material = material;
 }
 
 void Drawable::calculate_bounding_box()
@@ -50,11 +49,6 @@ void Drawable::on_enabled()
 void Drawable::on_disabled()
 {
     Renderer::get_instance()->unregister_drawable(std::dynamic_pointer_cast<Drawable>(shared_from_this()));
-}
-
-std::shared_ptr<Material> Drawable::material()
-{
-    return m_material;
 }
 
 void Drawable::draw_instanced(i32 const size)

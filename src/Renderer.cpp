@@ -44,12 +44,12 @@ void Renderer::unregister_shader(std::shared_ptr<Shader> const& shader)
 
 void Renderer::register_drawable(std::shared_ptr<Drawable> const& drawable)
 {
-    drawable->material()->drawables.emplace_back(drawable);
+    drawable->material->drawables.emplace_back(drawable);
 }
 
 void Renderer::unregister_drawable(std::shared_ptr<Drawable> const& drawable)
 {
-    AK::swap_and_erase(drawable->material()->drawables, drawable);
+    AK::swap_and_erase(drawable->material->drawables, drawable);
 }
 
 void Renderer::register_material(std::shared_ptr<Material> const& material)
@@ -264,9 +264,9 @@ void Renderer::draw_instanced(std::shared_ptr<Material> const& material, glm::ma
 
     //set_shader_uniforms(shader, projection_view, projection_view_no_translation);
 
-    shader->set_vec3("material.color", glm::vec3(first_drawable->material()->color.x, first_drawable->material()->color.y, first_drawable->material()->color.z));
-    shader->set_float("material.specular", first_drawable->material()->specular);
-    shader->set_float("material.shininess", first_drawable->material()->shininess);
+    shader->set_vec3("material.color", glm::vec3(first_drawable->material->color.x, first_drawable->material->color.y, first_drawable->material->color.z));
+    shader->set_float("material.specular", first_drawable->material->specular);
+    shader->set_float("material.shininess", first_drawable->material->shininess);
 
     first_drawable->draw_instanced(material->model_matrices.size());
 }

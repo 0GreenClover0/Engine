@@ -87,11 +87,11 @@ std::shared_ptr<Mesh> Sphere::create_sphere() const
         std::vector<Texture> diffuse_maps = { TextureLoader::get_instance()->load_texture(texture_path, TextureType::Diffuse) };
         textures.insert(textures.end(), diffuse_maps.begin(), diffuse_maps.end());
 
-        m_material->radius_multiplier = radius;
-        m_material->sector_count = sector_count;
-        m_material->stack_count = stack_count;
+        material->radius_multiplier = radius;
+        material->sector_count = sector_count;
+        material->stack_count = stack_count;
 
-        return MeshFactory::create(vertices, indices, textures, m_draw_type, m_material);
+        return MeshFactory::create(vertices, indices, textures, m_draw_type, material);
     }
 
     for (u32 x = 0; x <= stack_count; ++x)
@@ -142,5 +142,5 @@ std::shared_ptr<Mesh> Sphere::create_sphere() const
         textures.insert(textures.end(), diffuse_maps.begin(), diffuse_maps.end());
     }
 
-    return MeshFactory::create(vertices, indices, textures, m_draw_type, m_material);
+    return MeshFactory::create(vertices, indices, textures, m_draw_type, material);
 }

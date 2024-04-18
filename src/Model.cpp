@@ -129,12 +129,12 @@ void Model::draw_instanced(i32 const size)
 
 void Model::prepare()
 {
-    if (m_material->is_gpu_instanced)
+    if (material->is_gpu_instanced)
     {
-        if (m_material->first_drawable != nullptr)
+        if (material->first_drawable != nullptr)
             return;
 
-        m_material->first_drawable = std::dynamic_pointer_cast<Drawable>(shared_from_this());
+        material->first_drawable = std::dynamic_pointer_cast<Drawable>(shared_from_this());
     }
 
     load_model(model_path);
@@ -229,7 +229,7 @@ std::shared_ptr<Mesh> Model::proccess_mesh(aiMesh const* mesh, aiScene const* sc
     std::vector<Texture> specular_maps = load_material_textures(assimp_material, aiTextureType_SPECULAR, TextureType::Specular);
     textures.insert(textures.end(), specular_maps.begin(), specular_maps.end());
 
-    return MeshFactory::create(vertices, indices, textures, m_draw_type, m_material);
+    return MeshFactory::create(vertices, indices, textures, m_draw_type, material);
 }
 
 std::vector<Texture> Model::load_material_textures(aiMaterial const* material, aiTextureType const type, TextureType const type_name)
