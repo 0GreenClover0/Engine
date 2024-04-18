@@ -16,50 +16,6 @@ SceneSerializer::SceneSerializer(std::shared_ptr<Scene> const& scene) : m_scene(
 {
 }
 
-void SceneSerializer::serialize_shader(YAML::Emitter& out, std::shared_ptr<Shader> const& shader)
-{
-    out << YAML::Key << "Shader";
-    out << YAML::BeginMap; // Shader
-
-    out << YAML::Key << "VertexPath" << YAML::Value << shader->m_vertex_path;
-    out << YAML::Key << "FragmentPath" << YAML::Value << shader->m_fragment_path;
-    out << YAML::Key << "GeometryPath" << YAML::Value << shader->m_geometry_path;
-
-    out << YAML::EndMap; // Shader
-}
-
-void SceneSerializer::serialize_material_instance(YAML::Emitter& out, std::shared_ptr<Material> const& material)
-{
-    // TODO: We should not serialize each individual shader and material instances and materials, but rather batch same ones together
-    out << YAML::Key << "Material";
-    out << YAML::BeginMap; // Material
-
-    serialize_shader(out, material->shader);
-    out << YAML::Key << "Color" << YAML::Value << material->color;
-
-    out << YAML::EndMap; // Material
-}
-
-std::shared_ptr<Shader> SceneSerializer::deserialize_shader(YAML::Node const& node) const
-{
-    auto const vertex_path = node["VertexPath"].as<std::string>();
-    auto const fragment_path = node["FragmentPath"].as<std::string>();
-    auto const geometry_path = node["GeometryPath"].as<std::string>();
-
-    if (geometry_path.empty())
-        return ShaderFactory::create(vertex_path, fragment_path);
-
-    return ShaderFactory::create(vertex_path, fragment_path, geometry_path);
-}
-
-std::shared_ptr<Material> SceneSerializer::deserialize_material_instance(YAML::Node const& node) const
-{
-    auto const shader = deserialize_shader(node["Shader"]);
-    auto material = Material::create(shader);
-    material->color = node["Color"].as<glm::vec4>();
-    return material;
-}
-
 void SceneSerializer::serialize_entity(YAML::Emitter& out, std::shared_ptr<Entity> const& entity)
 {
     out << YAML::BeginMap; // Entity
@@ -124,7 +80,7 @@ void SceneSerializer::serialize_entity(YAML::Emitter& out, std::shared_ptr<Entit
 
             out << YAML::Key << "ModelPath" << YAML::Value << model->m_model_path;
 
-            serialize_material_instance(out, model->m_material);
+            out << YAML::Key << "Material" << YAML::Value << model->material;
 
             out << YAML::EndMap; // ModelComponent
         }
@@ -174,41 +130,37 @@ std::shared_ptr<Entity> SceneSerializer::deserialize_entity(YAML::Node const& en
         auto component_name = component["ComponentName"].as<std::string>();
         if (component_name == "EllipseComponent")
         {
-            auto material = deserialize_material_instance(component["Material"]);
             deserialized_entity->add_component<class Ellipse>(Ellipse::create(
                 component["CenterX"].as<float>(),
                 component["CenterZ"].as<float>(),
                 component["RadiusX"].as<float>(),
                 component["RadiusZ"].as<float>(),
                 component["SegmentCount"].as<i32>(),
-                material
+                component["Material"].as<std::shared_ptr<Material>>()
             ));
         }
         else if (component_name == "SphereComponent")
         {
-            auto material = deserialize_material_instance(component["Material"]);
             deserialized_entity->add_component<Sphere>(Sphere::create(
                 component["Radius"].as<float>(),
                 component["Sectors"].as<u32>(),
                 component["Stacks"].as<u32>(),
                 component["TexturePath"].as<std::string>(),
-                material
+                component["Material"].as<std::shared_ptr<Material>>()
             ));
         }
         else if (component_name == "CubeComponent")
         {
-            auto material = deserialize_material_instance(component["Material"]);
             deserialized_entity->add_component<Cube>(
-                Cube::create(component["TexturePath"].as<std::string>(), material)
+                Cube::create(component["TexturePath"].as<std::string>(), component["Material"].as<std::shared_ptr<Material>>())
             );
         }
         else if (component_name == "ModelComponent")
         {
-            auto material = deserialize_material_instance(component["Material"]);
             deserialized_entity->add_component<Model>(
                 Model::create(
                     component["ModelPath"].as<std::string>(),
-                    material
+                    component["Material"].as<std::shared_ptr<Material>>()
                 )
             );
         }

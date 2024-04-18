@@ -101,6 +101,66 @@ namespace YAML
             return true;
         }
     };
+
+    template<>
+    struct convert<std::shared_ptr<Shader>>
+    {
+        static Node encode(std::shared_ptr<Shader> const& rhs)
+        {
+            Node node;
+            node.push_back(rhs->get_vertex_path());
+            node.push_back(rhs->get_fragment_path());
+            node.push_back(rhs->get_geometry_path());
+            return node;
+        }
+
+        static bool decode(Node const& node, std::shared_ptr<Shader>& rhs)
+        {
+            if (node.size() != 3)
+                return false;
+
+            auto const vertex_path = node["VertexPath"].as<std::string>();
+            auto const fragment_path = node["FragmentPath"].as<std::string>();
+            auto const geometry_path = node["GeometryPath"].as<std::string>();
+
+            if (geometry_path.empty())
+            {
+                rhs = ShaderFactory::create(vertex_path, fragment_path);
+            }
+            else
+            {
+                rhs = ShaderFactory::create(vertex_path, fragment_path, geometry_path);
+            }
+
+            return true;
+        }
+    };
+
+    template<>
+    struct convert<std::shared_ptr<Material>>
+    {
+        static Node encode(std::shared_ptr<Material> const& rhs)
+        {
+            Node node;
+            node.push_back(rhs->shader);
+            node.push_back(rhs->color);
+            return node;
+        }
+
+        static bool decode(Node const& node, std::shared_ptr<Material>& rhs)
+        {
+            if (node.size() != 2)
+                return false;
+
+            auto const shader = node["Shader"].as<std::shared_ptr<Shader>>();
+            auto const color = node["Color"].as<glm::vec4>();
+
+            rhs = Material::create(shader);
+            rhs->color = color;
+
+            return true;
+        }
+    };
 }
 
 YAML::Emitter& operator<<(YAML::Emitter& out, glm::vec2 const& v)
@@ -128,5 +188,30 @@ YAML::Emitter& operator<<(YAML::Emitter& out, std::wstring const& v)
 {
     std::string const narrow(v.begin(), v.end());
     out << narrow;
+    return out;
+}
+
+YAML::Emitter& operator<<(YAML::Emitter& out, std::shared_ptr<Shader> const& shader)
+{
+    out << YAML::BeginMap; // Shader
+
+    out << YAML::Key << "VertexPath" << YAML::Value << shader->get_vertex_path();
+    out << YAML::Key << "FragmentPath" << YAML::Value << shader->get_fragment_path();
+    out << YAML::Key << "GeometryPath" << YAML::Value << shader->get_geometry_path();
+
+    out << YAML::EndMap; // Shader
+
+    return out;
+}
+
+YAML::Emitter& operator<<(YAML::Emitter& out, std::shared_ptr<Material> const& material)
+{
+    out << YAML::BeginMap; // Material
+
+    out << YAML::Key << "Shader" << YAML::Value << material->shader;
+    out << YAML::Key << "Color" << YAML::Value << material->color;
+
+    out << YAML::EndMap; // Material
+
     return out;
 }
