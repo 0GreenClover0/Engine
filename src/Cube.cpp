@@ -69,12 +69,12 @@ std::string Cube::get_name() const
 
 void Cube::prepare()
 {
-    if (m_material->is_gpu_instanced)
+    if (material->is_gpu_instanced)
     {
-        if (m_material->first_drawable != nullptr)
+        if (material->first_drawable != nullptr)
             return;
 
-        m_material->first_drawable = std::dynamic_pointer_cast<Drawable>(shared_from_this());
+        material->first_drawable = std::dynamic_pointer_cast<Drawable>(shared_from_this());
     }
 
     m_meshes.emplace_back(create_cube());
@@ -108,5 +108,5 @@ std::shared_ptr<Mesh> Cube::create_cube() const
     textures.insert(textures.end(), diffuse_maps.begin(), diffuse_maps.end());
     textures.insert(textures.end(), specular_maps.begin(), specular_maps.end());
 
-    return MeshFactory::create(vertices, indices, textures, m_draw_type, m_material);
+    return MeshFactory::create(vertices, indices, textures, m_draw_type, material);
 }

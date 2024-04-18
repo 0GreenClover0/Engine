@@ -57,6 +57,4 @@ public:
 private:
     // TODO: Negative render order is currently not supported
     i32 m_render_order = 0;
-
-    friend class SceneSerializer;
 };

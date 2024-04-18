@@ -17,8 +17,6 @@ public:
     virtual void on_enabled() override;
     virtual void on_disabled() override;
 
-    std::shared_ptr<Material> material();
-
     virtual void draw() const = 0;
 
     virtual void draw_instanced(i32 const size);
@@ -29,8 +27,8 @@ public:
 
     BoundingBox bounds = {};
 
-protected:
-    std::shared_ptr<Material> m_material;
+    std::shared_ptr<Material> material = nullptr;
 
+private:
     friend class SceneSerializer;
 };

@@ -30,7 +30,7 @@ ScreenText::ScreenText(AK::Badge<ScreenText>, std::wstring const& content, glm::
 {
     auto const ui_shader = ShaderFactory::create("./res/shaders/ui.hlsl", "./res/shaders/ui.hlsl");
     auto const ui_material = Material::create(ui_shader);
-    m_material = ui_material;
+    material = ui_material;
 }
 
 ScreenText::~ScreenText()

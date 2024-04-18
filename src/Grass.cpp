@@ -47,12 +47,12 @@ std::string Grass::get_name() const
 
 void Grass::prepare()
 {
-    if (m_material->is_gpu_instanced)
+    if (material->is_gpu_instanced)
     {
-        if (m_material->first_drawable != nullptr)
+        if (material->first_drawable != nullptr)
             return;
 
-        m_material->first_drawable = std::dynamic_pointer_cast<Drawable>(shared_from_this());
+        material->first_drawable = std::dynamic_pointer_cast<Drawable>(shared_from_this());
     }
 
     m_meshes.emplace_back(create_blade());
@@ -86,5 +86,5 @@ std::shared_ptr<Mesh> Grass::create_blade() const
 
     textures.insert(textures.end(), diffuse_maps.begin(), diffuse_maps.end());
 
-    return MeshFactory::create(vertices, indices, textures, m_draw_type, m_material);
+    return MeshFactory::create(vertices, indices, textures, m_draw_type, material);
 }

@@ -28,7 +28,7 @@ void SkyboxGL::draw() const
     glBindVertexArray(m_VAO);
 
     glActiveTexture(GL_TEXTURE0);
-    m_material->shader->set_int("skybox", 0);
+    material->shader->set_int("skybox", 0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, m_texture_id);
 
     // Draw mesh
