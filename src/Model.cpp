@@ -148,8 +148,8 @@ void Model::reset()
 
 void Model::reprepare()
 {
-    Model::reset();
-    Model::prepare();
+    reset();
+    prepare();
 }
 
 void Model::load_model(std::string const& path)
