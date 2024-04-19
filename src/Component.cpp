@@ -19,6 +19,10 @@ void Component::uninitialize()
 {
 }
 
+void Component::reprepare()
+{
+}
+
 void Component::awake()
 {
 }

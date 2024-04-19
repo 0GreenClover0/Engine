@@ -33,7 +33,7 @@ public:
 
     virtual void prepare();
     virtual void reset();
-    virtual void reprepare();
+    virtual void reprepare() override;
 
     virtual void calculate_bounding_box() override;
     virtual void adjust_bounding_box() override;

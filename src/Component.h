@@ -13,6 +13,8 @@ public:
     virtual void initialize();
     virtual void uninitialize();
 
+    virtual void reprepare();
+
     virtual void awake();
     virtual void start();
     virtual void update();
