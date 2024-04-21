@@ -1,5 +1,30 @@
 #include "Shader.h"
 
+std::string Shader::get_vertex_path()
+{
+    return m_vertex_path;
+}
+
+std::string Shader::get_fragment_path()
+{
+    return m_fragment_path;
+}
+
+std::string Shader::get_geometry_path()
+{
+    return m_geometry_path;
+}
+
+std::string Shader::get_tessellation_control_path()
+{
+    return m_tessellation_control_path;
+}
+
+std::string Shader::get_tessellation_evaluation_path()
+{
+    return m_tessellation_evaluation_path;
+}
+
 Shader::Shader(std::string const& compute_path) : m_compute_path(compute_path)
 {
 }

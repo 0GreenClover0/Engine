@@ -26,6 +26,12 @@ public:
     void virtual set_mat4(std::string const& name, glm::mat4 const value) const = 0;
     void virtual load_shader() = 0;
 
+    std::string get_vertex_path();
+    std::string get_fragment_path();
+    std::string get_geometry_path();
+    std::string get_tessellation_control_path();
+    std::string get_tessellation_evaluation_path();
+
     std::vector<std::shared_ptr<Material>> materials;
 
 protected:
