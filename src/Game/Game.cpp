@@ -23,7 +23,8 @@
 #include "SpotLight.h"
 #include "Terrain.h"
 #include "Player/PlayerInput.h"
-#include <Sphere.h>
+#include "LighthouseKeeper.h"
+#include "Sphere.h"
 
 Game::Game(std::shared_ptr<Window> const& window) : window(window)
 {
@@ -80,4 +81,9 @@ void Game::initialize()
 
     auto const water = Entity::create("water");
     water->add_component(Model::create("./res/models/water/water.gltf", standard_material));
+
+    auto const keeper = Entity::create("keeper");
+    keeper->add_component(Model::create("./res/models/keeper/keeper.gltf", standard_material));
+    keeper->add_component(LighthouseKeeper::create());
+    keeper->transform->set_local_position({ 0.0f, 0.0f, 3.0f });
 }
