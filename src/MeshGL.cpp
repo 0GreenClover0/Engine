@@ -7,7 +7,7 @@
 #include "Texture.h"
 
 MeshGL::MeshGL(AK::Badge<MeshFactory>, std::vector<Vertex> const& vertices, std::vector<u32> const& indices,
-               std::vector<Texture> const& textures, DrawType const draw_type, std::shared_ptr<Material> const& material,
+               std::vector<std::shared_ptr<Texture>> const& textures, DrawType const draw_type, std::shared_ptr<Material> const& material,
                DrawFunctionType const draw_function):
     Mesh(vertices, indices, textures, draw_type, material, draw_function)
 {
@@ -96,7 +96,7 @@ MeshGL::~MeshGL()
 {
     for (auto const& texture : m_textures)
     {
-        glDeleteTextures(1, &texture.id);
+        glDeleteTextures(1, &texture->id);
     }
 
     m_vertices.clear();
@@ -170,24 +170,24 @@ void MeshGL::bind_textures() const
         std::string number;
         std::string name = "material.";
 
-        if (m_textures[i].type == TextureType::Diffuse)
+        if (m_textures[i]->type == TextureType::Diffuse)
         {
             name += "texture_diffuse";
             number = std::to_string(diffuse_number++);
         }
-        else if (m_textures[i].type == TextureType::Specular)
+        else if (m_textures[i]->type == TextureType::Specular)
         {
             name += "texture_specular";
             number = std::to_string(specular_number++);
         }
-        else if (m_textures[i].type == TextureType::Heightmap)
+        else if (m_textures[i]->type == TextureType::Heightmap)
         {
             name += "texture_height";
             number = std::to_string(height_number++);
         }
 
         material->shader->set_int(name + number, i);
-        glBindTexture(GL_TEXTURE_2D, m_textures[i].id);
+        glBindTexture(GL_TEXTURE_2D, m_textures[i]->id);
     }
 
     if (m_textures.empty())
@@ -196,7 +196,7 @@ void MeshGL::bind_textures() const
 
         material->shader->set_int("material.texture_diffuse1", 0);
 
-        glBindTexture(GL_TEXTURE_2D, InternalMeshData::white_texture.id);
+        glBindTexture(GL_TEXTURE_2D, InternalMeshData::white_texture->id);
     }
 }
 

@@ -8,7 +8,7 @@
 #include <TextureLoaderDX11.h>
 
 MeshDX11::MeshDX11(AK::Badge<MeshFactory>, std::vector<Vertex> const& vertices, std::vector<u32> const& indices,
-                   std::vector<Texture> const& textures, DrawType const draw_type, std::shared_ptr<Material> const& material,
+                   std::vector<std::shared_ptr<Texture>> const& textures, DrawType const draw_type, std::shared_ptr<Material> const& material,
                    DrawFunctionType const draw_function) : Mesh(vertices, indices, textures, draw_type, material, draw_function)
 {
     switch (draw_type)
@@ -69,19 +69,19 @@ MeshDX11::~MeshDX11()
     // FIXME: Managing lifetime of models and textures should be handled in ResourceManager
     for (auto const& texture : m_textures)
     {
-        if (texture.image_sampler_state)
+        if (texture->image_sampler_state)
         {
-            texture.image_sampler_state->Release();
+            texture->image_sampler_state->Release();
         }
 
-        if (texture.shader_resource_view)
+        if (texture->shader_resource_view)
         {
-            texture.shader_resource_view->Release();
+            texture->shader_resource_view->Release();
         }
 
-        if (texture.texture_2d)
+        if (texture->texture_2d)
         {
-            texture.texture_2d->Release();
+            texture->texture_2d->Release();
         }
     }
 
@@ -117,8 +117,8 @@ void MeshDX11::bind_textures() const
 
     for (u32 i = 0; i < m_textures.size(); ++i)
     {
-        device_context->PSSetShaderResources(i, 1, &m_textures[i].shader_resource_view);
-        device_context->PSSetSamplers(i, 1, &m_textures[i].image_sampler_state);
+        device_context->PSSetShaderResources(i, 1, &m_textures[i]->shader_resource_view);
+        device_context->PSSetSamplers(i, 1, &m_textures[i]->image_sampler_state);
     }
 }
 

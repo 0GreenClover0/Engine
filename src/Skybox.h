@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "Drawable.h"
+#include "Texture.h"
 #include "Vertex.h"
 #include "Serialization.h"
 
@@ -25,7 +26,7 @@ public:
     void operator=(Skybox const&) = delete;
 
 protected:
-    u32 m_texture_id = 0;
+    std::shared_ptr<Texture> m_texture = nullptr;
 
 private:
     void virtual bind_texture() const = 0;

@@ -30,14 +30,14 @@ public:
     std::shared_ptr<Material> material;
 
 protected:
-    Mesh(std::vector<Vertex> const& vertices, std::vector<u32> const& indices, std::vector<Texture> const& textures,
+    Mesh(std::vector<Vertex> const& vertices, std::vector<u32> const& indices, std::vector<std::shared_ptr<Texture>> const& textures,
          DrawType const draw_type, std::shared_ptr<Material> const& material, DrawFunctionType const draw_function);
 
     [[nodiscard]] BoundingBox calculate_adjusted_bounding_box(glm::mat4 const& model_matrix) const;
 
     std::vector<Vertex> m_vertices;
     std::vector<u32> m_indices;
-    std::vector<Texture> m_textures;
+    std::vector<std::shared_ptr<Texture>> m_textures;
 
     DrawType m_draw_type;
     DrawFunctionType m_draw_function;

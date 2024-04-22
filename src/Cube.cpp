@@ -95,13 +95,13 @@ std::shared_ptr<Mesh> Cube::create_cube() const
 {
     std::vector<Vertex> const vertices = m_big_cube ? InternalMeshData::big_cube.vertices : InternalMeshData::cube.vertices;
     std::vector<u32> const indices = m_big_cube ? InternalMeshData::big_cube.indices : InternalMeshData::cube.indices;
-    std::vector<Texture> textures;
+    std::vector<std::shared_ptr<Texture>> textures;
 
-    std::vector<Texture> diffuse_maps = {};
+    std::vector<std::shared_ptr<Texture>> diffuse_maps = {};
     if (!diffuse_texture_path.empty())
         diffuse_maps.emplace_back(TextureLoader::get_instance()->load_texture(diffuse_texture_path, TextureType::Diffuse));
 
-    std::vector<Texture> specular_maps = {};
+    std::vector<std::shared_ptr<Texture>> specular_maps = {};
     if (!specular_texture_path.empty())
         specular_maps.emplace_back(TextureLoader::get_instance()->load_texture(specular_texture_path, TextureType::Specular));
 

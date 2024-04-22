@@ -76,18 +76,18 @@ std::shared_ptr<Mesh> Terrain::create_terrain_from_height_map_gpu() const
         false,
     };
 
-    Texture const heightmap = TextureLoader::get_instance()->load_texture(m_height_map_path, TextureType::Heightmap, texture_settings);
+    std::shared_ptr<Texture> const heightmap = TextureLoader::get_instance()->load_texture(m_height_map_path, TextureType::Heightmap, texture_settings);
 
-    if (heightmap.id == 0)
+    if (heightmap->id == 0)
     {
         std::cout << "Height map failed to load at path: " << m_height_map_path << '\n';
         return MeshFactory::create({}, {}, {}, m_draw_type, material);
     }
 
-    i32 const width = heightmap.width;
-    i32 const height = heightmap.height;
+    i32 const width = heightmap->width;
+    i32 const height = heightmap->height;
 
-    std::vector<Texture> textures;
+    std::vector<std::shared_ptr<Texture>> textures;
     textures.emplace_back(heightmap);
 
     u32 constexpr resolution = 20;

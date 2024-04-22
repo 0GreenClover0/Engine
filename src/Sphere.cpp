@@ -70,7 +70,7 @@ std::shared_ptr<Mesh> Sphere::create_sphere() const
 
     std::vector<Vertex> vertices;
     std::vector<u32> indices;
-    std::vector<Texture> textures;
+    std::vector<std::shared_ptr<Texture>> textures;
 
     if (use_geometry_shader)
     {
@@ -84,7 +84,7 @@ std::shared_ptr<Mesh> Sphere::create_sphere() const
         indices.push_back(1);
         indices.push_back(2);
 
-        std::vector<Texture> diffuse_maps = { TextureLoader::get_instance()->load_texture(texture_path, TextureType::Diffuse) };
+        std::vector diffuse_maps = { TextureLoader::get_instance()->load_texture(texture_path, TextureType::Diffuse) };
         textures.insert(textures.end(), diffuse_maps.begin(), diffuse_maps.end());
 
         material->radius_multiplier = radius;
@@ -138,7 +138,7 @@ std::shared_ptr<Mesh> Sphere::create_sphere() const
 
     if (!texture_path.empty())
     {
-        std::vector<Texture> diffuse_maps = { TextureLoader::get_instance()->load_texture(texture_path, TextureType::Diffuse) };
+        std::vector diffuse_maps = { TextureLoader::get_instance()->load_texture(texture_path, TextureType::Diffuse) };
         textures.insert(textures.end(), diffuse_maps.begin(), diffuse_maps.end());
     }
 

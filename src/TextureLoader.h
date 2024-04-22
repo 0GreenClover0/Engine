@@ -22,8 +22,10 @@ class TextureLoader
 public:
     virtual ~TextureLoader() = default;
 
-    [[nodiscard]] Texture load_texture(std::string const& path, TextureType const type, TextureSettings const& settings = {});
-    [[nodiscard]] Texture load_cubemap(std::vector<std::string> const& paths, TextureType const type, TextureSettings const& settings = {});
+    [[nodiscard]] std::shared_ptr<Texture> load_texture(std::string const &path, TextureType const type,
+                                                        TextureSettings const &settings = {});
+    [[nodiscard]] std::shared_ptr<Texture> load_cubemap(std::vector<std::string> const &paths, TextureType const type,
+                                                        TextureSettings const &settings = {});
 
     static std::shared_ptr<TextureLoader> get_instance()
     {

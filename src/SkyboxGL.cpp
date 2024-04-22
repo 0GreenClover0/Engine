@@ -17,7 +17,7 @@ void SkyboxGL::bind()
 
 void SkyboxGL::draw() const
 {
-    if (m_texture_id == 0)
+    if (m_texture->id == 0)
         return;
 
     GLint depth_func_previous_value;
@@ -29,7 +29,7 @@ void SkyboxGL::draw() const
 
     glActiveTexture(GL_TEXTURE0);
     material->shader->set_int("skybox", 0);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, m_texture_id);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, m_texture->id);
 
     // Draw mesh
     glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -45,7 +45,7 @@ void SkyboxGL::draw() const
 
 void SkyboxGL::bind_texture() const
 {
-    glBindTexture(GL_TEXTURE_CUBE_MAP, m_texture_id);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, m_texture->id);
 }
 
 void SkyboxGL::create_cube()
