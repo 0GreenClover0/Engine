@@ -53,8 +53,8 @@ private:
     void load_model(std::string const& path);
     void proccess_node(aiNode const* node, aiScene const* scene);
     std::shared_ptr<Mesh> proccess_mesh(aiMesh const* mesh, aiScene const* scene);
-    std::vector<Texture> load_material_textures(aiMaterial const* material, aiTextureType type, TextureType const type_name);
+    std::vector<std::shared_ptr<Texture>> load_material_textures(aiMaterial const* material, aiTextureType type, TextureType const type_name);
 
     std::string m_directory;
-    std::vector<Texture> m_loaded_textures;
+    std::vector<std::shared_ptr<Texture>> m_loaded_textures;
 };

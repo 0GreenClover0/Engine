@@ -74,9 +74,9 @@ std::shared_ptr<Mesh> Grass::create_blade() const
         0, 2, 3
     };
 
-    std::vector<Texture> textures;
+    std::vector<std::shared_ptr<Texture>> textures;
 
-    std::vector<Texture> diffuse_maps = {};
+    std::vector<std::shared_ptr<Texture>> diffuse_maps = {};
     TextureSettings texture_settings = {};
     texture_settings.wrap_mode_x = TextureWrapMode::ClampToEdge;
     texture_settings.wrap_mode_y = TextureWrapMode::ClampToEdge;

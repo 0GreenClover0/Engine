@@ -8,9 +8,9 @@
 #include "Texture.h"
 #include "Vertex.h"
 
-Mesh::Mesh(std::vector<Vertex> const& vertices, std::vector<u32> const& indices, std::vector<Texture> const& textures,
+Mesh::Mesh(std::vector<Vertex> const& vertices, std::vector<u32> const& indices, std::vector<std::shared_ptr<Texture>> const& textures,
            DrawType const draw_type, std::shared_ptr<Material> const& material, DrawFunctionType const draw_function)
-    : m_vertices(vertices), m_indices(indices), m_textures(textures), material(material), m_draw_type(draw_type), m_draw_function(draw_function)
+    : material(material), m_vertices(vertices), m_indices(indices), m_textures(textures), m_draw_type(draw_type), m_draw_function(draw_function)
 {
 }
 

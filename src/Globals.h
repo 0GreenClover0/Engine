@@ -2,6 +2,7 @@
 
 #include "Material.h"
 
+#include <memory>
 #include <vector>
 
 #include "Vertex.h"
@@ -18,7 +19,7 @@ struct MeshData
 {
     std::vector<Vertex> vertices;
     std::vector<u32> indices;
-    std::vector<Texture> textures;
+    std::vector<std::shared_ptr<Texture>> textures;
 };
 
 namespace InternalMeshData
@@ -26,7 +27,7 @@ namespace InternalMeshData
 
 inline MeshData cube;
 inline MeshData big_cube;
-inline Texture white_texture;
+inline std::shared_ptr<Texture> white_texture;
 
 void light_initialize(); // FIXME: Move that to the initialize() function when it works on DX11
 void initialize();

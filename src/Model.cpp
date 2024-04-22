@@ -187,7 +187,7 @@ std::shared_ptr<Mesh> Model::proccess_mesh(aiMesh const* mesh, aiScene const* sc
 {
     std::vector<Vertex> vertices;
     std::vector<u32> indices;
-    std::vector<Texture> textures;
+    std::vector<std::shared_ptr<Texture>> textures;
 
     for (u32 i = 0; i < mesh->mNumVertices; ++i)
     {
@@ -223,18 +223,18 @@ std::shared_ptr<Mesh> Model::proccess_mesh(aiMesh const* mesh, aiScene const* sc
 
     aiMaterial const* assimp_material = scene->mMaterials[mesh->mMaterialIndex];
 
-    std::vector<Texture> diffuse_maps = load_material_textures(assimp_material, aiTextureType_DIFFUSE, TextureType::Diffuse);
+    std::vector<std::shared_ptr<Texture>> diffuse_maps = load_material_textures(assimp_material, aiTextureType_DIFFUSE, TextureType::Diffuse);
     textures.insert(textures.end(), diffuse_maps.begin(), diffuse_maps.end());
 
-    std::vector<Texture> specular_maps = load_material_textures(assimp_material, aiTextureType_SPECULAR, TextureType::Specular);
+    std::vector<std::shared_ptr<Texture>> specular_maps = load_material_textures(assimp_material, aiTextureType_SPECULAR, TextureType::Specular);
     textures.insert(textures.end(), specular_maps.begin(), specular_maps.end());
 
     return MeshFactory::create(vertices, indices, textures, m_draw_type, material);
 }
 
-std::vector<Texture> Model::load_material_textures(aiMaterial const* material, aiTextureType const type, TextureType const type_name)
+std::vector<std::shared_ptr<Texture>> Model::load_material_textures(aiMaterial const* material, aiTextureType const type, TextureType const type_name)
 {
-    std::vector<Texture> textures;
+    std::vector<std::shared_ptr<Texture>> textures;
 
     u32 const material_count = material->GetTextureCount(type);
     for (u32 i = 0; i < material_count; ++i)
@@ -243,9 +243,9 @@ std::vector<Texture> Model::load_material_textures(aiMaterial const* material, a
         material->GetTexture(type, i, &str);
 
         bool is_already_loaded = false;
-        for (const auto& loaded_texture : m_loaded_textures)
+        for (auto const& loaded_texture : m_loaded_textures)
         {
-            if (std::strcmp(loaded_texture.path.data(), str.C_Str()) == 0)
+            if (std::strcmp(loaded_texture->path.data(), str.C_Str()) == 0)
             {
                 textures.push_back(loaded_texture);
                 is_already_loaded = true;
@@ -262,7 +262,7 @@ std::vector<Texture> Model::load_material_textures(aiMaterial const* material, a
         TextureSettings settings = {};
         settings.flip_vertically = false;
 
-        Texture texture = TextureLoader::get_instance()->load_texture(file_path, type_name, settings);
+        std::shared_ptr<Texture> texture = TextureLoader::get_instance()->load_texture(file_path, type_name, settings);
         textures.push_back(texture);
         m_loaded_textures.push_back(texture);
     }
