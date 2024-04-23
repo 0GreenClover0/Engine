@@ -6,6 +6,7 @@
 #include <assimp/postprocess.h>
 
 #include <imgui.h>
+#include <imgui_stdlib.h>
 
 #include "Entity.h"
 #include "Globals.h"
@@ -62,9 +63,9 @@ void Model::draw_editor()
 {
     Drawable::draw_editor();
 
-    model_path.reserve(255);
+    ImGui::InputText("Model Path", &model_path);
 
-    if (ImGui::InputText("Model Path", model_path.data(), 255, ImGuiInputTextFlags_EnterReturnsTrue))
+    if (ImGui::IsItemDeactivatedAfterEdit())
     {
         reprepare();
     }
