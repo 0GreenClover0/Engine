@@ -65,6 +65,16 @@ std::shared_ptr<RendererDX11> RendererDX11::create()
     hr = renderer->get_device()->CreateBuffer(&light_buffer_desc, nullptr, &renderer->m_constant_buffer_light);
     assert(SUCCEEDED(hr));
 
+    D3D11_BUFFER_DESC camera_buffer_desc = {};
+    camera_buffer_desc.Usage = D3D11_USAGE_DYNAMIC;
+    camera_buffer_desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    camera_buffer_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    camera_buffer_desc.MiscFlags = 0;
+    camera_buffer_desc.ByteWidth = sizeof(ConstantBufferCameraPosition);
+
+    hr = renderer->get_device()->CreateBuffer(&camera_buffer_desc, nullptr, &renderer->m_constant_buffer_camera_position);
+    assert(SUCCEEDED(hr));
+
     renderer->create_depth_stencil();
     renderer->create_rasterizer_state();
 
@@ -322,6 +332,7 @@ void RendererDX11::update_object(std::shared_ptr<Drawable> const& drawable, std:
     get_device_context()->VSSetConstantBuffers(0, 1, &m_constant_buffer_per_object);
 
     set_light_buffer(drawable);
+    set_camera_position_buffer(drawable);
 }
 
 void RendererDX11::unbind_material(std::shared_ptr<Material> const &material) const
@@ -462,6 +473,20 @@ void RendererDX11::set_light_buffer(std::shared_ptr<Drawable> const& drawable) c
     CopyMemory(mapped_light_buffer_resource.pData, &light_data, sizeof(ConstantBufferLight));
     get_device_context()->Unmap(m_constant_buffer_light, 0);
     get_device_context()->PSSetConstantBuffers(0, 1, &m_constant_buffer_light);
+}
+
+void RendererDX11::set_camera_position_buffer(std::shared_ptr<Drawable> const& drawable) const
+{
+    ConstantBufferCameraPosition camera_pos_data = {};
+    camera_pos_data.camera_pos = Camera::get_main_camera()->entity->transform->get_position();
+
+    D3D11_MAPPED_SUBRESOURCE camera_pos_buffer_resource = {};
+    HRESULT const hr = get_device_context()->Map(m_constant_buffer_camera_position, 0, D3D11_MAP_WRITE_DISCARD, 0, &camera_pos_buffer_resource);
+    assert(SUCCEEDED(hr));
+
+    CopyMemory(camera_pos_buffer_resource.pData, &camera_pos_data, sizeof(ConstantBufferCameraPosition));
+    get_device_context()->Unmap(m_constant_buffer_camera_position, 0);
+    get_device_context()->PSSetConstantBuffers(2, 1, &m_constant_buffer_camera_position);
 }
 
 bool RendererDX11::create_device_d3d(HWND const hwnd)

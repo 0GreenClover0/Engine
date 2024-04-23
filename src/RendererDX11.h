@@ -45,6 +45,7 @@ private:
 
     [[nodiscard]] static D3D11_VIEWPORT create_viewport(i32 const width, i32 const height);
     void set_light_buffer(std::shared_ptr<Drawable> const& drawable) const;
+    void set_camera_position_buffer(std::shared_ptr<Drawable> const& drawable) const;
 
     [[nodiscard]] bool create_device_d3d(HWND const hwnd);
     void cleanup_device_d3d();
@@ -78,6 +79,7 @@ private:
 
     ID3D11RasterizerState* g_rasterizer_state = nullptr;
     ID3D11Buffer* m_constant_buffer_light = nullptr;
+    ID3D11Buffer* m_constant_buffer_camera_position = nullptr;
     ID3D11Buffer* m_constant_buffer_per_object = nullptr;
     ID3D11Buffer* m_constant_buffer_point_shadows = nullptr;
     ID3D11DepthStencilView* m_depth_stencil_view = nullptr;
