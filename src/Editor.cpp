@@ -33,6 +33,7 @@ Editor::Editor(AK::Badge<Editor>)
 
     m_debug_window.flags |= ImGuiWindowFlags_MenuBar;
     m_game_window.flags |= ImGuiWindowFlags_MenuBar;
+    m_hierarchy_window.flags |= ImGuiWindowFlags_MenuBar;
     m_last_second = glfwGetTime();
 
     load_assets();
@@ -289,6 +290,16 @@ void Editor::draw_scene_hierarchy()
     {
         ImGui::End();
         return;
+    }
+
+    if (ImGui::BeginMenuBar())
+    {
+        if (ImGui::Button("Add Entity"))
+        {
+            Entity::create("Entity");
+        }
+
+        ImGui::EndMenuBar();
     }
 
     // Draw every entity without a parent, and draw its children recursively
