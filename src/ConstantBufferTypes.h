@@ -10,6 +10,11 @@ struct ConstantBuffer
 
 };
 
+struct Time
+{
+    double time;
+};
+
 struct DXPointLight
 {
     glm::vec3 position;
@@ -57,6 +62,11 @@ struct DXDirectionalLight
     float padding3;
     glm::vec3 specular;
     float padding4;
+};
+
+struct ConstantBufferPerShader
+{
+    Time time;
 };
 
 struct ConstantBufferPerObject

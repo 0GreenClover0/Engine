@@ -38,6 +38,18 @@ std::shared_ptr<RendererDX11> RendererDX11::create()
 
     assert(SUCCEEDED(hr));
 
+    D3D11_BUFFER_DESC per_shader_desc = {};
+    per_shader_desc.Usage = D3D11_USAGE_DYNAMIC;
+    per_shader_desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    per_shader_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    per_shader_desc.MiscFlags = 0;
+    per_shader_desc.ByteWidth = static_cast<UINT>(sizeof(ConstantBufferPerShader) + (16 - sizeof(ConstantBufferPerShader) % 16));
+    per_shader_desc.StructureByteStride = 0;
+
+    hr = renderer->get_device()->CreateBuffer(&per_shader_desc, nullptr, &renderer->m_constant_buffer_per_shader);
+
+    assert(SUCCEEDED(hr));
+
     glfwSetWindowSizeCallback(Engine::window->get_glfw_window(), on_window_resize);
 
     D3D11_BUFFER_DESC light_buffer_desc = {};
@@ -249,6 +261,17 @@ void RendererDX11::update_shader(std::shared_ptr<Shader> const& shader, glm::mat
 {
     g_pd3dDeviceContext->PSSetShaderResources(1, 1, &m_shadow_shader_resource_view);
     g_pd3dDeviceContext->PSSetSamplers(1, 1, &m_shadow_sampler_state);
+
+    Time const data = { glfwGetTime() };
+
+    D3D11_MAPPED_SUBRESOURCE mapped_subresource = {};
+    HRESULT const hr = get_device_context()->Map(m_constant_buffer_per_shader, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped_subresource);
+    assert(SUCCEEDED(hr));
+
+    CopyMemory(mapped_subresource.pData, &data, sizeof(Time));
+
+    get_device_context()->Unmap(m_constant_buffer_per_shader, 0);
+    get_device_context()->VSSetConstantBuffers(0, 1, &m_constant_buffer_per_shader);
 }
 
 void RendererDX11::update_material(std::shared_ptr<Material> const& material) const
