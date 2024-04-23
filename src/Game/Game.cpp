@@ -135,4 +135,8 @@ void Game::initialize()
     rect2->add_component(Model::create("./res/models/pyramid3/scene.gltf", standard_material));
     rect2->transform->set_local_position(glm::vec3(6, 2, 0));
     rect2->add_component(Collider2D::create(ColliderType2D::Rectangle, glm::vec2(1.95f, 1.95f)));
+
+    auto const skinned = Entity::create("skinned");
+    skinned->add_component(Model::create("./res/models/man/man.gltf", "./res/models/man/anim.gltf", standard_material));
+    skinned->transform->set_local_position(glm::vec3(2, 2, 0));
 }

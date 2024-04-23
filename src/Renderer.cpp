@@ -11,6 +11,7 @@
 #include "Camera.h"
 #include "Engine.h"
 #include "Entity.h"
+#include "Model.h"
 #include "ShaderFactory.h"
 #include "Skybox.h"
 
@@ -223,7 +224,6 @@ void Renderer::draw(std::shared_ptr<Material> const& material, glm::mat4 const& 
     for (auto const& drawable : material->drawables)
     {
         update_object(drawable, material, projection_view);
-
         drawable->draw();
     }
 }

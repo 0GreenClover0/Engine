@@ -4,7 +4,6 @@
 #include "TextureLoaderDX11.h"
 #include "Drawable.h"
 #include "Entity.h"
-#include "Model.h"
 #include "Camera.h"
 #include "ShaderFactory.h"
 
@@ -48,6 +47,17 @@ std::shared_ptr<RendererDX11> RendererDX11::create()
     light_buffer_desc.ByteWidth = sizeof(ConstantBufferLight);
 
     hr = renderer->get_device()->CreateBuffer(&light_buffer_desc, nullptr, &renderer->m_constant_buffer_light);
+
+    assert(SUCCEEDED(hr));
+
+    D3D11_BUFFER_DESC skinning_buffer_desc = {};
+    skinning_buffer_desc.Usage = D3D11_USAGE_DYNAMIC;
+    skinning_buffer_desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    skinning_buffer_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    skinning_buffer_desc.MiscFlags = 0;
+    skinning_buffer_desc.ByteWidth = sizeof(SkinningBuffer);
+
+    hr = renderer->get_device()->CreateBuffer(&skinning_buffer_desc, nullptr, &renderer->m_skinning_buffer);
 
     assert(SUCCEEDED(hr));
 
@@ -245,7 +255,7 @@ void RendererDX11::bind_dsv_for_shadow_mapping() const
 }
 
 void RendererDX11::update_shader(std::shared_ptr<Shader> const& shader, glm::mat4 const& projection_view,
-                                 glm::mat4 const& projection_view_no_translation) const
+    glm::mat4 const& projection_view_no_translation) const
 {
     g_pd3dDeviceContext->PSSetShaderResources(1, 1, &m_shadow_shader_resource_view);
     g_pd3dDeviceContext->PSSetSamplers(1, 1, &m_shadow_sampler_state);
@@ -256,7 +266,7 @@ void RendererDX11::update_material(std::shared_ptr<Material> const& material) co
 }
 
 void RendererDX11::update_object(std::shared_ptr<Drawable> const& drawable, std::shared_ptr<Material> const& material,
-                                 glm::mat4 const& projection_view) const
+    glm::mat4 const& projection_view) const
 {
     ConstantBufferPerObject data = {};
     glm::mat4 const model = drawable->entity->transform->get_model_matrix();
@@ -272,8 +282,17 @@ void RendererDX11::update_object(std::shared_ptr<Drawable> const& drawable, std:
 
     get_device_context()->Unmap(m_constant_buffer_per_object, 0);
     get_device_context()->VSSetConstantBuffers(0, 1, &m_constant_buffer_per_object);
-    
+
     set_light_buffer(drawable);
+
+    if (const auto skinned_model = std::dynamic_pointer_cast<Model>(drawable))
+    {
+        if (skinned_model->is_skinned())
+        {
+            set_skinning_buffer(skinned_model);
+            skinned_model->pre_draw_update();
+        }
+    }
 }
 
 void RendererDX11::initialize_global_renderer_settings()
@@ -342,8 +361,8 @@ void RendererDX11::set_light_buffer(std::shared_ptr<Drawable> const& drawable) c
         // Sort lights by distance
         std::ranges::sort(m_point_lights, [drawable](std::shared_ptr<PointLight> const& a, std::shared_ptr<PointLight> const& b) {
             return glm::length(drawable->entity->transform->get_position() - a->entity->transform->get_position()) <
-                   glm::length(drawable->entity->transform->get_position() - b->entity->transform->get_position());
-        });
+                glm::length(drawable->entity->transform->get_position() - b->entity->transform->get_position());
+            });
     }
 
     for (i32 i = 0; i < num_point_lights; i++)
@@ -369,8 +388,8 @@ void RendererDX11::set_light_buffer(std::shared_ptr<Drawable> const& drawable) c
         // Sort lights by distance
         std::ranges::sort(m_spot_lights, [drawable](std::shared_ptr<SpotLight> const& a, std::shared_ptr<SpotLight> const& b) {
             return glm::length(drawable->entity->transform->get_position() - a->entity->transform->get_position()) <
-                   glm::length(drawable->entity->transform->get_position() - b->entity->transform->get_position());
-        });
+                glm::length(drawable->entity->transform->get_position() - b->entity->transform->get_position());
+            });
     }
 
     for (i32 i = 0; i < num_spot_lights; i++)
@@ -401,6 +420,25 @@ void RendererDX11::set_light_buffer(std::shared_ptr<Drawable> const& drawable) c
     CopyMemory(mapped_light_buffer_resource.pData, &light_data, sizeof(ConstantBufferLight));
     get_device_context()->Unmap(m_constant_buffer_light, 0);
     get_device_context()->PSSetConstantBuffers(0, 1, &m_constant_buffer_light);
+}
+
+void RendererDX11::set_skinning_buffer(std::shared_ptr<Model> const& model) const
+{
+    SkinningBuffer skinning_buffer = {};
+
+    for (int i = 0; i < 512; ++i)
+    {
+        skinning_buffer.bones[i] = model->rig.skinned_pose[i];
+    }
+
+    D3D11_MAPPED_SUBRESOURCE mapped_skinning_buffer_resource = {};
+    HRESULT const hr = get_device_context()->Map(m_skinning_buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped_skinning_buffer_resource);
+
+    assert(SUCCEEDED(hr));
+
+    CopyMemory(mapped_skinning_buffer_resource.pData, &skinning_buffer, sizeof(SkinningBuffer));
+    get_device_context()->Unmap(m_skinning_buffer, 0);
+    get_device_context()->VSSetConstantBuffers(2, 1, &m_skinning_buffer);
 }
 
 bool RendererDX11::create_device_d3d(HWND const hwnd)
@@ -500,7 +538,7 @@ void RendererDX11::create_rasterizer_state()
     {
         wfdesc.FillMode = D3D11_FILL_WIREFRAME;
     }
-    else 
+    else
     {
         wfdesc.FillMode = D3D11_FILL_SOLID;
     }

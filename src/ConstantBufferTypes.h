@@ -59,6 +59,11 @@ struct DXDirectionalLight
     float padding4;
 };
 
+struct SkinningBuffer
+{
+    glm::mat4 bones[512] = { glm::mat4(1.0f) };
+};
+
 struct ConstantBufferPerObject
 {
     glm::mat4 projection_view_model;

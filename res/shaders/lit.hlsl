@@ -51,11 +51,18 @@ cbuffer object_buffer : register(b0)
     float4x4 light_projection_view_model;
 };
 
+cbuffer rig_buffer : register(b2)
+{
+    float4x4 bones[512];
+}
+
 struct VS_Input
 {
     float3 pos: POSITION;
     float3 normal : NORMAL;
     float2 UV : TEXCOORD0;
+    int4 skin_indices : SKININDICES;
+    float4 skin_weights : SKINWEIGHTS;
 };
 
 struct VS_Output
@@ -76,10 +83,47 @@ VS_Output vs_main(VS_Input input)
 {
     VS_Output output;
 
+    float4 pos_skinned = float4(input.pos, 1.0f);
+    /////////////
+    // Check if there are bones influencing the vertex
+    bool has_influences = false;
+    for(int i = 0; i < 4; i++)
+    {
+        if(input.skin_indices[i] >= 0)
+        {
+            has_influences = true;
+            break;
+        }
+    }
+    
+    if(has_influences)
+    {   
+        // Perform skinning calculations
+        pos_skinned = float4(0.f,0.f,0.f,0.f);
+        float4 norm_skinned = float4(0.f,0.f,0.f,0.f);
+        
+        for(int i = 0; i < 4; i++)
+        {
+            if(input.skin_indices[i] >= 0)
+            {
+                float4x4 bone = bones[input.skin_indices[i]];
+                float weight = input.skin_weights[i];
+                pos_skinned += mul(mul(bone, input.pos), weight);            // posSkinned+=(bone*pos)*weight;
+                norm_skinned += mul(mul(bone, input.normal), weight);           // norm_skinned+=(bone*norm)*weight;
+            }
+        }
+        
+        pos_skinned.w = 1.f;
+    }
+    //output.world_pos = pos_skinned; 
+    //gl_Position=PVM*posSkinned; //vec4(PositionInput,1.);
+    
+    // output.world_pos = mul(model, float4(input.pos, 1.0f));
     output.world_pos = mul(model, float4(input.pos, 1.0f));
     output.UV = input.UV;
     output.normal = normalize(mul(input.normal, (float3x3)model));
-    output.pixel_pos = mul(projection_view_model, float4(input.pos, 1.0f));
+    // output.pixel_pos = mul(projection_view_model, float4(input.pos, 1.0f));
+    output.pixel_pos = mul(projection_view_model, pos_skinned);
     output.light_space_pos = mul(light_projection_view_model, float4(input.pos, 1.0f));
     return output;
 }
