@@ -89,6 +89,12 @@ struct ConstantBufferPerObject
     glm::mat4 projection_view;
 };
 
+struct ConstantBufferCameraPosition
+{
+    glm::vec3 camera_pos;
+    float padding1;
+};
+
 struct ConstantBufferLight
 {
     DXDirectionalLight directional_light;
