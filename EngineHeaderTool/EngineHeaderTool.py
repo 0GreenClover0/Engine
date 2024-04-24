@@ -5,6 +5,7 @@ import argparse
 
 menu = []
 active_choice = 0
+scene_serializer_lines = ""
 
 def find_serializable_variables(header_file_path, all_public):
     
@@ -111,34 +112,45 @@ def display_menu(menu_items, active_index):
         print(option)
 
 def check_includes(Component, file = '/src/SceneSerializer.cpp'):
-    file_path = args.engine_dir + file
+    global scene_serializer_lines
 
-    print (Component)
+    print(Component)
 
     header_pattern = re.compile('#include "' + Component.replace(args.engine_dir + "/src/", "", 1) + '"')
+    file_path = args.engine_dir + file
 
-    with open(file_path, 'r') as file:
-        lines = file.readlines()
+    if file == '/src/SceneSerializer.cpp':
+        lines = scene_serializer_lines
+    else:
+        with open(file_path, 'r') as file_content:
+            lines = file_content.readlines()
 
-        for line in lines:
-            if header_pattern.match(line):
-                return True
-            
+    for line in lines:
+        if header_pattern.match(line):
+                    return True
+
     return False
 
 def remove_lines_between(start_line, end_line, first_skip = False, file = '/src/SceneSerializer.cpp'):
+    global scene_serializer_lines
     print('Removing lines from ' + start_line + ' to ' + end_line)
-    file_path = args.engine_dir + file
 
-    with open(file_path, 'r') as file:
-        lines = file.readlines()
-    
+    file_path = args.engine_dir + file
+    lines = None
+    from_cache = False
+
+    if file == '/src/SceneSerializer.cpp':
+        lines = scene_serializer_lines
+        from_cache = True
+    else:
+        with open(file_path, 'r') as file:
+            lines = file.readlines()
+
     save_lines = True
-    
+
     new_lines = []
     
     for line in lines:
-        
         if start_line in line:
             save_lines = False
 
@@ -150,32 +162,46 @@ def remove_lines_between(start_line, end_line, first_skip = False, file = '/src/
                     first_skip = False
                 else:
                     save_lines = True
-    
-    with open(file_path, 'w') as file:
-        file.writelines(new_lines)
+
+    if from_cache:
+        scene_serializer_lines.clear()
+        scene_serializer_lines += new_lines
+    else:
+        with open(file_path, 'w') as file:
+            file.writelines(new_lines)
 
 def add_lines_at_target(target_line, lines_to_add, shift = 0, file = '/src/SceneSerializer.cpp'):
-    file_path = args.engine_dir + file
+    global scene_serializer_lines
 
-    with open(file_path, 'r') as file:
-        lines = file.readlines()
-    
+    file_path = args.engine_dir + file
+    lines = None
+    from_cache = False
+
+    if file == '/src/SceneSerializer.cpp':
+        lines = scene_serializer_lines
+        from_cache = True
+    else:
+        with open(file_path, 'r') as file:
+            lines = file.readlines()
+
     target_index = None
     for index, line in enumerate(lines):
-
         if target_line in line:
             target_index = index + shift
             break
-    
+
     if target_index is None:
         print("Can't find place to add code for new componenet serialization")
         return
-    
+
     for line_to_add in reversed(lines_to_add):
         lines.insert(target_index, line_to_add + '\n')
 
-    with open(file_path, 'w') as file:
-        file.writelines(lines)
+    if from_cache:
+        scene_serializer_lines = lines
+    else:
+        with open(file_path, 'w') as file:
+            file.writelines(lines)
 
 def create_header_code(Component):
     header_code = [
@@ -431,7 +457,6 @@ def add_serialization(file, pick_vars, pick_files, indentation = 0):
                 index += 1
 
 def add_to_component_list(file):
-    
     name, parent, is_parent, is_abstract = file
     name = name.replace("\\", "/")
     Component = os.path.basename(name)[:-2]
@@ -447,7 +472,6 @@ def add_to_component_list(file):
 
     if is_already_serialized == False:
         add_lines_at_target('// # Put new header here', create_header_code(name), 0, '/src/Editor.cpp')
-    
 
 
 parser = argparse.ArgumentParser(description='Engine Header Tool')
@@ -456,6 +480,9 @@ parser.add_argument('-pv', '--pick_vars', action='store_true', help='let you pic
 parser.add_argument('-pf', '--pick_files', action='store_true', help='let you pick files to serilize')
 
 args = parser.parse_args()
+
+with open(args.engine_dir + '/src/SceneSerializer.cpp', 'r') as file:
+    scene_serializer_lines = file.readlines()
 
 files_to_serialize = scan_all_files()
 sorted_files = sorted(files_to_serialize, key=lambda x: x[1] != "Component")
@@ -492,5 +519,10 @@ for file in files_to_serialize:
     add_serialization(file, args.pick_vars, args.pick_files)
 
 add_lines_at_target('// # Put new component here', ['    // # Auto component list end'], 0, '/src/ComponentList.h')
+
+with open(args.engine_dir + '/src/SceneSerializer.cpp', 'w') as file:
+    file.truncate(0)
+    file.writelines(scene_serializer_lines)
+
 #cmd = input()
 print("\033[A                             \033[A")
