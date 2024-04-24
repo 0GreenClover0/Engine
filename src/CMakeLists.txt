@@ -19,6 +19,9 @@ get_filename_component(PARENT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/.." ABSOLUTE)
 set(FW1_DIR "${PARENT_DIR}/thirdparty/FW1")
 set(FW1_SOURCE_DIR ${FW1_DIR} CACHE INTERNAL "")
 
+# Set EHT directory
+set(EHT_DIR "${PARENT_DIR}/EngineHeaderTool")
+
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
                                                   ${glad_SOURCE_DIR}
                                                   ${stb_image_SOURCE_DIR}
@@ -49,6 +52,12 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
         "${FW1_DIR}/FW1FontWrapper.dll"
         $<TARGET_FILE_DIR:${PROJECT_NAME}>
     COMMENT "Copying FW1FontWrapper.dll to output directory"
+)
+
+add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD
+    COMMAND py
+        "${EHT_DIR}/EngineHeaderTool.py -d \"${PARENT_DIR}\""
+    COMMENT "Running EngineHeaderTool"
 )
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
