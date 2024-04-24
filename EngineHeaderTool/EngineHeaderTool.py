@@ -14,7 +14,7 @@ def find_serializable_variables(header_file_path, all_public):
 
     if not os.path.isfile(header_file_path):
         file_name = os.path.basename(header_file_path)
-        for root, dirs, files in os.walk('../src'):
+        for root, dirs, files in os.walk(args.engine_dir + '/src'):
             if file_name in files:
                 header_file_path = os.path.join(root, file_name)
                 break
@@ -59,7 +59,7 @@ def find_serializable_variables(header_file_path, all_public):
 def find_inherits_from(header_file_path):
     if not os.path.isfile(header_file_path):
         file_name = os.path.basename(header_file_path)
-        for root, dirs, files in os.walk('../src'):
+        for root, dirs, files in os.walk(args.engine_dir + '/src'):
             if file_name in files:
                 header_file_path = os.path.join(root, file_name)
                 break
@@ -80,11 +80,11 @@ def recursively_search_serializable_variables(header_file_path):
     if inherits_from == "Component":
         return []
 
-    inherits_from_path = '../src/' + inherits_from + '.h'
+    inherits_from_path = args.engine_dir + '/src/' + inherits_from + '.h'
 
     if not os.path.isfile(inherits_from_path):
         file_name = os.path.basename(inherits_from_path)
-        for root, dirs, files in os.walk('../src'):
+        for root, dirs, files in os.walk(args.engine_dir + '/src'):
             if file_name in files:
                 inherits_from_path = os.path.join(root, file_name)
                 break
@@ -110,13 +110,12 @@ def display_menu(menu_items, active_index):
 
         print(option)
 
-def check_includes(Component, file = '../src/SceneSerializer.cpp'):
-        
-    file_path = file
+def check_includes(Component, file = '/src/SceneSerializer.cpp'):
+    file_path = args.engine_dir + file
 
     print (Component)
 
-    header_pattern = re.compile('#include "' + Component[7:] + '"')
+    header_pattern = re.compile('#include "' + Component.replace(args.engine_dir + "/src/", "", 1) + '"')
 
     with open(file_path, 'r') as file:
         lines = file.readlines()
@@ -127,11 +126,10 @@ def check_includes(Component, file = '../src/SceneSerializer.cpp'):
             
     return False
 
-def remove_lines_between(start_line, end_line, first_skip = False, file = '../src/SceneSerializer.cpp'):
-    
+def remove_lines_between(start_line, end_line, first_skip = False, file = '/src/SceneSerializer.cpp'):
     print('Removing lines from ' + start_line + ' to ' + end_line)
-    file_path = file
-    
+    file_path = args.engine_dir + file
+
     with open(file_path, 'r') as file:
         lines = file.readlines()
     
@@ -156,9 +154,8 @@ def remove_lines_between(start_line, end_line, first_skip = False, file = '../sr
     with open(file_path, 'w') as file:
         file.writelines(new_lines)
 
-def add_lines_at_target(target_line, lines_to_add, shift = 0, file = '../src/SceneSerializer.cpp'):
-
-    file_path = file
+def add_lines_at_target(target_line, lines_to_add, shift = 0, file = '/src/SceneSerializer.cpp'):
+    file_path = args.engine_dir + file
 
     with open(file_path, 'r') as file:
         lines = file.readlines()
@@ -176,13 +173,13 @@ def add_lines_at_target(target_line, lines_to_add, shift = 0, file = '../src/Sce
     
     for line_to_add in reversed(lines_to_add):
         lines.insert(target_index, line_to_add + '\n')
-    
+
     with open(file_path, 'w') as file:
         file.writelines(lines)
 
 def create_header_code(Component):
     header_code = [
-        '#include "' + Component[7:] +'"',
+        '#include "' + Component.replace(args.engine_dir + "/src/", "", 1) +'"',
     ]
 
     return header_code
@@ -308,7 +305,7 @@ def pick_variables(serializable_vars):
 
 def scan_all_files(inherits_from = 'Component'):
 
-    header_folder_path = '../src/'
+    header_folder_path = args.engine_dir + '/src'
     files_to_serialize = []
 
     for root, dirs, files in os.walk(header_folder_path):
@@ -381,7 +378,7 @@ def add_serialization(file, pick_vars, pick_files, indentation = 0):
             exit()
 
     Component = os.path.basename(name)[:-2]
-    header_file_path = '../src/' + Component + '.h'
+    header_file_path = args.engine_dir + '/src/' + Component + '.h'
     serializable_vars = find_serializable_variables(header_file_path, pick_vars)
     
     print('Adding ' + Component)
@@ -444,16 +441,17 @@ def add_to_component_list(file):
         return
     
     print('Adding ' + Component + ' to component list')
-    add_lines_at_target('// # Put new component here', ['    ENUMERATE_COMPONENT(' + Component + ', "' + readable + '") \\'], 0, '../src/ComponentList.h')
+    add_lines_at_target('// # Put new component here', ['    ENUMERATE_COMPONENT(' + Component + ', "' + readable + '") \\'], 0, '/src/ComponentList.h')
     
-    is_already_serialized = check_includes(name, '../src/Editor.cpp')
+    is_already_serialized = check_includes(name, '/src/Editor.cpp')
 
     if is_already_serialized == False:
-        add_lines_at_target('// # Put new header here', create_header_code(name), 0, '../src/Editor.cpp')
+        add_lines_at_target('// # Put new header here', create_header_code(name), 0, '/src/Editor.cpp')
     
 
 
 parser = argparse.ArgumentParser(description='Engine Header Tool')
+parser.add_argument('-d', '--engine_dir', action='store', help="root directory of the engine")
 parser.add_argument('-pv', '--pick_vars', action='store_true', help='let you pick variables to serilize')
 parser.add_argument('-pf', '--pick_files', action='store_true', help='let you pick files to serilize')
 
@@ -484,15 +482,15 @@ code = [
 ]
 add_lines_at_target('auto_deserialize_component', code, 3)
 
-remove_lines_between('// # Auto component list start', '// # Auto component list end', False, '../src/ComponentList.h')
-add_lines_at_target('// # Put new component here', ['    // # Auto component list start'], 0, '../src/ComponentList.h')
-add_lines_at_target('// # Put new component here', ['#define ENUMERATE_COMPONENTS \\'], 0, '../src/ComponentList.h')
+remove_lines_between('// # Auto component list start', '// # Auto component list end', False, '/src/ComponentList.h')
+add_lines_at_target('// # Put new component here', ['    // # Auto component list start'], 0, '/src/ComponentList.h')
+add_lines_at_target('// # Put new component here', ['#define ENUMERATE_COMPONENTS \\'], 0, '/src/ComponentList.h')
 
 for file in files_to_serialize:
     add_to_component_list(file)
 for file in files_to_serialize:
     add_serialization(file, args.pick_vars, args.pick_files)
 
-add_lines_at_target('// # Put new component here', ['    // # Auto component list end'], 0, '../src/ComponentList.h')
+add_lines_at_target('// # Put new component here', ['    // # Auto component list end'], 0, '/src/ComponentList.h')
 #cmd = input()
 print("\033[A                             \033[A")
