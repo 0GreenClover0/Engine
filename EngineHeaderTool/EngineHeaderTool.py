@@ -110,9 +110,9 @@ def display_menu(menu_items, active_index):
 
         print(option)
 
-def check_includes(Component):
+def check_includes(Component, file = '../src/SceneSerializer.cpp'):
         
-    file_path = '../src/SceneSerializer.cpp'
+    file_path = file
 
     print (Component)
 
@@ -127,10 +127,10 @@ def check_includes(Component):
             
     return False
 
-def remove_lines_between(start_line, end_line, first_skip = False):
+def remove_lines_between(start_line, end_line, first_skip = False, file = '../src/SceneSerializer.cpp'):
     
     print('Removing lines from ' + start_line + ' to ' + end_line)
-    file_path = '../src/SceneSerializer.cpp'
+    file_path = file
     
     with open(file_path, 'r') as file:
         lines = file.readlines()
@@ -156,9 +156,9 @@ def remove_lines_between(start_line, end_line, first_skip = False):
     with open(file_path, 'w') as file:
         file.writelines(new_lines)
 
-def add_lines_at_target(target_line, lines_to_add, shift = 0):
+def add_lines_at_target(target_line, lines_to_add, shift = 0, file = '../src/SceneSerializer.cpp'):
 
-    file_path = '../src/SceneSerializer.cpp'
+    file_path = file
 
     with open(file_path, 'r') as file:
         lines = file.readlines()
@@ -433,6 +433,26 @@ def add_serialization(file, pick_vars, pick_files, indentation = 0):
             else:
                 index += 1
 
+def add_to_component_list(file):
+    
+    name, parent, is_parent, is_abstract = file
+    name = name.replace("\\", "/")
+    Component = os.path.basename(name)[:-2]
+    readable = re.sub(r'(?<=[a-z])(?=[A-Z])', ' ', Component)
+
+    if is_abstract:
+        return
+    
+    print('Adding ' + Component + ' to component list')
+    add_lines_at_target('// # Put new component here', ['    ENUMERATE_COMPONENT(' + Component + ', "' + readable + '") \\'], 0, '../src/ComponentList.h')
+    
+    is_already_serialized = check_includes(name, '../src/Editor.cpp')
+
+    if is_already_serialized == False:
+        add_lines_at_target('// # Put new header here', create_header_code(name), 0, '../src/Editor.cpp')
+    
+
+
 parser = argparse.ArgumentParser(description='Engine Header Tool')
 parser.add_argument('-pv', '--pick_vars', action='store_true', help='let you pick variables to serilize')
 parser.add_argument('-pf', '--pick_files', action='store_true', help='let you pick files to serilize')
@@ -464,8 +484,15 @@ code = [
 ]
 add_lines_at_target('auto_deserialize_component', code, 3)
 
+remove_lines_between('// # Auto component list start', '// # Auto component list end', False, '../src/ComponentList.h')
+add_lines_at_target('// # Put new component here', ['    // # Auto component list start'], 0, '../src/ComponentList.h')
+add_lines_at_target('// # Put new component here', ['#define ENUMERATE_COMPONENTS \\'], 0, '../src/ComponentList.h')
+
+for file in files_to_serialize:
+    add_to_component_list(file)
 for file in files_to_serialize:
     add_serialization(file, args.pick_vars, args.pick_files)
 
+add_lines_at_target('// # Put new component here', ['    // # Auto component list end'], 0, '../src/ComponentList.h')
 #cmd = input()
 print("\033[A                             \033[A")

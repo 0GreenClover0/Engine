@@ -22,7 +22,17 @@
 #include "SoundListener.h"
 #include "Sphere.h"
 #include "Sprite.h"
+#include "Collider2D.h"
+#include "ExampleDynamicText.h"
+#include "ExampleUIBar.h"
+#include "Light.h"
 #include "Game/Player/PlayerInput.h"
+#include "Model.h"
+#include "Ellipse.h"
+#include "DirectionalLight.h"
+#include "PointLight.h"
+#include "SpotLight.h"
+// # Put new header here
 
 namespace Editor
 {
@@ -403,9 +413,10 @@ void Editor::draw_inspector()
     {
         if constexpr (false)
             ;
+#define CONCAT_CLASS(name) class name
 #define ENUMERATE_COMPONENT(name, ui_name)                       \
         else if (ImGui::Button(ui_name, ImVec2(-FLT_MIN, 20)))   \
-            entity->add_component<##name>(##name::create());
+            entity->add_component<CONCAT_CLASS(name)>(##name::create());
         ENUMERATE_COMPONENTS
 #undef ENUMERATE_COMPONENT
 
