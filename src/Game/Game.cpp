@@ -24,6 +24,7 @@
 #include "Terrain.h"
 #include "Player/PlayerInput.h"
 #include "LighthouseKeeper.h"
+#include "LighthouseLight.h"
 #include "Sphere.h"
 
 Game::Game(std::shared_ptr<Window> const& window) : window(window)
@@ -86,4 +87,8 @@ void Game::initialize()
     keeper->add_component(Model::create("./res/models/keeper/keeper.gltf", standard_material));
     keeper->add_component(LighthouseKeeper::create());
     keeper->transform->set_local_position({ 0.0f, 0.0f, 3.0f });
+
+    auto const light = Entity::create("light");
+    light->add_component(Sphere::create(0.5f, 12, 12, "./res/textures/stone.jpg", standard_material));
+    light->add_component(LighthouseLight::create());;
 }
