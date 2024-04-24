@@ -262,16 +262,16 @@ void RendererDX11::update_shader(std::shared_ptr<Shader> const& shader, glm::mat
     g_pd3dDeviceContext->PSSetShaderResources(1, 1, &m_shadow_shader_resource_view);
     g_pd3dDeviceContext->PSSetSamplers(1, 1, &m_shadow_sampler_state);
 
-    Time const data = { glfwGetTime() };
+    ConstantBufferPerShader const data = { glfwGetTime() };
 
     D3D11_MAPPED_SUBRESOURCE mapped_subresource = {};
     HRESULT const hr = get_device_context()->Map(m_constant_buffer_per_shader, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped_subresource);
     assert(SUCCEEDED(hr));
 
-    CopyMemory(mapped_subresource.pData, &data, sizeof(Time));
+    CopyMemory(mapped_subresource.pData, &data, sizeof(ConstantBufferPerShader));
 
     get_device_context()->Unmap(m_constant_buffer_per_shader, 0);
-    get_device_context()->VSSetConstantBuffers(0, 1, &m_constant_buffer_per_shader);
+    get_device_context()->PSSetConstantBuffers(1, 1, &m_constant_buffer_per_shader);
 }
 
 void RendererDX11::update_material(std::shared_ptr<Material> const& material) const

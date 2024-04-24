@@ -1,0 +1,209 @@
+Scene: Untitled
+Entities:
+  - Entity: fae1bf65dc1614e1e87e7b6e1fbc5b665e0dc9ab1037b3d4e1c034620287bbd7
+    Name: Camera
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent: aa7d8d5045cce457207352c90be4b6105d8374e7484761a2e0c34c76695e2138
+    Components:
+      - ComponentName: SoundListenerComponent
+      - ComponentName: CameraComponent
+        Width: 1280
+        Height: 720
+        Fov: 1.04719758
+        Near_plane: 0.100000001
+        Far_plane: 1000000
+  - Entity: 93aa24febdb8585238303439c26ffdb4468599674c870b59d4b22f9d53265acc
+    Name: Player
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent: ""
+    Components:
+      - ComponentName: PlayerInputComponent
+        Player_speed: 5
+        Camera_speed: 12.5
+  - Entity: aa7d8d5045cce457207352c90be4b6105d8374e7484761a2e0c34c76695e2138
+    Name: CameraParent
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent: 93aa24febdb8585238303439c26ffdb4468599674c870b59d4b22f9d53265acc
+    Components:
+      []
+  - Entity: a90770c9d378ab89a26b3300b78ef991eb68f4bb300ae657f14c3bff5b05bdcf
+    Name: text
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent: ""
+    Components:
+      - ComponentName: ExampleDynamicTextComponent
+  - Entity: 3bc7225432b5bc54c399dedad4100e6ad701a08b0713b5e5cf42ce6f13bc44c2
+    Name: bar
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent: ""
+    Components:
+      - ComponentName: ExampleUIBarComponent
+        Value: 0
+  - Entity: f40adabbf26ad22e99c32bb0e5cc88554f51e6a785a2bbe3b81f290f70904d56
+    Name: transparent_grass
+    TransformComponent:
+      Translation: [0.800000012, -0.800000012, 0]
+      Rotation: [0, 0, 0]
+      Scale: [0.200000003, 0.200000003, 0.200000003]
+      Parent: ""
+    Components:
+      - ComponentName: SpriteComponent
+        Diffuse_texture_path: ./res/textures/grass.png
+        Model_path: ""
+        Material:
+          Shader:
+            VertexPath: ./res/shaders/ui.hlsl
+            FragmentPath: ./res/shaders/ui.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+  - Entity: 08419b2a0243a665f8f3ff242fa3fbd4eb125af0f88503eefbebf69dfb2e8d55
+    Name: Point light
+    TransformComponent:
+      Translation: [2, 2, 2]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent: ""
+    Components:
+      - ComponentName: SphereComponent
+        Sector_count: 10
+        Stack_count: 10
+        Texture_path: ./res/textures/container.png
+        Radius: 0.100000001
+        Model_path: ""
+        Material:
+          Shader:
+            VertexPath: ./res/shaders/light_source.hlsl
+            FragmentPath: ./res/shaders/light_source.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+  - Entity: b543cb1e74300948661c44289b8af3904760d81781fb28a369526488bee877f7
+    Name: Directional light
+    TransformComponent:
+      Translation: [0, 14, 0]
+      Rotation: [-90, 0, 0]
+      Scale: [1, 1, 1]
+      Parent: ""
+    Components:
+      - ComponentName: SphereComponent
+        Sector_count: 10
+        Stack_count: 10
+        Texture_path: ./res/textures/container.png
+        Radius: 0.100000001
+        Model_path: ""
+        Material:
+          Shader:
+            VertexPath: ./res/shaders/light_source.hlsl
+            FragmentPath: ./res/shaders/light_source.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+      - ComponentName: DirectionalLightComponent
+        Ambient: [0.400000006, 0.400000006, 0.400000006]
+        Diffuse: [0.899999976, 0.899999976, 0.899999976]
+        Specular: [0.5, 0.5, 0.5]
+  - Entity: 8961db90823da52e71e33dbb4bb4ef9e8d223c7f48f8d4f2545676c557813b5f
+    Name: Floor
+    TransformComponent:
+      Translation: [4, 0, 2]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent: ""
+    Components:
+      - ComponentName: ModelComponent
+        Model_path: ./res/models/hubert/floor.gltf
+        Material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+  - Entity: 195db9530eb0b6a0e5fc4ae3748e17858a05b0adb861747eec8714119786e198
+    Name: collider_test
+    TransformComponent:
+      Translation: [3.63095355, 2, -0.816998661]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent: ""
+    Components:
+      - ComponentName: Collider2DComponent
+      - ComponentName: SphereComponent
+        Sector_count: 12
+        Stack_count: 12
+        Texture_path: ./res/textures/stone.jpg
+        Radius: 1
+        Model_path: ""
+        Material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+  - Entity: 8c17be00d3af6ecec340a3bfa7124a6ce24cf2b42771526a23c9c8af27b9c765
+    Name: collider_test2
+    TransformComponent:
+      Translation: [-1.56810224, 2, -7.19493723]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent: ""
+    Components:
+      - ComponentName: Collider2DComponent
+      - ComponentName: SphereComponent
+        Sector_count: 12
+        Stack_count: 12
+        Texture_path: ./res/textures/stone.jpg
+        Radius: 1
+        Model_path: ""
+        Material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+  - Entity: a54c9896f2d5fc2437baf3847de79d93f2a3fe84341b0022390e03d63e086f25
+    Name: rect1
+    TransformComponent:
+      Translation: [-4.69941378, 2, -7.84292078]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent: ""
+    Components:
+      - ComponentName: ModelComponent
+        Model_path: ./res/models/pyramid3/scene.gltf
+        Material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+      - ComponentName: Collider2DComponent
+  - Entity: 126431e6d79be4ea90ec3cbc0f5f82bfd3fb5462eb93cc005ac08b2ed2590a91
+    Name: rect2
+    TransformComponent:
+      Translation: [9.45216656, 3.05695796, 3.13384676]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent: ""
+    Components:
+      - ComponentName: ModelComponent
+        Model_path: ./res/models/pyramid3/scene.gltf
+        Material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+      - ComponentName: Collider2DComponent
