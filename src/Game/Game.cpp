@@ -26,6 +26,7 @@
 #include "LighthouseKeeper.h"
 #include "LighthouseLight.h"
 #include "Sphere.h"
+#include "Ship.h"
 
 Game::Game(std::shared_ptr<Window> const& window) : window(window)
 {
@@ -91,4 +92,10 @@ void Game::initialize()
     auto const light = Entity::create("light");
     light->add_component(Sphere::create(0.5f, 12, 12, "./res/textures/stone.jpg", standard_material));
     light->add_component(LighthouseLight::create());;
+
+    auto const ship = Entity::create("ship");
+    ship->add_component(Model::create("./res/models/pyramid3/scene.gltf", standard_material));
+    ship->transform->set_local_position({ -5.5f, 0.0f, 0.0f });
+    ship->transform->set_local_scale({ 0.25f, 0.25f, 0.25f });
+    ship->add_component(Ship::create(light->get_component<LighthouseLight>()));;
 }

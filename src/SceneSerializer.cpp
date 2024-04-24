@@ -25,6 +25,9 @@
 #include "Sound.h"
 #include "SoundListener.h"
 #include "Game/Player/PlayerInput.h"
+#include "Game/LighthouseKeeper.h"
+#include "Game/LighthouseLight.h"
+#include "Game/Ship.h"
 // # Put new header here
 
 SceneSerializer::SceneSerializer(std::shared_ptr<Scene> const& scene) : m_scene(scene)
@@ -163,6 +166,34 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "ambient" << YAML::Value << light->ambient;
         out << YAML::Key << "diffuse" << YAML::Value << light->diffuse;
         out << YAML::Key << "specular" << YAML::Value << light->specular;
+        out << YAML::EndMap;
+    }
+    else
+    if (auto const lighthousekeeper = std::dynamic_pointer_cast<class LighthouseKeeper>(component); lighthousekeeper != nullptr)
+    {
+        out << YAML::BeginMap;
+        out << YAML::Key << "ComponentName" << YAML::Value << "LighthouseKeeperComponent";
+        out << YAML::Key << "maximum_speed" << YAML::Value << lighthousekeeper->maximum_speed;
+        out << YAML::Key << "deceleration" << YAML::Value << lighthousekeeper->deceleration;
+        out << YAML::EndMap;
+    }
+    else
+    if (auto const lighthouselight = std::dynamic_pointer_cast<class LighthouseLight>(component); lighthouselight != nullptr)
+    {
+        out << YAML::BeginMap;
+        out << YAML::Key << "ComponentName" << YAML::Value << "LighthouseLightComponent";
+        out << YAML::Key << "range" << YAML::Value << lighthouselight->range;
+        out << YAML::EndMap;
+    }
+    else
+    if (auto const ship = std::dynamic_pointer_cast<class Ship>(component); ship != nullptr)
+    {
+        out << YAML::BeginMap;
+        out << YAML::Key << "ComponentName" << YAML::Value << "ShipComponent";
+        out << YAML::Key << "minimum_speed" << YAML::Value << ship->minimum_speed;
+        out << YAML::Key << "maximum_speed" << YAML::Value << ship->maximum_speed;
+        out << YAML::Key << "turn_speed" << YAML::Value << ship->turn_speed;
+        out << YAML::Key << "visibility_range" << YAML::Value << ship->visibility_range;
         out << YAML::EndMap;
     }
     else
@@ -387,6 +418,34 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         deserialized_component->ambient = component["ambient"].as<glm::vec3>();
         deserialized_component->diffuse = component["diffuse"].as<glm::vec3>();
         deserialized_component->specular = component["specular"].as<glm::vec3>();
+        deserialized_entity->add_component(deserialized_component);
+        deserialized_component->reprepare();
+    }
+    else
+    if (component_name == "LighthouseKeeperComponent")
+    {
+        auto const deserialized_component = LighthouseKeeper::create();
+        deserialized_component->maximum_speed = component["maximum_speed"].as<float>();
+        deserialized_component->deceleration = component["deceleration"].as<float>();
+        deserialized_entity->add_component(deserialized_component);
+        deserialized_component->reprepare();
+    }
+    else
+    if (component_name == "LighthouseLightComponent")
+    {
+        auto const deserialized_component = LighthouseLight::create();
+        deserialized_component->range = component["range"].as<float>();
+        deserialized_entity->add_component(deserialized_component);
+        deserialized_component->reprepare();
+    }
+    else
+    if (component_name == "ShipComponent")
+    {
+        auto const deserialized_component = Ship::create();
+        deserialized_component->minimum_speed = component["minimum_speed"].as<float>();
+        deserialized_component->maximum_speed = component["maximum_speed"].as<float>();
+        deserialized_component->turn_speed = component["turn_speed"].as<float>();
+        deserialized_component->visibility_range = component["visibility_range"].as<int>();
         deserialized_entity->add_component(deserialized_component);
         deserialized_component->reprepare();
     }
