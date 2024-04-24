@@ -255,6 +255,9 @@ std::vector<std::shared_ptr<Texture>> Model::load_material_textures(aiMaterial c
 
         TextureSettings settings = {};
         settings.flip_vertically = false;
+        settings.filtering_min = TextureFiltering::Nearest;
+        settings.filtering_max = TextureFiltering::Nearest;
+        settings.filtering_mipmap = TextureFiltering::Nearest;
 
         std::shared_ptr<Texture> texture = ResourceManager::get_instance().load_texture(file_path, type_name, settings);
         textures.push_back(texture);
