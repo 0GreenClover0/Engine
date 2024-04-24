@@ -32,6 +32,9 @@
 #include "DirectionalLight.h"
 #include "PointLight.h"
 #include "SpotLight.h"
+#include "Game/LighthouseKeeper.h"
+#include "Game/LighthouseLight.h"
+#include "Game/Ship.h"
 // # Put new header here
 
 namespace Editor
