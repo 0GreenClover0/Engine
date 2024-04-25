@@ -15,8 +15,8 @@ public:
     virtual void update() override;
     virtual void draw_editor() override;
 
-    float maximum_speed = 0.08f;
-    float acceleration = maximum_speed / 23.0f;
+    float maximum_speed = 8.0f * 0.005f;
+    float acceleration = 0.35f * 0.005f;
     float deceleration = acceleration;
 
 private:
