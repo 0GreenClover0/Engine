@@ -90,7 +90,7 @@ void Game::initialize()
     keeper->transform->set_local_position({ 0.0f, 0.0f, 3.0f });
 
     auto const light = Entity::create("light");
-    light->add_component(Sphere::create(0.5f, 12, 12, "./res/textures/stone.jpg", standard_material));
+    light->add_component(Sphere::create(0.25f, 12, 12, "./res/textures/stone.jpg", standard_material));
     light->add_component(LighthouseLight::create());;
 
     auto const ship = Entity::create("ship");
