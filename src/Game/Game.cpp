@@ -94,8 +94,7 @@ void Game::initialize()
     light->add_component(LighthouseLight::create());;
 
     auto const ship = Entity::create("ship");
-    ship->add_component(Model::create("./res/models/pyramid3/scene.gltf", standard_material));
+    ship->add_component(Model::create("./res/models/ship/ship.gltf", standard_material));
     ship->transform->set_local_position({ -5.5f, 0.0f, 0.0f });
-    ship->transform->set_local_scale({ 0.25f, 0.25f, 0.25f });
     ship->add_component(Ship::create(light->get_component<LighthouseLight>()));;
 }
