@@ -64,3 +64,13 @@ bool Input::is_key_pressed(i32 const key) const
 
     return glfwGetKey(m_window->get_glfw_window(), key) == GLFW_PRESS;
 }
+
+glm::vec2 Input::get_mouse_position() const
+{
+    double x_position, y_position;
+    glfwGetCursorPos(m_window->get_glfw_window(), &x_position, &y_position);
+
+    i32 width, height;
+    glfwGetWindowSize(m_window->get_glfw_window(), &width, &height);
+    return glm::vec2((x_position / width) - 0.5f, (y_position / height) - 0.5f) * 2.0f;
+}

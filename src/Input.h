@@ -15,6 +15,8 @@ public:
     [[nodiscard]] bool get_key(i32 const key) const;
     [[nodiscard]] bool get_key_down(i32 const key) const;
 
+    glm::vec2 get_mouse_position() const;
+
     // TODO: Handle custom callbacks using an observer pattern
     static void mouse_callback(GLFWwindow* window, double const x, double const y);
 
