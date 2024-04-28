@@ -16,7 +16,7 @@ public:
     ScreenText(AK::Badge<ScreenText>, std::wstring const& content, glm::vec2 const& position, float const font_size, u32 const color, u16 const flags);
     ~ScreenText() override;
 
-    virtual void start() override;
+    virtual void initialize() override;
     virtual void draw() const override;
     virtual void draw_editor() override;
 

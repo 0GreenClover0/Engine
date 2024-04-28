@@ -50,9 +50,9 @@ ScreenText::~ScreenText()
         m_d_write_text_layout->Release();
 }
 
-void ScreenText::start()
+void ScreenText::initialize()
 {
-    set_can_tick(true);
+    Drawable::initialize();
 
     m_viewport = get_viewport();
 
