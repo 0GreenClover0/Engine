@@ -221,7 +221,9 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
     }
     else
     {
-        std::cout << "Error. Serialization of component " << component->get_name() << " failed." << "\n";
+        // NOTE: This only returns unmangled name while using the MSVC compiler
+        std::string const name = typeid(*component).name();
+        std::cout << "Error. Serialization of component " << name.substr(6) << " failed." << "\n";
     }
     // # Put new serialization here
 }
