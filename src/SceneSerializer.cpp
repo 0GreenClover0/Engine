@@ -34,6 +34,16 @@ SceneSerializer::SceneSerializer(std::shared_ptr<Scene> const& scene) : m_scene(
 {
 }
 
+std::shared_ptr<SceneSerializer> SceneSerializer::get_instance()
+{
+    return m_instance;
+}
+
+void SceneSerializer::set_instance(std::shared_ptr<SceneSerializer> const& instance)
+{
+    m_instance = instance;
+}
+
 void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_ptr<Component> const& component)
 {
     // # Auto serialization start

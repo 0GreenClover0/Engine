@@ -473,13 +473,14 @@ void Editor::draw_scene_save() const
 void Editor::save_scene() const
 {
     auto const scene_serializer = std::make_shared<SceneSerializer>(m_open_scene);
+    scene_serializer->set_instance(scene_serializer);
     scene_serializer->serialize("./res/scenes/scene.txt");
 }
 
 bool Editor::load_scene() const
 {
     auto const scene_serializer = std::make_shared<SceneSerializer>(m_open_scene);
-
+    scene_serializer->set_instance(scene_serializer);
     return scene_serializer->deserialize("./res/scenes/scene.txt");
 }
 
