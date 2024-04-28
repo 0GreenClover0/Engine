@@ -2,6 +2,7 @@
 
 #include "Model.h"
 
+NON_SERIALIZED
 class Ellipse final : public Model
 {
 public:

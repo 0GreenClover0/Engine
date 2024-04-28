@@ -114,17 +114,6 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
                 out << YAML::Key << "radius" << YAML::Value << sphere->radius;
             }
             else
-            if (auto const ellipse = std::dynamic_pointer_cast<class Ellipse>(component); ellipse != nullptr)
-            {
-                out << YAML::Key << "ComponentName" << YAML::Value << "EllipseComponent";
-                out << YAML::Key << "guid" << YAML::Value << ellipse->guid;
-                out << YAML::Key << "center_x" << YAML::Value << ellipse->center_x;
-                out << YAML::Key << "center_z" << YAML::Value << ellipse->center_z;
-                out << YAML::Key << "radius_x" << YAML::Value << ellipse->radius_x;
-                out << YAML::Key << "radius_z" << YAML::Value << ellipse->radius_z;
-                out << YAML::Key << "segment_count" << YAML::Value << ellipse->segment_count;
-            }
-            else
             if (auto const cube = std::dynamic_pointer_cast<class Cube>(component); cube != nullptr)
             {
                 out << YAML::Key << "ComponentName" << YAML::Value << "CubeComponent";
@@ -378,29 +367,6 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             auto const deserialized_component = std::dynamic_pointer_cast<class Cube>(get_from_pool(component["guid"].as<std::string>()));
             deserialized_component->diffuse_texture_path = component["diffuse_texture_path"].as<std::string>();
             deserialized_component->specular_texture_path = component["specular_texture_path"].as<std::string>();
-            deserialized_component->model_path = component["model_path"].as<std::string>();
-            deserialized_component->material = component["material"].as<std::shared_ptr<Material>>();
-            deserialized_entity->add_component(deserialized_component);
-            deserialized_component->reprepare();
-        }
-    }
-        else
-    if (component_name == "EllipseComponent")
-    {
-        if (first_pass)
-        {
-            auto const deserialized_component = Ellipse::create();
-            deserialized_component->guid = component["guid"].as<std::string>();
-            deserialized_pool.emplace_back(deserialized_component);
-        }
-        else
-        {
-            auto const deserialized_component = std::dynamic_pointer_cast<class Ellipse>(get_from_pool(component["guid"].as<std::string>()));
-            deserialized_component->center_x = component["center_x"].as<float>();
-            deserialized_component->center_z = component["center_z"].as<float>();
-            deserialized_component->radius_x = component["radius_x"].as<float>();
-            deserialized_component->radius_z = component["radius_z"].as<float>();
-            deserialized_component->segment_count = component["segment_count"].as<i32>();
             deserialized_component->model_path = component["model_path"].as<std::string>();
             deserialized_component->material = component["material"].as<std::shared_ptr<Material>>();
             deserialized_entity->add_component(deserialized_component);
