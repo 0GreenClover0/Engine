@@ -1,5 +1,6 @@
 #include "Entity.h"
 
+#include "Engine.h"
 #include "MainScene.h"
 #include "AK/AK.h"
 
@@ -57,7 +58,10 @@ void Entity::destroy_immediate()
         }
 
         components[i]->set_can_tick(false);
-        components[i]->set_enabled(false);
+
+        if (Engine::is_game_running())
+            components[i]->set_enabled(false);
+
         components[i]->uninitialize();
         components[i]->entity = nullptr;
     }
