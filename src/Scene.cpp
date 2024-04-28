@@ -64,6 +64,9 @@ void Scene::run_frame()
         {
             component->awake();
             component->has_been_awaken = true;
+
+            if (component->enabled())
+                component->on_enabled();
         }
 
         components_to_awake.clear();
