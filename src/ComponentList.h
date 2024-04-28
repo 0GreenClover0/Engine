@@ -18,7 +18,6 @@
     ENUMERATE_COMPONENT(Model, "Model") \
     ENUMERATE_COMPONENT(ScreenText, "Screen Text") \
     ENUMERATE_COMPONENT(Cube, "Cube") \
-    ENUMERATE_COMPONENT(Ellipse, "Ellipse") \
     ENUMERATE_COMPONENT(Sphere, "Sphere") \
     ENUMERATE_COMPONENT(Sprite, "Sprite") \
     ENUMERATE_COMPONENT(DirectionalLight, "Directional Light") \
