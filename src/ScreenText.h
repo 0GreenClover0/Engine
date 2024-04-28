@@ -24,9 +24,9 @@ public:
     void set_text(std::wstring const& new_content);
 
     // Text properties
-    std::wstring text = {};
+    std::wstring text = L"Example text";
     glm::vec2 position = {};
-    float font_size = 128;
+    float font_size = 40;
     u32 color = 0;
     u16 flags = 0; //  Stores flags such as FW1_CENTER | FW1_VCENTER. FW1_RESTORESTATE is set by default.
 
