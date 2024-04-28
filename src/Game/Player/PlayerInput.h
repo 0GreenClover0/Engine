@@ -13,19 +13,21 @@ public:
 
     explicit PlayerInput(AK::Badge<PlayerInput>);
 
+    virtual void on_enabled() override;
+    virtual void on_disabled() override;
     virtual void awake() override;
     virtual void update() override;
 
-    std::shared_ptr<Entity> camera_entity;
+    std::weak_ptr<Entity> camera_entity;
     std::shared_ptr<Window> window;
 
     float player_speed = 5.0f;
     float camera_speed = 12.5f;
 
-    std::shared_ptr<Entity> player;
-    std::shared_ptr<Entity> player_model;
-    std::shared_ptr<Entity> player_head;
-    std::shared_ptr<Entity> camera_parent;
+    std::weak_ptr<Entity> player;
+    std::weak_ptr<Entity> player_model;
+    std::weak_ptr<Entity> player_head;
+    std::weak_ptr<Entity> camera_parent;
 
 private:
     void process_input() const;
