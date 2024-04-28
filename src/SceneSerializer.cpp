@@ -41,6 +41,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
     {
         out << YAML::BeginMap;
         out << YAML::Key << "ComponentName" << YAML::Value << "CameraComponent";
+        out << YAML::Key << "guid" << YAML::Value << camera->guid;
         out << YAML::Key << "width" << YAML::Value << camera->width;
         out << YAML::Key << "height" << YAML::Value << camera->height;
         out << YAML::Key << "fov" << YAML::Value << camera->fov;
@@ -53,6 +54,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
     {
         out << YAML::BeginMap;
         out << YAML::Key << "ComponentName" << YAML::Value << "Collider2DComponent";
+        out << YAML::Key << "guid" << YAML::Value << collider2d->guid;
         out << YAML::EndMap;
     }
     else
@@ -63,6 +65,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         if (auto const screentext = std::dynamic_pointer_cast<class ScreenText>(component); screentext != nullptr)
         {
             out << YAML::Key << "ComponentName" << YAML::Value << "ScreenTextComponent";
+            out << YAML::Key << "guid" << YAML::Value << screentext->guid;
             out << YAML::Key << "text" << YAML::Value << screentext->text;
             out << YAML::Key << "position" << YAML::Value << screentext->position;
             out << YAML::Key << "font_size" << YAML::Value << screentext->font_size;
@@ -76,12 +79,14 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
             if (auto const sprite = std::dynamic_pointer_cast<class Sprite>(component); sprite != nullptr)
             {
                 out << YAML::Key << "ComponentName" << YAML::Value << "SpriteComponent";
+                out << YAML::Key << "guid" << YAML::Value << sprite->guid;
                 out << YAML::Key << "diffuse_texture_path" << YAML::Value << sprite->diffuse_texture_path;
             }
             else
             if (auto const sphere = std::dynamic_pointer_cast<class Sphere>(component); sphere != nullptr)
             {
                 out << YAML::Key << "ComponentName" << YAML::Value << "SphereComponent";
+                out << YAML::Key << "guid" << YAML::Value << sphere->guid;
                 out << YAML::Key << "sector_count" << YAML::Value << sphere->sector_count;
                 out << YAML::Key << "stack_count" << YAML::Value << sphere->stack_count;
                 out << YAML::Key << "texture_path" << YAML::Value << sphere->texture_path;
@@ -91,6 +96,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
             if (auto const ellipse = std::dynamic_pointer_cast<class Ellipse>(component); ellipse != nullptr)
             {
                 out << YAML::Key << "ComponentName" << YAML::Value << "EllipseComponent";
+                out << YAML::Key << "guid" << YAML::Value << ellipse->guid;
                 out << YAML::Key << "center_x" << YAML::Value << ellipse->center_x;
                 out << YAML::Key << "center_z" << YAML::Value << ellipse->center_z;
                 out << YAML::Key << "radius_x" << YAML::Value << ellipse->radius_x;
@@ -101,18 +107,21 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
             if (auto const cube = std::dynamic_pointer_cast<class Cube>(component); cube != nullptr)
             {
                 out << YAML::Key << "ComponentName" << YAML::Value << "CubeComponent";
+                out << YAML::Key << "guid" << YAML::Value << cube->guid;
                 out << YAML::Key << "diffuse_texture_path" << YAML::Value << cube->diffuse_texture_path;
                 out << YAML::Key << "specular_texture_path" << YAML::Value << cube->specular_texture_path;
             }
             else
             {
                 out << YAML::Key << "ComponentName" << YAML::Value << "ModelComponent";
+                out << YAML::Key << "guid" << YAML::Value << model->guid;
             }
             out << YAML::Key << "model_path" << YAML::Value << model->model_path;
         }
         else
         {
             out << YAML::Key << "ComponentName" << YAML::Value << "DrawableComponent";
+            out << YAML::Key << "guid" << YAML::Value << drawable->guid;
         }
         out << YAML::Key << "material" << YAML::Value << drawable->material;
         out << YAML::EndMap;
@@ -122,6 +131,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
     {
         out << YAML::BeginMap;
         out << YAML::Key << "ComponentName" << YAML::Value << "ExampleDynamicTextComponent";
+        out << YAML::Key << "guid" << YAML::Value << exampledynamictext->guid;
         out << YAML::EndMap;
     }
     else
@@ -129,6 +139,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
     {
         out << YAML::BeginMap;
         out << YAML::Key << "ComponentName" << YAML::Value << "ExampleUIBarComponent";
+        out << YAML::Key << "guid" << YAML::Value << exampleuibar->guid;
         out << YAML::Key << "value" << YAML::Value << exampleuibar->value;
         out << YAML::EndMap;
     }
@@ -140,6 +151,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         if (auto const spotlight = std::dynamic_pointer_cast<class SpotLight>(component); spotlight != nullptr)
         {
             out << YAML::Key << "ComponentName" << YAML::Value << "SpotLightComponent";
+            out << YAML::Key << "guid" << YAML::Value << spotlight->guid;
             out << YAML::Key << "constant" << YAML::Value << spotlight->constant;
             out << YAML::Key << "linear" << YAML::Value << spotlight->linear;
             out << YAML::Key << "quadratic" << YAML::Value << spotlight->quadratic;
@@ -150,6 +162,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         if (auto const pointlight = std::dynamic_pointer_cast<class PointLight>(component); pointlight != nullptr)
         {
             out << YAML::Key << "ComponentName" << YAML::Value << "PointLightComponent";
+            out << YAML::Key << "guid" << YAML::Value << pointlight->guid;
             out << YAML::Key << "constant" << YAML::Value << pointlight->constant;
             out << YAML::Key << "linear" << YAML::Value << pointlight->linear;
             out << YAML::Key << "quadratic" << YAML::Value << pointlight->quadratic;
@@ -158,10 +171,12 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         if (auto const directionallight = std::dynamic_pointer_cast<class DirectionalLight>(component); directionallight != nullptr)
         {
             out << YAML::Key << "ComponentName" << YAML::Value << "DirectionalLightComponent";
+            out << YAML::Key << "guid" << YAML::Value << directionallight->guid;
         }
         else
         {
             out << YAML::Key << "ComponentName" << YAML::Value << "LightComponent";
+            out << YAML::Key << "guid" << YAML::Value << light->guid;
         }
         out << YAML::Key << "ambient" << YAML::Value << light->ambient;
         out << YAML::Key << "diffuse" << YAML::Value << light->diffuse;
@@ -169,11 +184,27 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::EndMap;
     }
     else
+    if (auto const sound = std::dynamic_pointer_cast<class Sound>(component); sound != nullptr)
+    {
+        out << YAML::BeginMap;
+        out << YAML::Key << "ComponentName" << YAML::Value << "SoundComponent";
+        out << YAML::Key << "guid" << YAML::Value << sound->guid;
+        out << YAML::EndMap;
+    }
+    else
+    if (auto const soundlistener = std::dynamic_pointer_cast<class SoundListener>(component); soundlistener != nullptr)
+    {
+        out << YAML::BeginMap;
+        out << YAML::Key << "ComponentName" << YAML::Value << "SoundListenerComponent";
+        out << YAML::Key << "guid" << YAML::Value << soundlistener->guid;
+        out << YAML::EndMap;
+    }
+    else
     if (auto const lighthousekeeper = std::dynamic_pointer_cast<class LighthouseKeeper>(component); lighthousekeeper != nullptr)
     {
         out << YAML::BeginMap;
         out << YAML::Key << "ComponentName" << YAML::Value << "LighthouseKeeperComponent";
-        out << YAML::Key << "maximum_speed" << YAML::Value << lighthousekeeper->maximum_speed;
+        out << YAML::Key << "guid" << YAML::Value << lighthousekeeper->guid;
         out << YAML::Key << "deceleration" << YAML::Value << lighthousekeeper->deceleration;
         out << YAML::EndMap;
     }
@@ -182,7 +213,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
     {
         out << YAML::BeginMap;
         out << YAML::Key << "ComponentName" << YAML::Value << "LighthouseLightComponent";
-        out << YAML::Key << "range" << YAML::Value << lighthouselight->range;
+        out << YAML::Key << "guid" << YAML::Value << lighthouselight->guid;
         out << YAML::EndMap;
     }
     else
@@ -190,24 +221,9 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
     {
         out << YAML::BeginMap;
         out << YAML::Key << "ComponentName" << YAML::Value << "ShipComponent";
-        out << YAML::Key << "minimum_speed" << YAML::Value << ship->minimum_speed;
-        out << YAML::Key << "maximum_speed" << YAML::Value << ship->maximum_speed;
+        out << YAML::Key << "guid" << YAML::Value << ship->guid;
         out << YAML::Key << "turn_speed" << YAML::Value << ship->turn_speed;
         out << YAML::Key << "visibility_range" << YAML::Value << ship->visibility_range;
-        out << YAML::EndMap;
-    }
-    else
-    if (auto const sound = std::dynamic_pointer_cast<class Sound>(component); sound != nullptr)
-    {
-        out << YAML::BeginMap;
-        out << YAML::Key << "ComponentName" << YAML::Value << "SoundComponent";
-        out << YAML::EndMap;
-    }
-    else
-    if (auto const soundlistener = std::dynamic_pointer_cast<class SoundListener>(component); soundlistener != nullptr)
-    {
-        out << YAML::BeginMap;
-        out << YAML::Key << "ComponentName" << YAML::Value << "SoundListenerComponent";
         out << YAML::EndMap;
     }
     else
@@ -215,6 +231,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
     {
         out << YAML::BeginMap;
         out << YAML::Key << "ComponentName" << YAML::Value << "PlayerInputComponent";
+        out << YAML::Key << "guid" << YAML::Value << playerinput->guid;
         out << YAML::Key << "player_speed" << YAML::Value << playerinput->player_speed;
         out << YAML::Key << "camera_speed" << YAML::Value << playerinput->camera_speed;
         out << YAML::EndMap;

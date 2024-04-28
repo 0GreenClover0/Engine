@@ -36,7 +36,7 @@ public:
     void set_enabled(bool const value);
     bool enabled() const;
 
-    std::string guid;
+    std::string guid = "";
 
 private:
     bool m_enabled = true;

@@ -230,11 +230,13 @@ def create_serialization_code(file, Component, serializable_vars, indentation = 
         serialization_code += [
         '        // # Put new ' + Component  + ' kid here',
         '        {',
-        '            out << YAML::Key << "ComponentName" << YAML::Value << "' + Component + 'Component";'
+        '            out << YAML::Key << "ComponentName" << YAML::Value << "' + Component + 'Component";',
+        '            out << YAML::Key << "guid" << YAML::Value << ' + component + '->guid;'
         ]
     else:
         serialization_code += [
-        '        out << YAML::Key << "ComponentName" << YAML::Value << "' + Component + 'Component";'
+        '        out << YAML::Key << "ComponentName" << YAML::Value << "' + Component + 'Component";',
+        '        out << YAML::Key << "guid" << YAML::Value << ' + component + '->guid;'
         ]
 
     if is_parent == True:
