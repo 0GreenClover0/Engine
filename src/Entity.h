@@ -40,6 +40,8 @@ public:
         {
             component->awake();
             component->has_been_awaken = true;
+
+            component->on_enabled();
         }
         else
         {
@@ -70,6 +72,8 @@ public:
         {
             component->awake();
             component->has_been_awaken = true;
+
+            component->on_enabled();
         }
         else
         {
@@ -101,6 +105,8 @@ public:
         {
             component->awake();
             component->has_been_awaken = true;
+
+            component->on_enabled();
         }
         else
         {
