@@ -9,6 +9,8 @@
 #include <yaml-cpp/emitter.h>
 #include <yaml-cpp/node/node.h>
 
+#include "SceneSerializer.h"
+
 namespace YAML
 {
     template<>
@@ -165,6 +167,44 @@ namespace YAML
             return true;
         }
     };
+
+    template<typename T>
+        requires std::is_base_of_v<Component, T>
+    struct convert<std::shared_ptr<T>>
+    {
+        static Node encode(std::shared_ptr<T> const& rhs)
+        {
+            Node node;
+            node.push_back(rhs->guid);
+            return node;
+        }
+
+        static bool decode(Node const& node, std::shared_ptr<T>& rhs)
+        {
+            if (node.size() != 1)
+                return false;
+
+            rhs = std::dynamic_pointer_cast<T>(SceneSerializer::get_instance()->get_from_pool(node["guid"].as<std::string>()));
+
+            return true;
+        }
+    };
+}
+
+template<class T>
+YAML::Emitter& operator<<(YAML::Emitter& out, std::shared_ptr<T> const& v)
+    requires(std::is_base_of_v<Component, T>)
+{
+    out << YAML::BeginMap;
+
+    if (v == nullptr)
+        out << YAML::Key << "guid" << YAML::Value << "nullptr";
+    else
+        out << YAML::Key << "guid" << YAML::Value << v->guid;
+
+    out << YAML::EndMap;
+
+    return out;
 }
 
 inline YAML::Emitter& operator<<(YAML::Emitter& out, glm::vec2 const& v)
