@@ -397,7 +397,11 @@ void Editor::draw_inspector()
     {
         ImGui::Spacing();
         std::string guid = "##" + component->guid;
-        bool const component_open = ImGui::TreeNode((component->get_name() + guid).c_str());
+
+        // NOTE: This only returns unmangled name while using the MSVC compiler
+        std::string const name = typeid(*component).name();
+
+        bool const component_open = ImGui::TreeNode((name.substr(6) + guid).c_str());
         ImGui::Spacing();
 
         if (component_open)

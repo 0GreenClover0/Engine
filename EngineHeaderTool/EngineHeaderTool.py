@@ -423,7 +423,7 @@ def add_serialization(file, pick_vars, pick_files, indentation = 0):
         clean_up(files_to_serialize, Component, is_parent)
         
     place_to_add_serialization = '// # Put new serialization here'
-    shift = -3
+    shift = -5
     if parent != 'Component':
         place_to_add_serialization = '// # Put new ' + parent + ' kid here'
         shift = 1
@@ -493,7 +493,9 @@ remove_lines_between('// # Auto serialization start', '// # Put new serializatio
 code = [
     '    // # Auto serialization start',
     '    {',
-    '        std::cout << "Error. Serialization of component " << component->get_name() << " failed." << "\\n";',
+    '        // NOTE: This only returns unmangled name while using the MSVC compiler',
+    '        std::string const name = typeid(*component).name();',
+    '        std::cout << "Error. Serialization of component " << name.substr(6) << " failed." << "\\n";',
     '    }',
     '    // # Put new serialization here'
 ]
