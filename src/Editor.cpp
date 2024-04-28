@@ -316,7 +316,8 @@ void Editor::draw_scene_hierarchy()
     }
 
     // Draw every entity without a parent, and draw its children recursively
-    for (auto const& entity : m_open_scene->entities)
+    auto const entities_copy = m_open_scene->entities;
+    for (auto const& entity : entities_copy)
     {
         if (!entity->transform->parent.expired())
             continue;
