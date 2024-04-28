@@ -44,6 +44,17 @@ void SceneSerializer::set_instance(std::shared_ptr<SceneSerializer> const& insta
     m_instance = instance;
 }
 
+std::shared_ptr<Component> SceneSerializer::get_from_pool(std::string const &guid) const
+{
+    for (auto const& obj : deserialized_pool)
+    {
+        if (obj->guid == guid)
+            return obj;
+    }
+
+    return nullptr;
+}
+
 void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_ptr<Component> const& component)
 {
     // # Auto serialization start
@@ -295,220 +306,416 @@ void SceneSerializer::serialize_entity(YAML::Emitter& out, std::shared_ptr<Entit
     out << YAML::EndMap; // Entity
 }
 
-void SceneSerializer::auto_deserialize_component(YAML::Node const& component, std::shared_ptr<Entity> const& deserialized_entity) const
+void SceneSerializer::auto_deserialize_component(YAML::Node const& component, std::shared_ptr<Entity> const& deserialized_entity, bool const first_pass)
 {
     auto component_name = component["ComponentName"].as<std::string>();
     // # Auto deserialization start
     if (component_name == "CameraComponent")
     {
-        auto const deserialized_component = Camera::create();
-        deserialized_component->width = component["width"].as<float>();
-        deserialized_component->height = component["height"].as<float>();
-        deserialized_component->fov = component["fov"].as<float>();
-        deserialized_component->near_plane = component["near_plane"].as<float>();
-        deserialized_component->far_plane = component["far_plane"].as<float>();
-        deserialized_entity->add_component(deserialized_component);
-        deserialized_component->reprepare();
+        if (first_pass)
+        {
+            auto const deserialized_component = Camera::create();
+            deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_pool.emplace_back(deserialized_component);
+        }
+        else
+        {
+            auto const deserialized_component = std::dynamic_pointer_cast<class Camera>(get_from_pool(component["guid"].as<std::string>()));
+            deserialized_component->width = component["width"].as<float>();
+            deserialized_component->height = component["height"].as<float>();
+            deserialized_component->fov = component["fov"].as<float>();
+            deserialized_component->near_plane = component["near_plane"].as<float>();
+            deserialized_component->far_plane = component["far_plane"].as<float>();
+            deserialized_entity->add_component(deserialized_component);
+            deserialized_component->reprepare();
+        }
     }
-    else
+        else
     if (component_name == "Collider2DComponent")
     {
-        auto const deserialized_component = Collider2D::create();
-        deserialized_entity->add_component(deserialized_component);
-        deserialized_component->reprepare();
+        if (first_pass)
+        {
+            auto const deserialized_component = Collider2D::create();
+            deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_pool.emplace_back(deserialized_component);
+        }
+        else
+        {
+            auto const deserialized_component = std::dynamic_pointer_cast<class Collider2D>(get_from_pool(component["guid"].as<std::string>()));
+            deserialized_entity->add_component(deserialized_component);
+            deserialized_component->reprepare();
+        }
     }
-    else
+        else
     if (component_name == "ModelComponent")
     {
-        auto const deserialized_component = Model::create();
-        deserialized_component->model_path = component["model_path"].as<std::string>();
-        deserialized_component->material = component["material"].as<std::shared_ptr<Material>>();
-        deserialized_entity->add_component(deserialized_component);
-        deserialized_component->reprepare();
+        if (first_pass)
+        {
+            auto const deserialized_component = Model::create();
+            deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_pool.emplace_back(deserialized_component);
+        }
+        else
+        {
+            auto const deserialized_component = std::dynamic_pointer_cast<class Model>(get_from_pool(component["guid"].as<std::string>()));
+            deserialized_component->model_path = component["model_path"].as<std::string>();
+            deserialized_component->material = component["material"].as<std::shared_ptr<Material>>();
+            deserialized_entity->add_component(deserialized_component);
+            deserialized_component->reprepare();
+        }
     }
-    else
+        else
     if (component_name == "CubeComponent")
     {
-        auto const deserialized_component = Cube::create();
-        deserialized_component->diffuse_texture_path = component["diffuse_texture_path"].as<std::string>();
-        deserialized_component->specular_texture_path = component["specular_texture_path"].as<std::string>();
-        deserialized_component->model_path = component["model_path"].as<std::string>();
-        deserialized_component->material = component["material"].as<std::shared_ptr<Material>>();
-        deserialized_entity->add_component(deserialized_component);
-        deserialized_component->reprepare();
+        if (first_pass)
+        {
+            auto const deserialized_component = Cube::create();
+            deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_pool.emplace_back(deserialized_component);
+        }
+        else
+        {
+            auto const deserialized_component = std::dynamic_pointer_cast<class Cube>(get_from_pool(component["guid"].as<std::string>()));
+            deserialized_component->diffuse_texture_path = component["diffuse_texture_path"].as<std::string>();
+            deserialized_component->specular_texture_path = component["specular_texture_path"].as<std::string>();
+            deserialized_component->model_path = component["model_path"].as<std::string>();
+            deserialized_component->material = component["material"].as<std::shared_ptr<Material>>();
+            deserialized_entity->add_component(deserialized_component);
+            deserialized_component->reprepare();
+        }
     }
-    else
+        else
     if (component_name == "EllipseComponent")
     {
-        auto const deserialized_component = Ellipse::create();
-        deserialized_component->center_x = component["center_x"].as<float>();
-        deserialized_component->center_z = component["center_z"].as<float>();
-        deserialized_component->radius_x = component["radius_x"].as<float>();
-        deserialized_component->radius_z = component["radius_z"].as<float>();
-        deserialized_component->segment_count = component["segment_count"].as<i32>();
-        deserialized_component->model_path = component["model_path"].as<std::string>();
-        deserialized_component->material = component["material"].as<std::shared_ptr<Material>>();
-        deserialized_entity->add_component(deserialized_component);
-        deserialized_component->reprepare();
+        if (first_pass)
+        {
+            auto const deserialized_component = Ellipse::create();
+            deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_pool.emplace_back(deserialized_component);
+        }
+        else
+        {
+            auto const deserialized_component = std::dynamic_pointer_cast<class Ellipse>(get_from_pool(component["guid"].as<std::string>()));
+            deserialized_component->center_x = component["center_x"].as<float>();
+            deserialized_component->center_z = component["center_z"].as<float>();
+            deserialized_component->radius_x = component["radius_x"].as<float>();
+            deserialized_component->radius_z = component["radius_z"].as<float>();
+            deserialized_component->segment_count = component["segment_count"].as<i32>();
+            deserialized_component->model_path = component["model_path"].as<std::string>();
+            deserialized_component->material = component["material"].as<std::shared_ptr<Material>>();
+            deserialized_entity->add_component(deserialized_component);
+            deserialized_component->reprepare();
+        }
     }
-    else
+        else
     if (component_name == "SphereComponent")
     {
-        auto const deserialized_component = Sphere::create();
-        deserialized_component->sector_count = component["sector_count"].as<u32>();
-        deserialized_component->stack_count = component["stack_count"].as<u32>();
-        deserialized_component->texture_path = component["texture_path"].as<std::string>();
-        deserialized_component->radius = component["radius"].as<float>();
-        deserialized_component->model_path = component["model_path"].as<std::string>();
-        deserialized_component->material = component["material"].as<std::shared_ptr<Material>>();
-        deserialized_entity->add_component(deserialized_component);
-        deserialized_component->reprepare();
+        if (first_pass)
+        {
+            auto const deserialized_component = Sphere::create();
+            deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_pool.emplace_back(deserialized_component);
+        }
+        else
+        {
+            auto const deserialized_component = std::dynamic_pointer_cast<class Sphere>(get_from_pool(component["guid"].as<std::string>()));
+            deserialized_component->sector_count = component["sector_count"].as<u32>();
+            deserialized_component->stack_count = component["stack_count"].as<u32>();
+            deserialized_component->texture_path = component["texture_path"].as<std::string>();
+            deserialized_component->radius = component["radius"].as<float>();
+            deserialized_component->model_path = component["model_path"].as<std::string>();
+            deserialized_component->material = component["material"].as<std::shared_ptr<Material>>();
+            deserialized_entity->add_component(deserialized_component);
+            deserialized_component->reprepare();
+        }
     }
-    else
+        else
     if (component_name == "SpriteComponent")
     {
-        auto const deserialized_component = Sprite::create();
-        deserialized_component->diffuse_texture_path = component["diffuse_texture_path"].as<std::string>();
-        deserialized_component->model_path = component["model_path"].as<std::string>();
-        deserialized_component->material = component["material"].as<std::shared_ptr<Material>>();
-        deserialized_entity->add_component(deserialized_component);
-        deserialized_component->reprepare();
+        if (first_pass)
+        {
+            auto const deserialized_component = Sprite::create();
+            deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_pool.emplace_back(deserialized_component);
+        }
+        else
+        {
+            auto const deserialized_component = std::dynamic_pointer_cast<class Sprite>(get_from_pool(component["guid"].as<std::string>()));
+            deserialized_component->diffuse_texture_path = component["diffuse_texture_path"].as<std::string>();
+            deserialized_component->model_path = component["model_path"].as<std::string>();
+            deserialized_component->material = component["material"].as<std::shared_ptr<Material>>();
+            deserialized_entity->add_component(deserialized_component);
+            deserialized_component->reprepare();
+        }
     }
-    else
+        else
     if (component_name == "ScreenTextComponent")
     {
-        auto const deserialized_component = ScreenText::create();
-        deserialized_component->text = component["text"].as<std::wstring>();
-        deserialized_component->position = component["position"].as<glm::vec2>();
-        deserialized_component->font_size = component["font_size"].as<float>();
-        deserialized_component->color = component["color"].as<u32>();
-        deserialized_component->flags = component["flags"].as<u16>();
-        deserialized_component->material = component["material"].as<std::shared_ptr<Material>>();
-        deserialized_entity->add_component(deserialized_component);
-        deserialized_component->reprepare();
+        if (first_pass)
+        {
+            auto const deserialized_component = ScreenText::create();
+            deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_pool.emplace_back(deserialized_component);
+        }
+        else
+        {
+            auto const deserialized_component = std::dynamic_pointer_cast<class ScreenText>(get_from_pool(component["guid"].as<std::string>()));
+            deserialized_component->text = component["text"].as<std::wstring>();
+            deserialized_component->position = component["position"].as<glm::vec2>();
+            deserialized_component->font_size = component["font_size"].as<float>();
+            deserialized_component->color = component["color"].as<u32>();
+            deserialized_component->flags = component["flags"].as<u16>();
+            deserialized_component->material = component["material"].as<std::shared_ptr<Material>>();
+            deserialized_entity->add_component(deserialized_component);
+            deserialized_component->reprepare();
+        }
     }
-    else
+        else
     if (component_name == "ExampleDynamicTextComponent")
     {
-        auto const deserialized_component = ExampleDynamicText::create();
-        deserialized_entity->add_component(deserialized_component);
-        deserialized_component->reprepare();
+        if (first_pass)
+        {
+            auto const deserialized_component = ExampleDynamicText::create();
+            deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_pool.emplace_back(deserialized_component);
+        }
+        else
+        {
+            auto const deserialized_component = std::dynamic_pointer_cast<class ExampleDynamicText>(get_from_pool(component["guid"].as<std::string>()));
+            deserialized_entity->add_component(deserialized_component);
+            deserialized_component->reprepare();
+        }
     }
-    else
+        else
     if (component_name == "ExampleUIBarComponent")
     {
-        auto const deserialized_component = ExampleUIBar::create();
-        deserialized_component->value = component["value"].as<float>();
-        deserialized_entity->add_component(deserialized_component);
-        deserialized_component->reprepare();
+        if (first_pass)
+        {
+            auto const deserialized_component = ExampleUIBar::create();
+            deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_pool.emplace_back(deserialized_component);
+        }
+        else
+        {
+            auto const deserialized_component = std::dynamic_pointer_cast<class ExampleUIBar>(get_from_pool(component["guid"].as<std::string>()));
+            deserialized_component->value = component["value"].as<float>();
+            deserialized_entity->add_component(deserialized_component);
+            deserialized_component->reprepare();
+        }
     }
-    else
+        else
     if (component_name == "LightComponent")
     {
-        auto const deserialized_component = Light::create();
-        deserialized_component->ambient = component["ambient"].as<glm::vec3>();
-        deserialized_component->diffuse = component["diffuse"].as<glm::vec3>();
-        deserialized_component->specular = component["specular"].as<glm::vec3>();
-        deserialized_entity->add_component(deserialized_component);
-        deserialized_component->reprepare();
+        if (first_pass)
+        {
+            auto const deserialized_component = Light::create();
+            deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_pool.emplace_back(deserialized_component);
+        }
+        else
+        {
+            auto const deserialized_component = std::dynamic_pointer_cast<class Light>(get_from_pool(component["guid"].as<std::string>()));
+            deserialized_component->ambient = component["ambient"].as<glm::vec3>();
+            deserialized_component->diffuse = component["diffuse"].as<glm::vec3>();
+            deserialized_component->specular = component["specular"].as<glm::vec3>();
+            deserialized_entity->add_component(deserialized_component);
+            deserialized_component->reprepare();
+        }
     }
-    else
+        else
     if (component_name == "DirectionalLightComponent")
     {
-        auto const deserialized_component = DirectionalLight::create();
-        deserialized_component->ambient = component["ambient"].as<glm::vec3>();
-        deserialized_component->diffuse = component["diffuse"].as<glm::vec3>();
-        deserialized_component->specular = component["specular"].as<glm::vec3>();
-        deserialized_entity->add_component(deserialized_component);
-        deserialized_component->reprepare();
+        if (first_pass)
+        {
+            auto const deserialized_component = DirectionalLight::create();
+            deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_pool.emplace_back(deserialized_component);
+        }
+        else
+        {
+            auto const deserialized_component = std::dynamic_pointer_cast<class DirectionalLight>(get_from_pool(component["guid"].as<std::string>()));
+            deserialized_component->ambient = component["ambient"].as<glm::vec3>();
+            deserialized_component->diffuse = component["diffuse"].as<glm::vec3>();
+            deserialized_component->specular = component["specular"].as<glm::vec3>();
+            deserialized_entity->add_component(deserialized_component);
+            deserialized_component->reprepare();
+        }
     }
-    else
+        else
     if (component_name == "PointLightComponent")
     {
-        auto const deserialized_component = PointLight::create();
-        deserialized_component->constant = component["constant"].as<float>();
-        deserialized_component->linear = component["linear"].as<float>();
-        deserialized_component->quadratic = component["quadratic"].as<float>();
-        deserialized_component->ambient = component["ambient"].as<glm::vec3>();
-        deserialized_component->diffuse = component["diffuse"].as<glm::vec3>();
-        deserialized_component->specular = component["specular"].as<glm::vec3>();
-        deserialized_entity->add_component(deserialized_component);
-        deserialized_component->reprepare();
+        if (first_pass)
+        {
+            auto const deserialized_component = PointLight::create();
+            deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_pool.emplace_back(deserialized_component);
+        }
+        else
+        {
+            auto const deserialized_component = std::dynamic_pointer_cast<class PointLight>(get_from_pool(component["guid"].as<std::string>()));
+            deserialized_component->constant = component["constant"].as<float>();
+            deserialized_component->linear = component["linear"].as<float>();
+            deserialized_component->quadratic = component["quadratic"].as<float>();
+            deserialized_component->ambient = component["ambient"].as<glm::vec3>();
+            deserialized_component->diffuse = component["diffuse"].as<glm::vec3>();
+            deserialized_component->specular = component["specular"].as<glm::vec3>();
+            deserialized_entity->add_component(deserialized_component);
+            deserialized_component->reprepare();
+        }
     }
-    else
+        else
     if (component_name == "SpotLightComponent")
     {
-        auto const deserialized_component = SpotLight::create();
-        deserialized_component->constant = component["constant"].as<float>();
-        deserialized_component->linear = component["linear"].as<float>();
-        deserialized_component->quadratic = component["quadratic"].as<float>();
-        deserialized_component->cut_off = component["cut_off"].as<float>();
-        deserialized_component->outer_cut_off = component["outer_cut_off"].as<float>();
-        deserialized_component->ambient = component["ambient"].as<glm::vec3>();
-        deserialized_component->diffuse = component["diffuse"].as<glm::vec3>();
-        deserialized_component->specular = component["specular"].as<glm::vec3>();
-        deserialized_entity->add_component(deserialized_component);
-        deserialized_component->reprepare();
+        if (first_pass)
+        {
+            auto const deserialized_component = SpotLight::create();
+            deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_pool.emplace_back(deserialized_component);
+        }
+        else
+        {
+            auto const deserialized_component = std::dynamic_pointer_cast<class SpotLight>(get_from_pool(component["guid"].as<std::string>()));
+            deserialized_component->constant = component["constant"].as<float>();
+            deserialized_component->linear = component["linear"].as<float>();
+            deserialized_component->quadratic = component["quadratic"].as<float>();
+            deserialized_component->cut_off = component["cut_off"].as<float>();
+            deserialized_component->outer_cut_off = component["outer_cut_off"].as<float>();
+            deserialized_component->ambient = component["ambient"].as<glm::vec3>();
+            deserialized_component->diffuse = component["diffuse"].as<glm::vec3>();
+            deserialized_component->specular = component["specular"].as<glm::vec3>();
+            deserialized_entity->add_component(deserialized_component);
+            deserialized_component->reprepare();
+        }
     }
-    else
-    if (component_name == "LighthouseKeeperComponent")
-    {
-        auto const deserialized_component = LighthouseKeeper::create();
-        deserialized_component->maximum_speed = component["maximum_speed"].as<float>();
-        deserialized_component->deceleration = component["deceleration"].as<float>();
-        deserialized_entity->add_component(deserialized_component);
-        deserialized_component->reprepare();
-    }
-    else
-    if (component_name == "LighthouseLightComponent")
-    {
-        auto const deserialized_component = LighthouseLight::create();
-        deserialized_component->range = component["range"].as<float>();
-        deserialized_entity->add_component(deserialized_component);
-        deserialized_component->reprepare();
-    }
-    else
-    if (component_name == "ShipComponent")
-    {
-        auto const deserialized_component = Ship::create();
-        deserialized_component->minimum_speed = component["minimum_speed"].as<float>();
-        deserialized_component->maximum_speed = component["maximum_speed"].as<float>();
-        deserialized_component->turn_speed = component["turn_speed"].as<float>();
-        deserialized_component->visibility_range = component["visibility_range"].as<int>();
-        deserialized_entity->add_component(deserialized_component);
-        deserialized_component->reprepare();
-    }
-    else
+        else
     if (component_name == "SoundComponent")
     {
-        auto const deserialized_component = Sound::create();
-        deserialized_entity->add_component(deserialized_component);
-        deserialized_component->reprepare();
+        if (first_pass)
+        {
+            auto const deserialized_component = Sound::create();
+            deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_pool.emplace_back(deserialized_component);
+        }
+        else
+        {
+            auto const deserialized_component = std::dynamic_pointer_cast<class Sound>(get_from_pool(component["guid"].as<std::string>()));
+            deserialized_entity->add_component(deserialized_component);
+            deserialized_component->reprepare();
+        }
     }
-    else
+        else
     if (component_name == "SoundListenerComponent")
     {
-        auto const deserialized_component = SoundListener::create();
-        deserialized_entity->add_component(deserialized_component);
-        deserialized_component->reprepare();
+        if (first_pass)
+        {
+            auto const deserialized_component = SoundListener::create();
+            deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_pool.emplace_back(deserialized_component);
+        }
+        else
+        {
+            auto const deserialized_component = std::dynamic_pointer_cast<class SoundListener>(get_from_pool(component["guid"].as<std::string>()));
+            deserialized_entity->add_component(deserialized_component);
+            deserialized_component->reprepare();
+        }
     }
-    else
+        else
+    if (component_name == "LighthouseKeeperComponent")
+    {
+        if (first_pass)
+        {
+            auto const deserialized_component = LighthouseKeeper::create();
+            deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_pool.emplace_back(deserialized_component);
+        }
+        else
+        {
+            auto const deserialized_component = std::dynamic_pointer_cast<class LighthouseKeeper>(get_from_pool(component["guid"].as<std::string>()));
+            deserialized_component->deceleration = component["deceleration"].as<float>();
+            deserialized_entity->add_component(deserialized_component);
+            deserialized_component->reprepare();
+        }
+    }
+        else
+    if (component_name == "LighthouseLightComponent")
+    {
+        if (first_pass)
+        {
+            auto const deserialized_component = LighthouseLight::create();
+            deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_pool.emplace_back(deserialized_component);
+        }
+        else
+        {
+            auto const deserialized_component = std::dynamic_pointer_cast<class LighthouseLight>(get_from_pool(component["guid"].as<std::string>()));
+            deserialized_entity->add_component(deserialized_component);
+            deserialized_component->reprepare();
+        }
+    }
+        else
+    if (component_name == "ShipComponent")
+    {
+        if (first_pass)
+        {
+            auto const deserialized_component = Ship::create();
+            deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_pool.emplace_back(deserialized_component);
+        }
+        else
+        {
+            auto const deserialized_component = std::dynamic_pointer_cast<class Ship>(get_from_pool(component["guid"].as<std::string>()));
+            deserialized_component->turn_speed = component["turn_speed"].as<float>();
+            deserialized_component->visibility_range = component["visibility_range"].as<i32>();
+            deserialized_entity->add_component(deserialized_component);
+            deserialized_component->reprepare();
+        }
+    }
+        else
     if (component_name == "PlayerInputComponent")
     {
-        auto const deserialized_component = PlayerInput::create();
-        deserialized_component->player_speed = component["player_speed"].as<float>();
-        deserialized_component->camera_speed = component["camera_speed"].as<float>();
-        deserialized_entity->add_component(deserialized_component);
-        deserialized_component->reprepare();
+        if (first_pass)
+        {
+            auto const deserialized_component = PlayerInput::create();
+            deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_pool.emplace_back(deserialized_component);
+        }
+        else
+        {
+            auto const deserialized_component = std::dynamic_pointer_cast<class PlayerInput>(get_from_pool(component["guid"].as<std::string>()));
+            deserialized_component->player_speed = component["player_speed"].as<float>();
+            deserialized_component->camera_speed = component["camera_speed"].as<float>();
+            deserialized_entity->add_component(deserialized_component);
+            deserialized_component->reprepare();
+        }
     }
-    else
+        else
     {
         std::cout << "Error. Deserialization of component " << component_name << " failed." << "\n";
     }
     // # Put new deserialization here
 }
 
-std::shared_ptr<Entity> SceneSerializer::deserialize_entity(YAML::Node const& entity) const
+void SceneSerializer::deserialize_components(YAML::Node const &entity_node, std::shared_ptr<Entity> const &deserialized_entity,
+                                             bool const first_pass)
+{
+    auto const components = entity_node["Components"];
+
+    for (auto it = components.begin(); it != components.end(); ++it)
+    {
+        YAML::Node const& component = *it;
+        auto component_name = component["ComponentName"].as<std::string>();
+        if (false)
+        {
+            // Custom deserialization here
+        }
+        else
+        {
+            auto_deserialize_component(component, deserialized_entity, first_pass);
+        }
+    }
+}
+
+std::shared_ptr<Entity> SceneSerializer::deserialize_entity_first_pass(YAML::Node const& entity)
 {
     auto const entity_node = entity["Entity"];
     if (!entity_node)
@@ -540,23 +747,14 @@ std::shared_ptr<Entity> SceneSerializer::deserialize_entity(YAML::Node const& en
     deserialized_entity->transform->set_local_scale(transform["Scale"].as<glm::vec3>());
     deserialized_entity->m_parent_guid = transform["Parent"].as<std::string>();
 
-    auto const components = entity["Components"];
-
-    for (auto it = components.begin(); it != components.end(); ++it)
-    {
-        YAML::Node const& component = *it;
-        auto component_name = component["ComponentName"].as<std::string>();
-        if (false)
-        {
-            // Custom deserialization here
-        }
-        else
-        {
-            auto_deserialize_component(component, deserialized_entity);
-        }
-    }
+    deserialize_components(entity, deserialized_entity, true);
 
     return deserialized_entity;
+}
+
+void SceneSerializer::deserialize_entity_second_pass(YAML::Node const& entity, std::shared_ptr<Entity> const& deserialized_entity)
+{
+    deserialize_components(entity, deserialized_entity, false);
 }
 
 void SceneSerializer::serialize(std::string const& file_path) const
@@ -587,7 +785,7 @@ void SceneSerializer::serialize(std::string const& file_path) const
     scene_file.close();
 }
 
-bool SceneSerializer::deserialize(std::string const& file_path) const
+bool SceneSerializer::deserialize(std::string const& file_path)
 {
     std::ifstream scene_file(file_path);
 
@@ -611,27 +809,29 @@ bool SceneSerializer::deserialize(std::string const& file_path) const
 
     if (auto const entities = data["Entities"])
     {
-        std::vector<std::shared_ptr<Entity>> deserialized_entities = {};
+        std::vector<std::pair<std::shared_ptr<Entity>, YAML::Node>> deserialized_entities = {};
         deserialized_entities.reserve(entities.size());
 
-        // First pass. Create all entities.
+        // First pass. Create all entities and components.
         for (auto const entity : entities)
         {
-            auto const deserialized_entity = deserialize_entity(entity);
+            auto const deserialized_entity = deserialize_entity_first_pass(entity);
             if (deserialized_entity == nullptr)
                 return false;
 
-            deserialized_entities.emplace_back(deserialized_entity);
+            deserialized_entities.emplace_back(deserialized_entity, entity);
         }
 
-        // Second pass. Assign appropriate parent for each entity.
-        // TODO: Create a map of entity : guid to save performance?
-        for (auto const& entity : deserialized_entities)
+        // Second pass. Assign components' values including references to other components.
+        // Assign appropriate parent for each entity.
+        for (const auto& [entity, node] : deserialized_entities)
         {
+            deserialize_entity_second_pass(node, entity);
+
             if (entity->m_parent_guid.empty())
                 continue;
 
-            for (auto const& other_entity : deserialized_entities)
+            for (const auto& [other_entity, other_node] : deserialized_entities)
             {
                 if (entity->m_parent_guid == other_entity->guid)
                 {

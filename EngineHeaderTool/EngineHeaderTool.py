@@ -278,7 +278,15 @@ def create_deserialization_code(Component, serializable_vars):
     deserialization_code = [
         '    if (component_name == "' + Component + 'Component")',
         '    {',
-        '        auto const deserialized_component = ' + Component + '::create();',
+        '        if (first_pass)',
+        '        {',
+        '            auto const deserialized_component = ' + Component + '::create();',
+        '            deserialized_component->guid = component["guid"].as<std::string>();',
+        '            deserialized_pool.emplace_back(deserialized_component);',
+        '        }',
+        '        else',
+        '        {',
+        '            auto const deserialized_component = std::dynamic_pointer_cast<class ' + Component + '>(get_from_pool(component["guid"].as<std::string>()));'
     ]
 
     for var_type, var_name, is_checked in serializable_vars:
@@ -287,14 +295,15 @@ def create_deserialization_code(Component, serializable_vars):
             continue
 
         deserialization_code += [
-            '        deserialized_component->' + var_name + ' = component["' + var_name + '"].as<' + var_type + '>();',
+            '            deserialized_component->' + var_name + ' = component["' + var_name + '"].as<' + var_type + '>();',
         ]
 
     deserialization_code += [
-        '        deserialized_entity->add_component(deserialized_component);',
-        '        deserialized_component->reprepare();',
+        '            deserialized_entity->add_component(deserialized_component);',
+        '            deserialized_component->reprepare();',
+        '        }',
         '    }',
-        '    else'
+        '        else'
     ]
 
     return deserialization_code
