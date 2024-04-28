@@ -9,14 +9,11 @@
 namespace InternalMeshData
 {
 
-void light_initialize()
+void initialize()
 {
     default_shader = ResourceManager::get_instance().load_shader("./res/shaders/lit.hlsl", "./res/shaders/lit.hlsl");
     default_material = Material::create(default_shader);
-}
 
-void initialize()
-{
     cube.vertices = std::vector<Vertex>();
     cube.vertices.reserve(24);
 
