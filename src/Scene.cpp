@@ -21,7 +21,14 @@ void Scene::add_child(std::shared_ptr<Entity> const& entity)
 
 void Scene::remove_child(std::shared_ptr<Entity> const& entity)
 {
-    AK::swap_and_erase(entities, entity);
+    auto const it = std::ranges::find(entities, entity);
+
+    assert(it != entities.end());
+
+    if (it == entities.end())
+        return;
+
+    entities.erase(it);
 }
 
 void Scene::add_component_to_awake(std::shared_ptr<Component> const& component)
