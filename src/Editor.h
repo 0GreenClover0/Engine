@@ -67,6 +67,7 @@ private:
     void draw_scene_save() const;
 
     void draw_entity_recursively(std::shared_ptr<Transform> const& transform);
+    bool draw_entity_popup(std::shared_ptr<Entity> const& entity);
 
     void load_assets();
     void save_scene() const;
@@ -75,6 +76,8 @@ private:
 
     void camera_input() const;
     void non_camera_input();
+
+    void delete_selected_entity() const;
 
     void mouse_callback(double const x, double const y);
 
