@@ -38,6 +38,8 @@ public:
                                     DrawType const draw_type, std::shared_ptr<Material> const& material,
                                     DrawFunctionType const draw_function = DrawFunctionType::Indexed);
 
+    void reset_state() const;
+
 private:
     ResourceManager() = default;
 
