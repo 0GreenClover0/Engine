@@ -28,6 +28,16 @@ void Light::draw_editor()
     specular = glm::vec3(specular_color[0], specular_color[1], specular_color[2]);
 }
 
+void Light::initialize()
+{
+    Renderer::get_instance()->register_light(std::dynamic_pointer_cast<Light>(shared_from_this()));
+}
+
+void Light::uninitialize()
+{
+    Renderer::get_instance()->unregister_light(std::dynamic_pointer_cast<Light>(shared_from_this()));
+}
+
 void Light::on_enabled()
 {
     Renderer::get_instance()->register_light(std::static_pointer_cast<Light>(shared_from_this()));
