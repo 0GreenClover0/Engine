@@ -42,6 +42,12 @@ void Renderer::unregister_shader(std::shared_ptr<Shader> const& shader)
     AK::swap_and_erase(m_shaders, shader);
 }
 
+bool Renderer::is_drawable_registered(std::shared_ptr<Drawable> const &drawable) const
+{
+    return std::ranges::find(drawable->material->drawables.begin(), drawable->material->drawables.end(), drawable) !=
+           drawable->material->drawables.end();
+}
+
 void Renderer::register_drawable(std::shared_ptr<Drawable> const& drawable)
 {
     drawable->material->drawables.emplace_back(drawable);
@@ -69,6 +75,26 @@ void Renderer::unregister_material(std::shared_ptr<Material> const& material)
     // FIXME: Not sure if find works
     if (material->has_custom_render_order())
         m_custom_render_order_materials.erase(m_custom_render_order_materials.find( { material->get_render_order(), material }));
+}
+
+bool Renderer::is_light_registered(std::shared_ptr<Light> const &light) const
+{
+    if (auto const potential_point_light = std::dynamic_pointer_cast<PointLight>(light))
+    {
+        return std::ranges::find(m_point_lights.begin(), m_point_lights.end(), potential_point_light) != m_point_lights.end();
+    }
+
+    if (auto const potential_spot_light = std::dynamic_pointer_cast<SpotLight>(light))
+    {
+        return std::ranges::find(m_spot_lights.begin(), m_spot_lights.end(), potential_spot_light) != m_spot_lights.end();
+    }
+
+    if (auto const potential_directional_light = std::dynamic_pointer_cast<DirectionalLight>(light))
+    {
+        return m_directional_light == potential_directional_light;
+    }
+
+    std::unreachable();
 }
 
 void Renderer::register_light(std::shared_ptr<Light> const& light)
