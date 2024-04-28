@@ -67,9 +67,9 @@ public:
     {
         std::lock_guard guard(mutex);
 
-        assert(attached(p));
-
         auto found = find(p);
+
+        assert(found != m_listeners.end());
 
         if (found != m_listeners.end())
         {
