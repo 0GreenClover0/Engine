@@ -16,6 +16,9 @@ class SceneSerializer
 public:
     explicit SceneSerializer(std::shared_ptr<Scene> const& scene);
 
+    static std::shared_ptr<SceneSerializer> get_instance();
+    static void set_instance(std::shared_ptr<SceneSerializer> const& instance);
+
     void serialize(std::string const& file_path) const;
     bool deserialize(std::string const& file_path) const;
 
@@ -26,5 +29,7 @@ private:
     [[nodiscard]] std::shared_ptr<Entity> deserialize_entity(YAML::Node const& entity) const;
 
     std::shared_ptr<Scene> m_scene;
+
+    inline static std::shared_ptr<SceneSerializer> m_instance;
 };
 
