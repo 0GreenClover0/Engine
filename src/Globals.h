@@ -29,7 +29,6 @@ inline MeshData cube;
 inline MeshData big_cube;
 inline std::shared_ptr<Texture> white_texture;
 
-void light_initialize(); // FIXME: Move that to the initialize() function when it works on DX11
 void initialize();
 
 inline float skybox_vertices[] =
