@@ -198,6 +198,20 @@ void Transform::add_child(std::shared_ptr<Transform> const& transform)
     transform->parent = shared_from_this();
 }
 
+void Transform::remove_child(std::shared_ptr<Transform> const &transform)
+{
+    assert(transform->parent.lock() == shared_from_this());
+
+    auto const it = std::ranges::find(children, transform);
+
+    if (it == children.end())
+        return;
+
+    children.erase(it);
+
+    transform->parent.reset();
+}
+
 void Transform::set_dirty()
 {
     if (!m_local_dirty)
@@ -226,23 +240,25 @@ void Transform::set_parent_dirty()
     needs_bounding_box_adjusting = true;
 }
 
-void Transform::set_parent(std::shared_ptr<Transform> const& parent)
+void Transform::set_parent(std::shared_ptr<Transform> const& new_parent)
 {
-    if (parent == nullptr)
+    if (new_parent == nullptr)
     {
-        // TODO: Remove from current parrent
-        std::cout << "Setting parent to nullptr might not do what you want it to do." << "\n";
+        if (parent.expired())
+            return;
+
+        parent.lock()->remove_child(shared_from_this());
+        m_local_dirty = true;
+        needs_bounding_box_adjusting = true;
         return;
     }
 
-    parent->add_child(shared_from_this());
-    m_local_dirty = true;
-    needs_bounding_box_adjusting = true;
-}
+    if (!parent.expired())
+    {
+        parent.lock()->remove_child(shared_from_this());
+    }
 
-void Transform::set_parent(std::weak_ptr<Transform> const& parent)
-{
-    parent.lock()->add_child(shared_from_this());
+    new_parent->add_child(shared_from_this());
     m_local_dirty = true;
     needs_bounding_box_adjusting = true;
 }

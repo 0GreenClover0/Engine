@@ -43,8 +43,7 @@ public:
 
     void compute_local_model_matrix();
 
-    void set_parent(std::shared_ptr<Transform> const& parent);
-    void set_parent(std::weak_ptr<Transform> const& parent);
+    void set_parent(std::shared_ptr<Transform> const& new_parent);
 
     std::vector<std::shared_ptr<Transform>> children;
     std::weak_ptr<Transform> parent = {};
@@ -79,6 +78,7 @@ private:
     void recompute_model_matrix_if_needed();
     void recompute_forward_right_up_if_needed();
     void add_child(std::shared_ptr<Transform> const& transform);
+    void remove_child(std::shared_ptr<Transform> const& transform);
 
     void set_dirty();
     void set_parent_dirty();
