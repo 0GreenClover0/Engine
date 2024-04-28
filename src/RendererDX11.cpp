@@ -143,6 +143,9 @@ ID3D11ShaderResourceView* RendererDX11::get_render_texture_view() const
 
 void RendererDX11::render_shadow_map() const
 {
+    if (m_directional_light == nullptr)
+        return;
+
     bind_dsv_for_shadow_mapping();
 
     m_shadow_shader->use();
@@ -264,7 +267,9 @@ void RendererDX11::update_object(std::shared_ptr<Drawable> const& drawable, std:
     glm::mat4 const model = drawable->entity->transform->get_model_matrix();
     data.projection_view_model = projection_view * model;
     data.model = drawable->entity->transform->get_model_matrix();
-    data.light_projection_view_model = m_directional_light->get_projection_view_matrix() * model;
+
+    if (m_directional_light != nullptr)
+        data.light_projection_view_model = m_directional_light->get_projection_view_matrix() * model;
 
     D3D11_MAPPED_SUBRESOURCE mapped_resource;
     HRESULT const hr = get_device_context()->Map(m_constant_buffer_per_object, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped_resource);
