@@ -9,6 +9,7 @@
 
 #include "AK/AK.h"
 #include "Camera.h"
+#include "Debug.h"
 #include "Engine.h"
 #include "Entity.h"
 #include "ShaderFactory.h"
@@ -109,8 +110,12 @@ void Renderer::register_light(std::shared_ptr<Light> const& light)
     }
     else if (auto const potential_directional_light = std::dynamic_pointer_cast<DirectionalLight>(light))
     {
-        // Don't assert here
-        assert(m_directional_light == nullptr);
+        if (m_directional_light != nullptr)
+        {
+            Debug::log(
+                "You've just added a second directional light to the scene. You need to remove this one, remove the original, and then add this one back.",
+                DebugType::Error);
+        }
 
         m_directional_light = potential_directional_light;
     }
