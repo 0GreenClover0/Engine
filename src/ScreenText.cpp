@@ -21,7 +21,8 @@ std::shared_ptr<ScreenText> ScreenText::create(std::wstring const &content, glm:
     return text;
 }
 
-ScreenText::ScreenText(AK::Badge<ScreenText>, std::shared_ptr<Material> const& material) : Drawable(material)
+ScreenText::ScreenText(AK::Badge<ScreenText>, std::shared_ptr<Material> const& material) : Drawable(material),
+    flags(FW1_RESTORESTATE)
 {
 }
 
