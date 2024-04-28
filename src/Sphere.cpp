@@ -46,12 +46,6 @@ Sphere::Sphere(AK::Badge<Sphere>, float const radius, u32 const sectors, u32 con
     Sphere::prepare();
 }
 
-std::string Sphere::get_name() const
-{
-    std::string const name = typeid(decltype(*this)).name();
-    return name.substr(6);
-}
-
 void Sphere::prepare()
 {
     m_meshes.emplace_back(create_sphere());

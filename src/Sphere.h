@@ -11,8 +11,6 @@ public:
     explicit Sphere(AK::Badge<Sphere>, std::shared_ptr<Material> const& material);
     Sphere(AK::Badge<Sphere>, float radius, u32 sectors, u32 stacks, std::string const& texture_path, std::shared_ptr<Material> const& material);
 
-    virtual std::string get_name() const override;
-
     virtual void prepare() override;
     virtual void reset() override;
     virtual void reprepare() override;

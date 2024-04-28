@@ -12,12 +12,6 @@ Skybox::Skybox(std::shared_ptr<Material> const& material, std::vector<std::strin
     load_textures();
 }
 
-std::string Skybox::get_name() const
-{
-    std::string const name = typeid(decltype(*this)).name();
-    return name.substr(6);
-}
-
 void Skybox::load_textures()
 {
     TextureSettings constexpr texture_settings =

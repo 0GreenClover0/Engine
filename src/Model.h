@@ -25,7 +25,6 @@ public:
     explicit Model(AK::Badge<Model>, std::shared_ptr<Material> const& material);
 
     virtual void draw_editor() override;
-    virtual std::string get_name() const override;
 
     virtual void draw() const override;
 

@@ -28,12 +28,6 @@ void Light::draw_editor()
     specular = glm::vec3(specular_color[0], specular_color[1], specular_color[2]);
 }
 
-std::string Light::get_name() const
-{
-    std::string const name = typeid(decltype(*this)).name();
-    return name.substr(6);
-}
-
 void Light::on_enabled()
 {
     Renderer::get_instance()->register_light(std::static_pointer_cast<Light>(shared_from_this()));

@@ -15,8 +15,6 @@ public:
     explicit Grass(AK::Badge<Grass>, std::shared_ptr<Material> const& material);
     explicit Grass(AK::Badge<Grass>, std::shared_ptr<Material> const& material, std::string const& diffuse_texture_path);
 
-    virtual std::string get_name() const override;
-
     virtual void prepare() override;
 
 private:

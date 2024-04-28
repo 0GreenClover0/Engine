@@ -103,12 +103,6 @@ Model::Model(std::shared_ptr<Material> const& material) : Drawable(material)
 {
 }
 
-std::string Model::get_name() const
-{
-    std::string const name = typeid(decltype(*this)).name();
-    return name.substr(6);
-}
-
 void Model::draw() const
 {
     for (auto const& mesh : m_meshes)

@@ -12,7 +12,6 @@ public:
     explicit Light(AK::Badge<Light>) {}
 
     virtual void draw_editor() override;
-    virtual std::string get_name() const override;
 
     virtual void on_enabled() override;
     virtual void on_disabled() override;

@@ -24,12 +24,6 @@ Terrain::Terrain(AK::Badge<Terrain>, std::shared_ptr<Material> const& material, 
         m_draw_type = DrawType::TriangleStrip;
 }
 
-std::string Terrain::get_name() const
-{
-    std::string const name = typeid(decltype(*this)).name();
-    return name.substr(6);
-}
-
 void Terrain::draw() const
 {
     assert(m_meshes.size() == 1);
