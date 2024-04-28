@@ -65,4 +65,9 @@ void Entity::destroy_immediate()
         components[i]->uninitialize();
         components[i]->entity = nullptr;
     }
+
+    if (!transform->parent.expired())
+    {
+        transform->set_parent(nullptr);
+    }
 }
