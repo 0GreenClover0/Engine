@@ -335,14 +335,29 @@ void Editor::draw_entity_recursively(std::shared_ptr<Transform> const& transform
 
     if (!ImGui::TreeNodeEx(reinterpret_cast<void*>(static_cast<intptr_t>(entity->hashed_guid)), node_flags, "%s", entity->name.c_str()))
     {
-        if (ImGui::IsItemClicked())
+        if (ImGui::IsItemClicked() || ImGui::IsItemClicked(ImGuiMouseButton_Right))
+        {
             m_selected_entity = entity;
+        }
+
+        if (!draw_entity_popup(entity))
+        {
+            return;
+        }
 
         return;
     }
 
-    if (ImGui::IsItemClicked())
+    if (ImGui::IsItemClicked() || ImGui::IsItemClicked(ImGuiMouseButton_Right))
+    {
         m_selected_entity = entity;
+    }
+
+    if (!draw_entity_popup(entity))
+    {
+        ImGui::TreePop();
+        return;
+    }
 
     for (auto const& child : transform->children)
     {
@@ -350,6 +365,28 @@ void Editor::draw_entity_recursively(std::shared_ptr<Transform> const& transform
     }
 
     ImGui::TreePop();
+}
+
+bool Editor::draw_entity_popup(std::shared_ptr<Entity> const& entity)
+{
+    if (!m_selected_entity.expired() && ImGui::BeginPopupContextItem(nullptr, ImGuiPopupFlags_MouseButtonRight))
+    {
+        if (m_selected_entity.lock() != entity)
+        {
+            m_selected_entity = entity;
+        }
+
+        if (ImGui::Button("Delete"))
+        {
+            delete_selected_entity();
+            ImGui::EndPopup();
+            return false;
+        }
+
+        ImGui::EndPopup();
+    }
+
+    return true;
 }
 
 void Editor::load_assets()
@@ -615,6 +652,14 @@ void Editor::non_camera_input()
     }
 }
 
+void Editor::delete_selected_entity() const
+{
+    if (!m_selected_entity.expired())
+    {
+        m_selected_entity.lock()->destroy_immediate();
+    }
+}
+
 void Editor::mouse_callback(double const x, double const y)
 {
     if (m_mouse_just_entered)
@@ -653,6 +698,11 @@ void Editor::handle_input()
     if (input->get_key_down(GLFW_KEY_F5))
     {
         Renderer::get_instance()->reload_shaders();
+    }
+
+    if (input->get_key_down(GLFW_KEY_DELETE))
+    {
+        delete_selected_entity();
     }
 
     if (!input->get_key(GLFW_MOUSE_BUTTON_RIGHT))
