@@ -4,6 +4,8 @@
 #include "AK/Badge.h"
 #include "glm/glm.hpp"
 
+#include <array>
+
 enum class ColliderType2D
 {
     Rectangle,
@@ -17,15 +19,20 @@ public:
     static std::shared_ptr<Collider2D> create(ColliderType2D const collider_type, float const radius, bool const is_static = false);
     static std::shared_ptr<Collider2D> create(ColliderType2D const collider_type, glm::vec2 const bounds_dimensions,
                                               bool const is_static = false);
+    static std::shared_ptr<Collider2D> create(float const width, float const height, bool const is_static = false);
 
     // CircleCollision
     explicit Collider2D(AK::Badge<Collider2D>, ColliderType2D const collider_type, float const radius, bool const is_static);
 
     // RectangleCollision
     explicit Collider2D(AK::Badge<Collider2D>, ColliderType2D const collider_type, glm::vec2 const bounds_dimensions, bool const is_static);
+    explicit Collider2D(AK::Badge<Collider2D>, float const width, float const height, bool const is_static);
 
     virtual void initialize() override;
     virtual void uninitialize() override;
+
+    virtual void start() override;
+    virtual void update() override;
 
     // CIRCLE X CIRCLE
     void separate(glm::vec3 const& center1, glm::vec3 const& center2, float const radius1, float const radius2) const;
@@ -46,6 +53,11 @@ public:
     bool is_static() const;
     void set_static(bool const value);
 
+    bool overlaps(Collider2D const& other) const;
+
+    bool overlaps_one_way(Collider2D const& other) const;
+    void compute_axes(glm::vec2 const& center, float const angle);
+
 private:
     // This is distance from center_2d of a rectangle to the bounds.
     // For example, if we have a 1x1 square collider, the center is in the middle
@@ -56,4 +68,14 @@ private:
     bool m_is_static = false;
 
     ColliderType2D m_collider_type = ColliderType2D::Circle;
+
+    // OBB:
+
+    std::array<glm::vec2, 4> m_corners = {};
+    std::array<glm::vec2, 2> m_axes = {};
+
+    float m_width = 1.0f;
+    float m_height = 1.0f;
+
+    std::array<float, 2> m_origins = {};
 };

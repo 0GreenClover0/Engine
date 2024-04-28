@@ -10,11 +10,11 @@
     ENUMERATE_COMPONENT(ExampleDynamicText, "Example Dynamic Text") \
     ENUMERATE_COMPONENT(ExampleUIBar, "Example UIBar") \
     ENUMERATE_COMPONENT(Light, "Light") \
-    ENUMERATE_COMPONENT(Lighthouse, "Lighthouse") \
     ENUMERATE_COMPONENT(Sound, "Sound") \
     ENUMERATE_COMPONENT(SoundListener, "Sound Listener") \
     ENUMERATE_COMPONENT(Factory, "Factory") \
     ENUMERATE_COMPONENT(LevelController, "Level Controller") \
+    ENUMERATE_COMPONENT(Lighthouse, "Lighthouse") \
     ENUMERATE_COMPONENT(LighthouseKeeper, "Lighthouse Keeper") \
     ENUMERATE_COMPONENT(LighthouseLight, "Lighthouse Light") \
     ENUMERATE_COMPONENT(Player, "Player") \
