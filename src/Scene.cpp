@@ -6,9 +6,18 @@
 
 void Scene::unload()
 {
-    for (i32 i = entities.size() - 1; i >= 0; --i)
+    // TODO: We should probably cache top level entities somewhere or maybe assign them to dummy root entity
+    //       (I don't really like either of these).
+    std::vector<std::shared_ptr<Entity>> top_level_entities = {};
+    for (auto const& entity : entities)
     {
-        entities[i]->destroy_immediate();
+        if (entity->transform->parent.expired())
+            top_level_entities.emplace_back(entity);
+    }
+
+    for (auto const& entity : top_level_entities)
+    {
+        entity->destroy_immediate();
     }
 
     ResourceManager::get_instance().reset_state();

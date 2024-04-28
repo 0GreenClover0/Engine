@@ -43,7 +43,9 @@ std::shared_ptr<Entity> Entity::create_internal(std::string const &name)
 
 void Entity::destroy_immediate()
 {
-    MainScene::get_instance()->remove_child(shared_from_this());
+    // NOTE: We need to keep a pointer to this object to keep it alive for the duration of this function.
+    auto const ptr = shared_from_this();
+    MainScene::get_instance()->remove_child(ptr);
 
     for (u32 i = 0; i < components.size(); ++i)
     {
@@ -64,6 +66,12 @@ void Entity::destroy_immediate()
 
         components[i]->uninitialize();
         components[i]->entity = nullptr;
+    }
+
+    auto const children_copy = transform->children;
+    for (auto const& child : children_copy)
+    {
+        child->entity.lock()->destroy_immediate();
     }
 
     if (!transform->parent.expired())
