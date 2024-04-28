@@ -15,9 +15,3 @@ void SpotLight::draw_editor()
 {
     Light::draw_editor();
 }
-
-std::string SpotLight::get_name() const
-{
-    std::string const name = typeid(decltype(*this)).name();
-    return name.substr(6);
-}

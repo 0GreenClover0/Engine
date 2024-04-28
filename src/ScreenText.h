@@ -18,7 +18,6 @@ public:
 
     virtual void start() override;
     virtual void draw() const override;
-    virtual std::string get_name() const override;
     virtual void draw_editor() override;
 
     // Only content of the text component is now dynamically updated.

@@ -122,12 +122,6 @@ void ScreenText::draw() const
     );
 }
 
-std::string ScreenText::get_name() const
-{
-    std::string const name = typeid(decltype(*this)).name();
-    return name.substr(6);
-}
-
 void ScreenText::draw_editor()
 {
     ImGui::DragFloat2("Position", glm::value_ptr(position));

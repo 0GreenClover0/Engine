@@ -13,8 +13,6 @@ public:
 
     explicit Terrain(AK::Badge<Terrain>, std::shared_ptr<Material> const& material, bool const use_gpu, std::string const& height_map_path = "");
 
-    virtual std::string get_name() const override;
-
     virtual void draw() const override;
 
     virtual void prepare() override;

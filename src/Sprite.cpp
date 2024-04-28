@@ -40,12 +40,6 @@ Sprite::Sprite(AK::Badge<Sprite>, std::shared_ptr<Material> const& material, std
     m_draw_type = DrawType::Triangles;
 }
 
-std::string Sprite::get_name() const
-{
-    std::string const name = typeid(decltype(*this)).name();
-    return name.substr(6);
-}
-
 void Sprite::prepare()
 {
     if (material->is_gpu_instanced)

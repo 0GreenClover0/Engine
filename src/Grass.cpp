@@ -40,12 +40,6 @@ Grass::Grass(AK::Badge<Grass>, std::shared_ptr<Material> const& material, std::s
     m_draw_type = DrawType::Triangles;
 }
 
-std::string Grass::get_name() const
-{
-    std::string const name = typeid(decltype(*this)).name();
-    return name.substr(6);
-}
-
 void Grass::prepare()
 {
     if (material->is_gpu_instanced)

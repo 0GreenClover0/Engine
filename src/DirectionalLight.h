@@ -12,8 +12,6 @@ public:
 
     virtual void draw_editor() override;
 
-    virtual std::string get_name() const override;
-
     explicit DirectionalLight(AK::Badge<DirectionalLight> badge) : Light() { }
 
     glm::mat4 get_projection_view_matrix();

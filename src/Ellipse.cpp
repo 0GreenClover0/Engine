@@ -36,12 +36,6 @@ Ellipse::Ellipse(AK::Badge<Ellipse>, float center_x, float center_z, float radiu
     m_meshes.emplace_back(create_ellipse());
 }
 
-std::string Ellipse::get_name() const
-{
-    std::string const name = typeid(decltype(*this)).name();
-    return name.substr(6);
-}
-
 std::shared_ptr<Mesh> Ellipse::create_ellipse() const
 { 
     float const theta = 2 * glm::pi<float>() / static_cast<float>(segment_count); 

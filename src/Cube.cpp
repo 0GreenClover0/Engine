@@ -62,12 +62,6 @@ Cube::Cube(AK::Badge<Cube>, std::string const& diffuse_texture_path, std::string
     m_draw_type = DrawType::Triangles;
 }
 
-std::string Cube::get_name() const
-{
-    std::string const name = typeid(decltype(*this)).name();
-    return name.substr(6);
-}
-
 void Cube::prepare()
 {
     if (material->is_gpu_instanced)

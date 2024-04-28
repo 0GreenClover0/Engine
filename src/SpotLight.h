@@ -11,7 +11,6 @@ public:
     explicit SpotLight(AK::Badge<SpotLight>) : Light() { }
 
     virtual void draw_editor() override;
-    virtual std::string get_name() const override;
 
     // Default values for an around 50m distance of cover
     float constant = 1.0f; // Should not be changed

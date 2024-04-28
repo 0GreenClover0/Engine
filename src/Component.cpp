@@ -67,12 +67,6 @@ void Component::destroy_immediate()
     entity = nullptr;
 }
 
-std::string Component::get_name() const
-{
-    std::string const name = typeid(decltype(*this)).name();
-    return name.substr(6);
-}
-
 void Component::draw_editor()
 {
     if (ImGui::Button("Remove component", ImVec2(-FLT_MIN, 20.0f)))

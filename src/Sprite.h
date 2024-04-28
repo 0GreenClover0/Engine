@@ -13,8 +13,6 @@ public:
     explicit Sprite(AK::Badge<Sprite>, std::shared_ptr<Material> const& material);
     explicit Sprite(AK::Badge<Sprite>, std::shared_ptr<Material> const& material, std::string const& diffuse_texture_path);
 
-    virtual std::string get_name() const override;
-
     virtual void prepare() override;
 
     std::string diffuse_texture_path = "";

@@ -23,7 +23,6 @@ public:
 
     void destroy_immediate();
 
-    virtual std::string get_name() const;
     virtual void draw_editor();
 
     std::shared_ptr<Entity> entity;

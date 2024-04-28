@@ -44,12 +44,6 @@ void Collider2D::uninitialize()
     PhysicsEngine::get_instance()->remove_collider(std::dynamic_pointer_cast<Collider2D>(shared_from_this()));
 }
 
-std::string Collider2D::get_name() const
-{
-    std::string const name = typeid(decltype(*this)).name();
-    return name.substr(6);
-}
-
 void Collider2D::separate(glm::vec3 const& center1, glm::vec3 const& center2, float const radius1, float const radius2) const
 {
     // This is for circle x circle

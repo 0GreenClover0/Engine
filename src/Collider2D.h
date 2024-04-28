@@ -26,8 +26,6 @@ public:
     virtual void initialize() override;
     virtual void uninitialize() override;
 
-    virtual std::string get_name() const override;
-
     // CIRCLE X CIRCLE
     void separate(glm::vec3 const& center1, glm::vec3 const& center2, float const radius1, float const radius2) const;
 

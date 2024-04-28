@@ -15,12 +15,6 @@ void DirectionalLight::draw_editor()
     Light::draw_editor();
 }
 
-std::string DirectionalLight::get_name() const
-{
-    std::string const name = typeid(decltype(*this)).name();
-    return name.substr(6);
-}
-
 glm::mat4 DirectionalLight::get_projection_view_matrix()
 {
     if (m_last_model_matrix != entity->transform->get_model_matrix() && entity != nullptr)

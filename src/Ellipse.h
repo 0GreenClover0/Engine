@@ -13,8 +13,6 @@ public:
     explicit Ellipse(AK::Badge<Ellipse>);
     Ellipse(AK::Badge<Ellipse>, float center_x, float center_z, float radius_x, float radius_z, i32 segment_count, std::shared_ptr<Material> const& material);
 
-    virtual std::string get_name() const override;
-
     float center_x = 0.0f;
     float center_z = 0.0f;
     float radius_x = 5.0f;
