@@ -40,10 +40,16 @@ void Light::uninitialize()
 
 void Light::on_enabled()
 {
-    Renderer::get_instance()->register_light(std::static_pointer_cast<Light>(shared_from_this()));
+    auto const light = std::dynamic_pointer_cast<Light>(shared_from_this());
+
+    // Light might already be registered in initialize() or create() methods
+    if (!Renderer::get_instance()->is_light_registered(light))
+    {
+        Renderer::get_instance()->register_light(light);
+    }
 }
 
 void Light::on_disabled()
 {
-    Renderer::get_instance()->unregister_light(std::static_pointer_cast<Light>(shared_from_this()));
+    Renderer::get_instance()->unregister_light(std::dynamic_pointer_cast<Light>(shared_from_this()));
 }
