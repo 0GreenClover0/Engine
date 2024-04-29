@@ -28,6 +28,7 @@
 #include "Game/LighthouseKeeper.h"
 #include "Game/LighthouseLight.h"
 #include "Game/Ship.h"
+#include "Game/GameController.h"
 // # Put new header here
 
 SceneSerializer::SceneSerializer(std::shared_ptr<Scene> const& scene) : m_scene(scene)
@@ -206,6 +207,14 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
     {
         out << YAML::BeginMap;
         out << YAML::Key << "ComponentName" << YAML::Value << "SoundListenerComponent";
+        out << YAML::EndMap;
+    }
+    else
+    if (auto const gamecontroller = std::dynamic_pointer_cast<class GameController>(component); gamecontroller != nullptr)
+    {
+        out << YAML::BeginMap;
+        out << YAML::Key << "ComponentName" << YAML::Value << "GameControllerComponent";
+        out << YAML::Key << "map_time" << YAML::Value << gamecontroller->map_time;
         out << YAML::Key << "guid" << YAML::Value << soundlistener->guid;
         out << YAML::EndMap;
     }
@@ -557,6 +566,7 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             deserialized_component->reprepare();
         }
     }
+    else
         else
     if (component_name == "SoundComponent")
     {
@@ -589,6 +599,39 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             deserialized_component->reprepare();
         }
     }
+    else
+    if (component_name == "GameControllerComponent")
+    {
+        auto const deserialized_component = GameController::create();
+        deserialized_component->map_time = component["map_time"].as<i32>();
+        deserialized_entity->add_component(deserialized_component);
+        deserialized_component->reprepare();
+    }
+    else
+    if (component_name == "LighthouseKeeperComponent")
+    {
+        auto const deserialized_component = LighthouseKeeper::create();
+        deserialized_component->deceleration = component["deceleration"].as<float>();
+        deserialized_entity->add_component(deserialized_component);
+        deserialized_component->reprepare();
+    }
+    else
+    if (component_name == "LighthouseLightComponent")
+    {
+        auto const deserialized_component = LighthouseLight::create();
+        deserialized_entity->add_component(deserialized_component);
+        deserialized_component->reprepare();
+    }
+    else
+    if (component_name == "ShipComponent")
+    {
+        auto const deserialized_component = Ship::create();
+        deserialized_component->turn_speed = component["turn_speed"].as<float>();
+        deserialized_component->visibility_range = component["visibility_range"].as<i32>();
+        deserialized_entity->add_component(deserialized_component);
+        deserialized_component->reprepare();
+    }
+    else
         else
     if (component_name == "LighthouseKeeperComponent")
     {
