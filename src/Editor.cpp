@@ -35,6 +35,7 @@
 #include "Game/LighthouseKeeper.h"
 #include "Game/LighthouseLight.h"
 #include "Game/Ship.h"
+#include "Game/GameController.h"
 // # Put new header here
 
 namespace Editor

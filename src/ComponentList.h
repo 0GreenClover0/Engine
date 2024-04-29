@@ -11,6 +11,7 @@
     ENUMERATE_COMPONENT(Light, "Light") \
     ENUMERATE_COMPONENT(Sound, "Sound") \
     ENUMERATE_COMPONENT(SoundListener, "Sound Listener") \
+    ENUMERATE_COMPONENT(GameController, "Game Controller") \
     ENUMERATE_COMPONENT(LighthouseKeeper, "Lighthouse Keeper") \
     ENUMERATE_COMPONENT(LighthouseLight, "Lighthouse Light") \
     ENUMERATE_COMPONENT(Ship, "Ship") \

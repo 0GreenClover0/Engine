@@ -27,6 +27,7 @@
 #include "LighthouseLight.h"
 #include "Sphere.h"
 #include "Ship.h"
+#include "GameController.h"
 
 Game::Game(std::shared_ptr<Window> const& window) : window(window)
 {
@@ -97,4 +98,7 @@ void Game::initialize()
     ship->add_component(Model::create("./res/models/ship/ship.gltf", standard_material));
     ship->transform->set_local_position({ -5.5f, 0.0f, 0.0f });
     ship->add_component(Ship::create(light->get_component<LighthouseLight>()));;
+
+    auto const game_controller = Entity::create("game_controller");
+    game_controller->add_component(GameController::create());
 }
