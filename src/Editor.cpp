@@ -136,7 +136,7 @@ void Editor::draw_debug_window(std::shared_ptr<EditorWindow> const& window)
         return;
     }
 
-    draw_window_menu_bar();
+    draw_window_menu_bar(window);
 
     ImGui::Checkbox("Polygon mode", &m_polygon_mode_active);
     ImGui::Text("Application average %.3f ms/frame", m_average_ms_per_frame);
@@ -198,7 +198,7 @@ void Editor::draw_content_browser(std::shared_ptr<EditorWindow> const& window)
         return;
     }
 
-    draw_window_menu_bar();
+    draw_window_menu_bar(window);
 
     for (auto const& asset : m_assets)
     {
@@ -239,7 +239,7 @@ void Editor::draw_game(std::shared_ptr<EditorWindow> const& window)
         return;
     }
 
-    draw_window_menu_bar();
+    draw_window_menu_bar(window);
 
     if (ImGui::BeginMenuBar())
     {
@@ -369,7 +369,7 @@ void Editor::draw_scene_hierarchy(std::shared_ptr<EditorWindow> const& window)
         return;
     }
 
-    draw_window_menu_bar();
+    draw_window_menu_bar(window);
 
     if (ImGui::BeginMenuBar())
     {
@@ -455,7 +455,7 @@ bool Editor::draw_entity_popup(std::shared_ptr<Entity> const& entity)
     return true;
 }
 
-void Editor::draw_window_menu_bar()
+void Editor::draw_window_menu_bar(std::shared_ptr<EditorWindow> const& window)
 {
     if (ImGui::BeginMenuBar())
     {
@@ -483,10 +483,26 @@ void Editor::draw_window_menu_bar()
                 {
                     add_debug_window();
                 }
+
                 ImGui::EndMenu();
             }
+
+            if (window->type == EditorWindowType::Inspector)
+            {
+                if (ImGui::Button("Lock"))
+                {
+                    window->set_is_locked(!window->is_locked(), LockData { m_selected_entity });
+                }
+            }
+
             ImGui::EndMenu();
         }
+
+        if (window->is_locked())
+        {
+            ImGui::Text("LOCKED");
+        }
+
         ImGui::EndMenuBar();
     }
 }
@@ -522,16 +538,28 @@ void Editor::draw_inspector(std::shared_ptr<EditorWindow> const& window)
         return;
     }
 
-    draw_window_menu_bar();
+    draw_window_menu_bar(window);
 
-    if (m_selected_entity.expired())
+    if (window->is_locked() && window->get_locked_entity().expired())
+    {
+        window->set_is_locked(false, {});
+    }
+
+    std::weak_ptr<Entity> current_entity = window->get_locked_entity();
+
+    if (current_entity.expired())
+    {
+        current_entity = m_selected_entity;
+    }
+
+    if (current_entity.expired())
     {
         ImGui::End();
         return;
     }
 
     auto const camera = Camera::get_main_camera();
-    auto const entity = m_selected_entity.lock();
+    auto const entity = current_entity.lock();
 
     ImGui::Text("Transform");
     ImGui::Spacing();

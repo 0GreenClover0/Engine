@@ -30,6 +30,11 @@ enum class EditorWindowType
     Hierarchy,
 };
 
+struct LockData
+{
+    std::weak_ptr<Entity> selected_entity;
+};
+
 class EditorWindow
 {
 public:
@@ -81,9 +86,36 @@ public:
         return m_name;
     }
 
+    void set_is_locked(bool const locked, LockData const& data)
+    {
+        m_is_locked = locked;
+
+        if (locked)
+        {
+            m_selected_entity = data.selected_entity;
+        }
+        else
+        {
+            m_selected_entity.reset();
+        }
+    }
+
+    [[nodiscard]] bool is_locked() const
+    {
+        return m_is_locked;
+    }
+
+    [[nodiscard]] std::weak_ptr<Entity> get_locked_entity() const
+    {
+        return m_selected_entity;
+    }
+
 private:
     i32 m_id = 0;
     std::string m_name = {};
+    bool m_is_locked = false;
+
+    std::weak_ptr<Entity> m_selected_entity = {};
 };
 
 enum class AssetType
@@ -135,7 +167,7 @@ private:
     void draw_entity_recursively(std::shared_ptr<Transform> const& transform);
     bool draw_entity_popup(std::shared_ptr<Entity> const& entity);
 
-    void draw_window_menu_bar();
+    void draw_window_menu_bar(std::shared_ptr<EditorWindow> const& window);
 
     void load_assets();
     void save_scene() const;
