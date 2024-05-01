@@ -44,9 +44,12 @@ Editor::Editor(AK::Badge<Editor>)
 {
     set_style();
 
-    m_debug_window.flags |= ImGuiWindowFlags_MenuBar;
-    m_game_window.flags |= ImGuiWindowFlags_MenuBar;
-    m_hierarchy_window.flags |= ImGuiWindowFlags_MenuBar;
+    add_debug_window();
+    add_content_browser();
+    add_game();
+    add_inspector();
+    add_scene_hierarchy();
+
     m_last_second = glfwGetTime();
 
     load_assets();
@@ -73,11 +76,31 @@ void Editor::draw()
     if (!m_rendering_to_editor)
         return;
 
-    draw_content_browser();
-    draw_debug_window();
-    draw_scene_hierarchy();
-    draw_game();
-    draw_inspector();
+    auto const windows_copy = m_editor_windows;
+    for (auto& window : windows_copy)
+    {
+        switch (window->type)
+        {
+        case EditorWindowType::Debug:
+            draw_debug_window(window);
+            break;
+        case EditorWindowType::Content:
+            draw_content_browser(window);
+            break;
+        case EditorWindowType::Hierarchy:
+            draw_scene_hierarchy(window);
+            break;
+        case EditorWindowType::Game:
+            draw_game(window);
+            break;
+        case EditorWindowType::Inspector:
+            draw_inspector(window);
+            break;
+        case EditorWindowType::Custom:
+            std::cout << "Custom Editor windows are currently not supported.\n";
+            break;
+        }
+    }
 }
 
 void Editor::set_scene(std::shared_ptr<Scene> const& scene)
@@ -85,7 +108,7 @@ void Editor::set_scene(std::shared_ptr<Scene> const& scene)
     m_open_scene = scene;
 }
 
-void Editor::draw_debug_window()
+void Editor::draw_debug_window(std::shared_ptr<EditorWindow> const& window)
 {
     m_current_time = glfwGetTime();
     m_frame_count += 1;
@@ -97,13 +120,23 @@ void Editor::draw_debug_window()
         m_last_second = glfwGetTime();
     }
 
-    bool const open = ImGui::Begin("Debug", &m_debug_window.open, m_debug_window.flags);
+    bool is_still_open = true;
+    bool const open = ImGui::Begin(window->get_name().c_str(), &is_still_open, window->flags);
+
+    if (!is_still_open)
+    {
+        remove_window(window);
+        ImGui::End();
+        return;
+    }
 
     if (!open)
     {
         ImGui::End();
         return;
     }
+
+    draw_window_menu_bar();
 
     ImGui::Checkbox("Polygon mode", &m_polygon_mode_active);
     ImGui::Text("Application average %.3f ms/frame", m_average_ms_per_frame);
@@ -111,50 +144,61 @@ void Editor::draw_debug_window()
 
     std::string const log_count = "Logs " + std::to_string(Debug::debug_messages.size());
     ImGui::Text(log_count.c_str());
-    ImGui::BeginListBox("Logs", ImVec2(-FLT_MIN, 0.0f));
-
-    ImGuiListClipper clipper;
-    clipper.Begin(Debug::debug_messages.size());
-    while (clipper.Step())
+    if (ImGui::BeginListBox("Logs", ImVec2(-FLT_MIN, 0.0f)))
     {
-        for (int i = clipper.DisplayStart; i < clipper.DisplayEnd; i++)
+        ImGuiListClipper clipper;
+        clipper.Begin(Debug::debug_messages.size());
+        while (clipper.Step())
         {
-            switch (Debug::debug_messages[i].type)
+            for (int i = clipper.DisplayStart; i < clipper.DisplayEnd; i++)
             {
-            case DebugType::Log:
-                ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 255, 255, 255));
-                break;
-            case DebugType::Warning:
-                ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 250, 0, 255));
-                break;
-            case DebugType::Error:
-                ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 55, 0, 255));
-                break;
-            default:
-                std::unreachable();
+                switch (Debug::debug_messages[i].type)
+                {
+                case DebugType::Log:
+                    ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 255, 255, 255));
+                    break;
+                case DebugType::Warning:
+                    ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 250, 0, 255));
+                    break;
+                case DebugType::Error:
+                    ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 55, 0, 255));
+                    break;
+                default:
+                    std::unreachable();
+                }
+
+                ImGui::Text(Debug::debug_messages[i].text.c_str());
+                ImGui::PopStyleColor();
             }
-
-            ImGui::Text(Debug::debug_messages[i].text.c_str());
-            ImGui::PopStyleColor();
         }
-    }
 
-    ImGui::EndListBox();
+        ImGui::EndListBox();
+    }
 
     ImGui::End();
 
     Renderer::get_instance()->wireframe_mode_active = m_polygon_mode_active;
 }
 
-void Editor::draw_content_browser()
+void Editor::draw_content_browser(std::shared_ptr<EditorWindow> const& window)
 {
-    bool const open = ImGui::Begin("Content", &m_content_browser_window.open, m_content_browser_window.flags);
+    bool is_still_open = true;
+    bool const open = ImGui::Begin(window->get_name().c_str(), &is_still_open, window->flags);
+
+    if (!is_still_open)
+    {
+        remove_window(window);
+        ImGui::End();
+        return;
+    }
 
     if (!open)
     {
         ImGui::End();
         return;
     }
+
+    draw_window_menu_bar();
 
     for (auto const& asset : m_assets)
     {
@@ -167,16 +211,26 @@ void Editor::draw_content_browser()
     ImGui::End();
 }
 
-void Editor::draw_game()
+void Editor::draw_game(std::shared_ptr<EditorWindow> const& window)
 {
+    bool is_still_open = true;
     bool open = false;
     if (Engine::is_game_running())
     {
-        open = ImGui::Begin("Game", &m_game_window.open, m_game_window.flags);
+        window->set_name("Game");
+        open = ImGui::Begin(window->get_name().c_str(), &is_still_open, window->flags);
     }
     else
     {
-        open = ImGui::Begin("Scene", &m_game_window.open, m_game_window.flags);
+        window->set_name("Scene");
+        open = ImGui::Begin(window->get_name().c_str(), &is_still_open, window->flags);
+    }
+
+    if (!is_still_open)
+    {
+        remove_window(window);
+        ImGui::End();
+        return;
     }
 
     if (!open)
@@ -184,6 +238,8 @@ void Editor::draw_game()
         ImGui::End();
         return;
     }
+
+    draw_window_menu_bar();
 
     if (ImGui::BeginMenuBar())
     {
@@ -295,15 +351,25 @@ void Editor::draw_game()
     ImGui::End();
 }
 
-void Editor::draw_scene_hierarchy()
+void Editor::draw_scene_hierarchy(std::shared_ptr<EditorWindow> const& window)
 {
-    bool const open = ImGui::Begin("Hierarchy", &m_hierarchy_window.open, m_hierarchy_window.flags);
+    bool is_still_open = true;
+    bool const open = ImGui::Begin(window->get_name().c_str(), &is_still_open, window->flags);
+
+    if (!is_still_open)
+    {
+        remove_window(window);
+        ImGui::End();
+        return;
+    }
 
     if (!open)
     {
         ImGui::End();
         return;
     }
+
+    draw_window_menu_bar();
 
     if (ImGui::BeginMenuBar())
     {
@@ -389,6 +455,42 @@ bool Editor::draw_entity_popup(std::shared_ptr<Entity> const& entity)
     return true;
 }
 
+void Editor::draw_window_menu_bar()
+{
+    if (ImGui::BeginMenuBar())
+    {
+        if (ImGui::BeginMenu("Menu"))
+        {
+            if (ImGui::BeginMenu("Add window"))
+            {
+                if (ImGui::MenuItem("Inspector"))
+                {
+                    add_inspector();
+                }
+                if (ImGui::MenuItem("Game"))
+                {
+                    add_game();
+                }
+                if (ImGui::MenuItem("Content"))
+                {
+                    add_content_browser();
+                }
+                if (ImGui::MenuItem("Hierarchy"))
+                {
+                    add_scene_hierarchy();
+                }
+                if (ImGui::MenuItem("Debug"))
+                {
+                    add_debug_window();
+                }
+                ImGui::EndMenu();
+            }
+            ImGui::EndMenu();
+        }
+        ImGui::EndMenuBar();
+    }
+}
+
 void Editor::load_assets()
 {
     for (auto const& entry : std::filesystem::recursive_directory_iterator(content_path))
@@ -402,11 +504,27 @@ void Editor::load_assets()
     }
 }
 
-void Editor::draw_inspector()
+void Editor::draw_inspector(std::shared_ptr<EditorWindow> const& window)
 {
-    bool const open = ImGui::Begin("Inspector", &m_inspector_window.open, m_inspector_window.flags);
+    bool is_still_open = true;
+    bool const open = ImGui::Begin(window->get_name().c_str(), &is_still_open, window->flags);
 
-    if (!open || m_selected_entity.expired())
+    if (!is_still_open)
+    {
+        remove_window(window);
+        ImGui::End();
+        return;
+    }
+
+    if (!open)
+    {
+        ImGui::End();
+        return;
+    }
+
+    draw_window_menu_bar();
+
+    if (m_selected_entity.expired())
     {
         ImGui::End();
         return;
@@ -724,6 +842,44 @@ void Editor::switch_rendering_to_editor()
 {
     Renderer::get_instance()->switch_rendering_to_texture();
     m_rendering_to_editor = !m_rendering_to_editor;
+}
+
+void Editor::add_debug_window()
+{
+    auto debug_window = std::make_shared<EditorWindow>(m_last_window_id, ImGuiWindowFlags_MenuBar, EditorWindowType::Debug);
+    m_editor_windows.emplace_back(debug_window);
+}
+
+void Editor::add_content_browser()
+{
+    auto content_browser_window = std::make_shared<EditorWindow>(m_last_window_id, ImGuiWindowFlags_MenuBar, EditorWindowType::Content);
+    m_editor_windows.emplace_back(content_browser_window);
+}
+
+void Editor::add_game()
+{
+    auto game_window = std::make_shared<EditorWindow>(m_last_window_id, ImGuiWindowFlags_MenuBar, EditorWindowType::Game);
+    m_editor_windows.emplace_back(game_window);
+}
+
+void Editor::add_inspector()
+{
+    auto inspector_window = std::make_shared<EditorWindow>(m_last_window_id, ImGuiWindowFlags_MenuBar, EditorWindowType::Inspector);
+    m_editor_windows.emplace_back(inspector_window);
+}
+
+void Editor::add_scene_hierarchy()
+{
+    auto hierarchy_window = std::make_shared<EditorWindow>(m_last_window_id, ImGuiWindowFlags_MenuBar, EditorWindowType::Hierarchy);
+    m_editor_windows.emplace_back(hierarchy_window);
+}
+
+void Editor::remove_window(std::shared_ptr<EditorWindow> const& window)
+{
+    auto const it = std::ranges::find(m_editor_windows, window);
+
+    if (it != m_editor_windows.end())
+        m_editor_windows.erase(it);
 }
 
 }
