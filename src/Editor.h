@@ -20,11 +20,70 @@ enum class GuizmoOperationType
     None
 };
 
+enum class EditorWindowType
+{
+    Custom,
+    Debug,
+    Content,
+    Game,
+    Inspector,
+    Hierarchy,
+};
+
 class EditorWindow
 {
 public:
-    bool open = true;
+    EditorWindow(i32& last_id, i32 const flags, EditorWindowType const type) : type(type)
+    {
+        m_id = last_id + 1;
+        last_id = m_id;
+
+        this->flags |= flags;
+
+        switch (type)
+        {
+        case EditorWindowType::Debug:
+            m_name = "Debug##" + std::to_string(m_id);
+            break;
+        case EditorWindowType::Content:
+            m_name = "Content##" + std::to_string(m_id);
+            break;
+        case EditorWindowType::Hierarchy:
+            m_name = "Hierarchy##" + std::to_string(m_id);
+            break;
+        case EditorWindowType::Game:
+            m_name = "Game##" + std::to_string(m_id);
+            break;
+        case EditorWindowType::Inspector:
+            m_name = "Inspector##" + std::to_string(m_id);
+            break;
+        case EditorWindowType::Custom:
+            m_name = "Custom##" + std::to_string(m_id);
+            break;
+        }
+    }
+
     i32 flags = 0;
+    EditorWindowType type = EditorWindowType::Custom;
+
+    [[nodiscard]] i32 get_id() const
+    {
+        return m_id;
+    }
+
+    void set_name(std::string const& name)
+    {
+        m_name = name + "##" + std::to_string(m_id);
+    }
+
+    [[nodiscard]] std::string get_name() const
+    {
+        return m_name;
+    }
+
+private:
+    i32 m_id = 0;
+    std::string m_name = {};
 };
 
 enum class AssetType
@@ -59,15 +118,24 @@ public:
 private:
     void switch_rendering_to_editor();
 
-    void draw_debug_window();
-    void draw_content_browser();
-    void draw_game();
-    void draw_inspector();
-    void draw_scene_hierarchy();
+    void add_debug_window();
+    void add_content_browser();
+    void add_game();
+    void add_inspector();
+    void add_scene_hierarchy();
+    void remove_window(std::shared_ptr<EditorWindow> const& window);
+
+    void draw_debug_window(std::shared_ptr<EditorWindow> const& window);
+    void draw_content_browser(std::shared_ptr<EditorWindow> const& window);
+    void draw_game(std::shared_ptr<EditorWindow> const& window);
+    void draw_inspector(std::shared_ptr<EditorWindow> const& window);
+    void draw_scene_hierarchy(std::shared_ptr<EditorWindow> const& window);
     void draw_scene_save() const;
 
     void draw_entity_recursively(std::shared_ptr<Transform> const& transform);
     bool draw_entity_popup(std::shared_ptr<Entity> const& entity);
+
+    void draw_window_menu_bar();
 
     void load_assets();
     void save_scene() const;
@@ -100,11 +168,8 @@ private:
     std::weak_ptr<Entity> m_selected_entity;
     std::shared_ptr<Scene> m_open_scene;
 
-    EditorWindow m_debug_window = {};
-    EditorWindow m_content_browser_window = {};
-    EditorWindow m_game_window = {};
-    EditorWindow m_inspector_window = {};
-    EditorWindow m_hierarchy_window = {};
+    std::vector<std::shared_ptr<EditorWindow>> m_editor_windows = {};
+    i32 m_last_window_id = 0;
 
     bool m_polygon_mode_active = false;
     i64 m_frame_count = 0;
