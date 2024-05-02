@@ -2,6 +2,8 @@
 
 #include "Light.h"
 
+#include "AK/Badge.h"
+
 #include <glm/trigonometric.hpp>
 
 class SpotLight final : public Light
