@@ -583,9 +583,21 @@ void Editor::draw_inspector(std::shared_ptr<EditorWindow> const& window)
         std::string guid = "##" + component->guid;
 
         // NOTE: This only returns unmangled name while using the MSVC compiler
-        std::string const name = typeid(*component).name();
+        std::string const typeid_name = typeid(*component).name();
+        std::string const name = typeid_name.substr(6);
 
-        bool const component_open = ImGui::TreeNode((name.substr(6) + guid).c_str());
+        bool const component_open = ImGui::TreeNode((name + guid).c_str());
+
+        ImGuiDragDropFlags src_flags = 0;
+        src_flags |= ImGuiDragDropFlags_SourceNoDisableHover;
+
+        if (ImGui::BeginDragDropSource(src_flags))
+        {
+            ImGui::Text((entity->name + " : " + name).c_str());
+            ImGui::SetDragDropPayload("guid", component->guid.data(), sizeof(i64) * 8);
+            ImGui::EndDragDropSource();
+        }
+
         ImGui::Spacing();
 
         if (component_open)
