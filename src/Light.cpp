@@ -50,3 +50,13 @@ void Light::on_disabled()
 {
     Renderer::get_instance()->unregister_light(std::dynamic_pointer_cast<Light>(shared_from_this()));
 }
+
+ID3D11ShaderResourceView* const* Light::get_shadow_shader_resource_view_address() const
+{
+    return &m_shadow_shader_resource_view;
+}
+
+ID3D11ShaderResourceView* Light::get_shadow_shader_resource_view() const
+{
+    return m_shadow_shader_resource_view;
+}

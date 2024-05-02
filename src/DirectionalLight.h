@@ -16,8 +16,12 @@ public:
 
     glm::mat4 get_projection_view_matrix();
 
+    void set_render_target_for_shadow_mapping() const;
+
+protected:
+    virtual void set_up_shadow_mapping() override;
+
 private:
-    // Matrices used for shadow mapping
     glm::mat4 m_projection_view_matrix = {};
-    glm::mat4 m_last_model_matrix = {};
+    ID3D11DepthStencilView* m_shadow_depth_stencil_view = nullptr;
 };
