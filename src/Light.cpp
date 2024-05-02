@@ -4,11 +4,8 @@
 
 #include "Renderer.h"
 
-std::shared_ptr<Light> Light::create()
+Light::~Light()
 {
-    auto light = std::make_shared<Light>(AK::Badge<Light> {});
-    Renderer::get_instance()->register_light(light);
-    return light;
 }
 
 void Light::draw_editor()

@@ -3,13 +3,11 @@
 #include <glm/vec3.hpp>
 
 #include "Component.h"
-#include "AK/Badge.h"
 
 class Light : public Component
 {
 public:
-    static std::shared_ptr<Light> create();
-    explicit Light(AK::Badge<Light>) {}
+    ~Light() override = 0;
 
     virtual void draw_editor() override;
 
