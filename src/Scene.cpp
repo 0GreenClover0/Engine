@@ -68,6 +68,23 @@ void Scene::remove_component_to_start(std::shared_ptr<Component> const& componen
     }
 }
 
+std::shared_ptr<Component> Scene::get_component_by_guid(std::string const &guid) const
+{
+    // TODO: Cache components in an unordered map with guids as keys
+    for (auto const& entity : entities)
+    {
+        for (auto const& component : entity->components)
+        {
+            if (component->guid == guid)
+            {
+                return component;
+            }
+        }
+    }
+
+    return nullptr;
+}
+
 void Scene::run_frame()
 {
     // Call Awake on every component that was constructed before running the first frame
