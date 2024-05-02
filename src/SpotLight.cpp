@@ -8,6 +8,7 @@ std::shared_ptr<SpotLight> SpotLight::create()
 {
     auto spot_light = std::make_shared<SpotLight>(AK::Badge<SpotLight> {});
     Renderer::get_instance()->register_light(spot_light);
+    spot_light->set_up_shadow_mapping();
     return spot_light;
 }
 
@@ -20,4 +21,8 @@ std::string SpotLight::get_name() const
 {
     std::string const name = typeid(decltype(*this)).name();
     return name.substr(6);
+}
+
+void SpotLight::set_up_shadow_mapping()
+{
 }

@@ -147,8 +147,7 @@ void Renderer::render() const
     if (Camera::get_main_camera() == nullptr)
         return;
 
-    render_shadow_map();
-
+    render_shadow_maps();
     bind_for_render_frame();
 
     // Premultiply projection and view matrices

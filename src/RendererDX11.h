@@ -27,6 +27,9 @@ public:
     [[nodiscard]] ID3D11DeviceContext* get_device_context() const;
     [[nodiscard]] ID3D11ShaderResourceView* get_render_texture_view() const;
 
+    ID3D11RenderTargetView* g_emptyRenderTargetView = nullptr;
+    static float constexpr SHADOW_MAP_SIZE = 1024.0f;
+
 protected:
     virtual void update_shader(std::shared_ptr<Shader> const& shader, glm::mat4 const& projection_view, glm::mat4 const& projection_view_no_translation) const override;
     virtual void update_material(std::shared_ptr<Material> const& material) const override;
@@ -55,10 +58,8 @@ private:
     }
 
     void virtual bind_for_render_frame() const override;
-    void setup_shadow_mapping();
-    void bind_dsv_for_shadow_mapping() const;
-    virtual void render_shadow_map() const override;
-
+    void set_RS_for_shadow_mapping() const;
+    virtual void render_shadow_maps() const override;
     inline static std::shared_ptr<RendererDX11> m_instance_dx11;
 
     D3D11_VIEWPORT m_viewport = {};
@@ -69,7 +70,6 @@ private:
     IDXGISwapChain* g_pSwapChain = nullptr;
     ID3D11RenderTargetView* g_mainRenderTargetView = nullptr;
     ID3D11RenderTargetView* g_textureRenderTargetView = nullptr;
-    ID3D11RenderTargetView* g_emptyRenderTargetView = nullptr;
 
     ID3D11RasterizerState* g_rasterizer_state = nullptr;
     ID3D11Buffer* m_constant_buffer_light = nullptr;
@@ -81,12 +81,8 @@ private:
 
     // Shadow mapping variables
     ID3D11RasterizerState* g_shadow_rasterizer_state = nullptr;
-    ID3D11Texture2D* m_shadow_texture = nullptr;
-    ID3D11DepthStencilView* m_shadow_depth_stencil_view = nullptr;
-    ID3D11ShaderResourceView* m_shadow_shader_resource_view = nullptr;
     ID3D11SamplerState* m_shadow_sampler_state = nullptr;
 
-    static float constexpr SHADOW_MAP_SIZE = 1024.0f;
 
     inline static DXGI_FORMAT m_render_target_format = DXGI_FORMAT_R32G32B32A32_FLOAT;
 };

@@ -59,7 +59,30 @@ std::shared_ptr<RendererDX11> RendererDX11::create()
 
     renderer->m_shadow_map_viewport = create_viewport(SHADOW_MAP_SIZE, SHADOW_MAP_SIZE);
 
-    renderer->setup_shadow_mapping();
+    D3D11_SAMPLER_DESC shadow_sampler_desc = {};
+    shadow_sampler_desc.Filter = D3D11_FILTER_COMPARISON_MIN_MAG_MIP_LINEAR;
+    shadow_sampler_desc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+    shadow_sampler_desc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+    shadow_sampler_desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+    shadow_sampler_desc.MipLODBias = 0.0f;
+    shadow_sampler_desc.MaxAnisotropy = 1;
+    shadow_sampler_desc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+    shadow_sampler_desc.BorderColor[0] = 0.0f;
+    shadow_sampler_desc.BorderColor[1] = 0.0f;
+    shadow_sampler_desc.BorderColor[2] = 0.0f;
+    shadow_sampler_desc.BorderColor[3] = 0.0f;
+    shadow_sampler_desc.MinLOD = 0;
+    shadow_sampler_desc.MaxLOD = FLT_MAX;
+    hr = renderer->get_device()->CreateSamplerState(&shadow_sampler_desc, &renderer->m_shadow_sampler_state);
+    assert(SUCCEEDED(hr));
+
+    D3D11_RASTERIZER_DESC shadow_rasterizer_state_desc = {};
+    shadow_rasterizer_state_desc.CullMode = D3D11_CULL_NONE;
+    shadow_rasterizer_state_desc.FrontCounterClockwise = true;
+    shadow_rasterizer_state_desc.FillMode = D3D11_FILL_SOLID;
+    hr = renderer->get_device()->CreateRasterizerState(&shadow_rasterizer_state_desc, &renderer->g_shadow_rasterizer_state);
+    assert(SUCCEEDED(hr));
+
     renderer->m_shadow_shader = ShaderFactory::create("./res/shaders/shadow_mapping.hlsl", "./res/shaders/shadow_mapping.hlsl");
 
     return renderer;
@@ -139,24 +162,27 @@ ID3D11ShaderResourceView* RendererDX11::get_render_texture_view() const
     return m_render_target_texture_view;
 }
 
-void RendererDX11::render_shadow_map() const
+void RendererDX11::render_shadow_maps() const
 {
-    bind_dsv_for_shadow_mapping();
-
-    m_shadow_shader->use();
-
-    for (auto const& shader : m_shaders)
+    set_RS_for_shadow_mapping();
+    // Directional light
+    if (m_directional_light != nullptr)
     {
-        for (auto const& material : shader->materials)
+        m_directional_light->set_render_target_for_shadows();
+        m_shadow_shader->use();
+        for (auto const& shader : m_shaders)
         {
-            if (material->is_gpu_instanced)
+            for (auto const& material : shader->materials)
             {
-                // GPU instancing is not implemented in DX11
-                std::unreachable();
-            }
-            else
-            {
-                draw(material, m_directional_light->get_projection_view_matrix());
+                if (material->is_gpu_instanced)
+                {
+                    // GPU instancing is not implemented in DX11
+                    std::unreachable();
+                }
+                else
+                {
+                    draw(material, m_directional_light->get_projection_view_matrix());
+                }
             }
         }
     }
@@ -177,77 +203,16 @@ void RendererDX11::bind_for_render_frame() const
     }
 }
 
-void RendererDX11::setup_shadow_mapping()
-{
-    D3D11_TEXTURE2D_DESC shadow_texture_desc = {};
-    shadow_texture_desc.Width = static_cast<float>(SHADOW_MAP_SIZE);
-    shadow_texture_desc.Height = static_cast<float>(SHADOW_MAP_SIZE);
-    shadow_texture_desc.MipLevels = 1;
-    shadow_texture_desc.ArraySize = 1;
-    shadow_texture_desc.Format = DXGI_FORMAT_R24G8_TYPELESS;
-    shadow_texture_desc.SampleDesc.Count = 1;
-    shadow_texture_desc.SampleDesc.Quality = 0;
-    shadow_texture_desc.Usage = D3D11_USAGE_DEFAULT;
-    shadow_texture_desc.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
-    shadow_texture_desc.CPUAccessFlags = 0;
-    shadow_texture_desc.MiscFlags = 0;
-
-    HRESULT hr = get_device()->CreateTexture2D(&shadow_texture_desc, nullptr, &m_shadow_texture);
-    assert(SUCCEEDED(hr));
-
-    D3D11_DEPTH_STENCIL_VIEW_DESC shadow_depth_stencil_view_desc = {};
-    shadow_depth_stencil_view_desc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-    shadow_depth_stencil_view_desc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-    shadow_depth_stencil_view_desc.Texture2D.MipSlice = 0;
-    shadow_depth_stencil_view_desc.Flags = 0;
-    hr = get_device()->CreateDepthStencilView(m_shadow_texture, &shadow_depth_stencil_view_desc, &m_shadow_depth_stencil_view);
-    assert(SUCCEEDED(hr));
-
-    D3D11_SHADER_RESOURCE_VIEW_DESC shadow_shader_resource_view_desc = {};
-    shadow_shader_resource_view_desc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
-    shadow_shader_resource_view_desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-    shadow_shader_resource_view_desc.Texture2D.MostDetailedMip = 0;
-    shadow_shader_resource_view_desc.Texture2D.MipLevels = shadow_texture_desc.MipLevels;
-    hr = get_device()->CreateShaderResourceView(m_shadow_texture, &shadow_shader_resource_view_desc, &m_shadow_shader_resource_view);
-    assert(SUCCEEDED(hr));
-
-    D3D11_SAMPLER_DESC shadow_sampler_desc = {};
-    shadow_sampler_desc.Filter = D3D11_FILTER_COMPARISON_MIN_MAG_MIP_LINEAR;
-    shadow_sampler_desc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
-    shadow_sampler_desc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
-    shadow_sampler_desc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
-    shadow_sampler_desc.MipLODBias = 0.0f;
-    shadow_sampler_desc.MaxAnisotropy = 1;
-    shadow_sampler_desc.ComparisonFunc = D3D11_COMPARISON_LESS_EQUAL;
-    shadow_sampler_desc.BorderColor[0] = 0.0f;
-    shadow_sampler_desc.BorderColor[1] = 0.0f;
-    shadow_sampler_desc.BorderColor[2] = 0.0f;
-    shadow_sampler_desc.BorderColor[3] = 0.0f;
-    shadow_sampler_desc.MinLOD = 0;
-    shadow_sampler_desc.MaxLOD = FLT_MAX;
-    hr = get_device()->CreateSamplerState(&shadow_sampler_desc, &m_shadow_sampler_state);
-    assert(SUCCEEDED(hr));
-
-    D3D11_RASTERIZER_DESC shadow_rasterizer_state_desc = {};
-    shadow_rasterizer_state_desc.CullMode = D3D11_CULL_FRONT;
-    shadow_rasterizer_state_desc.FrontCounterClockwise = true;
-    shadow_rasterizer_state_desc.FillMode = D3D11_FILL_SOLID;
-    hr = g_pd3dDevice->CreateRasterizerState(&shadow_rasterizer_state_desc, &g_shadow_rasterizer_state);
-    assert(SUCCEEDED(hr));
-}
-
-void RendererDX11::bind_dsv_for_shadow_mapping() const
+void RendererDX11::set_RS_for_shadow_mapping() const
 {
     get_device_context()->RSSetState(g_shadow_rasterizer_state);
     get_device_context()->RSSetViewports(1, &m_shadow_map_viewport);
-    get_device_context()->OMSetRenderTargets(1, &g_emptyRenderTargetView, m_shadow_depth_stencil_view);
-    get_device_context()->ClearDepthStencilView(m_shadow_depth_stencil_view, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
 void RendererDX11::update_shader(std::shared_ptr<Shader> const& shader, glm::mat4 const& projection_view,
                                  glm::mat4 const& projection_view_no_translation) const
 {
-    g_pd3dDeviceContext->PSSetShaderResources(1, 1, &m_shadow_shader_resource_view);
+    g_pd3dDeviceContext->PSSetShaderResources(1, 1, &m_directional_light->m_shadow_shader_resource_view);
     g_pd3dDeviceContext->PSSetSamplers(1, 1, &m_shadow_sampler_state);
 }
 

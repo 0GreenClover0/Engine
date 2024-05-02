@@ -88,7 +88,7 @@ protected:
     void virtual initialize_global_renderer_settings() = 0;
     void virtual initialize_buffers(size_t const max_size) = 0;
     void virtual perform_frustum_culling(std::shared_ptr<Material> const& material) const = 0;
-    virtual void render_shadow_map() const = 0;
+    virtual void render_shadow_maps() const = 0;
 
     virtual void bind_for_render_frame() const;
 

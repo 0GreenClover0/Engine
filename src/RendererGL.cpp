@@ -48,7 +48,7 @@ void RendererGL::begin_frame() const
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void RendererGL::render_shadow_map() const
+void RendererGL::render_shadow_maps() const
 {
 }
 
