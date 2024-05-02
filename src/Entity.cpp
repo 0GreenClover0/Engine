@@ -4,7 +4,7 @@
 #include "MainScene.h"
 #include "AK/AK.h"
 
-Entity::Entity(AK::Badge<Entity>, std::string name) : name(std::move(name))
+Entity::Entity(AK::Badge<Entity>, std::string const& name) : name(std::move(name))
 {
 }
 
