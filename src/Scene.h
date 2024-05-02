@@ -22,6 +22,8 @@ public:
     void add_component_to_start(std::shared_ptr<Component> const& component);
     void remove_component_to_start(std::shared_ptr<Component> const& component);
 
+    std::shared_ptr<Component> get_component_by_guid(std::string const& guid) const;
+
     void run_frame();
 
     bool is_running = false;
