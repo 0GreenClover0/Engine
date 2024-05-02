@@ -9,7 +9,7 @@
 class Entity : public std::enable_shared_from_this<Entity>
 {
 public:
-    explicit Entity(AK::Badge<Entity>, std::string name);
+    explicit Entity(AK::Badge<Entity>, std::string const& name);
     static std::shared_ptr<Entity> create(std::string const& name = "Entity");
     static std::shared_ptr<Entity> create(std::string const& guid, std::string const& name);
 
