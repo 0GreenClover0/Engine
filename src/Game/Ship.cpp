@@ -7,6 +7,8 @@
 #include "Input.h"
 #include "Ship.h"
 
+#include "imgui_extensions.h"
+
 std::shared_ptr<Ship> Ship::create()
 {
     return std::make_shared<Ship>(AK::Badge<Ship> {});
@@ -35,19 +37,24 @@ void Ship::awake()
 }
 
 void Ship::update()
-{   
+{
     m_speed = maximum_speed;
 
     glm::vec2 const ship_position = { entity->transform->get_local_position().x, entity->transform->get_local_position().z };
-    glm::vec2 const target_position = m_light->get_position();
 
-    float const distance_to_light = glm::distance(ship_position, target_position);
-
-    if (distance_to_light < m_light->range)
+    if (!m_light.expired())
     {
-        follow_light(ship_position, target_position);
+        auto const light = m_light.lock();
+        glm::vec2 const target_position = light->get_position();
 
-        m_speed = minimum_speed + ((maximum_speed + m_light->additional_ship_speed - minimum_speed) * (distance_to_light / m_light->range));
+        float const distance_to_light = glm::distance(ship_position, target_position);
+
+        if (distance_to_light < light->range)
+        {
+            follow_light(ship_position, target_position);
+
+            m_speed = minimum_speed + ((maximum_speed + light->additional_ship_speed - minimum_speed) * (distance_to_light / light->range));
+        }
     }
 
     glm::vec2 const speed_vector = glm::vec2(cos(glm::radians(m_direction)), sin(glm::radians(m_direction))) * m_speed;
@@ -59,6 +66,8 @@ void Ship::update()
 void Ship::draw_editor()
 {
     ImGui::DragFloat("Speed", &maximum_speed, 0.001f, 0.0f, 0.5f);
+
+    draw_ptr("Light", m_light);
 }
 
 void Ship::follow_light(glm::vec2 ship_position, glm::vec2 target_position)
