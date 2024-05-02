@@ -8,7 +8,6 @@
 class Light : public Component
 {
 public:
-    static std::shared_ptr<Light> create();
     explicit Light(AK::Badge<Light>) {}
 
     virtual void draw_editor() override;
