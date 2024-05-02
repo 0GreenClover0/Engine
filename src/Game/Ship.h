@@ -28,5 +28,5 @@ private:
 
     float m_speed = 0.0f;
     float m_direction = 0.0f;
-    std::shared_ptr<LighthouseLight> m_light;
+    std::weak_ptr<LighthouseLight> m_light;
 };
