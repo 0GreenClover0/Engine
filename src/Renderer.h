@@ -91,6 +91,7 @@ protected:
     void virtual initialize_buffers(size_t const max_size) = 0;
     void virtual perform_frustum_culling(std::shared_ptr<Material> const& material) const = 0;
     virtual void render_shadow_maps() const = 0;
+    void render_single_shadow_map(glm::mat4 const& projection_view) const;
 
     virtual void bind_for_render_frame() const;
 
@@ -115,6 +116,7 @@ protected:
     std::vector<std::shared_ptr<Light>> m_lights = {};
     std::vector<std::shared_ptr<Material>> m_instanced_materials = {};
     std::shared_ptr<Shader> m_shadow_shader = nullptr;
+    std::shared_ptr<Shader> m_point_shadow_shader = nullptr;
 
 private:
     struct MaterialWithOrder
