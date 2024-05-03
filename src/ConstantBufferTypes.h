@@ -23,7 +23,8 @@ struct DXPointLight
     float constant;
     float linear;
     float quadratic;
-    float padding[2];
+    float far_plane;
+    float near_plane;
 };
 
 struct DXSpotLight
@@ -81,4 +82,10 @@ struct ConstantBufferLight
 struct ConstantBufferSkybox : public ConstantBuffer
 {
     glm::mat4 PV_no_translation;
+};
+
+struct ConstantBufferDepth : public ConstantBuffer
+{
+    glm::vec3 light_pos;
+    float far_plane;
 };

@@ -60,6 +60,7 @@ private:
     void virtual bind_for_render_frame() const override;
     void setup_shadow_mapping();
     void set_RS_for_shadow_mapping() const;
+    void update_depth_shader(u32 const point_light_index) const;
     virtual void render_shadow_maps() const override;
     inline static std::shared_ptr<RendererDX11> m_instance_dx11;
 
@@ -75,6 +76,7 @@ private:
     ID3D11RasterizerState* g_rasterizer_state = nullptr;
     ID3D11Buffer* m_constant_buffer_light = nullptr;
     ID3D11Buffer* m_constant_buffer_per_object = nullptr;
+    ID3D11Buffer* m_constant_buffer_point_shadows = nullptr;
     ID3D11DepthStencilView* m_depth_stencil_view = nullptr;
     ID3D11Texture2D* m_depth_stencil_buffer = nullptr;
     ID3D11Texture2D* m_render_target_texture = nullptr;

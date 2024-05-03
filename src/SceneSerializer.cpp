@@ -229,6 +229,8 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "ambient" << YAML::Value << light->ambient;
         out << YAML::Key << "diffuse" << YAML::Value << light->diffuse;
         out << YAML::Key << "specular" << YAML::Value << light->specular;
+        out << YAML::Key << "m_near_plane" << YAML::Value << light->m_near_plane;
+        out << YAML::Key << "m_far_plane" << YAML::Value << light->m_far_plane;
         out << YAML::EndMap;
     }
     else
@@ -619,6 +621,8 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             deserialized_component->ambient = component["ambient"].as<glm::vec3>();
             deserialized_component->diffuse = component["diffuse"].as<glm::vec3>();
             deserialized_component->specular = component["specular"].as<glm::vec3>();
+            deserialized_component->m_near_plane = component["m_near_plane"].as<float>();
+            deserialized_component->m_far_plane = component["m_far_plane"].as<float>();
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
         }
@@ -641,6 +645,8 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             deserialized_component->ambient = component["ambient"].as<glm::vec3>();
             deserialized_component->diffuse = component["diffuse"].as<glm::vec3>();
             deserialized_component->specular = component["specular"].as<glm::vec3>();
+            deserialized_component->m_near_plane = component["m_near_plane"].as<float>();
+            deserialized_component->m_far_plane = component["m_far_plane"].as<float>();
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
         }
@@ -665,6 +671,8 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             deserialized_component->ambient = component["ambient"].as<glm::vec3>();
             deserialized_component->diffuse = component["diffuse"].as<glm::vec3>();
             deserialized_component->specular = component["specular"].as<glm::vec3>();
+            deserialized_component->m_near_plane = component["m_near_plane"].as<float>();
+            deserialized_component->m_far_plane = component["m_far_plane"].as<float>();
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
         }

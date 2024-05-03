@@ -217,6 +217,25 @@ void Renderer::render() const
     }
 }
 
+void Renderer::render_single_shadow_map(glm::mat4 const& projection_view) const
+{
+    for (auto const& shader : m_shaders)
+    {
+        for (auto const& material : shader->materials)
+        {
+            if (material->is_gpu_instanced)
+            {
+                // GPU instancing is not implemented in DX11
+                std::unreachable();
+            }
+            else
+            {
+                draw(material, projection_view);
+            }
+        }
+    }
+}
+
 void Renderer::end_frame() const
 {
 }
