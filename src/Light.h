@@ -23,6 +23,9 @@ public:
     glm::vec3 diffuse = glm::vec3(1.0f, 1.0f, 1.0f);
     glm::vec3 specular = glm::vec3(1.0f, 1.0f, 1.0f);
 
+    float m_near_plane = 1.0f;
+    float m_far_plane = 25.0f;
+
     ID3D11ShaderResourceView* m_shadow_shader_resource_view = nullptr;
 
 protected:

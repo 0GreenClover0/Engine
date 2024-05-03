@@ -44,6 +44,7 @@ public:
 
     void virtual begin_frame() const;
     void render() const;
+    void render_single_shadow_map(glm::mat4 const& projection_view) const;
     void virtual end_frame() const;
     void virtual present() const;
 
@@ -113,6 +114,7 @@ protected:
     std::vector<std::shared_ptr<Light>> m_lights = {};
     std::vector<std::shared_ptr<Material>> m_instanced_materials = {};
     std::shared_ptr<Shader> m_shadow_shader = nullptr;
+    std::shared_ptr<Shader> m_point_shadow_shader = nullptr;
 
 private:
     struct MaterialWithOrder

@@ -38,6 +38,17 @@ std::shared_ptr<RendererDX11> RendererDX11::create()
 
     assert(SUCCEEDED(hr));
 
+    D3D11_BUFFER_DESC point_shadow_buffer_desc;
+    point_shadow_buffer_desc.Usage = D3D11_USAGE_DYNAMIC;
+    point_shadow_buffer_desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    point_shadow_buffer_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    point_shadow_buffer_desc.MiscFlags = 0;
+    point_shadow_buffer_desc.ByteWidth = static_cast<UINT>(sizeof(ConstantBufferDepth) + (16 - (sizeof(ConstantBufferDepth) % 16)));
+    desc.StructureByteStride = 0;
+    hr = renderer->get_device()->CreateBuffer(&point_shadow_buffer_desc, nullptr, &renderer->m_constant_buffer_point_shadows);
+
+    assert(SUCCEEDED(hr));
+
     glfwSetWindowSizeCallback(Engine::window->get_glfw_window(), on_window_resize);
 
     D3D11_BUFFER_DESC light_buffer_desc = {};
@@ -84,6 +95,8 @@ std::shared_ptr<RendererDX11> RendererDX11::create()
     assert(SUCCEEDED(hr));
 
     renderer->m_shadow_shader = ShaderFactory::create("./res/shaders/shadow_mapping.hlsl", "./res/shaders/shadow_mapping.hlsl");
+    renderer->m_point_shadow_shader = ShaderFactory::create("./res/shaders/point_shadow_mapping.hlsl", "./res/shaders/point_shadow_mapping.hlsl");
+
 
     return renderer;
 }
@@ -170,20 +183,17 @@ void RendererDX11::render_shadow_maps() const
     {
         m_directional_light->set_render_target_for_shadows();
         m_shadow_shader->use();
-        for (auto const& shader : m_shaders)
+        render_single_shadow_map(m_directional_light->get_projection_view_matrix());
+    }
+    // Point lights
+    m_point_shadow_shader->use();
+    for (int i = 0; i < m_point_lights.size(); i++)
+    {
+        update_depth_shader(i);
+        for (int face = 0; face < 6; face++)
         {
-            for (auto const& material : shader->materials)
-            {
-                if (material->is_gpu_instanced)
-                {
-                    // GPU instancing is not implemented in DX11
-                    std::unreachable();
-                }
-                else
-                {
-                    draw(material, m_directional_light->get_projection_view_matrix());
-                }
-            }
+            m_point_lights[i]->set_render_target_for_shadows(face);
+            render_single_shadow_map(m_point_lights[i]->get_projection_view_matrix(face));
         }
     }
 }
@@ -209,10 +219,31 @@ void RendererDX11::set_RS_for_shadow_mapping() const
     get_device_context()->RSSetViewports(1, &m_shadow_map_viewport);
 }
 
+void RendererDX11::update_depth_shader(int const point_light_index) const
+{
+    ConstantBufferDepth data = {};
+    data.far_plane = m_point_lights[point_light_index]->m_far_plane;
+    data.light_pos = m_point_lights[point_light_index]->entity->transform->get_position();
+
+    D3D11_MAPPED_SUBRESOURCE mapped_resource;
+    HRESULT const hr = get_device_context()->Map(m_constant_buffer_point_shadows, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped_resource);
+    assert(SUCCEEDED(hr));
+
+    CopyMemory(mapped_resource.pData, &data, sizeof(ConstantBufferDepth));
+
+    get_device_context()->Unmap(m_constant_buffer_point_shadows, 0);
+    get_device_context()->PSSetConstantBuffers(1, 1, &m_constant_buffer_point_shadows);
+}
+
 void RendererDX11::update_shader(std::shared_ptr<Shader> const& shader, glm::mat4 const& projection_view,
                                  glm::mat4 const& projection_view_no_translation) const
 {
     g_pd3dDeviceContext->PSSetShaderResources(1, 1, &m_directional_light->m_shadow_shader_resource_view);
+    // There are 4 designated registers for point shadow cubemaps, registers 2-5
+    for (int i = 0; i < m_point_lights.size(); i++)
+    {
+        g_pd3dDeviceContext->PSSetShaderResources(2 + i, 1, &m_point_lights[i]->m_shadow_shader_resource_view);
+    }
     g_pd3dDeviceContext->PSSetSamplers(1, 1, &m_shadow_sampler_state);
 }
 
@@ -320,6 +351,8 @@ void RendererDX11::set_light_buffer(std::shared_ptr<Drawable> const& drawable) c
         light_data.point_lights[i].constant = m_point_lights[i]->constant;
         light_data.point_lights[i].linear = m_point_lights[i]->linear;
         light_data.point_lights[i].quadratic = m_point_lights[i]->quadratic;
+        light_data.point_lights[i].far_plane = m_point_lights[i]->m_far_plane;
+        light_data.point_lights[i].near_plane = m_point_lights[i]->m_near_plane;
     }
 
     i32 num_spot_lights;

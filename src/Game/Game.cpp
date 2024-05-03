@@ -73,10 +73,9 @@ void Game::initialize()
     transparent->transform->set_local_position(glm::vec3(0.8f, -0.8f, 0.0f));
 
     auto const point_light = Entity::create("Point light");
-    point_light->add_component(Sphere::create(0.1f, 10, 10, "./res/textures/container.png", light_source_material));
+    //point_light->add_component(Sphere::create(0.1f, 10, 10, "./res/textures/container.png", light_source_material));
     point_light->transform->set_local_position(glm::vec3(2.0f, 2.0f, 2.0f));
 
-    /*
     auto const point_light_component = point_light->add_component<PointLight>(PointLight::create());
     point_light_component->ambient = glm::vec3(0.05f);
     point_light_component->diffuse = glm::vec3(0.9f);
@@ -85,6 +84,7 @@ void Game::initialize()
     point_light_component->linear = 0.09f;
     point_light_component->quadratic = 0.032f;
 
+    /*
     auto const spot_light = Entity::create("Spot light");
     spot_light->add_component(Sphere::create(0.1f, 10, 10, "./res/textures/container.png", light_source_material));
     spot_light->transform->set_local_position(glm::vec3(0.0f, 0.0f, -10.0f));
