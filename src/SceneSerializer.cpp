@@ -215,6 +215,8 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::BeginMap;
         out << YAML::Key << "ComponentName" << YAML::Value << "LighthouseKeeperComponent";
         out << YAML::Key << "guid" << YAML::Value << lighthousekeeper->guid;
+        out << YAML::Key << "maximum_speed" << YAML::Value << lighthousekeeper->maximum_speed;
+        out << YAML::Key << "acceleration" << YAML::Value << lighthousekeeper->acceleration;
         out << YAML::Key << "deceleration" << YAML::Value << lighthousekeeper->deceleration;
         out << YAML::EndMap;
     }
@@ -232,6 +234,8 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::BeginMap;
         out << YAML::Key << "ComponentName" << YAML::Value << "ShipComponent";
         out << YAML::Key << "guid" << YAML::Value << ship->guid;
+        out << YAML::Key << "minimum_speed" << YAML::Value << ship->minimum_speed;
+        out << YAML::Key << "maximum_speed" << YAML::Value << ship->maximum_speed;
         out << YAML::Key << "turn_speed" << YAML::Value << ship->turn_speed;
         out << YAML::Key << "visibility_range" << YAML::Value << ship->visibility_range;
         out << YAML::EndMap;
@@ -597,6 +601,8 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         else
         {
             auto const deserialized_component = std::dynamic_pointer_cast<class LighthouseKeeper>(get_from_pool(component["guid"].as<std::string>()));
+            deserialized_component->maximum_speed = component["maximum_speed"].as<float>();
+            deserialized_component->acceleration = component["acceleration"].as<float>();
             deserialized_component->deceleration = component["deceleration"].as<float>();
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
@@ -630,6 +636,8 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         else
         {
             auto const deserialized_component = std::dynamic_pointer_cast<class Ship>(get_from_pool(component["guid"].as<std::string>()));
+            deserialized_component->minimum_speed = component["minimum_speed"].as<float>();
+            deserialized_component->maximum_speed = component["maximum_speed"].as<float>();
             deserialized_component->turn_speed = component["turn_speed"].as<float>();
             deserialized_component->visibility_range = component["visibility_range"].as<i32>();
             deserialized_entity->add_component(deserialized_component);
