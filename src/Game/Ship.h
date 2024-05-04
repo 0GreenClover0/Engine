@@ -11,8 +11,6 @@ public:
 
     explicit Ship(AK::Badge<Ship>);
 
-    void set_light(std::shared_ptr<LighthouseLight> const& light);
-
     virtual void awake() override;
     virtual void update() override;
     virtual void draw_editor() override;
@@ -23,10 +21,11 @@ public:
     float turn_speed = 15.0f;
     i32 visibility_range = 110;
 
+    std::weak_ptr<LighthouseLight> light = {};
+
 private:
     void follow_light(glm::vec2 ship_position, glm::vec2 target_position);
 
     float m_speed = 0.0f;
     float m_direction = 0.0f;
-    std::weak_ptr<LighthouseLight> m_light;
 };
