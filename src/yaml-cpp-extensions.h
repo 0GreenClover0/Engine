@@ -257,6 +257,95 @@ namespace YAML
         return out;
     }
 
+    template<typename T>
+        requires std::is_base_of_v<Entity, T>
+    struct convert<std::shared_ptr<T>>
+    {
+        static Node encode(std::shared_ptr<T> const& rhs)
+        {
+            Node node;
+            node.push_back(rhs->guid);
+            return node;
+        }
+
+        static bool decode(Node const& node, std::shared_ptr<T>& rhs)
+        {
+            if (node.size() != 1)
+                return false;
+
+            rhs = std::dynamic_pointer_cast<T>(SceneSerializer::get_instance()->get_entity_from_pool(node["guid"].as<std::string>()));
+
+            return true;
+        }
+    };
+
+    template<typename T>
+        requires std::is_base_of_v<Entity, T>
+    struct convert<std::weak_ptr<T>>
+    {
+        static Node encode(std::weak_ptr<T> const& rhs)
+        {
+            Node node;
+
+            if (!rhs.expired())
+            {
+                node.push_back(rhs.lock()->guid);
+            }
+            else
+            {
+                node.push_back("nullptr");
+            }
+            return node;
+        }
+
+        static bool decode(Node const& node, std::weak_ptr<T>& rhs)
+        {
+            if (node.size() != 1)
+                return false;
+
+            if (node["guid"].as<std::string>() == "nullptr")
+            {
+                return true;
+            }
+
+            rhs = std::dynamic_pointer_cast<T>(SceneSerializer::get_instance()->get_entity_from_pool(node["guid"].as<std::string>()));
+
+            return true;
+        }
+    };
+
+    template<class T>
+    Emitter & operator<<(YAML::Emitter& out, std::shared_ptr<T> const& v)
+        requires(std::is_base_of_v<Entity, T>)
+    {
+        out << YAML::BeginMap;
+
+        if (v == nullptr)
+            out << YAML::Key << "guid" << YAML::Value << "nullptr";
+        else
+            out << YAML::Key << "guid" << YAML::Value << v->guid;
+
+        out << YAML::EndMap;
+
+        return out;
+    }
+
+    template<class T>
+    Emitter & operator<<(YAML::Emitter& out, std::weak_ptr<T> const& v)
+        requires(std::is_base_of_v<Entity, T>)
+    {
+        out << YAML::BeginMap;
+
+        if (v.expired())
+            out << YAML::Key << "guid" << YAML::Value << "nullptr";
+        else
+            out << YAML::Key << "guid" << YAML::Value << v.lock()->guid;
+
+        out << YAML::EndMap;
+
+        return out;
+    }
+
     inline Emitter & operator<<(YAML::Emitter& out, glm::vec2 const& v)
     {
         out << YAML::Flow;
