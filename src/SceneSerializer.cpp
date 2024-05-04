@@ -29,6 +29,7 @@
 #include "Game/LighthouseLight.h"
 #include "Game/Ship.h"
 #include "Game/GameController.h"
+#include "Game/Lighthouse.h"
 // # Put new header here
 
 SceneSerializer::SceneSerializer(std::shared_ptr<Scene> const& scene) : m_scene(scene)
@@ -195,6 +196,16 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::EndMap;
     }
     else
+    if (auto const lighthouse = std::dynamic_pointer_cast<class Lighthouse>(component); lighthouse != nullptr)
+    {
+        out << YAML::BeginMap;
+        out << YAML::Key << "ComponentName" << YAML::Value << "LighthouseComponent";
+        out << YAML::Key << "guid" << YAML::Value << lighthouse->guid;
+        out << YAML::Key << "enterable_distance" << YAML::Value << lighthouse->enterable_distance;
+        out << YAML::Key << "light" << YAML::Value << lighthouse->light;
+        out << YAML::EndMap;
+    }
+    else
     if (auto const sound = std::dynamic_pointer_cast<class Sound>(component); sound != nullptr)
     {
         out << YAML::BeginMap;
@@ -227,6 +238,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "maximum_speed" << YAML::Value << lighthousekeeper->maximum_speed;
         out << YAML::Key << "acceleration" << YAML::Value << lighthousekeeper->acceleration;
         out << YAML::Key << "deceleration" << YAML::Value << lighthousekeeper->deceleration;
+        out << YAML::Key << "lighthouse" << YAML::Value << lighthousekeeper->lighthouse;
         out << YAML::EndMap;
     }
     else
@@ -568,6 +580,24 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
     }
     else
         else
+    if (component_name == "LighthouseComponent")
+    {
+        if (first_pass)
+        {
+            auto const deserialized_component = Lighthouse::create();
+            deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_pool.emplace_back(deserialized_component);
+        }
+        else
+        {
+            auto const deserialized_component = std::dynamic_pointer_cast<class Lighthouse>(get_from_pool(component["guid"].as<std::string>()));
+            deserialized_component->enterable_distance = component["enterable_distance"].as<float>();
+            deserialized_component->light = component["light"].as<std::weak_ptr<LighthouseLight>>();
+            deserialized_entity->add_component(deserialized_component);
+            deserialized_component->reprepare();
+        }
+    }
+        else
     if (component_name == "SoundComponent")
     {
         if (first_pass)
@@ -647,6 +677,7 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             deserialized_component->maximum_speed = component["maximum_speed"].as<float>();
             deserialized_component->acceleration = component["acceleration"].as<float>();
             deserialized_component->deceleration = component["deceleration"].as<float>();
+            deserialized_component->lighthouse = component["lighthouse"].as<std::weak_ptr<Lighthouse>>();
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
         }

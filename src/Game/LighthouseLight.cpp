@@ -5,6 +5,8 @@
 #include "Input.h"
 #include "LighthouseLight.h"
 
+#include "ResourceManager.h"
+
 std::shared_ptr<LighthouseLight> LighthouseLight::create()
 {
     return std::make_shared<LighthouseLight>(AK::Badge<LighthouseLight> {});
@@ -14,9 +16,25 @@ LighthouseLight::LighthouseLight(AK::Badge<LighthouseLight>)
 {
 }
 
+void LighthouseLight::on_enabled()
+{
+    if (!m_sphere.expired())
+        m_sphere.lock()->set_enabled(true);
+}
+
+void LighthouseLight::on_disabled()
+{
+    if (!m_sphere.expired())
+        m_sphere.lock()->set_enabled(false);
+}
+
 void LighthouseLight::awake()
 {
     set_can_tick(true);
+
+    auto const standard_shader = ResourceManager::get_instance().load_shader("./res/shaders/lit.hlsl", "./res/shaders/lit.hlsl");
+    auto const standard_material = Material::create(standard_shader);
+    m_sphere = entity->add_component(Sphere::create(0.25f, 12, 12, "./res/textures/stone.jpg", standard_material));
 }
 
 void LighthouseLight::update()
