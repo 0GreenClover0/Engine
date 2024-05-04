@@ -5,6 +5,7 @@
 
 #include "Entity.h"
 #include "LighthouseKeeper.h"
+#include "Globals.h"
 
 std::shared_ptr<LighthouseKeeper> LighthouseKeeper::create()
 {
@@ -70,7 +71,10 @@ void LighthouseKeeper::update()
         m_speed = glm::normalize(m_speed) * maximum_speed;
     }
 
-    entity->transform->set_local_position(entity->transform->get_local_position() + glm::vec3(m_speed.x, 0.0f, m_speed.y));
+    glm::vec3 speed_vector = glm::vec3(m_speed.x, 0.0f, m_speed.y);
+    speed_vector *= delta_time;
+
+    entity->transform->set_local_position(entity->transform->get_local_position() + speed_vector);
 }
 
 void LighthouseKeeper::draw_editor()

@@ -17,10 +17,10 @@ public:
     virtual void update() override;
     virtual void draw_editor() override;
 
-    float minimum_speed = 0.35f * 0.005f;
-    float maximum_speed = 0.75f * 0.005f;
+    float minimum_speed = 0.11f;
+    float maximum_speed = 0.23f;
 
-    float turn_speed = 0.25f;
+    float turn_speed = 15.0f;
     i32 visibility_range = 110;
 
 private:

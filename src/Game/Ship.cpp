@@ -8,6 +8,7 @@
 #include "Ship.h"
 
 #include "imgui_extensions.h"
+#include "Globals.h"
 
 std::shared_ptr<Ship> Ship::create()
 {
@@ -57,7 +58,9 @@ void Ship::update()
         }
     }
 
-    glm::vec2 const speed_vector = glm::vec2(cos(glm::radians(m_direction)), sin(glm::radians(m_direction))) * m_speed;
+    float delta_speed = m_speed * delta_time;
+
+    glm::vec2 speed_vector = glm::vec2(cos(glm::radians(m_direction)), sin(glm::radians(m_direction))) * delta_speed;
 
     entity->transform->set_local_position(entity->transform->get_local_position() + glm::vec3(speed_vector.x, 0.0f, speed_vector.y));
     entity->transform->set_euler_angles(glm::vec3(0.0f, -m_direction - 90.0f, 0.0f));
@@ -81,6 +84,6 @@ void Ship::follow_light(glm::vec2 ship_position, glm::vec2 target_position)
     {
         i32 const rotate_direction = glm::sign(ship_direction.x * target_direction.y - ship_direction.y * target_direction.x);
 
-        m_direction += rotate_direction * turn_speed;
+        m_direction += rotate_direction * turn_speed * delta_time;
     }
 }
