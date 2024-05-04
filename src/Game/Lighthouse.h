@@ -26,7 +26,6 @@ public:
 
     std::weak_ptr<LighthouseLight> light = {};
 
-    NON_SERIALIZED
     std::weak_ptr<Entity> spawn_position = {};
 
 private:
