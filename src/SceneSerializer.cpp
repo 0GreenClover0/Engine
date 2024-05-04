@@ -59,6 +59,17 @@ std::shared_ptr<Component> SceneSerializer::get_from_pool(std::string const &gui
     return nullptr;
 }
 
+std::shared_ptr<Entity> SceneSerializer::get_entity_from_pool(std::string const &guid) const
+{
+    for (auto const& obj : deserialized_entities_pool)
+    {
+        if (obj->guid == guid)
+            return obj;
+    }
+
+    return nullptr;
+}
+
 void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_ptr<Component> const& component)
 {
     // # Auto serialization start
@@ -911,6 +922,7 @@ bool SceneSerializer::deserialize(std::string const& file_path)
             if (deserialized_entity == nullptr)
                 return false;
 
+            deserialized_entities_pool.emplace_back(deserialized_entity);
             deserialized_entities.emplace_back(deserialized_entity, entity);
         }
 

@@ -20,6 +20,7 @@ public:
     static void set_instance(std::shared_ptr<SceneSerializer> const& instance);
 
     [[nodiscard]] std::shared_ptr<Component> get_from_pool(std::string const& guid) const;
+    [[nodiscard]] std::shared_ptr<Entity> get_entity_from_pool(std::string const& guid) const;
 
     void serialize(std::string const& file_path) const;
     bool deserialize(std::string const& file_path);
@@ -35,6 +36,7 @@ private:
     void deserialize_entity_second_pass(YAML::Node const& entity, std::shared_ptr<Entity> const& deserialized_entity);
 
     std::vector<std::shared_ptr<Component>> deserialized_pool = {};
+    std::vector<std::shared_ptr<Entity>> deserialized_entities_pool = {};
     std::shared_ptr<Scene> m_scene;
 
     inline static std::shared_ptr<SceneSerializer> m_instance;
