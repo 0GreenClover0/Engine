@@ -36,6 +36,7 @@ void Lighthouse::draw_editor()
     Component::draw_editor();
 
     draw_ptr("Light", light);
+    draw_ptr("Spawn", spawn_position);
 }
 
 void Lighthouse::enter()
