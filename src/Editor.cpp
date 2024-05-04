@@ -567,15 +567,40 @@ void Editor::draw_inspector(std::shared_ptr<EditorWindow> const& window)
 
     glm::vec3 position = entity->transform->get_local_position();
     ImGui::InputFloat3("Position", glm::value_ptr(position));
+
+    ImGui::SameLine();
+
+    if (ImGui::Button("Copy##1"))
+    {
+        std::string const cpy = glm::to_string(position);
+        ImGui::SetClipboardText(cpy.c_str());
+    }
+
     entity->transform->set_local_position(position);
 
     glm::vec3 rotation = entity->transform->get_euler_angles();
     ImGui::InputFloat3("Rotation", glm::value_ptr(rotation));
     entity->transform->set_euler_angles(rotation);
 
+    ImGui::SameLine();
+
+    if (ImGui::Button("Copy##2"))
+    {
+        std::string const cpy = glm::to_string(rotation);
+        ImGui::SetClipboardText(cpy.c_str());
+    }
+
     glm::vec3 scale = entity->transform->get_local_scale();
     ImGui::InputFloat3("Scale", glm::value_ptr(scale));
     entity->transform->set_local_scale(scale);
+
+    ImGui::SameLine();
+
+    if (ImGui::Button("Copy##3"))
+    {
+        std::string const cpy = glm::to_string(scale);
+        ImGui::SetClipboardText(cpy.c_str());
+    }
 
     auto const components_copy = entity->components;
     for (auto const& component : components_copy)
