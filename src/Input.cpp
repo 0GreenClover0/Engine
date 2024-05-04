@@ -25,6 +25,7 @@ Input::Input(std::shared_ptr<Window> const& window) : m_window(window)
     m_keys.insert(std::pair<i32, Key>(GLFW_MOUSE_BUTTON_LEFT, GLFW_MOUSE_BUTTON_LEFT));
     m_keys.insert(std::pair<i32, Key>(GLFW_MOUSE_BUTTON_RIGHT, GLFW_MOUSE_BUTTON_RIGHT));
     m_keys.insert(std::pair<i32, Key>(GLFW_KEY_F1, GLFW_KEY_F1));
+    m_keys.insert(std::pair<i32, Key>(GLFW_KEY_F2, GLFW_KEY_F2));
     m_keys.insert(std::pair<i32, Key>(GLFW_KEY_F5, GLFW_KEY_F5));
     m_keys.insert(std::pair<i32, Key>(GLFW_KEY_DELETE, GLFW_KEY_DELETE));
 }
