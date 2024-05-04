@@ -30,6 +30,7 @@
 #include "Game/Ship.h"
 #include "Game/GameController.h"
 #include "Game/Lighthouse.h"
+#include "Path.h"
 // # Put new header here
 
 SceneSerializer::SceneSerializer(std::shared_ptr<Scene> const& scene) : m_scene(scene)
@@ -206,6 +207,15 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::EndMap;
     }
     else
+    if (auto const path = std::dynamic_pointer_cast<class Path>(component); path != nullptr)
+    {
+        out << YAML::BeginMap;
+        out << YAML::Key << "ComponentName" << YAML::Value << "PathComponent";
+        out << YAML::Key << "guid" << YAML::Value << path->guid;
+        out << YAML::Key << "points" << YAML::Value << path->points;
+        out << YAML::EndMap;
+    }
+    else
     if (auto const sound = std::dynamic_pointer_cast<class Sound>(component); sound != nullptr)
     {
         out << YAML::BeginMap;
@@ -218,6 +228,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
     {
         out << YAML::BeginMap;
         out << YAML::Key << "ComponentName" << YAML::Value << "SoundListenerComponent";
+        out << YAML::Key << "guid" << YAML::Value << soundlistener->guid;
         out << YAML::EndMap;
     }
     else
@@ -225,8 +236,8 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
     {
         out << YAML::BeginMap;
         out << YAML::Key << "ComponentName" << YAML::Value << "GameControllerComponent";
+        out << YAML::Key << "guid" << YAML::Value << gamecontroller->guid;
         out << YAML::Key << "map_time" << YAML::Value << gamecontroller->map_time;
-        out << YAML::Key << "guid" << YAML::Value << soundlistener->guid;
         out << YAML::EndMap;
     }
     else
@@ -578,7 +589,6 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             deserialized_component->reprepare();
         }
     }
-    else
         else
     if (component_name == "LighthouseComponent")
     {
@@ -593,6 +603,23 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             auto const deserialized_component = std::dynamic_pointer_cast<class Lighthouse>(get_from_pool(component["guid"].as<std::string>()));
             deserialized_component->enterable_distance = component["enterable_distance"].as<float>();
             deserialized_component->light = component["light"].as<std::weak_ptr<LighthouseLight>>();
+            deserialized_entity->add_component(deserialized_component);
+            deserialized_component->reprepare();
+        }
+    }
+        else
+    if (component_name == "PathComponent")
+    {
+        if (first_pass)
+        {
+            auto const deserialized_component = Path::create();
+            deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_pool.emplace_back(deserialized_component);
+        }
+        else
+        {
+            auto const deserialized_component = std::dynamic_pointer_cast<class Path>(get_from_pool(component["guid"].as<std::string>()));
+            deserialized_component->points = component["points"].as<std::vector<glm::vec2>>();
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
         }
@@ -629,39 +656,23 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             deserialized_component->reprepare();
         }
     }
-    else
+        else
     if (component_name == "GameControllerComponent")
     {
-        auto const deserialized_component = GameController::create();
-        deserialized_component->map_time = component["map_time"].as<i32>();
-        deserialized_entity->add_component(deserialized_component);
-        deserialized_component->reprepare();
+        if (first_pass)
+        {
+            auto const deserialized_component = GameController::create();
+            deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_pool.emplace_back(deserialized_component);
+        }
+        else
+        {
+            auto const deserialized_component = std::dynamic_pointer_cast<class GameController>(get_from_pool(component["guid"].as<std::string>()));
+            deserialized_component->map_time = component["map_time"].as<float>();
+            deserialized_entity->add_component(deserialized_component);
+            deserialized_component->reprepare();
+        }
     }
-    else
-    if (component_name == "LighthouseKeeperComponent")
-    {
-        auto const deserialized_component = LighthouseKeeper::create();
-        deserialized_component->deceleration = component["deceleration"].as<float>();
-        deserialized_entity->add_component(deserialized_component);
-        deserialized_component->reprepare();
-    }
-    else
-    if (component_name == "LighthouseLightComponent")
-    {
-        auto const deserialized_component = LighthouseLight::create();
-        deserialized_entity->add_component(deserialized_component);
-        deserialized_component->reprepare();
-    }
-    else
-    if (component_name == "ShipComponent")
-    {
-        auto const deserialized_component = Ship::create();
-        deserialized_component->turn_speed = component["turn_speed"].as<float>();
-        deserialized_component->visibility_range = component["visibility_range"].as<i32>();
-        deserialized_entity->add_component(deserialized_component);
-        deserialized_component->reprepare();
-    }
-    else
         else
     if (component_name == "LighthouseKeeperComponent")
     {

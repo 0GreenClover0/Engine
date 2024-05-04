@@ -10,6 +10,7 @@
     ENUMERATE_COMPONENT(ExampleUIBar, "Example UIBar") \
     ENUMERATE_COMPONENT(Light, "Light") \
     ENUMERATE_COMPONENT(Lighthouse, "Lighthouse") \
+    ENUMERATE_COMPONENT(Path, "Path") \
     ENUMERATE_COMPONENT(Sound, "Sound") \
     ENUMERATE_COMPONENT(SoundListener, "Sound Listener") \
     ENUMERATE_COMPONENT(GameController, "Game Controller") \
