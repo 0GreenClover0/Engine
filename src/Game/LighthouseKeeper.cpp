@@ -7,6 +7,12 @@
 #include "LighthouseKeeper.h"
 #include "Globals.h"
 
+#include "Debug.h"
+#include "Lighthouse.h"
+#include "AK/AK.h"
+
+#include <imgui_extensions.h>
+
 std::shared_ptr<LighthouseKeeper> LighthouseKeeper::create()
 {
     return std::make_shared<LighthouseKeeper>(AK::Badge<LighthouseKeeper> {});
@@ -75,6 +81,21 @@ void LighthouseKeeper::update()
     speed_vector *= delta_time;
 
     entity->transform->set_local_position(entity->transform->get_local_position() + speed_vector);
+
+    if (!lighthouse.expired() && Input::input->get_key_down(GLFW_KEY_SPACE))
+    {
+        auto const lighthouse_locked = lighthouse.lock();
+        auto const lighthouse_transform = lighthouse_locked->entity->transform;
+
+        glm::vec2 const keeper_position = AK::convert_3d_to_2d(entity->transform->get_position());
+        glm::vec2 const lighthouse_position = AK::convert_3d_to_2d(lighthouse_transform->get_position());
+
+        if (distance(keeper_position, lighthouse_position) < lighthouse_locked->enterable_distance)
+        {
+            lighthouse_locked->enter();
+            entity->destroy_immediate();
+        }
+    }
 }
 
 void LighthouseKeeper::draw_editor()
@@ -82,4 +103,6 @@ void LighthouseKeeper::draw_editor()
     ImGui::InputFloat("Acceleration", &acceleration);
     ImGui::InputFloat("Deceleration", &deceleration);
     ImGui::InputFloat("Maximum speed", &maximum_speed);
+
+    draw_ptr("Lighthouse", lighthouse);
 }

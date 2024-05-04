@@ -43,7 +43,7 @@ void Ship::update()
 
     glm::vec2 const ship_position = { entity->transform->get_local_position().x, entity->transform->get_local_position().z };
 
-    if (!m_light.expired())
+    if (!m_light.expired() && m_light.lock()->enabled())
     {
         auto const light = m_light.lock();
         glm::vec2 const target_position = light->get_position();
