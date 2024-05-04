@@ -13,6 +13,7 @@ public:
 
     virtual void awake() override;
     virtual void update() override;
+    virtual void on_destroyed() override;
     virtual void draw_editor() override;
 
     float minimum_speed = 0.11f;
@@ -20,8 +21,11 @@ public:
 
     float turn_speed = 15.0f;
     i32 visibility_range = 110;
+    float start_direction_wiggle = 15.0f;
 
     std::weak_ptr<LighthouseLight> light = {};
+
+    Event<void(std::shared_ptr<Ship>)> on_ship_destroyed;
 
 private:
     void follow_light(glm::vec2 ship_position, glm::vec2 target_position);

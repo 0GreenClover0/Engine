@@ -28,6 +28,7 @@
 #include "Sphere.h"
 #include "Ship.h"
 #include "GameController.h"
+#include "ShipSpawner.h"
 #include "Lighthouse.h"
 
 Game::Game(std::shared_ptr<Window> const& window) : window(window)
@@ -89,11 +90,6 @@ void Game::initialize()
     auto const light = Entity::create("light");
     auto const light_comp = light->add_component(LighthouseLight::create());
 
-    auto const ship = Entity::create("ship");
-    ship->add_component(Model::create("./res/models/ship/ship.gltf", standard_material));
-    ship->transform->set_local_position({ -5.5f, 0.0f, 0.0f });
-    ship->add_component(Ship::create(light->get_component<LighthouseLight>()));
-
     auto const lighthouse = Entity::create("Lighthouse");
     lighthouse->add_component<Model>(Model::create("./res/models/lighthouse/lighthouse.gltf", standard_material));
     lighthouse->transform->set_local_position(glm::vec3(2.294563f, 0.223798f, 2.378702f));
@@ -104,6 +100,7 @@ void Game::initialize()
     spawn->transform->set_local_position(glm::vec3(0.0f, 0.0f, 0.4f));
     lighthouse_comp->spawn_position = spawn;
 
-    auto const game_controller = Entity::create("game_controller");
+    auto const game_controller = Entity::create("Game Controller");
     game_controller->add_component(GameController::create());
+    game_controller->add_component(ShipSpawner::create(light->get_component<LighthouseLight>()));
 }

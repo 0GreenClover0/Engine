@@ -17,6 +17,7 @@
     ENUMERATE_COMPONENT(LighthouseKeeper, "Lighthouse Keeper") \
     ENUMERATE_COMPONENT(LighthouseLight, "Lighthouse Light") \
     ENUMERATE_COMPONENT(Ship, "Ship") \
+    ENUMERATE_COMPONENT(ShipSpawner, "Ship Spawner") \
     ENUMERATE_COMPONENT(PlayerInput, "Player Input") \
     ENUMERATE_COMPONENT(Model, "Model") \
     ENUMERATE_COMPONENT(ScreenText, "Screen Text") \

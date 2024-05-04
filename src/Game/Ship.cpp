@@ -2,6 +2,7 @@
 #include <imgui.h>
 #include <glm/gtx/vector_angle.hpp>
 #include <glm/vec2.hpp>
+#include <glm/gtc/random.hpp>
 
 #include "Entity.h"
 #include "Input.h"
@@ -9,6 +10,7 @@
 
 #include "imgui_extensions.h"
 #include "Globals.h"
+#include "AK/AK.h"
 
 std::shared_ptr<Ship> Ship::create()
 {
@@ -29,6 +31,18 @@ Ship::Ship(AK::Badge<Ship>)
 
 void Ship::awake()
 {
+    glm::vec2 const ship_position = AK::convert_3d_to_2d(entity->transform->get_local_position());
+
+    if (glm::epsilonEqual(ship_position, {0.0f, 0.0f}, 0.0001f) == glm::bvec2(true, true))
+    {
+        set_can_tick(true);
+        return;
+    }
+    glm::vec2 const target_direction = glm::normalize(glm::vec2(glm::vec2(0.0f, 0.0f) - ship_position));
+    i32 const rotate_direction = glm::sign(1.0f * target_direction.y - 0.0f * target_direction.x);
+    m_direction = glm::degrees(glm::angle(glm::vec2(1.0f, 0.0f), target_direction)) * rotate_direction;
+    m_direction += glm::linearRand(-start_direction_wiggle, start_direction_wiggle);
+
     set_can_tick(true);
 }
 
@@ -36,7 +50,7 @@ void Ship::update()
 {
     m_speed = maximum_speed;
 
-    glm::vec2 const ship_position = { entity->transform->get_local_position().x, entity->transform->get_local_position().z };
+    glm::vec2 const ship_position = AK::convert_3d_to_2d(entity->transform->get_local_position());
 
     if (!light.expired() && light.lock()->enabled())
     {
@@ -59,6 +73,11 @@ void Ship::update()
 
     entity->transform->set_local_position(entity->transform->get_local_position() + glm::vec3(speed_vector.x, 0.0f, speed_vector.y));
     entity->transform->set_euler_angles(glm::vec3(0.0f, -m_direction - 90.0f, 0.0f));
+}
+
+void Ship::on_destroyed()
+{
+    on_ship_destroyed(static_pointer_cast<Ship>(shared_from_this()));
 }
 
 void Ship::draw_editor()

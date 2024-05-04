@@ -30,6 +30,7 @@
 #include "Game/Ship.h"
 #include "Game/GameController.h"
 #include "Game/Lighthouse.h"
+#include "Game/ShipSpawner.h"
 #include "Path.h"
 // # Put new header here
 
@@ -270,6 +271,18 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "maximum_speed" << YAML::Value << ship->maximum_speed;
         out << YAML::Key << "turn_speed" << YAML::Value << ship->turn_speed;
         out << YAML::Key << "visibility_range" << YAML::Value << ship->visibility_range;
+        out << YAML::Key << "start_direction_wiggle" << YAML::Value << ship->start_direction_wiggle;
+        out << YAML::Key << "light" << YAML::Value << ship->light;
+        out << YAML::EndMap;
+    }
+    else
+    if (auto const shipspawner = std::dynamic_pointer_cast<class ShipSpawner>(component); shipspawner != nullptr)
+    {
+        out << YAML::BeginMap;
+        out << YAML::Key << "ComponentName" << YAML::Value << "ShipSpawnerComponent";
+        out << YAML::Key << "guid" << YAML::Value << shipspawner->guid;
+        out << YAML::Key << "paths" << YAML::Value << shipspawner->paths;
+        out << YAML::Key << "light" << YAML::Value << shipspawner->light;
         out << YAML::EndMap;
     }
     else
@@ -725,6 +738,26 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             deserialized_component->maximum_speed = component["maximum_speed"].as<float>();
             deserialized_component->turn_speed = component["turn_speed"].as<float>();
             deserialized_component->visibility_range = component["visibility_range"].as<i32>();
+            deserialized_component->start_direction_wiggle = component["start_direction_wiggle"].as<float>();
+            deserialized_component->light = component["light"].as<std::weak_ptr<LighthouseLight>>();
+            deserialized_entity->add_component(deserialized_component);
+            deserialized_component->reprepare();
+        }
+    }
+        else
+    if (component_name == "ShipSpawnerComponent")
+    {
+        if (first_pass)
+        {
+            auto const deserialized_component = ShipSpawner::create();
+            deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_pool.emplace_back(deserialized_component);
+        }
+        else
+        {
+            auto const deserialized_component = std::dynamic_pointer_cast<class ShipSpawner>(get_from_pool(component["guid"].as<std::string>()));
+            deserialized_component->paths = component["paths"].as<std::vector<std::weak_ptr<Path>>>();
+            deserialized_component->light = component["light"].as<std::weak_ptr<LighthouseLight>>();
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
         }
