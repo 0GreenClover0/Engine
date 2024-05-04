@@ -224,90 +224,91 @@ namespace YAML
             return true;
         }
     };
-}
 
-template<class T>
-YAML::Emitter& operator<<(YAML::Emitter& out, std::shared_ptr<T> const& v)
-    requires(std::is_base_of_v<Component, T>)
-{
-    out << YAML::BeginMap;
+    template<class T>
+    Emitter & operator<<(YAML::Emitter& out, std::shared_ptr<T> const& v)
+        requires(std::is_base_of_v<Component, T>)
+    {
+        out << YAML::BeginMap;
 
-    if (v == nullptr)
-        out << YAML::Key << "guid" << YAML::Value << "nullptr";
-    else
-        out << YAML::Key << "guid" << YAML::Value << v->guid;
+        if (v == nullptr)
+            out << YAML::Key << "guid" << YAML::Value << "nullptr";
+        else
+            out << YAML::Key << "guid" << YAML::Value << v->guid;
 
-    out << YAML::EndMap;
+        out << YAML::EndMap;
 
-    return out;
-}
+        return out;
+    }
 
-template<class T>
-YAML::Emitter& operator<<(YAML::Emitter& out, std::weak_ptr<T> const& v)
-    requires(std::is_base_of_v<Component, T>)
-{
-    out << YAML::BeginMap;
+    template<class T>
+    Emitter & operator<<(YAML::Emitter& out, std::weak_ptr<T> const& v)
+        requires(std::is_base_of_v<Component, T>)
+    {
+        out << YAML::BeginMap;
 
-    if (v.expired())
-        out << YAML::Key << "guid" << YAML::Value << "nullptr";
-    else
-        out << YAML::Key << "guid" << YAML::Value << v.lock()->guid;
+        if (v.expired())
+            out << YAML::Key << "guid" << YAML::Value << "nullptr";
+        else
+            out << YAML::Key << "guid" << YAML::Value << v.lock()->guid;
 
-    out << YAML::EndMap;
+        out << YAML::EndMap;
 
-    return out;
-}
+        return out;
+    }
 
-inline YAML::Emitter& operator<<(YAML::Emitter& out, glm::vec2 const& v)
-{
-    out << YAML::Flow;
-    out << YAML::BeginSeq << v.x << v.y << YAML::EndSeq;
-    return out;
-}
+    inline Emitter & operator<<(YAML::Emitter& out, glm::vec2 const& v)
+    {
+        out << YAML::Flow;
+        out << YAML::BeginSeq << v.x << v.y << YAML::EndSeq;
+        return out;
+    }
 
-inline YAML::Emitter& operator<<(YAML::Emitter& out, glm::vec3 const& v)
-{
-    out << YAML::Flow;
-    out << YAML::BeginSeq << v.x << v.y << v.z << YAML::EndSeq;
-    return out;
-}
+    inline Emitter & operator<<(YAML::Emitter& out, glm::vec3 const& v)
+    {
+        out << YAML::Flow;
+        out << YAML::BeginSeq << v.x << v.y << v.z << YAML::EndSeq;
+        return out;
+    }
 
-inline YAML::Emitter& operator<<(YAML::Emitter& out, glm::vec4 const& v)
-{
-    out << YAML::Flow;
-    out << YAML::BeginSeq << v.x << v.y << v.z << v.w << YAML::EndSeq;
-    return out;
-}
+    inline Emitter & operator<<(YAML::Emitter& out, glm::vec4 const& v)
+    {
+        out << YAML::Flow;
+        out << YAML::BeginSeq << v.x << v.y << v.z << v.w << YAML::EndSeq;
+        return out;
+    }
 
-inline YAML::Emitter& operator<<(YAML::Emitter& out, std::wstring const& v)
-{
-    std::string const narrow(v.begin(), v.end());
-    out << narrow;
-    return out;
-}
+    inline Emitter & operator<<(YAML::Emitter& out, std::wstring const& v)
+    {
+        std::string const narrow(v.begin(), v.end());
+        out << narrow;
+        return out;
+    }
 
-inline YAML::Emitter& operator<<(YAML::Emitter& out, std::shared_ptr<Shader> const& shader)
-{
-    out << YAML::BeginMap; // Shader
+    inline Emitter & operator<<(YAML::Emitter& out, std::shared_ptr<Shader> const& shader)
+    {
+        out << YAML::BeginMap; // Shader
 
-    out << YAML::Key << "VertexPath" << YAML::Value << shader->get_vertex_path();
-    out << YAML::Key << "FragmentPath" << YAML::Value << shader->get_fragment_path();
-    out << YAML::Key << "GeometryPath" << YAML::Value << shader->get_geometry_path();
+        out << YAML::Key << "VertexPath" << YAML::Value << shader->get_vertex_path();
+        out << YAML::Key << "FragmentPath" << YAML::Value << shader->get_fragment_path();
+        out << YAML::Key << "GeometryPath" << YAML::Value << shader->get_geometry_path();
 
-    out << YAML::EndMap; // Shader
+        out << YAML::EndMap; // Shader
 
-    return out;
-}
+        return out;
+    }
 
-inline YAML::Emitter& operator<<(YAML::Emitter& out, std::shared_ptr<Material> const& material)
-{
-    out << YAML::BeginMap; // Material
+    inline Emitter & operator<<(YAML::Emitter& out, std::shared_ptr<Material> const& material)
+    {
+        out << YAML::BeginMap; // Material
 
-    out << YAML::Key << "Shader" << YAML::Value << material->shader;
-    out << YAML::Key << "Color" << YAML::Value << material->color;
-    out << YAML::Key << "RenderOrder" << YAML::Value << material->get_render_order();
+        out << YAML::Key << "Shader" << YAML::Value << material->shader;
+        out << YAML::Key << "Color" << YAML::Value << material->color;
+        out << YAML::Key << "RenderOrder" << YAML::Value << material->get_render_order();
 
-    out << YAML::EndMap; // Material
+        out << YAML::EndMap; // Material
 
-    return out;
+        return out;
+    }
+
 }
