@@ -189,13 +189,22 @@ void RendererDX11::render_shadow_maps() const
     m_point_shadow_shader->use();
     for (int i = 0; i < m_point_lights.size(); i++)
     {
-        update_depth_shader(i);
+        update_depth_shader(m_point_lights[i]);
         for (int face = 0; face < 6; face++)
         {
             m_point_lights[i]->set_render_target_for_shadows(face);
             render_single_shadow_map(m_point_lights[i]->get_projection_view_matrix(face));
         }
     }
+    //Spot lights
+    m_shadow_shader->use();
+    for (int i = 0; i < m_spot_lights.size(); i++)
+    {
+        update_depth_shader(m_spot_lights[i]);
+        m_spot_lights[i]->set_render_target_for_shadows();
+        render_single_shadow_map(m_spot_lights[i]->get_projection_view_matrix());
+    }
+
 }
 
 void RendererDX11::bind_for_render_frame() const
@@ -219,11 +228,11 @@ void RendererDX11::set_RS_for_shadow_mapping() const
     get_device_context()->RSSetViewports(1, &m_shadow_map_viewport);
 }
 
-void RendererDX11::update_depth_shader(int const point_light_index) const
+void RendererDX11::update_depth_shader(std::shared_ptr<Light> const& light) const
 {
     ConstantBufferDepth data = {};
-    data.far_plane = m_point_lights[point_light_index]->m_far_plane;
-    data.light_pos = m_point_lights[point_light_index]->entity->transform->get_position();
+    data.far_plane = light->m_far_plane;
+    data.light_pos = light->entity->transform->get_position();
 
     D3D11_MAPPED_SUBRESOURCE mapped_resource;
     HRESULT const hr = get_device_context()->Map(m_constant_buffer_point_shadows, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped_resource);
@@ -243,6 +252,11 @@ void RendererDX11::update_shader(std::shared_ptr<Shader> const& shader, glm::mat
     for (int i = 0; i < m_point_lights.size(); i++)
     {
         g_pd3dDeviceContext->PSSetShaderResources(2 + i, 1, &m_point_lights[i]->m_shadow_shader_resource_view);
+    }
+    // There are 4 designated registers for spot shadow maps, registers 6-9
+    for (int i = 0; i < m_spot_lights.size(); i++)
+    {
+        g_pd3dDeviceContext->PSSetShaderResources(6 + i, 1, &m_spot_lights[i]->m_shadow_shader_resource_view);
     }
     g_pd3dDeviceContext->PSSetSamplers(1, 1, &m_shadow_sampler_state);
 }
@@ -385,6 +399,11 @@ void RendererDX11::set_light_buffer(std::shared_ptr<Drawable> const& drawable) c
         light_data.spot_lights[i].ambient = m_spot_lights[i]->ambient;
         light_data.spot_lights[i].diffuse = m_spot_lights[i]->diffuse;
         light_data.spot_lights[i].specular = m_spot_lights[i]->specular;
+
+        light_data.spot_lights[i].near_plane = m_spot_lights[i]->m_near_plane;
+        light_data.spot_lights[i].far_plane = m_spot_lights[i]->m_far_plane;
+
+        light_data.spot_lights[i].light_projection_view_model = m_spot_lights[i]->get_projection_view_matrix() * drawable->entity->transform->get_model_matrix();
     }
 
     light_data.camera_pos = Camera::get_main_camera()->entity->transform->get_position();
