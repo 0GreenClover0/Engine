@@ -18,18 +18,13 @@ std::shared_ptr<Ship> Ship::create()
 std::shared_ptr<Ship> Ship::create(std::shared_ptr<LighthouseLight> const& light)
 {
     auto ship = std::make_shared<Ship>(AK::Badge<Ship> {});
-    ship->set_light(light);
+    ship->light = light;
     
     return ship;
 }
 
 Ship::Ship(AK::Badge<Ship>)
 {
-}
-
-void Ship::set_light(std::shared_ptr<LighthouseLight> const& light)
-{
-    m_light = light;
 }
 
 void Ship::awake()
@@ -43,18 +38,18 @@ void Ship::update()
 
     glm::vec2 const ship_position = { entity->transform->get_local_position().x, entity->transform->get_local_position().z };
 
-    if (!m_light.expired() && m_light.lock()->enabled())
+    if (!light.expired() && light.lock()->enabled())
     {
-        auto const light = m_light.lock();
-        glm::vec2 const target_position = light->get_position();
+        auto const light_locked = light.lock();
+        glm::vec2 const target_position = light_locked->get_position();
 
         float const distance_to_light = glm::distance(ship_position, target_position);
 
-        if (distance_to_light < light->range)
+        if (distance_to_light < light_locked->range)
         {
             follow_light(ship_position, target_position);
 
-            m_speed = minimum_speed + ((maximum_speed + light->additional_ship_speed - minimum_speed) * (distance_to_light / light->range));
+            m_speed = minimum_speed + ((maximum_speed + light_locked->additional_ship_speed - minimum_speed) * (distance_to_light / light_locked->range));
         }
     }
 
@@ -70,7 +65,7 @@ void Ship::draw_editor()
 {
     ImGui::DragFloat("Speed", &maximum_speed, 0.001f, 0.0f, 0.5f);
 
-    draw_ptr("Light", m_light);
+    draw_ptr("Light", light);
 }
 
 void Ship::follow_light(glm::vec2 ship_position, glm::vec2 target_position)
