@@ -23,6 +23,7 @@ struct DXPointLight
     float constant;
     float linear;
     float quadratic;
+
     float far_plane;
     float near_plane;
 };
@@ -41,11 +42,13 @@ struct DXSpotLight
     float quadratic;
 
     glm::vec3 ambient;
-    float padding4;
+    float far_plane;
     glm::vec3 diffuse;
-    float padding5;
+    float near_plane;
     glm::vec3 specular;
     float padding6;
+
+    glm::mat4 light_projection_view_model;
 };
 
 struct DXDirectionalLight

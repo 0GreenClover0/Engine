@@ -33,8 +33,12 @@ struct SpotLight
     float quadratic; 
 
     float3 ambient;
+    float far_plane;
     float3 diffuse;
+    float near_plane;
     float3 specular;
+
+    float4x4 projection_view_model;
 };
 
 cbuffer light_buffer : register(b0)
@@ -68,6 +72,7 @@ struct VS_Output
     float3 world_pos : POSITION;
     float2 UV : TEXCOORD;
     float4 light_space_pos : TEXCOORD1;
+    float3 raw_pos : TEXCOORD2;
 };
 
 Texture2D obj_texture : register(t0);
@@ -75,12 +80,17 @@ Texture2D directional_shadow_map : register(t1);
 
 // This is not ideal, however my options were:
 // - using a TextureCubeArray, which would require me to pass the texture cubes as one resource (which is doable, but it would require another refactor)
-// - using an array of TextureCubes, but in this case you can't use them like a normal array anyway (e.g. shadow_cube_maps[0]), so what's the point.
+// - using an array of TextureCubes, but in this case you can't use them like a normal array anyway (e.g. point_light_shadow_map_slot0[0]), so what's the point.
 // Because we have a limited number of point-lights, I just kind of brute-forced it.
-TextureCube shadow_cube_map_slot0 : register(t2);
-TextureCube shadow_cube_map_slot1 : register(t3);
-TextureCube shadow_cube_map_slot2 : register(t4);
-TextureCube shadow_cube_map_slot3 : register(t5);
+TextureCube point_light_shadow_map_slot0 : register(t2);
+TextureCube point_light_shadow_map_slot1 : register(t3);
+TextureCube point_light_shadow_map_slot2 : register(t4);
+TextureCube point_light_shadow_map_slot3 : register(t5);
+
+Texture2D spot_light_shadow_map_slot0 : register(t6);
+Texture2D spot_light_shadow_map_slot1 : register(t7);
+Texture2D spot_light_shadow_map_slot2 : register(t8);
+Texture2D spot_light_shadow_map_slot3 : register(t9);
 
 SamplerState obj_sampler_state : register(s0);
 SamplerState shadow_map_sampler : register(s1);
@@ -94,6 +104,7 @@ VS_Output vs_main(VS_Input input)
     output.normal = mul(input.normal, (float3x3)model);
     output.pixel_pos = mul(projection_view_model, float4(input.pos, 1.0f));
     output.light_space_pos = mul(light_projection_view_model, float4(input.pos, 1.0f));
+    output.raw_pos = input.pos;
     return output;
 }
 
@@ -103,24 +114,71 @@ float point_shadow_calculation(PointLight light, float3 world_pos, int index)
     float closest_depth;
     if (index == 0)
     {
-        closest_depth = shadow_cube_map_slot0.Sample(shadow_map_sampler, pixel_to_light).r;
+        closest_depth = point_light_shadow_map_slot0.Sample(shadow_map_sampler, pixel_to_light).r;
     }
     else if (index == 1)
     {
-        closest_depth = shadow_cube_map_slot1.Sample(shadow_map_sampler, pixel_to_light).r;
+        closest_depth = point_light_shadow_map_slot1.Sample(shadow_map_sampler, pixel_to_light).r;
     }
     else if (index == 2)
     {
-        closest_depth = shadow_cube_map_slot2.Sample(shadow_map_sampler, pixel_to_light).r;
+        closest_depth = point_light_shadow_map_slot2.Sample(shadow_map_sampler, pixel_to_light).r;
     }
     else if (index == 3)
     {
-        closest_depth = shadow_cube_map_slot3.Sample(shadow_map_sampler, pixel_to_light).r;
+        closest_depth = point_light_shadow_map_slot3.Sample(shadow_map_sampler, pixel_to_light).r;
     }
 
     closest_depth *= light.far_plane;
+
     float current_depth = length(pixel_to_light);
     float shadow = current_depth - 0.05f > closest_depth ? 1.0f : 0.0f;
+    return shadow;
+}
+
+float spot_shadow_calculation(SpotLight light, float3 raw_pos, int index, float3 normal)
+{
+    float4 light_space_pos = mul(light.projection_view_model, float4(raw_pos, 1.0f));
+
+    light_space_pos.xyz /= light_space_pos.w;
+    light_space_pos.x = light_space_pos.x / 2.0f + 0.5f;
+    light_space_pos.y = -light_space_pos.y / 2.0f + 0.5f;
+    float shadow = 0.0f;
+    float bias = max(0.005f * (1.0f - dot(normal, light.direction)), 0.005f);
+    float depth = light_space_pos.z;
+
+    // Reference for PCF implementation:
+    // https://learnopengl.com/Advanced-Lighting/Shadows/Shadow-Mapping
+    Texture2D current_texture;
+    if (index == 0)
+    {
+        current_texture = spot_light_shadow_map_slot0;
+    }
+    else if (index == 1)
+    {
+        current_texture = spot_light_shadow_map_slot1;
+    }
+    else if (index == 2)
+    {
+        current_texture = spot_light_shadow_map_slot2;
+    }
+    else if (index == 3)
+    {
+        current_texture = spot_light_shadow_map_slot3;
+    }
+    
+    float2 map_size;
+    spot_light_shadow_map_slot0.GetDimensions(map_size.x, map_size.y);
+    float2 texel_size = 1.0f / map_size;
+    for (int x = -1; x <= 1; x++)
+    {
+        for (int y = -1; y <= 1; y++)
+        {
+            float pcf_depth = spot_light_shadow_map_slot0.Sample(shadow_map_sampler, light_space_pos.xy + float2(x, y) * texel_size).r;
+            shadow += depth - bias > pcf_depth ? 1.0f : 0.0f;
+        }
+    }
+    shadow /= 9.0f;
     return shadow;
 }
 
@@ -157,16 +215,16 @@ float3 calculate_directional_light(DirectionalLight light, float3 normal, float3
     // https://learnopengl.com/Advanced-Lighting/Shadows/Shadow-Mapping
     float2 map_size;
     directional_shadow_map.GetDimensions(map_size.x, map_size.y);
-    float2 texel_size = 1.0 / map_size;
+    float2 texel_size = 1.0f / map_size;
     for (int x = -1; x <= 1; x++)
     {
         for (int y = -1; y <= 1; y++)
         {
             float pcf_depth = directional_shadow_map.Sample(shadow_map_sampler, light_space_pos.xy + float2(x, y) * texel_size).r;
-            shadow += depth - bias > pcf_depth ? 1.0 : 0.0;
+            shadow += depth - bias > pcf_depth ? 1.0f : 0.0f;
         }
     }
-    shadow /= 9.0;
+    shadow /= 9.0f;
 
     return ambient + (1.0f - shadow) * (diffuse + specular);
 }
@@ -191,10 +249,10 @@ float3 calculate_point_light(PointLight light, float3 normal, float3 world_pos, 
     float3 diffuse = light.diffuse * diff * diffuse_texture;
     float3 specular = light.specular * spec * diffuse_texture;
     float shadow = point_shadow_calculation(light, world_pos, index);
-    return attenuation * (ambient + (1.0 - shadow) * (diffuse + specular));
+    return attenuation * (ambient + (1.0f - shadow) * (diffuse + specular));
 }
 
-float3 calculate_spot_light(SpotLight light, float3 normal, float3 world_pos, float3 view_dir, float3 diffuse_texture)
+float3 calculate_spot_light(SpotLight light, float3 normal, float3 world_pos, float3 view_dir, float3 diffuse_texture, int index, float3 raw_pos)
 {
     float3 light_dir = normalize(light.position - world_pos.xyz);
 
@@ -218,8 +276,9 @@ float3 calculate_spot_light(SpotLight light, float3 normal, float3 world_pos, fl
     float3 ambient = light.ambient * diffuse_texture;
     float3 diffuse = light.diffuse * diff * diffuse_texture;
     float3 specular = light.specular * spec * diffuse_texture;
+    float shadow = spot_shadow_calculation(light, raw_pos, index, normal);
 
-    return attenuation * intensity * (ambient + specular + diffuse);
+    return attenuation * intensity * (ambient + (1.0f - shadow) * (diffuse + specular));
 }
 
 float4 gamma_correction(float3 color)
@@ -235,21 +294,21 @@ float4 gamma_correction(float3 color)
 float4 ps_main(VS_Output input) : SV_TARGET
 {
     float3 norm = normalize(input.normal);
-    
+
     float3 view_dir = normalize(camera_pos.xyz - input.world_pos.xyz);
     float3 diffuse_texture = obj_texture.Sample(obj_sampler_state, input.UV).rgb;
 
     float3 result = calculate_directional_light(directonal_light, norm, view_dir, diffuse_texture, input.light_space_pos);
 
-    for (int i = 0; i < number_of_point_lights; i++)
+    for (int point_light_index = 0; point_light_index < number_of_point_lights; point_light_index++)
     {
-        result += calculate_point_light(point_lights[i], norm, input.world_pos.rgb, view_dir, diffuse_texture, i);
+        result += calculate_point_light(point_lights[point_light_index], norm, input.world_pos.rgb, view_dir, diffuse_texture, point_light_index);
     }
 
-    for (int j = 0; j < number_of_spot_lights; j++)
+    for (int spot_light_index = 0; spot_light_index < number_of_spot_lights; spot_light_index++)
     {
-        result += calculate_spot_light(spot_lights[j], norm, input.world_pos, view_dir, diffuse_texture);
+        result += calculate_spot_light(spot_lights[spot_light_index], norm, input.world_pos, view_dir, diffuse_texture, spot_light_index, input.raw_pos);
     }
-    
+
     return gamma_correction(result);
 }

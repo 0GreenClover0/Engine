@@ -14,6 +14,9 @@ public:
 
     virtual void draw_editor() override;
 
+    void set_render_target_for_shadow_mapping() const;
+    glm::mat4 get_projection_view_matrix();
+
     // Default values for an around 50m distance of cover
     float constant = 1.0f; // Should not be changed
     float linear = 0.09f;
@@ -24,4 +27,8 @@ public:
 
 protected:
     virtual void set_up_shadow_mapping() override;
+
+private:
+    ID3D11DepthStencilView* m_shadow_depth_stencil_view = nullptr;
+    glm::mat4 m_projection_view_matrix = {};
 };
