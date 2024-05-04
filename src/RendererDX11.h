@@ -60,7 +60,7 @@ private:
     void virtual bind_for_render_frame() const override;
     void setup_shadow_mapping();
     void set_RS_for_shadow_mapping() const;
-    void update_depth_shader(u32 const point_light_index) const;
+    void update_depth_shader(std::shared_ptr<Light> const& light) const;
     virtual void render_shadow_maps() const override;
     inline static std::shared_ptr<RendererDX11> m_instance_dx11;
 
