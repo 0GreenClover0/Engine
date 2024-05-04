@@ -143,6 +143,20 @@ public:
         return nullptr;
     }
 
+    template<typename T>
+    std::vector<std::shared_ptr<T>> get_components()
+    {
+        std::vector<std::shared_ptr<T>> vector = {};
+        for (auto const& component : components)
+        {
+            auto comp = std::dynamic_pointer_cast<T>(component);
+            if (comp != nullptr)
+                vector.emplace_back(comp);
+        }
+
+        return vector;
+    }
+
     std::string name;
     std::string guid;
     size_t hashed_guid;
