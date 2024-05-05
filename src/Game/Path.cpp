@@ -7,6 +7,8 @@
 
 #include <glm/gtc/type_ptr.inl>
 #include <iostream>
+#include <implot.h>
+#include "Game/GameController.h"
 
 std::shared_ptr<Path> Path::create()
 {
@@ -37,5 +39,35 @@ void Path::draw_editor()
     if (ImGui::Button("Add point from position"))
     {
         points.push_back(glm::vec2(entity->transform->get_local_position().x, entity->transform->get_local_position().z));
+    }
+
+    if (ImPlot::BeginPlot("Path visualised")) 
+    {
+        ImPlot::PushStyleVar(ImPlotStyleVar_LineWeight, 2.0f);
+        ImPlot::SetupLegend(ImPlotFlags_NoLegend);
+        ImPlot::SetupAxesLimits(-GameController::get_instance()->playfield_width, GameController::get_instance()->playfield_width, -GameController::get_instance()->playfield_height, GameController::get_instance()->playfield_height, ImGuiCond_Once);
+        ImGui::Checkbox("Reverse y-axis", &m_reverse_y);
+
+        std::vector<float> xs, ys;
+        for (const auto& p : points) 
+        {
+            xs.push_back(p.x);
+            m_reverse_y ? ys.push_back(-p.y) : ys.push_back(p.y);
+        }
+
+        ImPlot::PlotLine("##Line", xs.data(), ys.data(), points.size());
+
+        for (u32 i = 0; i < points.size(); i++)
+        {
+            double px = xs[i];
+            double py = ys[i];
+            if (ImPlot::DragPoint(i, &px, &py, ImVec4(0, 0.9f, 0, 1), 4))
+            {
+                points[i].x = px;
+                points[i].y = m_reverse_y ? -py : py;
+            }
+        }
+
+        ImPlot::EndPlot();
     }
 }
