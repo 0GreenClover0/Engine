@@ -160,11 +160,5 @@ bool ShipSpawner::is_spawn_possible() const
 
 void ShipSpawner::remove_ship(std::shared_ptr<Ship> const& ship_to_remove)
 {
-    for (i32 i = 0; i < ships.size(); i++)
-    {
-        if (ships[i].lock() == ship_to_remove)
-        {
-            ships.erase(ships.begin() + i);
-        }
-    }
+    AK::swap_and_erase(ships, ship_to_remove);
 }
