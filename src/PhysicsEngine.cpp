@@ -13,6 +13,22 @@ void PhysicsEngine::update_physics()
     solve_collisions();
 }
 
+void PhysicsEngine::on_collision_enter(std::shared_ptr<Collider2D> const& collider, std::shared_ptr<Collider2D> const& other)
+{
+    for (auto const& component : collider->entity->components)
+    {
+        component->on_collision_enter(other);
+    }
+}
+
+void PhysicsEngine::on_collision_exit(std::shared_ptr<Collider2D> const &collider, std::shared_ptr<Collider2D> const& other)
+{
+    for (auto const& component : collider->entity->components)
+    {
+        component->on_collision_exit(other);
+    }
+}
+
 void PhysicsEngine::emplace_collider(std::shared_ptr<Collider2D> const& collider)
 {
     colliders.emplace_back(collider);
@@ -52,8 +68,14 @@ void PhysicsEngine::solve_collisions() const
 
                 if (positions_distance < radius_sum)
                 {
+                    on_collision_enter(collider1, collider2);
+                    on_collision_enter(collider2, collider1);
+
                     collider1->separate(position1, position2, collider1->get_radius_2d(), collider2->get_radius_2d());
                     collider2->separate(position2, position1, collider2->get_radius_2d(), collider1->get_radius_2d());
+
+                    on_collision_exit(collider1, collider2);
+                    on_collision_exit(collider2, collider1);
                 }
             }
 
@@ -72,8 +94,14 @@ void PhysicsEngine::solve_collisions() const
 
                 if (right1 - left2 > 0 && right2 - left1 > 0 && bottom1 - top2 > 0 && bottom2 - top1 > 0)
                 {
+                    on_collision_enter(collider1, collider2);
+                    on_collision_enter(collider2, collider1);
+
                     collider1->separate(left1, left2, right1, right2, top1, top2, bottom1, bottom2, false);
                     collider2->separate(left1, left2, right1, right2, top1, top2, bottom1, bottom2, true);
+
+                    on_collision_exit(collider1, collider2);
+                    on_collision_exit(collider2, collider1);
                 }
             }
 
@@ -103,8 +131,14 @@ void PhysicsEngine::solve_collisions() const
 
                 if (center_to_nearest_point_length < radius_2d)
                 {
+                    on_collision_enter(collider1, collider2);
+                    on_collision_enter(collider2, collider1);
+
                     collider1->separate(center_2d, radius_2d, nearest_point, left, right, top, bottom, false);
                     collider2->separate(center_2d, radius_2d, nearest_point, left, right, top, bottom, true);
+
+                    on_collision_exit(collider1, collider2);
+                    on_collision_exit(collider2, collider1);
                 }
             }
         }
