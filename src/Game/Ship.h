@@ -30,6 +30,8 @@ public:
 private:
     void follow_light(glm::vec2 ship_position, glm::vec2 target_position);
 
+    bool is_out_of_room() const;
+
     float m_speed = 0.0f;
     float m_direction = 0.0f;
 };

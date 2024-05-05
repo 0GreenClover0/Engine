@@ -48,6 +48,12 @@ void Ship::awake()
 
 void Ship::update()
 {
+    if (is_out_of_room())
+    {
+        entity->destroy_immediate();
+        return;
+    }
+
     m_speed = maximum_speed;
 
     glm::vec2 const ship_position = AK::convert_3d_to_2d(entity->transform->get_local_position());
@@ -100,4 +106,22 @@ void Ship::follow_light(glm::vec2 ship_position, glm::vec2 target_position)
 
         m_direction += rotate_direction * turn_speed * delta_time;
     }
+}
+
+bool Ship::is_out_of_room() const
+{
+    float const x = entity->transform->get_local_position().x;
+    float const y = entity->transform->get_local_position().z;
+
+    if (y < -light.lock()->playfield_height || y > light.lock()->playfield_height)
+    {
+        return true;
+    }
+
+    if (x < -(light.lock()->playfield_width + light.lock()->playfield_additional_width) || x > (light.lock()->playfield_width + light.lock()->playfield_additional_width))
+    {
+        return true;
+    }
+
+    return false;
 }
