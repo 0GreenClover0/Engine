@@ -78,23 +78,33 @@ void Ship::update()
         return;
     }
 
-    m_speed = maximum_speed;
-
-    glm::vec2 const ship_position = AK::convert_3d_to_2d(entity->transform->get_local_position());
-
-    if (!light.expired() && light.lock()->enabled())
+    if (!m_is_in_port)
     {
-        auto const light_locked = light.lock();
-        glm::vec2 const target_position = light_locked->get_position();
+        m_speed = maximum_speed;
 
-        float const distance_to_light = glm::distance(ship_position, target_position);
+        glm::vec2 const ship_position = AK::convert_3d_to_2d(entity->transform->get_local_position());
 
-        if (distance_to_light < light_locked->range)
+        if (!light.expired() && light.lock()->enabled())
         {
-            follow_light(ship_position, target_position);
+            auto const light_locked = light.lock();
+            glm::vec2 const target_position = light_locked->get_position();
 
-            m_speed = minimum_speed + ((maximum_speed + light_locked->additional_ship_speed - minimum_speed) * (distance_to_light / light_locked->range));
+            float const distance_to_light = glm::distance(ship_position, target_position);
+
+            if (distance_to_light < light_locked->range)
+            {
+                follow_light(ship_position, target_position);
+
+                m_speed = minimum_speed + ((maximum_speed + light_locked->additional_ship_speed - minimum_speed) * (distance_to_light / light_locked->range));
+            }
         }
+    }
+    else
+    {
+        m_speed -= deceleration_speed * delta_time;
+
+        if (m_speed < 0.0f)
+            m_speed = 0.0f;
     }
 
     float delta_speed = m_speed * delta_time;
@@ -124,6 +134,16 @@ void Ship::draw_editor()
     ImGui::DragFloat("Speed", &maximum_speed, 0.001f, 0.0f, 0.5f);
 
     ImGuiEx::draw_ptr("Light", light);
+}
+
+void Ship::stop()
+{
+    m_is_in_port = true;
+}
+
+bool Ship::is_in_port() const
+{
+    return m_is_in_port;
 }
 
 void Ship::follow_light(glm::vec2 ship_position, glm::vec2 target_position)

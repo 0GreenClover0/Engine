@@ -18,6 +18,8 @@ public:
     virtual void draw_editor() override;
 
     void destroy();
+    void stop();
+    bool is_in_port() const;
 
     float minimum_speed = 0.11f;
     float maximum_speed = 0.23f;
@@ -35,6 +37,8 @@ public:
 
     float const destroy_time = 6.5f;
     
+    float deceleration_speed = 0.17f;
+
     Event<void(std::shared_ptr<Ship>)> on_ship_destroyed;
 
 private:
@@ -46,4 +50,6 @@ private:
     float m_direction = 0.0f;
     
     float m_how_deep_sink_factor = 0.26f;
+
+    bool m_is_in_port = false;
 };
