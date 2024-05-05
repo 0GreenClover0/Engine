@@ -33,16 +33,55 @@ bool Port::interact()
     if (ships_inside.size() <= 0)
         return false;
 
-    if (ships_inside[0].expired())
+    std::shared_ptr<Ship> chosen_ship = nullptr;
+
+    for (auto const& ship : ships_inside)
     {
-        Debug::log("Trying to interact with an expired ship inside the port. Something went wrong with removing the ship from the vector?", DebugType::Error);
+        if (ship.expired())
+        {
+            Debug::log("Trying to interact with an expired ship inside the port. Something went wrong with removing the ship from the vector?", DebugType::Error);
+            continue;
+        }
+
+        if (ship.lock()->type != ShipType::Pirates)
+        {
+            chosen_ship = ship.lock();
+            break;
+        }
+    }
+
+    if (chosen_ship == nullptr)
+    {
         return false;
     }
 
-    auto const ship = ships_inside[0].lock();
+    auto const& ship = chosen_ship;
 
-    // TODO: Do different things based on ship type
-    Player::get_instance()->packages += 1;
+    switch (ship->type)
+    {
+    case ShipType::FoodSmall:
+        Player::get_instance()->food += 1;
+        break;
+
+    case ShipType::FoodMedium:
+        Player::get_instance()->food += 2;
+        break;
+
+    case ShipType::FoodBig:
+        Player::get_instance()->food += 5;
+        break;
+
+    case ShipType::Tool:
+        Player::get_instance()->packages += 1;
+        break;
+
+    case ShipType::Pirates:
+        std::unreachable();
+
+    default:
+        break;
+    }
+
     AK::erase(ships_inside, ship);
     ship->entity->destroy_immediate();
     return true;
