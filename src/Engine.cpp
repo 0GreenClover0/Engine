@@ -24,6 +24,7 @@
 #include "RendererGL.h"
 #include "Window.h"
 #include "Game/Game.h"
+#include <implot.h>
 
 i32 Engine::initialize()
 {
@@ -162,6 +163,7 @@ void Engine::clean_up()
     }
 
     ImGui_ImplGlfw_Shutdown();
+    ImPlot::DestroyContext();
     ImGui::DestroyContext();
 
     glfwDestroyWindow(window->get_glfw_window());
@@ -273,6 +275,7 @@ void Engine::setup_imgui(GLFWwindow* glfw_window)
     // Setup Dear ImGui binding
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
+    ImPlot::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
