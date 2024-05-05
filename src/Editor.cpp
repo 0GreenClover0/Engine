@@ -646,7 +646,7 @@ void Editor::draw_inspector(std::shared_ptr<EditorWindow> const& window)
         }
     }
 
-    if (ImGui::BeginListBox("##empty", ImVec2(-FLT_MIN, 0.0f)))
+    if (ImGui::BeginListBox("##empty", ImVec2(-FLT_MIN, -FLT_MIN)))
     {
         if constexpr (false)
             ;
