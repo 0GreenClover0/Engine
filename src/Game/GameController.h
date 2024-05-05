@@ -24,6 +24,9 @@ public:
     NON_SERIALIZED
     i32 flash = 0;
     NON_SERIALIZED
+    float flash_counter = 0.0f;
+    float flash_time = 8.3f;
+    NON_SERIALIZED
     i32 packages = 2;
     NON_SERIALIZED
     i32 lighthouse_level = 0;

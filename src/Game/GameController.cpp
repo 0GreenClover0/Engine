@@ -60,6 +60,23 @@ void GameController::update()
                                L"Flash: " + std::to_wstring(flash);
         m_text.lock()->set_text(content);
     }
+
+    if (Input::input->get_key_down(GLFW_MOUSE_BUTTON_RIGHT))
+    {
+        if (flash > 0 && glm::epsilonEqual(flash_counter, 0.0f, 0.0001f))
+        {
+            flash_counter = flash_time;
+        }
+    }
+
+    if (flash_counter > 0.0f)
+    {
+        flash_counter -= delta_time;
+    }
+    else
+    {
+        flash_counter = 0.0f;
+    }
 }
 
 void GameController::draw_editor()
@@ -74,4 +91,6 @@ void GameController::draw_editor()
     map_time = minutes * 60 + seconds;
 
     ImGui::Text(("Time: " + std::to_string(time)).c_str());
+
+    ImGui::Text(("Flesh: " + std::to_string(flash_counter)).c_str());
 }

@@ -260,6 +260,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::BeginMap;
         out << YAML::Key << "ComponentName" << YAML::Value << "GameControllerComponent";
         out << YAML::Key << "guid" << YAML::Value << gamecontroller->guid;
+        out << YAML::Key << "flash_time" << YAML::Value << gamecontroller->flash_time;
         out << YAML::Key << "map_time" << YAML::Value << gamecontroller->map_time;
         out << YAML::Key << "factories" << YAML::Value << gamecontroller->factories;
         out << YAML::EndMap;
@@ -723,6 +724,7 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         else
         {
             auto const deserialized_component = std::dynamic_pointer_cast<class GameController>(get_from_pool(component["guid"].as<std::string>()));
+            deserialized_component->flash_time = component["flash_time"].as<float>();
             deserialized_component->map_time = component["map_time"].as<float>();
             deserialized_component->factories = component["factories"].as<std::vector<std::weak_ptr<Factory>>>();
             deserialized_entity->add_component(deserialized_component);

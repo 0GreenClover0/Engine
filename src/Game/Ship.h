@@ -2,6 +2,7 @@
 
 #include "Component.h"
 #include "LighthouseLight.h"
+#include "GameController.h"
 
 class Ship final : public Component
 {
