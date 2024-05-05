@@ -25,15 +25,6 @@ private:
     void remove_ship(std::shared_ptr<Ship> const& ship_to_remove);
     bool is_spawn_possible() const;
 
-    enum class ShipType
-    {
-        FoodSmall,
-        FoodMedium,
-        FoodBig,
-        Pirates,
-        Tool
-    };
-
     enum class SpawnType
     {
         Sequence,
