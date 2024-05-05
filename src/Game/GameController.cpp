@@ -6,6 +6,7 @@
 #include "GameController.h"
 #include "Globals.h"
 #include "Debug.h"
+#include "ScreenText.h"
 
 std::shared_ptr<GameController> GameController::create()
 {
@@ -34,6 +35,14 @@ void GameController::uninitialize()
 
 void GameController::awake()
 {
+    Component::initialize();
+
+    m_text = entity->add_component<ScreenText>(ScreenText::create());
+    m_text.lock()->color = 0xffffffff;
+    std::wstring const content = L"Packages: " + std::to_wstring(packages) + L" Level: " + std::to_wstring(lighthouse_level) + L"\n" +
+        L"Flash: " + std::to_wstring(flash);
+    m_text.lock()->set_text(content);
+
     time = map_time;
 
     set_can_tick(true);
@@ -44,6 +53,13 @@ void GameController::update()
     if (time > 0.0f)
     {
         time -= delta_time;
+    }
+
+    if (!m_text.expired())
+    {
+        std::wstring const content = L"Packages: " + std::to_wstring(packages) + L" Level: " + std::to_wstring(lighthouse_level) + L"\n" +
+                               L"Flash: " + std::to_wstring(flash);
+        m_text.lock()->set_text(content);
     }
 }
 
