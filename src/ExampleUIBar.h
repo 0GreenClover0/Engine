@@ -3,7 +3,6 @@
 #include "Component.h"
 #include "Engine.h"
 #include "Sprite.h"
-#include "Serialization.h"
 
 class ExampleUIBar final : public Component
 {

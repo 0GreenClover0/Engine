@@ -5,7 +5,6 @@
 #include "Drawable.h"
 #include "Texture.h"
 #include "Vertex.h"
-#include "Serialization.h"
 
 // TODO: Make skybox more performant
 NON_SERIALIZED

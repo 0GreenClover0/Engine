@@ -3,7 +3,6 @@
 #include <string>
 
 #include "Model.h"
-#include "Serialization.h"
 
 NON_SERIALIZED
 class Terrain final : public Model

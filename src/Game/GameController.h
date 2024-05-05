@@ -2,7 +2,6 @@
 
 #include "Component.h"
 #include "Engine.h"
-#include "Serialization.h"
 
 class ScreenText;
 class Factory;

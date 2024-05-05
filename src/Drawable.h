@@ -3,7 +3,6 @@
 #include "Bounds.h"
 #include "Component.h"
 #include "Material.h"
-#include "Serialization.h"
 
 class Drawable : public Component
 {

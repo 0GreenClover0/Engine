@@ -4,7 +4,6 @@
 #include "Path.h"
 #include <glm/gtc/type_ptr.inl>
 #include <iostream>
-#include "Debug.h"
 
 std::shared_ptr<Path> Path::create()
 {
