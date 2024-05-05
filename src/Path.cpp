@@ -33,6 +33,11 @@ void Path::draw_editor()
     {
         points.emplace_back(glm::vec2());
     }
+    ImGui::SameLine();
+    if (ImGui::Button("Add point from position"))
+    {
+        points.push_back(glm::vec2(entity->transform->get_local_position().x, entity->transform->get_local_position().z));
+    }
 }
 
 float Path::length() const
