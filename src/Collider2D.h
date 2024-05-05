@@ -14,14 +14,15 @@ class Collider2D final : public Component
 {
 public:
     static std::shared_ptr<Collider2D> create();
-    static std::shared_ptr<Collider2D> create(ColliderType2D const collider_type, float const radius);
-    static std::shared_ptr<Collider2D> create(ColliderType2D const collider_type, glm::vec2 const bounds_dimensions);
+    static std::shared_ptr<Collider2D> create(ColliderType2D const collider_type, float const radius, bool const is_static = false);
+    static std::shared_ptr<Collider2D> create(ColliderType2D const collider_type, glm::vec2 const bounds_dimensions,
+                                              bool const is_static = false);
 
     // CircleCollision
-    explicit Collider2D(AK::Badge<Collider2D>, ColliderType2D const collider_type, float const radius);
+    explicit Collider2D(AK::Badge<Collider2D>, ColliderType2D const collider_type, float const radius, bool const is_static);
 
     // RectangleCollision
-    explicit Collider2D(AK::Badge<Collider2D>, ColliderType2D const collider_type, glm::vec2 const bounds_dimensions);
+    explicit Collider2D(AK::Badge<Collider2D>, ColliderType2D const collider_type, glm::vec2 const bounds_dimensions, bool const is_static);
 
     virtual void initialize() override;
     virtual void uninitialize() override;
@@ -42,12 +43,17 @@ public:
     glm::vec2 get_center_2d() const;
     glm::vec2 get_bounds_dimensions_2d() const;
 
+    bool is_static() const;
+    void set_static(bool const value);
+
 private:
     // This is distance from center_2d of a rectangle to the bounds.
     // For example, if we have a 1x1 square collider, the center is in the middle
     // and bounds_dimensions = {0.5, 0.5}.
     glm::vec2 m_bounds_dimensions = {};
     float m_radius = 0.0f;
+
+    bool m_is_static = false;
 
     ColliderType2D m_collider_type = ColliderType2D::Circle;
 };

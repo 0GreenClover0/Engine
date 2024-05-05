@@ -46,7 +46,7 @@ void PhysicsEngine::solve_collisions() const
     {
         for (u32 j = 0; j < colliders.size(); j++)
         {
-            if (i == j)
+            if (i == j || (colliders[i]->is_static() && colliders[j]->is_static()))
                 continue;
 
             std::shared_ptr<Collider2D> collider1 = colliders[i];
@@ -71,8 +71,11 @@ void PhysicsEngine::solve_collisions() const
                     on_collision_enter(collider1, collider2);
                     on_collision_enter(collider2, collider1);
 
-                    collider1->separate(position1, position2, collider1->get_radius_2d(), collider2->get_radius_2d());
-                    collider2->separate(position2, position1, collider2->get_radius_2d(), collider1->get_radius_2d());
+                    if (!collider1->is_static())
+                        collider1->separate(position1, position2, collider1->get_radius_2d(), collider2->get_radius_2d());
+
+                    if (!collider2->is_static())
+                        collider2->separate(position2, position1, collider2->get_radius_2d(), collider1->get_radius_2d());
 
                     on_collision_exit(collider1, collider2);
                     on_collision_exit(collider2, collider1);
@@ -97,8 +100,11 @@ void PhysicsEngine::solve_collisions() const
                     on_collision_enter(collider1, collider2);
                     on_collision_enter(collider2, collider1);
 
-                    collider1->separate(left1, left2, right1, right2, top1, top2, bottom1, bottom2, false);
-                    collider2->separate(left1, left2, right1, right2, top1, top2, bottom1, bottom2, true);
+                    if (!collider1->is_static())
+                        collider1->separate(left1, left2, right1, right2, top1, top2, bottom1, bottom2, false);
+
+                    if (!collider2->is_static())
+                        collider2->separate(left1, left2, right1, right2, top1, top2, bottom1, bottom2, true);
 
                     on_collision_exit(collider1, collider2);
                     on_collision_exit(collider2, collider1);
@@ -134,8 +140,11 @@ void PhysicsEngine::solve_collisions() const
                     on_collision_enter(collider1, collider2);
                     on_collision_enter(collider2, collider1);
 
-                    collider1->separate(center_2d, radius_2d, nearest_point, left, right, top, bottom, false);
-                    collider2->separate(center_2d, radius_2d, nearest_point, left, right, top, bottom, true);
+                    if (!collider1->is_static())
+                        collider1->separate(center_2d, radius_2d, nearest_point, left, right, top, bottom, false);
+
+                    if (!collider2->is_static())
+                        collider2->separate(center_2d, radius_2d, nearest_point, left, right, top, bottom, true);
 
                     on_collision_exit(collider1, collider2);
                     on_collision_exit(collider2, collider1);
