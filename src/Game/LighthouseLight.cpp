@@ -7,6 +7,7 @@
 
 #include "ResourceManager.h"
 #include "imgui_extensions.h"
+#include "GameController.h"
 
 std::shared_ptr<LighthouseLight> LighthouseLight::create()
 {
@@ -52,8 +53,8 @@ void LighthouseLight::draw_editor()
 
 glm::vec2 LighthouseLight::get_position() const
 {
-    float const y = Input::input->get_mouse_position().y * playfield_height;
-    float const x = Input::input->get_mouse_position().x * (playfield_width - (playfield_additional_width * (Input::input->get_mouse_position().y + 1.0f) / 2.0f));
+    float const y = Input::input->get_mouse_position().y * GameController::get_instance()->playfield_height;
+    float const x = Input::input->get_mouse_position().x * (GameController::get_instance()->playfield_width - (GameController::get_instance()->playfield_additional_width * (Input::input->get_mouse_position().y + 1.0f) / 2.0f));
 
     return glm::vec2(x, y);
 }

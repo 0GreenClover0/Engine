@@ -25,10 +25,6 @@ public:
     float range = 100.0f * 0.005f;
     float additional_ship_speed = 0.2f * 0.005f;
 
-    float const playfield_width = 5.4f;
-    float const playfield_additional_width = 1.4f;
-    float const playfield_height = 3.6f;
-
 private:
 
     std::weak_ptr<Sphere> m_sphere = {};
