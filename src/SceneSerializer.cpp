@@ -285,6 +285,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "visibility_range" << YAML::Value << ship->visibility_range;
         out << YAML::Key << "start_direction_wiggle" << YAML::Value << ship->start_direction_wiggle;
         out << YAML::Key << "light" << YAML::Value << ship->light;
+        out << YAML::Key << "destroy_time" << YAML::Value << ship->destroy_time;
         out << YAML::EndMap;
     }
     else
@@ -753,6 +754,7 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             deserialized_component->visibility_range = component["visibility_range"].as<i32>();
             deserialized_component->start_direction_wiggle = component["start_direction_wiggle"].as<float>();
             deserialized_component->light = component["light"].as<std::weak_ptr<LighthouseLight>>();
+            deserialized_component->destroy_time = component["destroy_time"].as<float>();
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
         }
