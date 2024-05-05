@@ -4,10 +4,16 @@
 #include "Engine.h"
 #include "Serialization.h"
 
+class Factory;
+
 class GameController final : public Component
 {
 public:
     static std::shared_ptr<GameController> create();
+
+    static std::shared_ptr<GameController> get_instance();
+
+    virtual void uninitialize() override;
 
     virtual void awake() override;
     virtual void update() override;
@@ -18,9 +24,14 @@ public:
     NON_SERIALIZED
     i32 flash = 0;
     NON_SERIALIZED
-    i32 packages = 0;
+    i32 packages = 2;
+    NON_SERIALIZED
+    i32 lighthouse_level = 0;
 
     float map_time = 0.0f;
     NON_SERIALIZED
     float time = 0.0f;
+
+private:
+    inline static std::shared_ptr<GameController> m_instance;
 };
