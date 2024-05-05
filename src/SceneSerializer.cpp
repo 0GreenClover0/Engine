@@ -239,6 +239,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "guid" << YAML::Value << lighthouse->guid;
         out << YAML::Key << "enterable_distance" << YAML::Value << lighthouse->enterable_distance;
         out << YAML::Key << "light" << YAML::Value << lighthouse->light;
+        out << YAML::Key << "port" << YAML::Value << lighthouse->port;
         out << YAML::Key << "spawn_position" << YAML::Value << lighthouse->spawn_position;
         out << YAML::EndMap;
     }
@@ -288,6 +289,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "deceleration" << YAML::Value << lighthousekeeper->deceleration;
         out << YAML::Key << "interact_with_factory_distance" << YAML::Value << lighthousekeeper->interact_with_factory_distance;
         out << YAML::Key << "lighthouse" << YAML::Value << lighthousekeeper->lighthouse;
+        out << YAML::Key << "port" << YAML::Value << lighthousekeeper->port;
         out << YAML::EndMap;
     }
     else
@@ -698,6 +700,7 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             auto const deserialized_component = std::dynamic_pointer_cast<class Lighthouse>(get_from_pool(component["guid"].as<std::string>()));
             deserialized_component->enterable_distance = component["enterable_distance"].as<float>();
             deserialized_component->light = component["light"].as<std::weak_ptr<LighthouseLight>>();
+            deserialized_component->port = component["port"].as<std::weak_ptr<Port>>();
             deserialized_component->spawn_position = component["spawn_position"].as<std::weak_ptr<Entity>>();
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
@@ -787,6 +790,7 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             deserialized_component->deceleration = component["deceleration"].as<float>();
             deserialized_component->interact_with_factory_distance = component["interact_with_factory_distance"].as<float>();
             deserialized_component->lighthouse = component["lighthouse"].as<std::weak_ptr<Lighthouse>>();
+            deserialized_component->port = component["port"].as<std::weak_ptr<Port>>();
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
         }
