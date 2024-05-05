@@ -9,7 +9,27 @@
 
 std::shared_ptr<GameController> GameController::create()
 {
-    return std::make_shared<GameController>();
+    auto instance = std::make_shared<GameController>();
+
+    if (m_instance)
+    {
+        Debug::log("Instance already exists in the scene.", DebugType::Error);
+    }
+
+    m_instance = instance;
+    return instance;
+}
+
+std::shared_ptr<GameController> GameController::get_instance()
+{
+    return m_instance;
+}
+
+void GameController::uninitialize()
+{
+    Component::uninitialize();
+
+    m_instance = nullptr;
 }
 
 void GameController::awake()
