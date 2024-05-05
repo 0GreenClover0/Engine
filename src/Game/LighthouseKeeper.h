@@ -3,6 +3,7 @@
 #include "Component.h"
 #include "Input.h"
 
+class Port;
 class Factory;
 class Lighthouse;
 
@@ -24,6 +25,7 @@ public:
     float interact_with_factory_distance = 0.5f;
 
     std::weak_ptr<Lighthouse> lighthouse = {};
+    std::weak_ptr<Port> port = {};
 
 private:
     void handle_input() const;

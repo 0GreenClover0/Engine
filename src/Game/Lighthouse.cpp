@@ -68,6 +68,7 @@ void Lighthouse::exit()
     keeper->add_component(Model::create("./res/models/keeper/keeper.gltf", standard_material));
     auto const keeper_comp = keeper->add_component(LighthouseKeeper::create());
     keeper_comp->lighthouse = static_pointer_cast<Lighthouse>(shared_from_this());
+    keeper_comp->port = port;
 
     keeper->transform->set_local_position(spawn_position.lock()->transform->get_position());
 }

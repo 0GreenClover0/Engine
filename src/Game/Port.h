@@ -15,6 +15,12 @@ public:
 
     virtual void on_collision_enter(std::shared_ptr<Collider2D> const &other) override;
 
+    [[nodiscard]] bool interact();
+
+    float get_interactable_distance() const;
+
 private:
     std::vector<std::weak_ptr<Ship>> ships_inside = {};
+
+    float m_interactable_distance = 0.6f;
 };

@@ -11,6 +11,7 @@
 #include "AK/AK.h"
 #include "Factory.h"
 #include "LevelController.h"
+#include "Port.h"
 
 #include <imgui_extensions.h>
 
@@ -124,6 +125,23 @@ void LighthouseKeeper::handle_input() const
         if (closest_distance < interact_with_factory_distance)
         {
             if (closest_factory->interact())
+            {
+                return;
+            }
+        }
+    }
+
+    if (!port.expired() && Input::input->get_key_down(GLFW_KEY_SPACE))
+    {
+        auto const port_locked = port.lock();
+        auto const port_transform = port_locked->entity->transform;
+
+        glm::vec2 const keeper_position = AK::convert_3d_to_2d(entity->transform->get_position());
+        glm::vec2 const port_position = AK::convert_3d_to_2d(port_transform->get_position());
+
+        if (distance(keeper_position, port_position) < port_locked->get_interactable_distance())
+        {
+            if (port_locked->interact())
             {
                 return;
             }
