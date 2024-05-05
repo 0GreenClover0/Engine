@@ -36,13 +36,14 @@
 #include "Game/LighthouseKeeper.h"
 #include "Game/LighthouseLight.h"
 #include "Game/Ship.h"
-#include "Game/GameController.h"
 #include "Game/Lighthouse.h"
 #include "Game/ShipSpawner.h"
 #include "Game/Path.h"
 #include "Game/Factory.h"
 #include "Game/Port.h"
 #include "Curve.h"
+#include "Game/Player.h"
+#include "Game/LevelController.h"
 // # Put new header here
 
 namespace Editor

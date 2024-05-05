@@ -8,7 +8,7 @@
 #include <glm/gtc/type_ptr.inl>
 #include <iostream>
 #include <implot.h>
-#include "Game/GameController.h"
+#include "Game/LevelController.h"
 
 std::shared_ptr<Curve> Curve::create()
 {

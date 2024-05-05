@@ -2,7 +2,7 @@
 
 #include "Component.h"
 #include "LighthouseLight.h"
-#include "GameController.h"
+#include "LevelController.h"
 
 class Ship final : public Component
 {
@@ -21,23 +21,25 @@ public:
     void stop();
     bool is_in_port() const;
 
-    float minimum_speed = 0.11f;
-    float maximum_speed = 0.23f;
+    static void on_lighthouse_upgraded(float _turn_speed, float _range, float _additional_ship_speed, float _pirates_in_control);
 
-    float turn_speed = 15.0f;
-    i32 visibility_range = 110;
-    float start_direction_wiggle = 15.0f;
+    NON_SERIALIZED
+    float minimum_speed = 0.11f;
+    NON_SERIALIZED
+    float maximum_speed = 0.23f;
+    NON_SERIALIZED
+    inline static float turn_speed = 15.0f;
+    NON_SERIALIZED
+    inline static float range = 100.0f * 0.005f;
+    NON_SERIALIZED
+    inline static float additional_ship_speed = 0.2f * 0.005f;
+    NON_SERIALIZED
+    inline static float pirates_in_control = 1.0f;
 
     std::weak_ptr<LighthouseLight> light = {};
 
     NON_SERIALIZED
     bool is_destroyed = false;
-    NON_SERIALIZED
-    float destroyed_counter = 0.0f;
-
-    float const destroy_time = 6.5f;
-    
-    float deceleration_speed = 0.17f;
 
     Event<void(std::shared_ptr<Ship>)> on_ship_destroyed;
 
@@ -49,7 +51,14 @@ private:
     float m_speed = 0.0f;
     float m_direction = 0.0f;
     
-    float m_how_deep_sink_factor = 0.26f;
+    float const m_how_deep_sink_factor = 0.26f;
 
     bool m_is_in_port = false;
+
+    float m_destroyed_counter = 0.0f;
+
+    i32 const m_visibility_range = 110;
+    float const m_start_direction_wiggle = 15.0f;
+    float const m_destroy_time = 6.5f;
+    float const m_deceleration_speed = 0.17f;
 };

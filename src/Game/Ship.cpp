@@ -11,6 +11,7 @@
 #include "imgui_extensions.h"
 #include "Globals.h"
 #include "AK/AK.h"
+#include "Player.h"
 
 std::shared_ptr<Ship> Ship::create()
 {
@@ -38,10 +39,11 @@ void Ship::awake()
         set_can_tick(true);
         return;
     }
+
     glm::vec2 const target_direction = glm::normalize(glm::vec2(glm::vec2(0.0f, 0.0f) - ship_position));
     i32 const rotate_direction = glm::sign(1.0f * target_direction.y - 0.0f * target_direction.x);
     m_direction = glm::degrees(glm::angle(glm::vec2(1.0f, 0.0f), target_direction)) * rotate_direction;
-    m_direction += glm::linearRand(-start_direction_wiggle, start_direction_wiggle);
+    m_direction += glm::linearRand(-m_start_direction_wiggle, m_start_direction_wiggle);
 
     set_can_tick(true);
 }
@@ -62,12 +64,12 @@ void Ship::update()
 
     if (is_destroyed)
     {
-        if (destroyed_counter > 0.0f)
+        if (m_destroyed_counter > 0.0f)
         {
-            destroyed_counter -= delta_time;
+            m_destroyed_counter -= delta_time;
             entity->transform->set_local_position({
                 entity->transform->get_local_position().x,
-                ((destroyed_counter / destroy_time) - 1) * m_how_deep_sink_factor,
+                ((m_destroyed_counter / m_destroy_time) - 1) * m_how_deep_sink_factor,
                 entity->transform->get_local_position().z });
         }
         else
@@ -91,17 +93,17 @@ void Ship::update()
 
             float const distance_to_light = glm::distance(ship_position, target_position);
 
-            if (distance_to_light < light_locked->range)
+            if (distance_to_light < range)
             {
                 follow_light(ship_position, target_position);
 
-                m_speed = minimum_speed + ((maximum_speed + light_locked->additional_ship_speed - minimum_speed) * (distance_to_light / light_locked->range));
+                m_speed = minimum_speed + ((maximum_speed + additional_ship_speed - minimum_speed) * (distance_to_light / range));
             }
         }
     }
     else
     {
-        m_speed -= deceleration_speed * delta_time;
+        m_speed -= m_deceleration_speed * delta_time;
 
         if (m_speed < 0.0f)
             m_speed = 0.0f;
@@ -111,7 +113,7 @@ void Ship::update()
 
     glm::vec2 speed_vector = glm::vec2(cos(glm::radians(m_direction)), sin(glm::radians(m_direction))) * delta_speed;
 
-    if (glm::epsilonEqual(GameController::get_instance()->flash_counter, 0.0f, 0.0001f))
+    if (glm::epsilonEqual(Player::get_instance()->flash_counter, 0.0f, 0.0001f))
     {
         entity->transform->set_local_position(entity->transform->get_local_position() + glm::vec3(speed_vector.x, 0.0f, speed_vector.y));
     }
@@ -121,7 +123,7 @@ void Ship::update()
 void Ship::destroy()
 {
     is_destroyed = true;
-    destroyed_counter = destroy_time;
+    m_destroyed_counter = m_destroy_time;
 }
 
 void Ship::on_destroyed()
@@ -146,6 +148,14 @@ bool Ship::is_in_port() const
     return m_is_in_port;
 }
 
+void Ship::on_lighthouse_upgraded(float _turn_speed, float _range, float _additional_ship_speed, float _pirates_in_control)
+{
+    turn_speed = _turn_speed;
+    range = _range;
+    additional_ship_speed = _additional_ship_speed;
+    pirates_in_control = _pirates_in_control;
+}
+
 void Ship::follow_light(glm::vec2 ship_position, glm::vec2 target_position)
 {
     glm::vec2 const ship_direction = glm::normalize(glm::vec2(cos(glm::radians(m_direction)), sin(glm::radians(m_direction))));
@@ -153,7 +163,7 @@ void Ship::follow_light(glm::vec2 ship_position, glm::vec2 target_position)
 
     float const rotate_distance = glm::degrees(glm::angle(ship_direction, target_direction));
 
-    if (rotate_distance <= visibility_range)
+    if (rotate_distance <= m_visibility_range)
     {
         i32 const rotate_direction = glm::sign(ship_direction.x * target_direction.y - ship_direction.y * target_direction.x);
 
@@ -166,12 +176,12 @@ bool Ship::is_out_of_room() const
     float const x = entity->transform->get_local_position().x;
     float const y = entity->transform->get_local_position().z;
 
-    if (y < -GameController::get_instance()->playfield_height || y > GameController::get_instance()->playfield_height)
+    if (y < -LevelController::get_instance()->playfield_height || y > LevelController::get_instance()->playfield_height)
     {
         return true;
     }
 
-    if (x < -(GameController::get_instance()->playfield_width + GameController::get_instance()->playfield_additional_width) || x > (GameController::get_instance()->playfield_width + GameController::get_instance()->playfield_additional_width))
+    if (x < -(LevelController::get_instance()->playfield_width + LevelController::get_instance()->playfield_additional_width) || x > (LevelController::get_instance()->playfield_width + LevelController::get_instance()->playfield_additional_width))
     {
         return true;
     }

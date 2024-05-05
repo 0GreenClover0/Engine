@@ -14,9 +14,10 @@
     ENUMERATE_COMPONENT(Sound, "Sound") \
     ENUMERATE_COMPONENT(SoundListener, "Sound Listener") \
     ENUMERATE_COMPONENT(Factory, "Factory") \
-    ENUMERATE_COMPONENT(GameController, "Game Controller") \
+    ENUMERATE_COMPONENT(LevelController, "Level Controller") \
     ENUMERATE_COMPONENT(LighthouseKeeper, "Lighthouse Keeper") \
     ENUMERATE_COMPONENT(LighthouseLight, "Lighthouse Light") \
+    ENUMERATE_COMPONENT(Player, "Player") \
     ENUMERATE_COMPONENT(Port, "Port") \
     ENUMERATE_COMPONENT(Ship, "Ship") \
     ENUMERATE_COMPONENT(ShipSpawner, "Ship Spawner") \

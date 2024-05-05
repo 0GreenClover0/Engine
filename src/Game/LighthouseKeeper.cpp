@@ -10,7 +10,7 @@
 #include "Lighthouse.h"
 #include "AK/AK.h"
 #include "Factory.h"
-#include "GameController.h"
+#include "LevelController.h"
 
 #include <imgui_extensions.h>
 
@@ -97,7 +97,7 @@ void LighthouseKeeper::draw_editor()
 
 void LighthouseKeeper::handle_input() const
 {
-    auto const& factories = GameController::get_instance()->factories;
+    auto const& factories = LevelController::get_instance()->factories;
     if (factories.size() > 0 && Input::input->get_key_down(GLFW_KEY_SPACE))
     {
         std::shared_ptr<Factory> closest_factory = factories[0].lock();
