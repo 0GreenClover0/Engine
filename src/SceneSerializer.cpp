@@ -34,6 +34,7 @@
 #include "Game/ShipSpawner.h"
 #include "Path.h"
 #include "Game/Factory.h"
+#include "Game/Port.h"
 // # Put new header here
 
 SceneSerializer::SceneSerializer(std::shared_ptr<Scene> const& scene) : m_scene(scene)
@@ -288,6 +289,14 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::EndMap;
     }
     else
+    if (auto const port = std::dynamic_pointer_cast<class Port>(component); port != nullptr)
+    {
+        out << YAML::BeginMap;
+        out << YAML::Key << "ComponentName" << YAML::Value << "PortComponent";
+        out << YAML::Key << "guid" << YAML::Value << port->guid;
+        out << YAML::EndMap;
+    }
+    else
     if (auto const ship = std::dynamic_pointer_cast<class Ship>(component); ship != nullptr)
     {
         out << YAML::BeginMap;
@@ -300,6 +309,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "start_direction_wiggle" << YAML::Value << ship->start_direction_wiggle;
         out << YAML::Key << "light" << YAML::Value << ship->light;
         out << YAML::Key << "destroy_time" << YAML::Value << ship->destroy_time;
+        out << YAML::Key << "deceleration_speed" << YAML::Value << ship->deceleration_speed;
         out << YAML::EndMap;
     }
     else
@@ -771,6 +781,22 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         }
     }
         else
+    if (component_name == "PortComponent")
+    {
+        if (first_pass)
+        {
+            auto const deserialized_component = Port::create();
+            deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_pool.emplace_back(deserialized_component);
+        }
+        else
+        {
+            auto const deserialized_component = std::dynamic_pointer_cast<class Port>(get_from_pool(component["guid"].as<std::string>()));
+            deserialized_entity->add_component(deserialized_component);
+            deserialized_component->reprepare();
+        }
+    }
+        else
     if (component_name == "ShipComponent")
     {
         if (first_pass)
@@ -789,6 +815,7 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             deserialized_component->start_direction_wiggle = component["start_direction_wiggle"].as<float>();
             deserialized_component->light = component["light"].as<std::weak_ptr<LighthouseLight>>();
             deserialized_component->destroy_time = component["destroy_time"].as<float>();
+            deserialized_component->deceleration_speed = component["deceleration_speed"].as<float>();
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
         }

@@ -9,6 +9,7 @@
 #include "Globals.h"
 #include "ResourceManager.h"
 #include "AK/AK.h"
+#include "Collider2D.h"
 
 std::shared_ptr<ShipSpawner> ShipSpawner::create()
 {
@@ -117,6 +118,7 @@ void ShipSpawner::spawn_ship()
     ship->transform->set_local_position({ spawn_position.x, 0.0f, spawn_position.y });
 
     auto const ship_comp = ship->add_component(Ship::create(light.lock()));
+    ship->add_component<Collider2D>(Collider2D::create(ColliderType2D::Rectangle, { 0.5f, 0.5f }));
     ship_comp->on_ship_destroyed.attach(&ShipSpawner::remove_ship, shared_from_this());
 
     ships.emplace_back(ship_comp);
