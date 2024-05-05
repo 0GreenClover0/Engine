@@ -219,16 +219,16 @@ void RendererDX11::setup_shadow_mapping()
 {
     D3D11_SAMPLER_DESC shadow_sampler_desc = {};
     shadow_sampler_desc.Filter = D3D11_FILTER_COMPARISON_MIN_MAG_MIP_LINEAR;
-    shadow_sampler_desc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-    shadow_sampler_desc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-    shadow_sampler_desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+    shadow_sampler_desc.AddressU = D3D11_TEXTURE_ADDRESS_BORDER;
+    shadow_sampler_desc.AddressV = D3D11_TEXTURE_ADDRESS_BORDER;
+    shadow_sampler_desc.AddressW = D3D11_TEXTURE_ADDRESS_BORDER;
     shadow_sampler_desc.MipLODBias = 0.0f;
     shadow_sampler_desc.MaxAnisotropy = 1;
     shadow_sampler_desc.ComparisonFunc = D3D11_COMPARISON_NEVER;
-    shadow_sampler_desc.BorderColor[0] = 0.0f;
-    shadow_sampler_desc.BorderColor[1] = 0.0f;
-    shadow_sampler_desc.BorderColor[2] = 0.0f;
-    shadow_sampler_desc.BorderColor[3] = 0.0f;
+    shadow_sampler_desc.BorderColor[0] = 1.0f;
+    shadow_sampler_desc.BorderColor[1] = 1.0f;
+    shadow_sampler_desc.BorderColor[2] = 1.0f;
+    shadow_sampler_desc.BorderColor[3] = 1.0f;
     shadow_sampler_desc.MinLOD = 0;
     shadow_sampler_desc.MaxLOD = FLT_MAX;
     auto hr = get_device()->CreateSamplerState(&shadow_sampler_desc, &m_shadow_sampler_state);
