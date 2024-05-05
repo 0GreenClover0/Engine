@@ -8,6 +8,9 @@
 
 #include <imgui.h>
 
+namespace ImGuiEx
+{
+
 template<class T>
 void draw_ptr(std::string const& label, std::weak_ptr<T>& ptr)
 {
@@ -44,4 +47,21 @@ void draw_ptr(std::string const& label, std::weak_ptr<T>& ptr)
 
         ImGui::EndDragDropTarget();
     }
+}
+
+inline void InputFloat(char const* label, float* v)
+{
+    ImGui::InputFloat(label, v, 0, 0, "%.3f", ImGuiInputTextFlags_CharsDecimal);
+}
+
+inline void InputFloat2(char const* label, float v[2])
+{
+    ImGui::InputFloat2(label, v, "%.3f", ImGuiInputTextFlags_CharsDecimal);
+}
+
+inline void InputFloat3(char const* label, float v[3])
+{
+    ImGui::InputFloat3(label, v, "%.3f", ImGuiInputTextFlags_CharsDecimal);
+}
+
 }

@@ -5,6 +5,7 @@
 #include <glm/gtx/string_cast.hpp>
 #include <imgui.h>
 #include <ImGuizmo.h>
+#include "imgui_extensions.h"
 
 #include "Camera.h"
 #include "ComponentList.h"
@@ -570,7 +571,7 @@ void Editor::draw_inspector(std::shared_ptr<EditorWindow> const& window)
     ImGui::Spacing();
 
     glm::vec3 position = entity->transform->get_local_position();
-    ImGui::InputFloat3("Position", glm::value_ptr(position));
+    ImGuiEx::InputFloat3("Position", glm::value_ptr(position));
 
     ImGui::SameLine();
 
@@ -583,7 +584,7 @@ void Editor::draw_inspector(std::shared_ptr<EditorWindow> const& window)
     entity->transform->set_local_position(position);
 
     glm::vec3 rotation = entity->transform->get_euler_angles();
-    ImGui::InputFloat3("Rotation", glm::value_ptr(rotation));
+    ImGuiEx::InputFloat3("Rotation", glm::value_ptr(rotation));
     entity->transform->set_euler_angles(rotation);
 
     ImGui::SameLine();
@@ -595,7 +596,7 @@ void Editor::draw_inspector(std::shared_ptr<EditorWindow> const& window)
     }
 
     glm::vec3 scale = entity->transform->get_local_scale();
-    ImGui::InputFloat3("Scale", glm::value_ptr(scale));
+    ImGuiEx::InputFloat3("Scale", glm::value_ptr(scale));
     entity->transform->set_local_scale(scale);
 
     ImGui::SameLine();

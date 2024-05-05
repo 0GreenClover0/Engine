@@ -115,7 +115,7 @@ void Ship::draw_editor()
 {
     ImGui::DragFloat("Speed", &maximum_speed, 0.001f, 0.0f, 0.5f);
 
-    draw_ptr("Light", light);
+    ImGuiEx::draw_ptr("Light", light);
 }
 
 void Ship::follow_light(glm::vec2 ship_position, glm::vec2 target_position)

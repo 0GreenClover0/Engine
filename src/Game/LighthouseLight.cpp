@@ -6,6 +6,7 @@
 #include "LighthouseLight.h"
 
 #include "ResourceManager.h"
+#include "imgui_extensions.h"
 
 std::shared_ptr<LighthouseLight> LighthouseLight::create()
 {
@@ -46,7 +47,7 @@ void LighthouseLight::update()
 
 void LighthouseLight::draw_editor()
 {
-    ImGui::InputFloat("Light range", &range);
+    ImGuiEx::InputFloat("Light range", &range);
 }
 
 glm::vec2 LighthouseLight::get_position() const

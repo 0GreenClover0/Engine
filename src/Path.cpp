@@ -2,6 +2,9 @@
 
 #include "Entity.h"
 #include "Path.h"
+
+#include "imgui_extensions.h"
+
 #include <glm/gtc/type_ptr.inl>
 #include <iostream>
 
@@ -18,7 +21,7 @@ void Path::draw_editor()
 {
     for (u32 i = 0; i < points.size(); i++)
     {
-        ImGui::InputFloat2(("Position##" + std::to_string(i)).c_str(), glm::value_ptr(points[i]));
+        ImGuiEx::InputFloat2(("Position##" + std::to_string(i)).c_str(), glm::value_ptr(points[i]));
         ImGui::SameLine();
         if (ImGui::Button(("Remove point##" + std::to_string(i)).c_str()))
         {

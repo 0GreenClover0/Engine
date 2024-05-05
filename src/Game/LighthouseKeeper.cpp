@@ -88,11 +88,11 @@ void LighthouseKeeper::update()
 
 void LighthouseKeeper::draw_editor()
 {
-    ImGui::InputFloat("Acceleration", &acceleration);
-    ImGui::InputFloat("Deceleration", &deceleration);
-    ImGui::InputFloat("Maximum speed", &maximum_speed);
+    ImGuiEx::InputFloat("Acceleration", &acceleration);
+    ImGuiEx::InputFloat("Deceleration", &deceleration);
+    ImGuiEx::InputFloat("Maximum speed", &maximum_speed);
 
-    draw_ptr("Lighthouse", lighthouse);
+    ImGuiEx::draw_ptr("Lighthouse", lighthouse);
 }
 
 void LighthouseKeeper::handle_input() const
