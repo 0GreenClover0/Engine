@@ -79,6 +79,31 @@ void swap_and_erase(std::vector<T>& vector, T element)
     }
 }
 
+template<typename T>
+void erase(std::vector<T>& vector, T element)
+{
+    if (auto const it = std::ranges::find(vector, element); it != vector.end())
+    {
+        vector.erase(it);
+    }
+}
+
+template<typename T>
+void erase(std::vector<std::weak_ptr<T>>& vector, std::shared_ptr<T> element)
+{
+    for (u32 i = 0; i < vector.size(); ++i)
+    {
+        if (vector[i].expired())
+            continue;
+
+        if (vector[i].lock() == element)
+        {
+            vector.erase(vector.begin() + i);
+            return;
+        }
+    }
+}
+
 #pragma endregion
 
 }
