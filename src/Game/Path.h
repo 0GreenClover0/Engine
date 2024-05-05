@@ -1,8 +1,9 @@
 #pragma once
 
 #include "Component.h"
+#include "Curve.h"
 
-class Path final : public Component
+class Path final : public Curve
 {
 public:
     static std::shared_ptr<Path> create();
@@ -11,10 +12,8 @@ public:
 
     virtual void draw_editor() override;
 
-    glm::vec2 get_point_at(float x) const;
-    
-    std::vector<glm::vec2> points = {};
-
 private:
     float length() const;
+
+    bool m_reverse_y = true;
 };
