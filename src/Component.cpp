@@ -43,6 +43,10 @@ void Component::on_disabled()
 {
 }
 
+void Component::on_destroyed()
+{
+}
+
 void Component::destroy_immediate()
 {
     assert(entity != nullptr);
