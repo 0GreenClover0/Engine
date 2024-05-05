@@ -4,6 +4,15 @@
 #include "LighthouseLight.h"
 #include "LevelController.h"
 
+enum class ShipType
+{
+    FoodSmall,
+    FoodMedium,
+    FoodBig,
+    Pirates,
+    Tool
+};
+
 class Ship final : public Component
 {
 public:
@@ -35,6 +44,9 @@ public:
     inline static float additional_ship_speed = 0.2f * 0.005f;
     NON_SERIALIZED
     inline static float pirates_in_control = 1.0f;
+
+    NON_SERIALIZED
+    ShipType type = ShipType::FoodSmall;
 
     std::weak_ptr<LighthouseLight> light = {};
 

@@ -42,7 +42,11 @@ void ShipSpawner::awake()
     s3.spawn_list.emplace_back(ShipType::FoodBig);
     s3.spawn_type = SpawnType::Sequence;
 
-    SpawnEvent pirate_event = {};
+    SpawnEvent s4 = {};
+    s4.spawn_list.emplace_back(ShipType::Tool);
+    s4.spawn_type = SpawnType::Sequence;
+
+    SpawnEvent pirate_event;
     pirate_event.spawn_list.emplace_back(ShipType::Pirates);
     pirate_event.spawn_list.emplace_back(ShipType::Pirates);
     pirate_event.spawn_list.emplace_back(ShipType::Pirates);
@@ -52,6 +56,7 @@ void ShipSpawner::awake()
     m_backup_spawn.emplace_back(s1);
     m_backup_spawn.emplace_back(s2);
     m_backup_spawn.emplace_back(s3);
+    m_backup_spawn.emplace_back(s4);
     m_backup_spawn.emplace_back(pirate_event);
 
     m_main_spawn = m_backup_spawn;
@@ -134,6 +139,8 @@ void ShipSpawner::spawn_ship()
     }
 
     SpawnEvent* being_spawn = &m_main_spawn.back();
+
+    ship_comp->type = being_spawn->spawn_list.back();
 
     being_spawn->spawn_list.pop_back();
 }
