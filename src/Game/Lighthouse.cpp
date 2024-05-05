@@ -1,6 +1,5 @@
 #include "Lighthouse.h"
 
-#include "Debug.h"
 #include "Entity.h"
 #include "Model.h"
 #include "ResourceManager.h"

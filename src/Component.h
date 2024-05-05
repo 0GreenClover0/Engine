@@ -1,6 +1,10 @@
 #pragma once
+
 #include <memory>
 #include <string>
+
+#include "Serialization.h"
+#include "Debug.h"
 
 class Entity;
 

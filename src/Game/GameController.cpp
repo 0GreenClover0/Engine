@@ -5,7 +5,6 @@
 #include "Input.h"
 #include "GameController.h"
 #include "Globals.h"
-#include "Debug.h"
 #include "ScreenText.h"
 
 std::shared_ptr<GameController> GameController::create()

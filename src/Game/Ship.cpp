@@ -11,7 +11,6 @@
 #include "imgui_extensions.h"
 #include "Globals.h"
 #include "AK/AK.h"
-#include "Debug.h"
 
 std::shared_ptr<Ship> Ship::create()
 {

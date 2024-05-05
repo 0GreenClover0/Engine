@@ -3,8 +3,6 @@
 #include "Component.h"
 #include "AK/Badge.h"
 
-#include "Serialization.h"
-
 class LighthouseLight;
 class LighthouseKeeper;
 

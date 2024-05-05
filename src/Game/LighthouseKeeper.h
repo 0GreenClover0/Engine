@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Component.h"
-#include "Serialization.h"
 #include "Input.h"
 
 class Factory;

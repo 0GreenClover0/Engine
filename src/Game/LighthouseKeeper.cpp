@@ -7,7 +7,6 @@
 #include "LighthouseKeeper.h"
 #include "Globals.h"
 
-#include "Debug.h"
 #include "Lighthouse.h"
 #include "AK/AK.h"
 #include "Factory.h"
