@@ -4,6 +4,7 @@
 #include "Engine.h"
 #include "Serialization.h"
 
+class ScreenText;
 class Factory;
 
 class GameController final : public Component
@@ -36,4 +37,6 @@ public:
 
 private:
     inline static std::shared_ptr<GameController> m_instance;
+
+    std::weak_ptr<ScreenText> m_text = {};
 };
