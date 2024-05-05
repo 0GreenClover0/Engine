@@ -28,10 +28,11 @@
 #include "LighthouseLight.h"
 #include "Sphere.h"
 #include "Ship.h"
-#include "GameController.h"
+#include "LevelController.h"
 #include "ShipSpawner.h"
 #include "Lighthouse.h"
 #include "Port.h"
+#include "Player.h"
 
 Game::Game(std::shared_ptr<Window> const& window) : window(window)
 {
@@ -119,10 +120,11 @@ void Game::initialize()
     port->add_component(Cube::create("./res/textures/skybox/interstellar/interstellar_bk.tga", standard_material));
     port->add_component<Collider2D>(Collider2D::create(ColliderType2D::Rectangle, { port->transform->get_local_scale().x / 2.0f, port->transform->get_local_scale().z / 2.0f }, true));
 
-    auto const game_controller = Entity::create("Game Controller");
-    auto const game_controller_comp = game_controller->add_component(GameController::create());
-    game_controller->add_component(ShipSpawner::create(light->get_component<LighthouseLight>()));
+    auto const level_controller = Entity::create("Level Controller");
+    auto const level_controller_comp = level_controller->add_component(LevelController::create());
+    level_controller->add_component(Player::create());
+    level_controller->add_component(ShipSpawner::create(light->get_component<LighthouseLight>()));
 
-    game_controller_comp->factories.emplace_back(generator_comp);
-    game_controller_comp->factories.emplace_back(workshop_comp);
+    level_controller_comp->factories.emplace_back(generator_comp);
+    level_controller_comp->factories.emplace_back(workshop_comp);
 }

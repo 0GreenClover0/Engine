@@ -6,12 +6,12 @@
 class ScreenText;
 class Factory;
 
-class GameController final : public Component
+class LevelController final : public Component
 {
 public:
-    static std::shared_ptr<GameController> create();
+    static std::shared_ptr<LevelController> create();
 
-    static std::shared_ptr<GameController> get_instance();
+    static std::shared_ptr<LevelController> get_instance();
 
     virtual void uninitialize() override;
 
@@ -19,17 +19,7 @@ public:
     virtual void update() override;
     virtual void draw_editor() override;
 
-    NON_SERIALIZED
-    i32 food = 0;
-    NON_SERIALIZED
-    i32 flash = 0;
-    NON_SERIALIZED
-    float flash_counter = 0.0f;
-    float flash_time = 8.3f;
-    NON_SERIALIZED
-    i32 packages = 2;
-    NON_SERIALIZED
-    i32 lighthouse_level = 0;
+    void on_lighthouse_upgraded();
 
     float map_time = 0.0f;
     NON_SERIALIZED
@@ -43,8 +33,10 @@ public:
     float const playfield_additional_width = 1.4f;
     float const playfield_height = 3.6f;
 
+    //TODO KRZYWE
+
 private:
-    inline static std::shared_ptr<GameController> m_instance;
+    inline static std::shared_ptr<LevelController> m_instance;
 
     std::weak_ptr<ScreenText> m_text = {};
 };

@@ -3,7 +3,8 @@
 #include "Entity.h"
 #include "Model.h"
 #include "ResourceManager.h"
-#include "Game/GameController.h"
+#include "Game/LevelController.h"
+#include "Player.h"
 
 std::shared_ptr<Factory> Factory::create()
 {
@@ -16,19 +17,19 @@ Factory::Factory(AK::Badge<Factory>)
 
 bool Factory::interact() const
 {
-    if (GameController::get_instance()->packages <= 0)
+    if (Player::get_instance()->packages <= 0)
         return false;
 
     if (type == FactoryType::Generator)
     {
-        GameController::get_instance()->flash += 1;
+        Player::get_instance()->flash += 1;
     }
     else if (type == FactoryType::Workshop)
     {
-        GameController::get_instance()->lighthouse_level += 1;
+        Player::get_instance()->upgrade_lighthouse();
     }
 
-    GameController::get_instance()->packages -= 1;
+    Player::get_instance()->packages -= 1;
 
     return true;
 }

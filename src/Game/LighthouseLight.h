@@ -22,9 +22,6 @@ public:
 
     glm::vec2 get_position() const;
 
-    float range = 100.0f * 0.005f;
-    float additional_ship_speed = 0.2f * 0.005f;
-
 private:
 
     std::weak_ptr<Sphere> m_sphere = {};

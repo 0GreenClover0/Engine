@@ -150,7 +150,7 @@ bool ShipSpawner::is_spawn_possible() const
         }
     }
 
-    if (number_of_ships < GameController::get_instance()->ships_limit)
+    if (number_of_ships < LevelController::get_instance()->ships_limit)
     {
         return true;
     }
