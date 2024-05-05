@@ -6,29 +6,29 @@
 
 std::shared_ptr<Collider2D> Collider2D::create()
 {
-    auto collider_2d = std::make_shared<Collider2D>(AK::Badge<Collider2D> {}, ColliderType2D::Circle, 1.0f);
+    auto collider_2d = std::make_shared<Collider2D>(AK::Badge<Collider2D> {}, ColliderType2D::Circle, 1.0f, false);
     return collider_2d;
 }
 
-std::shared_ptr<Collider2D> Collider2D::create(ColliderType2D const collider_type, float const radius)
+std::shared_ptr<Collider2D> Collider2D::create(ColliderType2D const collider_type, float const radius, bool is_static)
 {
-    auto collider_2d = std::make_shared<Collider2D>(AK::Badge<Collider2D> {}, collider_type, radius);
+    auto collider_2d = std::make_shared<Collider2D>(AK::Badge<Collider2D> {}, collider_type, radius, is_static);
     return collider_2d;
 }
 
-std::shared_ptr<Collider2D> Collider2D::create(ColliderType2D const collider_type, glm::vec2 const bounds_dimensions)
+std::shared_ptr<Collider2D> Collider2D::create(ColliderType2D const collider_type, glm::vec2 const bounds_dimensions, bool is_static)
 {
-    auto collider_2d = std::make_shared<Collider2D>(AK::Badge<Collider2D> {}, collider_type, bounds_dimensions);
+    auto collider_2d = std::make_shared<Collider2D>(AK::Badge<Collider2D> {}, collider_type, bounds_dimensions, is_static);
     return collider_2d;
 }
 
-Collider2D::Collider2D(AK::Badge<Collider2D>, ColliderType2D const collider_type, float const radius) : m_radius(radius),
-    m_collider_type(collider_type)
+Collider2D::Collider2D(AK::Badge<Collider2D>, ColliderType2D const collider_type, float const radius, bool const is_static) : m_radius(radius),
+    m_is_static(is_static), m_collider_type(collider_type)
 {
 }
 
-Collider2D::Collider2D(AK::Badge<Collider2D>, ColliderType2D const collider_type, glm::vec2 const bounds_dimensions)
-    : m_bounds_dimensions(bounds_dimensions), m_collider_type(collider_type)
+Collider2D::Collider2D(AK::Badge<Collider2D>, ColliderType2D const collider_type, glm::vec2 const bounds_dimensions, bool const is_static)
+    : m_bounds_dimensions(bounds_dimensions), m_is_static(is_static), m_collider_type(collider_type)
 {
 }
 
@@ -147,4 +147,19 @@ glm::vec2 Collider2D::get_center_2d() const
 glm::vec2 Collider2D::get_bounds_dimensions_2d() const
 {
     return m_bounds_dimensions;
+}
+
+bool Collider2D::is_static() const
+{
+    return m_is_static;
+}
+
+void Collider2D::set_static(bool const value)
+{
+    if (m_is_static == value)
+    {
+        return;
+    }
+
+    m_is_static = value;
 }
