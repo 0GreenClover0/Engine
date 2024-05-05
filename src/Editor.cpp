@@ -39,9 +39,10 @@
 #include "Game/GameController.h"
 #include "Game/Lighthouse.h"
 #include "Game/ShipSpawner.h"
-#include "Path.h"
+#include "Game/Path.h"
 #include "Game/Factory.h"
 #include "Game/Port.h"
+#include "Curve.h"
 // # Put new header here
 
 namespace Editor

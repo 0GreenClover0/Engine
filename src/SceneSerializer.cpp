@@ -32,9 +32,10 @@
 #include "Game/GameController.h"
 #include "Game/Lighthouse.h"
 #include "Game/ShipSpawner.h"
-#include "Path.h"
+#include "Game/Path.h"
 #include "Game/Factory.h"
 #include "Game/Port.h"
+#include "Curve.h"
 // # Put new header here
 
 SceneSerializer::SceneSerializer(std::shared_ptr<Scene> const& scene) : m_scene(scene)
@@ -94,6 +95,24 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::BeginMap;
         out << YAML::Key << "ComponentName" << YAML::Value << "Collider2DComponent";
         out << YAML::Key << "guid" << YAML::Value << collider2d->guid;
+        out << YAML::EndMap;
+    }
+    else
+    if (auto const curve = std::dynamic_pointer_cast<class Curve>(component); curve != nullptr)
+    {
+        out << YAML::BeginMap;
+        // # Put new Curve kid here
+        if (auto const path = std::dynamic_pointer_cast<class Path>(component); path != nullptr)
+        {
+            out << YAML::Key << "ComponentName" << YAML::Value << "PathComponent";
+            out << YAML::Key << "guid" << YAML::Value << path->guid;
+        }
+        else
+        {
+            out << YAML::Key << "ComponentName" << YAML::Value << "CurveComponent";
+            out << YAML::Key << "guid" << YAML::Value << curve->guid;
+        }
+        out << YAML::Key << "points" << YAML::Value << curve->points;
         out << YAML::EndMap;
     }
     else
@@ -220,15 +239,6 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "enterable_distance" << YAML::Value << lighthouse->enterable_distance;
         out << YAML::Key << "light" << YAML::Value << lighthouse->light;
         out << YAML::Key << "spawn_position" << YAML::Value << lighthouse->spawn_position;
-        out << YAML::EndMap;
-    }
-    else
-    if (auto const path = std::dynamic_pointer_cast<class Path>(component); path != nullptr)
-    {
-        out << YAML::BeginMap;
-        out << YAML::Key << "ComponentName" << YAML::Value << "PathComponent";
-        out << YAML::Key << "guid" << YAML::Value << path->guid;
-        out << YAML::Key << "points" << YAML::Value << path->points;
         out << YAML::EndMap;
     }
     else
@@ -417,6 +427,40 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         else
         {
             auto const deserialized_component = std::dynamic_pointer_cast<class Collider2D>(get_from_pool(component["guid"].as<std::string>()));
+            deserialized_entity->add_component(deserialized_component);
+            deserialized_component->reprepare();
+        }
+    }
+        else
+    if (component_name == "CurveComponent")
+    {
+        if (first_pass)
+        {
+            auto const deserialized_component = Curve::create();
+            deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_pool.emplace_back(deserialized_component);
+        }
+        else
+        {
+            auto const deserialized_component = std::dynamic_pointer_cast<class Curve>(get_from_pool(component["guid"].as<std::string>()));
+            deserialized_component->points = component["points"].as<std::vector<glm::vec2>>();
+            deserialized_entity->add_component(deserialized_component);
+            deserialized_component->reprepare();
+        }
+    }
+        else
+    if (component_name == "PathComponent")
+    {
+        if (first_pass)
+        {
+            auto const deserialized_component = Path::create();
+            deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_pool.emplace_back(deserialized_component);
+        }
+        else
+        {
+            auto const deserialized_component = std::dynamic_pointer_cast<class Path>(get_from_pool(component["guid"].as<std::string>()));
+            deserialized_component->points = component["points"].as<std::vector<glm::vec2>>();
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
         }
@@ -654,23 +698,6 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             deserialized_component->enterable_distance = component["enterable_distance"].as<float>();
             deserialized_component->light = component["light"].as<std::weak_ptr<LighthouseLight>>();
             deserialized_component->spawn_position = component["spawn_position"].as<std::weak_ptr<Entity>>();
-            deserialized_entity->add_component(deserialized_component);
-            deserialized_component->reprepare();
-        }
-    }
-        else
-    if (component_name == "PathComponent")
-    {
-        if (first_pass)
-        {
-            auto const deserialized_component = Path::create();
-            deserialized_component->guid = component["guid"].as<std::string>();
-            deserialized_pool.emplace_back(deserialized_component);
-        }
-        else
-        {
-            auto const deserialized_component = std::dynamic_pointer_cast<class Path>(get_from_pool(component["guid"].as<std::string>()));
-            deserialized_component->points = component["points"].as<std::vector<glm::vec2>>();
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
         }

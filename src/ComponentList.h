@@ -6,11 +6,11 @@
 #define ENUMERATE_COMPONENTS \
     ENUMERATE_COMPONENT(Camera, "Camera") \
     ENUMERATE_COMPONENT(Collider2D, "Collider2D") \
+    ENUMERATE_COMPONENT(Curve, "Curve") \
     ENUMERATE_COMPONENT(ExampleDynamicText, "Example Dynamic Text") \
     ENUMERATE_COMPONENT(ExampleUIBar, "Example UIBar") \
     ENUMERATE_COMPONENT(Light, "Light") \
     ENUMERATE_COMPONENT(Lighthouse, "Lighthouse") \
-    ENUMERATE_COMPONENT(Path, "Path") \
     ENUMERATE_COMPONENT(Sound, "Sound") \
     ENUMERATE_COMPONENT(SoundListener, "Sound Listener") \
     ENUMERATE_COMPONENT(Factory, "Factory") \
@@ -21,6 +21,7 @@
     ENUMERATE_COMPONENT(Ship, "Ship") \
     ENUMERATE_COMPONENT(ShipSpawner, "Ship Spawner") \
     ENUMERATE_COMPONENT(PlayerInput, "Player Input") \
+    ENUMERATE_COMPONENT(Path, "Path") \
     ENUMERATE_COMPONENT(Model, "Model") \
     ENUMERATE_COMPONENT(ScreenText, "Screen Text") \
     ENUMERATE_COMPONENT(Cube, "Cube") \
