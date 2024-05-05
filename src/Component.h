@@ -20,6 +20,7 @@ public:
     virtual void update();
     virtual void on_enabled();
     virtual void on_disabled();
+    virtual void on_destroyed();
 
     void destroy_immediate();
 
