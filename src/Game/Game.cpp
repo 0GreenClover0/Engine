@@ -12,6 +12,7 @@
 #include "ExampleDynamicText.h"
 #include "Grass.h"
 #include "ExampleUIBar.h"
+#include "Factory.h"
 #include "MeshFactory.h"
 #include "Model.h"
 #include "PointLight.h"
@@ -100,7 +101,20 @@ void Game::initialize()
     spawn->transform->set_local_position(glm::vec3(0.0f, 0.0f, 0.4f));
     lighthouse_comp->spawn_position = spawn;
 
+    auto const generator = Entity::create("Generator");
+    auto const generator_comp = generator->add_component<Factory>(Factory::create());
+    generator_comp->set_type(FactoryType::Generator);
+    generator->transform->set_local_position({ 3.0f, 1.0f, 3.0f });
+
+    auto const workshop = Entity::create("Generator");
+    auto const workshop_comp = workshop->add_component<Factory>(Factory::create());
+    workshop_comp->set_type(FactoryType::Workshop);
+    workshop->transform->set_local_position({ -3.0f, 0.0f, 3.0f });
+
     auto const game_controller = Entity::create("Game Controller");
-    game_controller->add_component(GameController::create());
+    auto const game_controller_comp = game_controller->add_component(GameController::create());
     game_controller->add_component(ShipSpawner::create(light->get_component<LighthouseLight>()));
+
+    game_controller_comp->factories.emplace_back(generator_comp);
+    game_controller_comp->factories.emplace_back(workshop_comp);
 }

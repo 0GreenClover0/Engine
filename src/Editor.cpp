@@ -39,6 +39,7 @@
 #include "Game/Lighthouse.h"
 #include "Game/ShipSpawner.h"
 #include "Path.h"
+#include "Game/Factory.h"
 // # Put new header here
 
 namespace Editor
