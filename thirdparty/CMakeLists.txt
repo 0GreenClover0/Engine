@@ -28,6 +28,12 @@ set (imguizmo_SOURCE_DIR ${IMGUIZMO_DIR} CACHE INTERNAL "")
 add_library(imguizmo STATIC ${IMGUIZMO_DIR}/ImGuizmo.cpp)
 target_include_directories(imguizmo PRIVATE ${IMGUIZMO_DIR})
 
+# ImPlot
+set(IMPLOT_DIR ${CMAKE_CURRENT_LIST_DIR}/implot)
+set (implot_SOURCE_DIR ${IMPLOT_DIR} CACHE INTERNAL "")
+add_library(implot STATIC ${IMPLOT_DIR}/implot.cpp ${IMPLOT_DIR}/implot_items.cpp ${IMPLOT_DIR}/implot_demo.cpp)
+target_include_directories(implot PRIVATE ${IMPLOT_DIR})
+
 # disable most assimp importers
 SET (ASSIMP_BUILD_AMF_IMPORTER OFF)
 SET (ASSIMP_BUILD_3DS_IMPORTER OFF)
@@ -110,6 +116,7 @@ add_library(imgui STATIC ${imgui_SOURCE_DIR}/imgui.cpp
                          ${imgui_SOURCE_DIR}/imgui_widgets.cpp)
 
 target_include_directories(imguizmo PRIVATE ${imgui_SOURCE_DIR})
+target_include_directories(implot PRIVATE ${imgui_SOURCE_DIR})
 
 set_target_properties(glad
                       stb_image
@@ -120,7 +127,8 @@ set_target_properties(glad
                       spdlog
                       yaml-cpp
                       miniaudio
-                      imguizmo PROPERTIES FOLDER "thirdparty")
+                      imguizmo
+                      implot PROPERTIES FOLDER "thirdparty")
 
 if (TARGET zlibstatic)
     set_target_properties(zlibstatic PROPERTIES FOLDER "thirdparty")
