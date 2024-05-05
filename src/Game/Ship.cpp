@@ -11,6 +11,7 @@
 #include "imgui_extensions.h"
 #include "Globals.h"
 #include "AK/AK.h"
+#include "Debug.h"
 
 std::shared_ptr<Ship> Ship::create()
 {
@@ -51,6 +52,31 @@ void Ship::update()
     if (is_out_of_room())
     {
         entity->destroy_immediate();
+        return;
+    }
+
+    //TODO Add correct conditions for destroying ships
+    if (Input::input->get_key_down(GLFW_KEY_F3))
+    {
+        is_destroyed = true;
+        destroyed_counter = destroy_time;
+    }
+
+    if (is_destroyed)
+    {
+        if (destroyed_counter > 0.0f)
+        {
+            destroyed_counter -= delta_time;
+            entity->transform->set_local_position({
+                entity->transform->get_local_position().x,
+                ((destroyed_counter / destroy_time) - 1) * m_how_deep_sink_factor,
+                entity->transform->get_local_position().z });
+        }
+        else
+        {
+            entity->destroy_immediate();
+        }
+
         return;
     }
 

@@ -25,6 +25,13 @@ public:
 
     std::weak_ptr<LighthouseLight> light = {};
 
+    NON_SERIALIZED
+    bool is_destroyed = false;
+    NON_SERIALIZED
+    float destroyed_counter = 0.0f;
+
+    float const destroy_time = 6.5f;
+    
     Event<void(std::shared_ptr<Ship>)> on_ship_destroyed;
 
 private:
@@ -34,4 +41,6 @@ private:
 
     float m_speed = 0.0f;
     float m_direction = 0.0f;
+    
+    float m_how_deep_sink_factor = 0.26f;
 };
