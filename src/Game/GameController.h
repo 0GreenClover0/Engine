@@ -39,6 +39,10 @@ public:
 
     std::vector<std::weak_ptr<Factory>> factories = {};
 
+    float const playfield_width = 5.4f;
+    float const playfield_additional_width = 1.4f;
+    float const playfield_height = 3.6f;
+
 private:
     inline static std::shared_ptr<GameController> m_instance;
 

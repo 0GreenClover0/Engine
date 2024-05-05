@@ -146,12 +146,12 @@ bool Ship::is_out_of_room() const
     float const x = entity->transform->get_local_position().x;
     float const y = entity->transform->get_local_position().z;
 
-    if (y < -light.lock()->playfield_height || y > light.lock()->playfield_height)
+    if (y < -GameController::get_instance()->playfield_height || y > GameController::get_instance()->playfield_height)
     {
         return true;
     }
 
-    if (x < -(light.lock()->playfield_width + light.lock()->playfield_additional_width) || x > (light.lock()->playfield_width + light.lock()->playfield_additional_width))
+    if (x < -(GameController::get_instance()->playfield_width + GameController::get_instance()->playfield_additional_width) || x > (GameController::get_instance()->playfield_width + GameController::get_instance()->playfield_additional_width))
     {
         return true;
     }
