@@ -25,6 +25,9 @@ public:
     void initialize();
     void update_physics(); // TODO: All physics calculations should be in some kind of FixedUpdate
 
+    static void on_collision_enter(std::shared_ptr<Collider2D> const& collider, std::shared_ptr<Collider2D> const& other);
+    static void on_collision_exit(std::shared_ptr<Collider2D> const& collider, std::shared_ptr<Collider2D> const& other);
+
     void emplace_collider(std::shared_ptr<Collider2D> const& collider);
     void remove_collider(std::shared_ptr<Collider2D> const& collider);
 

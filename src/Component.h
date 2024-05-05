@@ -6,6 +6,7 @@
 #include "Serialization.h"
 #include "Debug.h"
 
+class Collider2D;
 class Entity;
 
 class Component : public std::enable_shared_from_this<Component>
@@ -25,6 +26,8 @@ public:
     virtual void on_enabled();
     virtual void on_disabled();
     virtual void on_destroyed();
+    virtual void on_collision_enter(std::shared_ptr<Collider2D> const& other);
+    virtual void on_collision_exit(std::shared_ptr<Collider2D> const& other);
 
     void destroy_immediate();
 
