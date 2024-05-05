@@ -32,6 +32,8 @@ public:
     NON_SERIALIZED
     float time = 0.0f;
 
+    std::vector<std::weak_ptr<Factory>> factories = {};
+
 private:
     inline static std::shared_ptr<GameController> m_instance;
 };

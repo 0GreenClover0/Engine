@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <iostream>
+
 #include <yaml-cpp/yaml.h>
 
 #include "Entity.h"
@@ -32,6 +33,7 @@
 #include "Game/Lighthouse.h"
 #include "Game/ShipSpawner.h"
 #include "Path.h"
+#include "Game/Factory.h"
 // # Put new header here
 
 SceneSerializer::SceneSerializer(std::shared_ptr<Scene> const& scene) : m_scene(scene)
@@ -245,12 +247,21 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::EndMap;
     }
     else
+    if (auto const factory = std::dynamic_pointer_cast<class Factory>(component); factory != nullptr)
+    {
+        out << YAML::BeginMap;
+        out << YAML::Key << "ComponentName" << YAML::Value << "FactoryComponent";
+        out << YAML::Key << "guid" << YAML::Value << factory->guid;
+        out << YAML::EndMap;
+    }
+    else
     if (auto const gamecontroller = std::dynamic_pointer_cast<class GameController>(component); gamecontroller != nullptr)
     {
         out << YAML::BeginMap;
         out << YAML::Key << "ComponentName" << YAML::Value << "GameControllerComponent";
         out << YAML::Key << "guid" << YAML::Value << gamecontroller->guid;
         out << YAML::Key << "map_time" << YAML::Value << gamecontroller->map_time;
+        out << YAML::Key << "factories" << YAML::Value << gamecontroller->factories;
         out << YAML::EndMap;
     }
     else
@@ -262,6 +273,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "maximum_speed" << YAML::Value << lighthousekeeper->maximum_speed;
         out << YAML::Key << "acceleration" << YAML::Value << lighthousekeeper->acceleration;
         out << YAML::Key << "deceleration" << YAML::Value << lighthousekeeper->deceleration;
+        out << YAML::Key << "interact_with_factory_distance" << YAML::Value << lighthousekeeper->interact_with_factory_distance;
         out << YAML::Key << "lighthouse" << YAML::Value << lighthousekeeper->lighthouse;
         out << YAML::EndMap;
     }
@@ -684,6 +696,22 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         }
     }
         else
+    if (component_name == "FactoryComponent")
+    {
+        if (first_pass)
+        {
+            auto const deserialized_component = Factory::create();
+            deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_pool.emplace_back(deserialized_component);
+        }
+        else
+        {
+            auto const deserialized_component = std::dynamic_pointer_cast<class Factory>(get_from_pool(component["guid"].as<std::string>()));
+            deserialized_entity->add_component(deserialized_component);
+            deserialized_component->reprepare();
+        }
+    }
+        else
     if (component_name == "GameControllerComponent")
     {
         if (first_pass)
@@ -696,6 +724,7 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component = std::dynamic_pointer_cast<class GameController>(get_from_pool(component["guid"].as<std::string>()));
             deserialized_component->map_time = component["map_time"].as<float>();
+            deserialized_component->factories = component["factories"].as<std::vector<std::weak_ptr<Factory>>>();
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
         }
@@ -715,6 +744,7 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             deserialized_component->maximum_speed = component["maximum_speed"].as<float>();
             deserialized_component->acceleration = component["acceleration"].as<float>();
             deserialized_component->deceleration = component["deceleration"].as<float>();
+            deserialized_component->interact_with_factory_distance = component["interact_with_factory_distance"].as<float>();
             deserialized_component->lighthouse = component["lighthouse"].as<std::weak_ptr<Lighthouse>>();
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();

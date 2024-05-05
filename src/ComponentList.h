@@ -13,6 +13,7 @@
     ENUMERATE_COMPONENT(Path, "Path") \
     ENUMERATE_COMPONENT(Sound, "Sound") \
     ENUMERATE_COMPONENT(SoundListener, "Sound Listener") \
+    ENUMERATE_COMPONENT(Factory, "Factory") \
     ENUMERATE_COMPONENT(GameController, "Game Controller") \
     ENUMERATE_COMPONENT(LighthouseKeeper, "Lighthouse Keeper") \
     ENUMERATE_COMPONENT(LighthouseLight, "Lighthouse Light") \

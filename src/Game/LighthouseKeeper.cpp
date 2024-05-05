@@ -10,6 +10,8 @@
 #include "Debug.h"
 #include "Lighthouse.h"
 #include "AK/AK.h"
+#include "Factory.h"
+#include "GameController.h"
 
 #include <imgui_extensions.h>
 
@@ -82,6 +84,53 @@ void LighthouseKeeper::update()
 
     entity->transform->set_local_position(entity->transform->get_local_position() + speed_vector);
 
+    handle_input();
+}
+
+void LighthouseKeeper::draw_editor()
+{
+    ImGui::InputFloat("Acceleration", &acceleration);
+    ImGui::InputFloat("Deceleration", &deceleration);
+    ImGui::InputFloat("Maximum speed", &maximum_speed);
+
+    draw_ptr("Lighthouse", lighthouse);
+}
+
+void LighthouseKeeper::handle_input() const
+{
+    auto const& factories = GameController::get_instance()->factories;
+    if (factories.size() > 0 && Input::input->get_key_down(GLFW_KEY_SPACE))
+    {
+        std::shared_ptr<Factory> closest_factory = factories[0].lock();
+        float closest_distance = distance(
+            AK::convert_3d_to_2d(closest_factory->entity->transform->get_position()),
+            AK::convert_3d_to_2d(entity->transform->get_position())
+        );
+
+        for (u32 i = 1; i < factories.size(); ++i)
+        {
+            auto const factory_locked = factories[i].lock();
+            float const distance = glm::distance(
+                AK::convert_3d_to_2d(factory_locked->entity->transform->get_position()),
+                AK::convert_3d_to_2d(entity->transform->get_position())
+            );
+
+            if (distance < closest_distance)
+            {
+                closest_distance = distance;
+                closest_factory = factory_locked;
+            }
+        }
+
+        if (closest_distance < interact_with_factory_distance)
+        {
+            if (closest_factory->interact())
+            {
+                return;
+            }
+        }
+    }
+
     if (!lighthouse.expired() && Input::input->get_key_down(GLFW_KEY_SPACE))
     {
         auto const lighthouse_locked = lighthouse.lock();
@@ -94,15 +143,7 @@ void LighthouseKeeper::update()
         {
             lighthouse_locked->enter();
             entity->destroy_immediate();
+            return;
         }
     }
-}
-
-void LighthouseKeeper::draw_editor()
-{
-    ImGui::InputFloat("Acceleration", &acceleration);
-    ImGui::InputFloat("Deceleration", &deceleration);
-    ImGui::InputFloat("Maximum speed", &maximum_speed);
-
-    draw_ptr("Lighthouse", lighthouse);
 }
