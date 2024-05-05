@@ -102,7 +102,10 @@ void Ship::update()
 
     glm::vec2 speed_vector = glm::vec2(cos(glm::radians(m_direction)), sin(glm::radians(m_direction))) * delta_speed;
 
-    entity->transform->set_local_position(entity->transform->get_local_position() + glm::vec3(speed_vector.x, 0.0f, speed_vector.y));
+    if (glm::epsilonEqual(GameController::get_instance()->flash_counter, 0.0f, 0.0001f))
+    {
+        entity->transform->set_local_position(entity->transform->get_local_position() + glm::vec3(speed_vector.x, 0.0f, speed_vector.y));
+    }
     entity->transform->set_euler_angles(glm::vec3(0.0f, -m_direction - 90.0f, 0.0f));
 }
 
