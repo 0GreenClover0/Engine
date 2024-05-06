@@ -42,7 +42,7 @@ void ShaderDX11::load_shader()
         ID3DBlob* shader_compile_errors_blob;
 
         std::wstring const vertex_path_final = std::wstring(m_vertex_path.begin(), m_vertex_path.end());
-        HRESULT hr = D3DCompileFromFile(vertex_path_final.c_str(), nullptr, nullptr, "vs_main", "vs_5_0", 0, 0, &vs_blob, &shader_compile_errors_blob);
+        HRESULT hr = D3DCompileFromFile(vertex_path_final.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "vs_main", "vs_5_0", 0, 0, &vs_blob, &shader_compile_errors_blob);
 
         if (FAILED(hr))
         {
@@ -77,7 +77,7 @@ void ShaderDX11::load_shader()
         ID3DBlob* shader_compile_errors_blob;
 
         std::wstring const pixel_path_final = std::wstring(m_fragment_path.begin(), m_fragment_path.end());
-        HRESULT hr = D3DCompileFromFile(pixel_path_final.c_str(), nullptr, nullptr, "ps_main", "ps_5_0", 0, 0, &ps_blob, &shader_compile_errors_blob);
+        HRESULT hr = D3DCompileFromFile(pixel_path_final.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "ps_main", "ps_5_0", 0, 0, &ps_blob, &shader_compile_errors_blob);
 
         if (FAILED(hr))
         {
