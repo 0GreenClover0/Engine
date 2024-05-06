@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ConstantBufferTypes.h"
 #include "ResourceManager.h"
 
 #include <xstring>
@@ -225,6 +226,36 @@ namespace YAML
         }
     };
 
+    template<>
+    struct convert<DXWave>
+    {
+        static Node encode(DXWave const& rhs)
+        {
+            Node node;
+            node.push_back(rhs.direction);
+            node.push_back(rhs.padding);
+            node.push_back(rhs.speed);
+            node.push_back(rhs.steepness);
+            node.push_back(rhs.wave_length);
+            node.push_back(rhs.amplitude);
+            return node;
+        }
+
+        static bool decode(Node const& node, DXWave& rhs)
+        {
+            if (!node.IsSequence() || node.size() != 6)
+                return false;
+
+            rhs.direction = node[0].as<glm::vec2>();
+            rhs.padding = node[1].as<glm::vec2>();
+            rhs.speed = node[2].as<float>();
+            rhs.steepness = node[3].as<float>();
+            rhs.wave_length = node[4].as<float>();
+            rhs.amplitude = node[5].as<float>();
+            return true;
+        }
+    };
+
     template<class T>
     Emitter & operator<<(YAML::Emitter& out, std::shared_ptr<T> const& v)
         requires(std::is_base_of_v<Component, T>)
@@ -400,4 +431,10 @@ namespace YAML
         return out;
     }
 
+    inline Emitter& operator<<(YAML::Emitter& out, DXWave const& wave)
+    {
+        out << YAML::Flow;
+        out << YAML::BeginSeq << wave.direction << wave.padding << wave.speed << wave.steepness << wave.wave_length << wave.amplitude << YAML::EndSeq;
+        return out;
+    }
 }

@@ -33,6 +33,7 @@
 #include "Lighthouse.h"
 #include "Port.h"
 #include "Player.h"
+#include "Water.h"
 
 Game::Game(std::shared_ptr<Window> const& window) : window(window)
 {
@@ -50,6 +51,7 @@ void Game::initialize()
 
     auto const ui_shader = ResourceManager::get_instance().load_shader("./res/shaders/ui.hlsl", "./res/shaders/ui.hlsl");
     auto const ui_material = Material::create(ui_shader, 1);
+    ui_material->casts_shadows = false;
 
     m_camera = Entity::create("Camera");
     m_camera->transform->set_local_position(glm::vec3(0.0f, 11.3f, 11.3f));
@@ -86,9 +88,6 @@ void Game::initialize()
 
     auto const scene = Entity::create("scene");
     scene->add_component(Model::create("./res/models/scene/scene.gltf", standard_material));
-
-    auto const water = Entity::create("water");
-    water->add_component(Model::create("./res/models/water/water.gltf", standard_material));
 
     auto const light = Entity::create("light");
     auto const light_comp = light->add_component(LighthouseLight::create());
@@ -129,4 +128,22 @@ void Game::initialize()
 
     level_controller_comp->factories.emplace_back(generator_comp);
     level_controller_comp->factories.emplace_back(workshop_comp);
+
+    auto const water = Entity::create("Water");
+    auto const water_comp = water->add_component(Water::create());
+    water_comp->material->casts_shadows = false;
+    water_comp->add_wave();
+    water_comp->waves[0].direction = glm::vec2(1.0f, 0.5f);
+    water_comp->waves[0].speed = 116.0f;
+    water_comp->waves[0].steepness = 0.7f;
+    water_comp->waves[0].wave_length = 115.0f;
+    water_comp->waves[0].amplitude = 0.04f;
+
+    water_comp->waves[1].direction = glm::vec2(-0.6f, 0.1f);
+    water_comp->waves[1].speed = 100.0f;
+    water_comp->waves[1].steepness = 0.9f;
+    water_comp->waves[1].wave_length = 500.0f;
+    water_comp->waves[1].amplitude = 0.035f;
+
+    water->transform->set_local_scale(glm::vec3(0.245f, 1.0f, 0.172f));
 }

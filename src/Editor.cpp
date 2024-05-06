@@ -44,6 +44,7 @@
 #include "Curve.h"
 #include "Game/Player.h"
 #include "Game/LevelController.h"
+#include "Water.h"
 // # Put new header here
 
 namespace Editor

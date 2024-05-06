@@ -10,6 +10,24 @@ struct ConstantBuffer
 
 };
 
+struct DXWave
+{
+    glm::vec2 direction;
+    glm::vec2 padding;
+
+    float speed;
+    float steepness;
+    float wave_length;
+    float amplitude;
+};
+
+struct ConstantBufferWave
+{
+    DXWave waves[15];
+    float time;
+    int number_of_waves;
+};
+
 struct DXPointLight
 {
     glm::vec3 position;
@@ -68,6 +86,7 @@ struct ConstantBufferPerObject
     glm::mat4 projection_view_model;
     glm::mat4 model;
     glm::mat4 light_projection_view_model;
+    glm::mat4 projection_view;
 };
 
 struct ConstantBufferLight

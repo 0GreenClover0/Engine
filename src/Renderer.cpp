@@ -223,6 +223,9 @@ void Renderer::render_single_shadow_map(glm::mat4 const& projection_view) const
     {
         for (auto const& material : shader->materials)
         {
+            if (!material->casts_shadows)
+                continue;
+
             if (material->is_gpu_instanced)
             {
                 // GPU instancing is not implemented in DX11

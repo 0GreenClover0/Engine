@@ -7,6 +7,7 @@
 #include "Model.h"
 #include "Camera.h"
 #include "ShaderFactory.h"
+#include "Water.h"
 
 #include <array>
 
@@ -61,7 +62,6 @@ std::shared_ptr<RendererDX11> RendererDX11::create()
     light_buffer_desc.ByteWidth = sizeof(ConstantBufferLight);
 
     hr = renderer->get_device()->CreateBuffer(&light_buffer_desc, nullptr, &renderer->m_constant_buffer_light);
-
     assert(SUCCEEDED(hr));
 
     renderer->create_depth_stencil();
@@ -300,6 +300,7 @@ void RendererDX11::update_object(std::shared_ptr<Drawable> const& drawable, std:
     glm::mat4 const model = drawable->entity->transform->get_model_matrix();
     data.projection_view_model = projection_view * model;
     data.model = drawable->entity->transform->get_model_matrix();
+    data.projection_view = projection_view;
 
     if (m_directional_light != nullptr)
         data.light_projection_view_model = m_directional_light->get_projection_view_matrix() * model;
@@ -312,7 +313,7 @@ void RendererDX11::update_object(std::shared_ptr<Drawable> const& drawable, std:
 
     get_device_context()->Unmap(m_constant_buffer_per_object, 0);
     get_device_context()->VSSetConstantBuffers(0, 1, &m_constant_buffer_per_object);
-    
+
     set_light_buffer(drawable);
 }
 

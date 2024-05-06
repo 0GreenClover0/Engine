@@ -40,3 +40,16 @@ struct SpotLight
 
     float4x4 projection_view_model;
 };
+
+struct Wave
+{
+    float2 direction;
+
+    float padding;
+    float padding2;
+
+    float speed;
+    float steepness;
+    float wave_length;
+    float amplitude;
+};
