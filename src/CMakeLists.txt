@@ -54,11 +54,13 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
     COMMENT "Copying FW1FontWrapper.dll to output directory"
 )
 
-add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD
-    COMMAND py
-        "${EHT_DIR}/EngineHeaderTool.py -d \"${PARENT_DIR}\""
-    COMMENT "Running EngineHeaderTool"
-)
+if(NOT DEFINED ENV{IS_CI})
+    add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD
+        COMMAND py
+            "${EHT_DIR}/EngineHeaderTool.py -d \"${PARENT_DIR}\""
+        COMMENT "Running EngineHeaderTool"
+    )
+endif()
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
                    COMMAND ${CMAKE_COMMAND} -E create_symlink
