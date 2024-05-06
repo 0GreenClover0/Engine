@@ -27,6 +27,7 @@
     ENUMERATE_COMPONENT(Cube, "Cube") \
     ENUMERATE_COMPONENT(Sphere, "Sphere") \
     ENUMERATE_COMPONENT(Sprite, "Sprite") \
+    ENUMERATE_COMPONENT(Water, "Water") \
     ENUMERATE_COMPONENT(DirectionalLight, "Directional Light") \
     ENUMERATE_COMPONENT(PointLight, "Point Light") \
     ENUMERATE_COMPONENT(SpotLight, "Spot Light") \

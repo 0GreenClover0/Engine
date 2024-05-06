@@ -45,6 +45,8 @@ public:
 
     bool is_billboard = false;
 
+    bool casts_shadows = true;
+
     // TODO: GPU instancing on one material currently supports only the first mesh that was bound to the material.
     bool is_gpu_instanced = false;
 

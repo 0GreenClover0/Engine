@@ -130,6 +130,14 @@ std::shared_ptr<Mesh> ResourceManager::load_mesh(u32 const array_id, std::string
     stream << name << array_id;
     std::string const& key = generate_key(stream);
 
+    // HACK: We currently don't unload any resources including meshes, even in the editor.
+    //       Changing water parameters inside editor recreates the mesh (very similar to changing Sphere's parameters),
+    //       which creates lots of big meshes. To work around this we just unload the water mesh everytime someone asks for it.
+    if (name == "WATER")
+    {
+        names_to_meshes.erase(key);
+    }
+
     auto resource_ptr = get_from_vector<Mesh>(key);
 
     if (resource_ptr != nullptr)

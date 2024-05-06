@@ -15,6 +15,7 @@ cbuffer object_buffer : register(b0)
     float4x4 projection_view_model;
     float4x4 model;
     float4x4 light_projection_view_model;
+    float4x4 projection_view;
 };
 
 struct VS_Input

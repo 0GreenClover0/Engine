@@ -37,6 +37,7 @@
 #include "Curve.h"
 #include "Game/Player.h"
 #include "Game/LevelController.h"
+#include "Water.h"
 // # Put new header here
 
 SceneSerializer::SceneSerializer(std::shared_ptr<Scene> const& scene) : m_scene(scene)
@@ -135,6 +136,15 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         if (auto const model = std::dynamic_pointer_cast<class Model>(component); model != nullptr)
         {
             // # Put new Model kid here
+            if (auto const water = std::dynamic_pointer_cast<class Water>(component); water != nullptr)
+            {
+                out << YAML::Key << "ComponentName" << YAML::Value << "WaterComponent";
+                out << YAML::Key << "guid" << YAML::Value << water->guid;
+                out << YAML::Key << "texture_path" << YAML::Value << water->texture_path;
+                out << YAML::Key << "waves" << YAML::Value << water->waves;
+                out << YAML::Key << "tesselation_level" << YAML::Value << water->tesselation_level;
+            }
+            else
             if (auto const sprite = std::dynamic_pointer_cast<class Sprite>(component); sprite != nullptr)
             {
                 out << YAML::Key << "ComponentName" << YAML::Value << "SpriteComponent";
@@ -545,6 +555,27 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component = std::dynamic_pointer_cast<class Sprite>(get_from_pool(component["guid"].as<std::string>()));
             deserialized_component->diffuse_texture_path = component["diffuse_texture_path"].as<std::string>();
+            deserialized_component->model_path = component["model_path"].as<std::string>();
+            deserialized_component->material = component["material"].as<std::shared_ptr<Material>>();
+            deserialized_entity->add_component(deserialized_component);
+            deserialized_component->reprepare();
+        }
+    }
+        else
+    if (component_name == "WaterComponent")
+    {
+        if (first_pass)
+        {
+            auto const deserialized_component = Water::create();
+            deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_pool.emplace_back(deserialized_component);
+        }
+        else
+        {
+            auto const deserialized_component = std::dynamic_pointer_cast<class Water>(get_from_pool(component["guid"].as<std::string>()));
+            deserialized_component->texture_path = component["texture_path"].as<std::string>();
+            deserialized_component->waves = component["waves"].as<std::vector<DXWave>>();
+            deserialized_component->tesselation_level = component["tesselation_level"].as<u32>();
             deserialized_component->model_path = component["model_path"].as<std::string>();
             deserialized_component->material = component["material"].as<std::shared_ptr<Material>>();
             deserialized_entity->add_component(deserialized_component);
