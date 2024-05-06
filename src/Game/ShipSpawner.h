@@ -16,6 +16,8 @@ public:
     virtual void update() override;
     virtual void draw_editor() override;
 
+    glm::vec2 find_nearest_non_pirate_ship(std::shared_ptr<Ship> const& center_ship);
+
     std::vector<std::weak_ptr<Path>> paths = {};
 
     std::weak_ptr<LighthouseLight> light = {};
@@ -41,5 +43,5 @@ private:
     std::vector<SpawnEvent> m_main_spawn = {};
     std::vector<SpawnEvent> m_backup_spawn = {};
 
-    std::vector<std::weak_ptr<Ship>> ships = {};
+    std::vector<std::weak_ptr<Ship>> m_ships = {};
 };

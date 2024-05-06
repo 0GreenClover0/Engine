@@ -12,17 +12,19 @@
 #include "Globals.h"
 #include "AK/AK.h"
 #include "Player.h"
+#include "ShipSpawner.h"
 
 std::shared_ptr<Ship> Ship::create()
 {
     return std::make_shared<Ship>(AK::Badge<Ship> {});
 }
 
-std::shared_ptr<Ship> Ship::create(std::shared_ptr<LighthouseLight> const& light)
+std::shared_ptr<Ship> Ship::create(std::shared_ptr<LighthouseLight> const& light, std::shared_ptr<ShipSpawner> const& spawner)
 {
     auto ship = std::make_shared<Ship>(AK::Badge<Ship> {});
     ship->light = light;
-    
+    ship->spawner = spawner;
+
     return ship;
 }
 
@@ -95,9 +97,30 @@ void Ship::update()
 
             if (distance_to_light < range)
             {
-                follow_light(ship_position, target_position);
-
+                follow_point(ship_position, target_position);
                 m_speed = minimum_speed + ((maximum_speed + additional_ship_speed - minimum_speed) * (distance_to_light / range));
+
+                if (type == ShipType::Pirates)
+                {
+                    m_pirates_in_control_counter = pirates_in_control;
+                }
+            }
+            else
+            {
+                if (m_pirates_in_control_counter > 0.0f)
+                {
+                    m_pirates_in_control_counter -= delta_time;
+                }
+                else
+                {
+                    m_pirates_in_control_counter = 0.0f;
+
+                    if (type == ShipType::Pirates)
+                    {
+                        glm::vec2 const target_position = spawner.lock()->find_nearest_non_pirate_ship(std::static_pointer_cast<Ship>(shared_from_this()));
+                        follow_point(ship_position, target_position);
+                    }
+                }
             }
         }
     }
@@ -156,7 +179,7 @@ void Ship::on_lighthouse_upgraded(float _turn_speed, float _range, float _additi
     pirates_in_control = _pirates_in_control;
 }
 
-void Ship::follow_light(glm::vec2 ship_position, glm::vec2 target_position)
+void Ship::follow_point(glm::vec2 ship_position, glm::vec2 target_position)
 {
     glm::vec2 const ship_direction = glm::normalize(glm::vec2(cos(glm::radians(m_direction)), sin(glm::radians(m_direction))));
     glm::vec2 const target_direction = glm::normalize(glm::vec2(target_position - ship_position));
