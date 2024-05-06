@@ -10,6 +10,25 @@ struct ConstantBuffer
 
 };
 
+struct DXWave
+{
+    // first 16 byte block
+    glm::vec2 direction;
+    glm::vec2 padding;
+    //second block
+    float speed;
+    float steepness;
+    float wave_length;
+    float amplitude;
+};
+
+struct ConstantBufferWave
+{
+    DXWave waves[15];
+    float time;
+    int number_of_waves;
+};
+
 struct DXPointLight
 {
     glm::vec3 position;

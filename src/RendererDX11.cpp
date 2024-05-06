@@ -7,6 +7,7 @@
 #include "Model.h"
 #include "Camera.h"
 #include "ShaderFactory.h"
+#include "Water.h"
 
 #include <array>
 
@@ -61,6 +62,9 @@ std::shared_ptr<RendererDX11> RendererDX11::create()
     hr = renderer->get_device()->CreateBuffer(&light_buffer_desc, nullptr, &renderer->m_constant_buffer_light);
 
     assert(SUCCEEDED(hr));
+
+    assert(SUCCEEDED(hr));
+
 
     renderer->create_depth_stencil();
     renderer->create_rasterizer_state();
@@ -275,7 +279,7 @@ void RendererDX11::update_object(std::shared_ptr<Drawable> const& drawable, std:
     data.light_projection_view_model = m_directional_light->get_projection_view_matrix() * model;
 
     D3D11_MAPPED_SUBRESOURCE mapped_resource;
-    HRESULT const hr = get_device_context()->Map(m_constant_buffer_per_object, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped_resource);
+    HRESULT hr = get_device_context()->Map(m_constant_buffer_per_object, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped_resource);
     assert(SUCCEEDED(hr));
 
     CopyMemory(mapped_resource.pData, &data, sizeof(ConstantBufferPerObject));
@@ -283,6 +287,7 @@ void RendererDX11::update_object(std::shared_ptr<Drawable> const& drawable, std:
     get_device_context()->Unmap(m_constant_buffer_per_object, 0);
     get_device_context()->VSSetConstantBuffers(0, 1, &m_constant_buffer_per_object);
     
+
     set_light_buffer(drawable);
 }
 

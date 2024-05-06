@@ -23,6 +23,8 @@
 #include "Terrain.h"
 #include "Player/PlayerInput.h"
 #include <Sphere.h>
+#include "Water.h"
+
 
 Game::Game(std::shared_ptr<Window> const& window) : window(window)
 {
@@ -33,11 +35,13 @@ void Game::initialize()
     auto const standard_shader = ShaderFactory::create("./res/shaders/lit.hlsl", "./res/shaders/lit.hlsl");
     auto const plain_shader = ShaderFactory::create("./res/shaders/simple.hlsl", "./res/shaders/simple.hlsl");
     auto const light_source_shader = ShaderFactory::create("./res/shaders/light_source.hlsl", "./res/shaders/light_source.hlsl");
+    auto const water_shader = ShaderFactory::create("./res/shaders/water.hlsl", "./res/shaders/water.hlsl");
 
     auto const standard_material = Material::create(standard_shader);
     auto const plain_material = Material::create(plain_shader);
     auto const light_source_material = Material::create(light_source_shader);
-
+    auto const water_material = Material::create(water_shader);
+    water_material->color = glm::vec4(1.0f, 1.0f, 1.0f, 0.5f);
     auto const ui_shader = ShaderFactory::create("./res/shaders/ui.hlsl", "./res/shaders/ui.hlsl");
     auto const ui_material = Material::create(ui_shader, 1);
 
@@ -135,4 +139,9 @@ void Game::initialize()
     rect2->add_component(Model::create("./res/models/pyramid3/scene.gltf", standard_material));
     rect2->transform->set_local_position(glm::vec3(6, 2, 0));
     rect2->add_component(Collider2D::create(ColliderType2D::Rectangle, glm::vec2(1.95f, 1.95f)));
+
+
+    auto const plane = Entity::create("plane");
+    plane->add_component(Water::create(6, "./res/textures/water.jpg", water_material));
+
 }
