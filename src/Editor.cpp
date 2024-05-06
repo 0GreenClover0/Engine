@@ -153,6 +153,10 @@ void Editor::draw_debug_window(std::shared_ptr<EditorWindow> const& window)
 
     std::string const log_count = "Logs " + std::to_string(Debug::debug_messages.size());
     ImGui::Text(log_count.c_str());
+    if (ImGui::Button("Clear log"))
+    {
+        Debug::clear();
+    }
     if (ImGui::BeginListBox("Logs", ImVec2(-FLT_MIN, 0.0f)))
     {
         ImGuiListClipper clipper;
