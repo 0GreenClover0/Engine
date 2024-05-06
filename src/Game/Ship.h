@@ -13,11 +13,37 @@ enum class ShipType
     Tool
 };
 
+static std::string ship_type_to_string(ShipType const type)
+{
+    switch (type)
+    {
+    case ShipType::FoodSmall:
+        return "Food small";
+
+    case ShipType::FoodMedium:
+        return "Food medium";
+
+    case ShipType::FoodBig:
+        return "Food big";
+
+    case ShipType::Pirates:
+        return "Pirates";
+
+    case ShipType::Tool:
+        return "Tool";
+
+    default:
+        return "Undefined ship";
+    }
+}
+
+class ShipSpawner;
+
 class Ship final : public Component
 {
 public:
     static std::shared_ptr<Ship> create();
-    static std::shared_ptr<Ship> create(std::shared_ptr<LighthouseLight> const& light);
+    static std::shared_ptr<Ship> create(std::shared_ptr<LighthouseLight> const& light, std::shared_ptr<ShipSpawner> const& spawner);
 
     explicit Ship(AK::Badge<Ship>);
 
@@ -43,12 +69,13 @@ public:
     NON_SERIALIZED
     inline static float additional_ship_speed = 0.2f * 0.005f;
     NON_SERIALIZED
-    inline static float pirates_in_control = 1.0f;
+    inline static float pirates_in_control = 10.0f;
 
     NON_SERIALIZED
     ShipType type = ShipType::FoodSmall;
 
     std::weak_ptr<LighthouseLight> light = {};
+    std::weak_ptr<ShipSpawner> spawner = {};
 
     NON_SERIALIZED
     bool is_destroyed = false;
@@ -56,7 +83,7 @@ public:
     Event<void(std::shared_ptr<Ship>)> on_ship_destroyed;
 
 private:
-    void follow_light(glm::vec2 ship_position, glm::vec2 target_position);
+    void follow_point(glm::vec2 ship_position, glm::vec2 target_position);
 
     bool is_out_of_room() const;
 
@@ -73,4 +100,6 @@ private:
     float const m_start_direction_wiggle = 15.0f;
     float const m_destroy_time = 6.5f;
     float const m_deceleration_speed = 0.17f;
+
+    float m_pirates_in_control_counter = 0.0f;
 };

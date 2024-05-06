@@ -35,29 +35,29 @@ void ShipSpawner::awake()
     s1.spawn_type = SpawnType::Sequence;
     
     SpawnEvent s2 = {};
-    s2.spawn_list.emplace_back(ShipType::FoodMedium);
+    s2.spawn_list.emplace_back(ShipType::Pirates);
     s2.spawn_type = SpawnType::Sequence;
 
-    SpawnEvent s3 = {};
-    s3.spawn_list.emplace_back(ShipType::FoodBig);
-    s3.spawn_type = SpawnType::Sequence;
+    //SpawnEvent s3 = {};
+    //s3.spawn_list.emplace_back(ShipType::FoodBig);
+    //s3.spawn_type = SpawnType::Sequence;
 
-    SpawnEvent s4 = {};
-    s4.spawn_list.emplace_back(ShipType::Tool);
-    s4.spawn_type = SpawnType::Sequence;
+    //SpawnEvent s4 = {};
+    //s4.spawn_list.emplace_back(ShipType::Tool);
+    //s4.spawn_type = SpawnType::Sequence;
 
-    SpawnEvent pirate_event;
-    pirate_event.spawn_list.emplace_back(ShipType::Pirates);
-    pirate_event.spawn_list.emplace_back(ShipType::Pirates);
-    pirate_event.spawn_list.emplace_back(ShipType::Pirates);
-    pirate_event.spawn_list.emplace_back(ShipType::Pirates);
-    pirate_event.spawn_type = SpawnType::Imidiet;
+    //SpawnEvent pirate_event = {};
+    //pirate_event.spawn_list.emplace_back(ShipType::Pirates);
+    //pirate_event.spawn_list.emplace_back(ShipType::Pirates);
+    //pirate_event.spawn_list.emplace_back(ShipType::Pirates);
+    //pirate_event.spawn_list.emplace_back(ShipType::Pirates);
+    //pirate_event.spawn_type = SpawnType::Imidiet;
 
     m_backup_spawn.emplace_back(s1);
     m_backup_spawn.emplace_back(s2);
-    m_backup_spawn.emplace_back(s3);
-    m_backup_spawn.emplace_back(s4);
-    m_backup_spawn.emplace_back(pirate_event);
+    //m_backup_spawn.emplace_back(s3);
+    //m_backup_spawn.emplace_back(s4);
+    //m_backup_spawn.emplace_back(pirate_event);
 
     m_main_spawn = m_backup_spawn;
 
@@ -82,18 +82,24 @@ void ShipSpawner::update()
 
 void ShipSpawner::draw_editor()
 {
-    i32 i = 0;
-    for (auto const& ship : ships)
+    u32 i = 0;
+    for (auto const& ship : m_ships)
     {
+        auto const ship_locked = ship.lock();
         ImGui::Text(("Ship " + std::to_string(i)).c_str());
-        if (!ship.lock()->is_destroyed)
+        ImGui::SameLine();
+        std::string type_string = ship_type_to_string(ship_locked->type);
+
+        ImGui::Text(("Type " + type_string).c_str());
+        if (!ship_locked->is_destroyed)
         {
             ImGui::SameLine();
             if (ImGui::Button(("Destroy##" + std::to_string(i)).c_str()))
             {
-                ship.lock()->destroy();
+                ship_locked->destroy();
             }
         }
+
         i++;
     }
 }
@@ -122,11 +128,11 @@ void ShipSpawner::spawn_ship()
     ship->add_component(Model::create("./res/models/ship/ship.gltf", standard_material));
     ship->transform->set_local_position({ spawn_position.x, 0.0f, spawn_position.y });
 
-    auto const ship_comp = ship->add_component(Ship::create(light.lock()));
+    auto const ship_comp = ship->add_component(Ship::create(light.lock(), std::static_pointer_cast<ShipSpawner>(shared_from_this())));
     ship->add_component<Collider2D>(Collider2D::create(ColliderType2D::Rectangle, { 0.5f, 0.5f }));
     ship_comp->on_ship_destroyed.attach(&ShipSpawner::remove_ship, shared_from_this());
 
-    ships.emplace_back(ship_comp);
+    m_ships.emplace_back(ship_comp);
 
     if (m_main_spawn.back().spawn_list.empty())
     {
@@ -149,7 +155,7 @@ bool ShipSpawner::is_spawn_possible() const
 {
     i32 number_of_ships = 0;
 
-    for (auto const& ship : ships)
+    for (auto const& ship : m_ships)
     {
         if (!ship.lock()->is_destroyed)
         {
@@ -167,5 +173,33 @@ bool ShipSpawner::is_spawn_possible() const
 
 void ShipSpawner::remove_ship(std::shared_ptr<Ship> const& ship_to_remove)
 {
-    AK::swap_and_erase(ships, ship_to_remove);
+    AK::swap_and_erase(m_ships, ship_to_remove);
+}
+
+glm::vec2 ShipSpawner::find_nearest_non_pirate_ship(std::shared_ptr<Ship> const& center_ship)
+{
+    auto const& nearest = m_ships[0];
+    glm::vec2 ship_position = AK::convert_3d_to_2d(center_ship->entity->transform->get_local_position());
+    glm::vec2 nearest_position = AK::convert_3d_to_2d(nearest.lock()->entity->transform->get_local_position());
+    float distance = glm::distance(ship_position, nearest_position);
+
+    for (auto const& ship : m_ships)
+    {
+        auto const ship_locked = ship.lock();
+        if (ship_locked == center_ship || ship_locked->type == ShipType::Pirates || ship_locked->is_destroyed)
+        {
+            continue;
+        }
+
+        glm::vec2 check_position = AK::convert_3d_to_2d(ship_locked->entity->transform->get_local_position());
+        float check_distance = glm::distance(ship_position, check_position);
+
+        if (distance < check_distance)
+        {
+            distance = check_distance;
+            nearest_position = check_position;
+        }
+    }
+
+    return nearest_position;
 }
