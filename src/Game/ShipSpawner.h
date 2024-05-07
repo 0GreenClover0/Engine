@@ -23,6 +23,7 @@ public:
 private:
     void spawn_ship();
     void remove_ship(std::shared_ptr<Ship> const& ship_to_remove);
+    bool is_spawn_possible() const;
 
     enum class ShipType
     {
