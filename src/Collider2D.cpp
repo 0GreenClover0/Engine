@@ -102,6 +102,16 @@ ColliderType2D Collider2D::get_collider_type() const
     return m_collider_type;
 }
 
+bool Collider2D::is_trigger() const
+{
+    return m_is_trigger;
+}
+
+void Collider2D::set_is_trigger(bool const is_trigger)
+{
+    m_is_trigger = is_trigger;
+}
+
 float Collider2D::get_radius_2d() const
 {
     return m_radius;

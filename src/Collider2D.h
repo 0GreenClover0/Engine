@@ -44,9 +44,14 @@ public:
     void separate(bool const sign) const;
 
     ColliderType2D get_collider_type() const;
+
+    bool is_trigger() const;
+    void set_is_trigger(bool const is_trigger);
+
     float get_radius_2d() const;
     glm::vec2 get_center_2d() const;
     glm::vec2 get_bounds_dimensions_2d() const;
+
     bool overlaps(Collider2D& other);
 
     bool is_static() const;
@@ -63,6 +68,8 @@ private:
     bool test_collision_rectangle_rectangle(Collider2D const& obb1, Collider2D const& obb2);
     bool test_collision_circle_circle(Collider2D const& obb1, Collider2D const& obb2) const;
     bool test_collision_circle_rectangle(Collider2D& obb1, Collider2D& obb2);
+
+    bool m_is_trigger = false;
 
     ColliderType2D m_collider_type = ColliderType2D::Circle;
     bool m_is_static = false;

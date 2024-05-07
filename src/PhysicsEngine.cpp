@@ -1,5 +1,6 @@
 #include "PhysicsEngine.h"
 
+#include "Debug.h"
 #include "Engine.h"
 #include "Entity.h"
 #include "AK/AK.h"
@@ -56,10 +57,16 @@ void PhysicsEngine::solve_collisions() const
             ColliderType2D const collider1_type = colliders[i]->get_collider_type();
             ColliderType2D const collider2_type = colliders[j]->get_collider_type();
 
+            bool const should_overlap_as_trigger = collider1->is_trigger() || collider2->is_trigger() && collider1->is_trigger() != collider2->is_trigger();
+
             // CIRCLE/CIRCLE
-            if (collider1_type == collider2_type && collider1_type == ColliderType2D::Circle)
+            if (collider1_type == collider2_type && collider1_type == ColliderType2D::Circle && collider1->overlaps(*collider2))
             {
-                if (collider1->overlaps(*collider2))
+                if (should_overlap_as_trigger)
+                {
+                    Debug::log("Overlap");
+                }
+                else
                 {
                     on_collision_enter(collider1, collider2);
                     on_collision_enter(collider2, collider1);
@@ -76,9 +83,13 @@ void PhysicsEngine::solve_collisions() const
             }
 
             // RECTANGLE/RECTANGLE
-            else if (collider1_type == collider2_type && collider1_type == ColliderType2D::Rectangle)
+            else if (collider1_type == collider2_type && collider1_type == ColliderType2D::Rectangle && collider1->overlaps(*collider2))
             {
-                if (collider1->overlaps(*collider2))
+                if (should_overlap_as_trigger)
+                {
+                    Debug::log("Overlap");
+                }
+                else
                 {
                     on_collision_enter(collider1, collider2);
                     on_collision_enter(collider2, collider1);
@@ -99,17 +110,24 @@ void PhysicsEngine::solve_collisions() const
             {
                 if (collider1->overlaps(*collider2))
                 {
-                    on_collision_enter(collider1, collider2);
-                    on_collision_enter(collider2, collider1);
+                    if (should_overlap_as_trigger)
+                    {
+                        Debug::log("Overlap");
+                    }
+                    else
+                    {
+                        on_collision_enter(collider1, collider2);
+                        on_collision_enter(collider2, collider1);
 
-                    if (!collider1->is_static())
-                        collider1->separate(true);
+                        if (!collider1->is_static())
+                            collider1->separate(true);
 
-                    if (!collider2->is_static())
-                        collider2->separate(true);
+                        if (!collider2->is_static())
+                            collider2->separate(true);
 
-                    on_collision_exit(collider1, collider2);
-                    on_collision_exit(collider2, collider1);
+                        on_collision_exit(collider1, collider2);
+                        on_collision_exit(collider2, collider1);
+                    }
                 }
             }
         }
