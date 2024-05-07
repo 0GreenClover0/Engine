@@ -44,9 +44,9 @@ inline std::string generate_hex(u32 const length)
     return ss.str();
 }
 
-inline glm::vec3 convert_2d_to_3d(glm::vec2 const& v)
+inline glm::vec3 convert_2d_to_3d(glm::vec2 const& v, float desired_y = 0.0f)
 {
-    return { v.x, 0, v.y };
+    return { v.x, desired_y, v.y };
 }
 
 inline glm::vec2 convert_3d_to_2d(glm::vec3 const& v)
