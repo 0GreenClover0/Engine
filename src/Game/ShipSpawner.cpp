@@ -100,6 +100,11 @@ void ShipSpawner::spawn_ship()
         return;
     }
 
+    if (!is_spawn_possible())
+    {
+        return;
+    }
+
     std::weak_ptr<Path> const path = paths[std::rand() % paths.size()];
 
     glm::vec2 spawn_position = path.lock()->get_point_at(glm::linearRand(0.0f, 1.0f));
@@ -129,6 +134,26 @@ void ShipSpawner::spawn_ship()
     SpawnEvent* being_spawn = &m_main_spawn.back();
 
     being_spawn->spawn_list.pop_back();
+}
+
+bool ShipSpawner::is_spawn_possible() const
+{
+    i32 number_of_ships = 0;
+
+    for (auto const& ship : ships)
+    {
+        if (!ship.lock()->is_destroyed)
+        {
+            number_of_ships++;
+        }
+    }
+
+    if (number_of_ships < GameController::get_instance()->ships_limit)
+    {
+        return true;
+    }
+
+    return false;
 }
 
 void ShipSpawner::remove_ship(std::shared_ptr<Ship> const& ship_to_remove)

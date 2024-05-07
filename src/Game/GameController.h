@@ -35,6 +35,8 @@ public:
     NON_SERIALIZED
     float time = 0.0f;
 
+    i32 ships_limit = 3;
+
     std::vector<std::weak_ptr<Factory>> factories = {};
 
 private:
