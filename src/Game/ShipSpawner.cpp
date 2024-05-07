@@ -76,6 +76,20 @@ void ShipSpawner::update()
 
 void ShipSpawner::draw_editor()
 {
+    i32 i = 0;
+    for (auto const& ship : ships)
+    {
+        ImGui::Text(("Ship " + std::to_string(i)).c_str());
+        if (!ship.lock()->is_destroyed)
+        {
+            ImGui::SameLine();
+            if (ImGui::Button(("Destroy##" + std::to_string(i)).c_str()))
+            {
+                ship.lock()->destroy();
+            }
+        }
+        i++;
+    }
 }
 
 void ShipSpawner::spawn_ship()

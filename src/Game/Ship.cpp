@@ -57,8 +57,7 @@ void Ship::update()
     //TODO Add correct conditions for destroying ships
     if (Input::input->get_key_down(GLFW_KEY_F3))
     {
-        is_destroyed = true;
-        destroyed_counter = destroy_time;
+        destroy();
     }
 
     if (is_destroyed)
@@ -107,6 +106,12 @@ void Ship::update()
         entity->transform->set_local_position(entity->transform->get_local_position() + glm::vec3(speed_vector.x, 0.0f, speed_vector.y));
     }
     entity->transform->set_euler_angles(glm::vec3(0.0f, -m_direction - 90.0f, 0.0f));
+}
+
+void Ship::destroy()
+{
+    is_destroyed = true;
+    destroyed_counter = destroy_time;
 }
 
 void Ship::on_destroyed()

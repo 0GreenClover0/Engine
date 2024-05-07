@@ -17,6 +17,8 @@ public:
     virtual void on_destroyed() override;
     virtual void draw_editor() override;
 
+    void destroy();
+
     float minimum_speed = 0.11f;
     float maximum_speed = 0.23f;
 
