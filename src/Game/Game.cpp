@@ -98,7 +98,7 @@ void Game::initialize()
     port->transform->set_local_position({ -0.113047f, 0.022923f, 2.162429f });
     port->transform->set_local_scale({ 2.866844f, 0.323763f, 1.0f });
     port->add_component(Cube::create("./res/textures/skybox/interstellar/interstellar_bk.tga", standard_material));
-    port->add_component<Collider2D>(Collider2D::create(ColliderType2D::Rectangle, { port->transform->get_local_scale().x / 2.0f, port->transform->get_local_scale().z / 2.0f }, true));
+    port->add_component<Collider2D>(Collider2D::create({ port->transform->get_local_scale().x / 2.0f, port->transform->get_local_scale().z / 2.0f }, true));
 
     auto const lighthouse = Entity::create("Lighthouse");
     lighthouse->add_component<Model>(Model::create("./res/models/lighthouse/lighthouse.gltf", standard_material));
