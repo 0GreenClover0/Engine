@@ -909,7 +909,10 @@ void Editor::handle_input()
 
     if (input->get_key_down(GLFW_KEY_DELETE))
     {
-        delete_selected_entity();
+        if (!ImGui::IsAnyItemActive())
+        {
+            delete_selected_entity();
+        }
     }
 
     if (!input->get_key(GLFW_MOUSE_BUTTON_RIGHT))
