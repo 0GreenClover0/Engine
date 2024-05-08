@@ -2,6 +2,7 @@
 
 #include "Component.h"
 #include "Engine.h"
+#include "Curve.h"
 
 class ScreenText;
 class Factory;
@@ -21,11 +22,9 @@ public:
 
     void on_lighthouse_upgraded();
 
-    float map_time = 0.0f;
+    float map_time = 180.0f;
     NON_SERIALIZED
     float time = 0.0f;
-
-    i32 ships_limit = 3;
 
     std::vector<std::weak_ptr<Factory>> factories = {};
 
@@ -33,7 +32,8 @@ public:
     float const playfield_additional_width = 1.4f;
     float const playfield_height = 3.6f;
 
-    //TODO KRZYWE
+    std::weak_ptr<Curve> ships_limit_curve = {};
+    u32 ships_limit = 0;
 
 private:
     inline static std::shared_ptr<LevelController> m_instance;
