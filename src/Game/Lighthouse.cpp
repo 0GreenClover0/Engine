@@ -8,6 +8,8 @@
 
 #include <imgui_extensions.h>
 
+#include "Collider2D.h"
+
 std::shared_ptr<Lighthouse> Lighthouse::create()
 {
     return std::make_shared<Lighthouse>(AK::Badge<Lighthouse> {});
@@ -66,6 +68,7 @@ void Lighthouse::exit()
 
     auto const keeper = Entity::create("keeper");
     keeper->add_component(Model::create("./res/models/keeper/keeper.gltf", standard_material));
+    keeper->add_component(Collider2D::create(0.1f));
     auto const keeper_comp = keeper->add_component(LighthouseKeeper::create());
     keeper_comp->lighthouse = static_pointer_cast<Lighthouse>(shared_from_this());
     keeper_comp->port = port;
