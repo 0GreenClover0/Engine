@@ -101,7 +101,7 @@ void Game::initialize()
     port->add_component<Collider2D>(Collider2D::create({ port->transform->get_local_scale().x / 2.0f, port->transform->get_local_scale().z / 2.0f }, true));
 
     auto const lighthouse = Entity::create("Lighthouse");
-    lighthouse->add_component<Model>(Model::create("./res/models/lighthouse/lighthouse.gltf", standard_material));
+    lighthouse->add_component<Model>(Model::create("./res/models/lighthouseNew/lighthouse.gltf", standard_material));
     lighthouse->transform->set_local_position(glm::vec3(2.294563f, 0.223798f, 2.378702f));
     auto const lighthouse_comp = lighthouse->add_component<Lighthouse>(Lighthouse::create());
     lighthouse_comp->light = light_comp;

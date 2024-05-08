@@ -53,7 +53,7 @@ void Factory::set_type(FactoryType const type)
     }
     else if (type == FactoryType::Workshop)
     {
-        model = entity->add_component<Model>(Model::create("./res/models/lighthouse/lighthouse.gltf", standard_material));
+        model = entity->add_component<Model>(Model::create("./res/models/lighthouseOld/lighthouse.gltf", standard_material));
         entity->transform->set_local_scale({ 1.0f, 1.0f, 1.0f });
     }
 }
