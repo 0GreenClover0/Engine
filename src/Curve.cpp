@@ -138,6 +138,33 @@ glm::vec2 Curve::get_point_at(float x) const
     return glm::vec2(0.0f, 0.0f);
 }
 
+float Curve::get_y_at(float x) const
+{
+    if (points.empty()) 
+    {
+        return 0.0f;
+    }
+
+    x = glm::clamp(x, 0.0f, 1.0f);
+
+    for (u32 i = 0; i < points.size() - 1; i++) 
+    {
+        if (x >= points[i].x && x <= points[i + 1].x) 
+        {
+            float x0 = points[i].x;
+            float y0 = points[i].y;
+            float x1 = points[i + 1].x;
+            float y1 = points[i + 1].y;
+
+            float t = (x - x0) / (x1 - x0);
+            float y = y0 + t * (y1 - y0);
+            return y;
+        }
+    }
+
+    return 0.0f;
+}
+
 void Curve::add_points(std::initializer_list<glm::vec2> new_points)
 {
     points.insert(points.end(), new_points.begin(), new_points.end());
