@@ -137,3 +137,8 @@ glm::vec2 Curve::get_point_at(float x) const
 
     return glm::vec2(0.0f, 0.0f);
 }
+
+void Curve::add_points(std::initializer_list<glm::vec2> new_points)
+{
+    points.insert(points.end(), new_points.begin(), new_points.end());
+}
