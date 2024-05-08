@@ -13,6 +13,7 @@ public:
     
     std::vector<glm::vec2> points = {};
     glm::vec2 get_point_at(float x) const;
+    void add_points(std::initializer_list<glm::vec2> new_points);
 
 protected:
     explicit Curve();
