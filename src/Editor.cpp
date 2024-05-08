@@ -65,7 +65,7 @@ Editor::Editor(AK::Badge<Editor>)
 
     m_camera_entity = Entity::create_internal("Editor Camera");
     m_editor_camera = m_camera_entity->add_component_internal<Camera>(Camera::create());
-    m_editor_camera->set_fov(glm::radians(60.0f));
+    reset_camera();
 
     if (!Engine::is_game_running())
         Camera::set_main_camera(m_editor_camera);
@@ -148,6 +148,10 @@ void Editor::draw_debug_window(std::shared_ptr<EditorWindow> const& window)
     draw_window_menu_bar(window);
 
     ImGui::Checkbox("Polygon mode", &m_polygon_mode_active);
+    if (ImGui::Button("Reset camera"))
+    {
+        reset_camera();
+    }
     ImGui::Text("Application average %.3f ms/frame", m_average_ms_per_frame);
     draw_scene_save();
 
@@ -846,6 +850,13 @@ void Editor::non_camera_input()
     {
         m_operation_type = GuizmoOperationType::None;
     }
+}
+
+void Editor::reset_camera()
+{
+    m_camera_entity->transform->set_local_position(m_camera_default_position);
+    m_camera_entity->transform->set_euler_angles(m_camera_default_rotation);
+    m_editor_camera->set_fov(glm::radians(m_camera_default_fov));
 }
 
 void Editor::delete_selected_entity() const

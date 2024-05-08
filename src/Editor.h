@@ -177,6 +177,8 @@ private:
     void camera_input() const;
     void non_camera_input();
 
+    void reset_camera();
+
     void delete_selected_entity() const;
 
     void mouse_callback(double const x, double const y);
@@ -187,6 +189,10 @@ private:
     bool m_mouse_just_entered = true;
     double m_sensitivity = 0.1;
     float m_camera_speed = 12.5f;
+
+    glm::vec3 const m_camera_default_position = { 0.0f, 11.3f, 11.3f };
+    glm::vec3 const m_camera_default_rotation = { -45.0f, 0.0f, 0.0f };
+    float const m_camera_default_fov = 17.51f;
 
     std::shared_ptr<Entity> m_camera_entity;
     std::shared_ptr<Camera> m_editor_camera;
