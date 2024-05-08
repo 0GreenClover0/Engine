@@ -72,29 +72,22 @@ void Collider2D::uninitialize()
     PhysicsEngine::get_instance()->remove_collider(std::dynamic_pointer_cast<Collider2D>(shared_from_this()));
 }
 
-void Collider2D::separate(Collider2D const& other) const
+void Collider2D::separate(Collider2D const& other, bool const is_static)
 {
     // This is for circle x circle
     glm::vec2 const center1_2d = get_center_2d();
     glm::vec2 const center2_2d = other.get_center_2d();
 
-    glm::vec2 const separation_vector_2d = glm::normalize(center1_2d - center2_2d) * 
-                                           (get_radius_2d() + other.get_radius_2d() - glm::distance(center1_2d, center2_2d));
+    // Here and below in second separate function multiply by 2 if static.
+    m_mtv = 0.5f * glm::normalize(center1_2d - center2_2d) * (get_radius_2d() + other.get_radius_2d() - glm::distance(center1_2d, center2_2d));
 
-    glm::vec3 const separation_vector = AK::convert_2d_to_3d(separation_vector_2d);
-    glm::vec3 const half_separation_vector = separation_vector * 0.5f;
-
-    glm::vec3 const new_position = entity->transform->get_local_position() + half_separation_vector;
-    entity->transform->set_local_position(new_position);
+    apply_mtv(true, is_static);
 }
 
-void Collider2D::separate(bool const sign) const
+void Collider2D::separate(bool const sign, bool const is_static)
 {
-    // This is for rectangle x rectangle
-    // This is for circle x rectangle (also)
-    float const factor = sign ? 1.0f : -1.0f;
-    glm::vec2 const new_pos = AK::convert_3d_to_2d(entity->transform->get_position()) + m_mtv * 0.5f * factor;
-    entity->transform->set_local_position(AK::convert_2d_to_3d(new_pos, entity->transform->get_position().y));
+    // This is for rectangle x rectangle and for circle x rectangle
+    apply_mtv(sign, is_static);
 }
 
 ColliderType2D Collider2D::get_collider_type() const
@@ -112,6 +105,21 @@ void Collider2D::set_is_trigger(bool const is_trigger)
     m_is_trigger = is_trigger;
 }
 
+bool Collider2D::is_static() const
+{
+    return m_is_static;
+}
+
+void Collider2D::set_is_static(bool const value)
+{
+    if (m_is_static == value)
+    {
+        return;
+    }
+
+    m_is_static = value;
+}
+
 float Collider2D::get_radius_2d() const
 {
     return m_radius;
@@ -125,21 +133,6 @@ glm::vec2 Collider2D::get_center_2d() const
 glm::vec2 Collider2D::get_bounds_dimensions_2d() const
 {
     return { m_width, m_height };
-}
-
-bool Collider2D::is_static() const
-{
-    return m_is_static;
-}
-
-void Collider2D::set_static(bool const value)
-{
-    if (m_is_static == value)
-    {
-        return;
-    }
-
-    m_is_static = value;
 }
 
 bool Collider2D::overlaps(Collider2D& other)
@@ -160,6 +153,17 @@ bool Collider2D::overlaps(Collider2D& other)
         return test_collision_circle_rectangle(other, *this);
 
     return false;
+}
+
+void Collider2D::apply_mtv(bool const sign, bool const is_static) const
+{
+    float factor = sign ? 1.0f : -1.0f;
+
+    if (is_static)
+        factor *= 2.0f;
+
+    glm::vec2 const new_position = AK::convert_3d_to_2d(entity->transform->get_position()) + m_mtv * 0.5f * factor;
+    entity->transform->set_local_position(AK::convert_2d_to_3d(new_position, entity->transform->get_position().y));
 }
 
 void Collider2D::update()
