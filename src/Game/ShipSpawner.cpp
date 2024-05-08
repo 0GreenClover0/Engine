@@ -35,34 +35,32 @@ void ShipSpawner::awake()
     s1.spawn_type = SpawnType::Sequence;
     
     SpawnEvent s2 = {};
-    s2.spawn_list.emplace_back(ShipType::Pirates);
+    s2.spawn_list.emplace_back(ShipType::FoodSmall);
     s2.spawn_type = SpawnType::Sequence;
 
-    //SpawnEvent s3 = {};
-    //s3.spawn_list.emplace_back(ShipType::FoodBig);
-    //s3.spawn_type = SpawnType::Sequence;
+    SpawnEvent s3 = {};
+    s3.spawn_list.emplace_back(ShipType::FoodSmall);
+    s3.spawn_type = SpawnType::Sequence;
 
-    //SpawnEvent s4 = {};
-    //s4.spawn_list.emplace_back(ShipType::Tool);
-    //s4.spawn_type = SpawnType::Sequence;
-
-    //SpawnEvent pirate_event = {};
-    //pirate_event.spawn_list.emplace_back(ShipType::Pirates);
-    //pirate_event.spawn_list.emplace_back(ShipType::Pirates);
-    //pirate_event.spawn_list.emplace_back(ShipType::Pirates);
-    //pirate_event.spawn_list.emplace_back(ShipType::Pirates);
-    //pirate_event.spawn_type = SpawnType::Imidiet;
+    SpawnEvent s4 = {};
+    s4.spawn_list.emplace_back(ShipType::Tool);
+    s4.spawn_type = SpawnType::Sequence;
 
     m_backup_spawn.emplace_back(s1);
     m_backup_spawn.emplace_back(s2);
-    //m_backup_spawn.emplace_back(s3);
-    //m_backup_spawn.emplace_back(s4);
-    //m_backup_spawn.emplace_back(pirate_event);
+    m_backup_spawn.emplace_back(s3);
+    m_backup_spawn.emplace_back(s4);
 
     m_main_spawn = m_backup_spawn;
 
     auto const seed = std::chrono::system_clock::now().time_since_epoch().count();
     std::ranges::shuffle(m_main_spawn, std::default_random_engine(seed));
+
+    auto const path1 = entity->add_component<Path>(Path::create());
+    path1->add_points({ { -5.0f, -2.5f }, { -5.0f, 1.7f } });
+
+    auto const path2 = entity->add_component<Path>(Path::create());
+    path2->add_points({ { 5.0f, -2.5f }, { 5.0f, 1.7f } });
 
     for (auto const& path : entity->get_components<Path>())
     {
@@ -74,10 +72,7 @@ void ShipSpawner::awake()
 
 void ShipSpawner::update()
 {
-    if (Input::input->get_key_down(GLFW_KEY_F2))
-    {
-        spawn_ship();
-    }
+    spawn_ship();
 }
 
 void ShipSpawner::draw_editor()
