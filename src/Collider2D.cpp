@@ -157,10 +157,13 @@ bool Collider2D::overlaps(Collider2D& other)
 
 void Collider2D::apply_mtv(bool const sign, bool const is_static) const
 {
-    float factor = sign ? 1.0f : -1.0f;
+    float const factor = sign ? 1.0f : -1.0f;
 
-    if (is_static)
-        factor *= 2.0f;
+    // I will leave this commented out to remember that this used to exist in case doubling the MTV might
+    // still be needed after further investigation and using collisions in game for a longer period.
+
+    // if (is_static)
+    //     factor *= 2.0f;
 
     glm::vec2 const new_position = AK::convert_3d_to_2d(entity->transform->get_position()) + m_mtv * 0.5f * factor;
     entity->transform->set_local_position(AK::convert_2d_to_3d(new_position, entity->transform->get_position().y));
