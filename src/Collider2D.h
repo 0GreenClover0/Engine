@@ -38,24 +38,25 @@ public:
     virtual void update() override;
 
     // CIRCLE X CIRCLE
-    void separate(Collider2D const& other) const;
+    void separate(Collider2D const& other, bool const is_static);
 
     // RECTANGLE X RECTANGLE, CIRCLE X RECTANGLE
-    void separate(bool const sign) const;
+    void separate(bool const sign, bool const is_static);
 
     ColliderType2D get_collider_type() const;
 
     bool is_trigger() const;
     void set_is_trigger(bool const is_trigger);
 
+    bool is_static() const;
+    void set_is_static(bool const value);
+
     float get_radius_2d() const;
     glm::vec2 get_center_2d() const;
     glm::vec2 get_bounds_dimensions_2d() const;
 
     bool overlaps(Collider2D& other);
-
-    bool is_static() const;
-    void set_static(bool const value);
+    void apply_mtv(bool const sign, bool const is_static) const;
 
 private:
     glm::vec2 get_perpendicular_axis(std::array<glm::vec2, 4> const& passed_corners, u8 const index) const;
@@ -70,9 +71,9 @@ private:
     bool test_collision_circle_rectangle(Collider2D& obb1, Collider2D& obb2);
 
     bool m_is_trigger = false;
+    bool m_is_static = false;
 
     ColliderType2D m_collider_type = ColliderType2D::Circle;
-    bool m_is_static = false;
 
     std::array<glm::vec2, 4> m_corners = {}; // For rectangle, calculated each frame
     std::array<glm::vec2, 2> m_axes = {};    // For rectangle, calculated each frame

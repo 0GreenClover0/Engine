@@ -59,55 +59,20 @@ void PhysicsEngine::solve_collisions() const
 
             bool const should_overlap_as_trigger = collider1->is_trigger() || collider2->is_trigger() && collider1->is_trigger() != collider2->is_trigger();
 
-            // CIRCLE/CIRCLE
-            if (collider1_type == collider2_type && collider1_type == ColliderType2D::Circle && collider1->overlaps(*collider2))
+            auto collision_type = CollisionType::Undefined;
+
+            if (collider1_type == collider2_type && collider1_type == ColliderType2D::Circle)
+                collision_type = CollisionType::CircleCircle;
+
+            if (collider1_type == collider2_type && collider1_type == ColliderType2D::Rectangle)
+                collision_type = CollisionType::RectangleRectangle;
+
+            if (collider1_type != collider2_type)
+                collision_type = CollisionType::CircleRectangle;
+
+            switch(collision_type)
             {
-                if (should_overlap_as_trigger)
-                {
-                    Debug::log("Overlap");
-                }
-                else
-                {
-                    on_collision_enter(collider1, collider2);
-                    on_collision_enter(collider2, collider1);
-
-                    if (!collider1->is_static())
-                        collider1->separate(*collider2);
-
-                    if (!collider2->is_static())
-                        collider2->separate(*collider1);
-
-                    on_collision_exit(collider1, collider2);
-                    on_collision_exit(collider2, collider1);
-                }
-            }
-
-            // RECTANGLE/RECTANGLE
-            else if (collider1_type == collider2_type && collider1_type == ColliderType2D::Rectangle && collider1->overlaps(*collider2))
-            {
-                if (should_overlap_as_trigger)
-                {
-                    Debug::log("Overlap");
-                }
-                else
-                {
-                    on_collision_enter(collider1, collider2);
-                    on_collision_enter(collider2, collider1);
-
-                    if (!collider1->is_static())
-                        collider1->separate(true);
-
-                    if (!collider2->is_static())
-                        collider2->separate(true);
-
-                    on_collision_exit(collider1, collider2);
-                    on_collision_exit(collider2, collider1);
-                }
-            }
-
-            // CIRCLE/RECTANGLE
-            else if (collider1_type != collider2_type)
-            {
+            case CollisionType::CircleCircle:
                 if (collider1->overlaps(*collider2))
                 {
                     if (should_overlap_as_trigger)
@@ -119,16 +84,94 @@ void PhysicsEngine::solve_collisions() const
                         on_collision_enter(collider1, collider2);
                         on_collision_enter(collider2, collider1);
 
-                        if (!collider1->is_static())
-                            collider1->separate(true);
-
-                        if (!collider2->is_static())
-                            collider2->separate(true);
+                        if (!collider1->is_static() && !collider2->is_static())
+                        {
+                            collider2->separate(*collider1, false);
+                            collider1->separate(*collider2, false);
+                        }
+                        else if (collider1->is_static())
+                        {
+                            collider2->separate(*collider1, true);
+                        }
+                        else if (collider2->is_static())
+                        {
+                            collider1->separate(*collider2, true);
+                        }
 
                         on_collision_exit(collider1, collider2);
                         on_collision_exit(collider2, collider1);
                     }
                 }
+                break;
+
+            case CollisionType::RectangleRectangle:
+                if (collider1->overlaps(*collider2))
+                {
+                    if (should_overlap_as_trigger)
+                    {
+                        Debug::log("Overlap");
+                    }
+                    else
+                    {
+                        on_collision_enter(collider1, collider2);
+                        on_collision_enter(collider2, collider1);
+
+                        if (!collider1->is_static() && !collider2->is_static())
+                        {
+                            collider1->separate(true, false);
+                            collider2->separate(true, false);
+                        }
+                        else if (collider1->is_static())
+                        {
+                            collider2->separate(true, true);
+                        }
+                        else if (collider2->is_static())
+                        {
+                            collider1->separate(true, true);
+                        }
+
+                        on_collision_exit(collider1, collider2);
+                        on_collision_exit(collider2, collider1);
+                    }
+                }
+                break;
+
+            case CollisionType::CircleRectangle:
+                if (collider1->overlaps(*collider2))
+                {
+                    if (should_overlap_as_trigger)
+                    {
+                        Debug::log("Overlap");
+                    }
+                    else
+                    {
+                        on_collision_enter(collider1, collider2);
+                        on_collision_enter(collider2, collider1);
+
+                        if (!collider1->is_static() && !collider2->is_static())
+                        {
+                            collider1->separate(true, false);
+                            collider2->separate(true, false);
+                        }
+                        else if (collider1->is_static())
+                        {
+                            collider2->separate(true, true);
+                        }
+                        else if (collider2->is_static())
+                        {
+                            collider1->separate(true, true);
+                        }
+
+                        on_collision_exit(collider1, collider2);
+                        on_collision_exit(collider2, collider1);
+                    }
+                }
+                break;
+
+            case CollisionType::Undefined:
+            default:
+                Debug::log("Undefined collision detected", DebugType::Error);
+                std::unreachable();
             }
         }
     }

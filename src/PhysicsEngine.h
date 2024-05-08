@@ -4,6 +4,14 @@
 
 #include "Collider2D.h"
 
+enum class CollisionType
+{
+    Undefined,
+    CircleCircle,
+    RectangleRectangle,
+    CircleRectangle
+};
+
 class PhysicsEngine
 {
 public:
