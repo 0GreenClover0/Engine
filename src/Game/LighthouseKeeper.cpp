@@ -27,6 +27,7 @@ LighthouseKeeper::LighthouseKeeper(AK::Badge<LighthouseKeeper>)
 void LighthouseKeeper::awake()
 {
     set_can_tick(true);
+
 }
 
 void LighthouseKeeper::update()
