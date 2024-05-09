@@ -29,6 +29,9 @@ protected:
     virtual void set_up_shadow_mapping() override;
 
 private:
+    float m_cut_off_degrees = 32.5f;
+    float m_outer_cut_off_degrees = 60.0f;
+
     ID3D11DepthStencilView* m_shadow_depth_stencil_view = nullptr;
     glm::mat4 m_projection_view_matrix = {};
 };

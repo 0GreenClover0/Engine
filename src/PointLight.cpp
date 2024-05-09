@@ -17,6 +17,9 @@ std::shared_ptr<PointLight> PointLight::create()
 void PointLight::draw_editor()
 {
     Light::draw_editor();
+    ImGui::Text("Attenuation:");
+    ImGui::SliderFloat("Linear", &linear, 0.0f, 1.0f);
+    ImGui::SliderFloat("Quadratic", &quadratic, 0.0f, 1.0f);
 }
 
 void PointLight::set_up_shadow_mapping()
