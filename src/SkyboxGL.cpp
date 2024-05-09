@@ -15,6 +15,11 @@ void SkyboxGL::bind()
     bind_texture();
 }
 
+void SkyboxGL::unbind()
+{
+    unbind_texture();
+}
+
 void SkyboxGL::draw() const
 {
     if (m_texture->id == 0)
@@ -46,6 +51,11 @@ void SkyboxGL::draw() const
 void SkyboxGL::bind_texture() const
 {
     glBindTexture(GL_TEXTURE_CUBE_MAP, m_texture->id);
+}
+
+void SkyboxGL::unbind_texture() const
+{
+    glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 }
 
 void SkyboxGL::create_cube()

@@ -2,12 +2,17 @@
 
 #include <iostream>
 #include <utility>
-#include <glad/glad.h>
 
 #include "Globals.h"
 #include "ResourceManager.h"
+#include "Renderer.h"
 
 Skybox::Skybox(std::shared_ptr<Material> const& material, std::vector<std::string> const& face_paths) : Drawable(material), m_face_paths(face_paths)
+{
+    load_textures();
+}
+
+Skybox::Skybox(std::shared_ptr<Material> const& material, std::string const& path) : Drawable(material), m_path(path)
 {
     load_textures();
 }
@@ -26,11 +31,21 @@ void Skybox::load_textures()
         false
     };
 
-    m_texture = ResourceManager::get_instance().load_cubemap(m_face_paths, TextureType::None, texture_settings);
+    if (Renderer::renderer_api == Renderer::RendererApi::DirectX11)
+    {
+        m_texture = ResourceManager::get_instance().load_cubemap(m_path, TextureType::None, texture_settings);
+    }
+    else if (Renderer::renderer_api == Renderer::RendererApi::OpenGL)
+    {
+        m_texture = ResourceManager::get_instance().load_cubemap(m_face_paths, TextureType::None, texture_settings);
+    }
 }
 
 void Skybox::set_instance(std::shared_ptr<Skybox> const& skybox)
 {
+    if (m_instance != nullptr)
+        Debug::log("Skybox already exists in the scene, setting instance to the new Skybox.", DebugType::Error);
+
     m_instance = skybox;
 }
 

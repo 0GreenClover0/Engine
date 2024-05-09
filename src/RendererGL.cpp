@@ -140,11 +140,17 @@ void RendererGL::update_object(std::shared_ptr<Drawable> const& drawable, std::s
     if (material->needs_view_model)
         material->shader->set_mat4("VM", Camera::get_main_camera()->get_view_matrix() * drawable->entity->transform->get_model_matrix());
 
-    if (material->needs_skybox)
+    if (Skybox::get_instance() != nullptr && material->needs_skybox)
         Skybox::get_instance()->bind();
 
     material->shader->set_mat4("PVM", projection_view * drawable->entity->transform->get_model_matrix());
     material->shader->set_mat4("model", drawable->entity->transform->get_model_matrix());
+}
+
+void RendererGL::unbind_material(std::shared_ptr<Material> const &material) const
+{
+    if (Skybox::get_instance() != nullptr && material->needs_skybox)
+        Skybox::get_instance()->unbind();
 }
 
 void RendererGL::initialize_global_renderer_settings()

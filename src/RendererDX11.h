@@ -26,6 +26,7 @@ public:
     [[nodiscard]] ID3D11Device* get_device() const;
     [[nodiscard]] ID3D11DeviceContext* get_device_context() const;
     [[nodiscard]] ID3D11ShaderResourceView* get_render_texture_view() const;
+    [[nodiscard]] ID3D11DepthStencilState* get_depth_stencil_state() const;
 
     ID3D11RenderTargetView* g_emptyRenderTargetView = nullptr;
     inline static float constexpr SHADOW_MAP_SIZE = 1024.0f;
@@ -34,6 +35,8 @@ protected:
     virtual void update_shader(std::shared_ptr<Shader> const& shader, glm::mat4 const& projection_view, glm::mat4 const& projection_view_no_translation) const override;
     virtual void update_material(std::shared_ptr<Material> const& material) const override;
     virtual void update_object(std::shared_ptr<Drawable> const& drawable, std::shared_ptr<Material> const& material, glm::mat4 const& projection_view) const override;
+
+    virtual void unbind_material(std::shared_ptr<Material> const &material) const override;
 
 private:
     virtual void initialize_global_renderer_settings() override;
@@ -79,6 +82,7 @@ private:
     ID3D11Buffer* m_constant_buffer_point_shadows = nullptr;
     ID3D11DepthStencilView* m_depth_stencil_view = nullptr;
     ID3D11Texture2D* m_depth_stencil_buffer = nullptr;
+    ID3D11DepthStencilState* m_depth_stencil_state = nullptr;
     ID3D11Texture2D* m_render_target_texture = nullptr;
     ID3D11ShaderResourceView* m_render_target_texture_view = nullptr;
 
