@@ -34,6 +34,12 @@ set (implot_SOURCE_DIR ${IMPLOT_DIR} CACHE INTERNAL "")
 add_library(implot STATIC ${IMPLOT_DIR}/implot.cpp ${IMPLOT_DIR}/implot_items.cpp ${IMPLOT_DIR}/implot_demo.cpp)
 target_include_directories(implot PRIVATE ${IMPLOT_DIR})
 
+# DDSTextureLoader
+set(DDSTEXTURELOADER_DIR ${CMAKE_CURRENT_LIST_DIR}/DDSTextureLoader)
+set (ddstextureloader_SOURCE_DIR ${DDSTEXTURELOADER_DIR} CACHE INTERNAL "")
+add_library(ddstextureloader STATIC ${DDSTEXTURELOADER_DIR}/DDSTextureLoader11.cpp)
+target_include_directories(ddstextureloader PRIVATE ${DDSTEXTURELOADER_DIR})
+
 # disable most assimp importers
 SET (ASSIMP_BUILD_AMF_IMPORTER OFF)
 SET (ASSIMP_BUILD_3DS_IMPORTER OFF)
@@ -128,7 +134,8 @@ set_target_properties(glad
                       yaml-cpp
                       miniaudio
                       imguizmo
-                      implot PROPERTIES FOLDER "thirdparty")
+                      implot
+                      ddstextureloader PROPERTIES FOLDER "thirdparty")
 
 if (TARGET zlibstatic)
     set_target_properties(zlibstatic PROPERTIES FOLDER "thirdparty")
