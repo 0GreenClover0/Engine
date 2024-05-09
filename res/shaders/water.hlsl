@@ -68,6 +68,8 @@ Texture2D spot_light_shadow_map_slot1 : register(t7);
 Texture2D spot_light_shadow_map_slot2 : register(t8);
 Texture2D spot_light_shadow_map_slot3 : register(t9);
 
+TextureCube skybox : register(t10);
+
 SamplerState obj_sampler_state : register(s0);
 SamplerState shadow_map_sampler : register(s1);
 
@@ -202,7 +204,13 @@ float3 calculate_spot_light(SpotLight light, float3 normal, float3 world_pos, fl
 
 float4 ps_main(VS_Output input) : SV_TARGET
 {
+    float ratio = 1.0f / 1.25f;
     float3 norm = normalize(input.normal);
+    float3 I = normalize(input.world_pos - camera_pos);
+    float3 R_refract = refract(I, norm, ratio);
+    float3 R_reflect = reflect(I, norm);
+    float3 refraction = skybox.Sample(obj_sampler_state, R_refract).rgb;
+    float3 reflection = skybox.Sample(obj_sampler_state, R_reflect).rgb;
     
     float3 view_dir = normalize(camera_pos.xyz - input.world_pos.xyz);
     float3 diffuse_texture = obj_texture.Sample(obj_sampler_state, input.UV).rgb;
@@ -219,5 +227,7 @@ float4 ps_main(VS_Output input) : SV_TARGET
         result += calculate_spot_light(spot_lights[j], norm, input.world_pos, view_dir, diffuse_texture, j, input.raw_pos);
     }
 
-    return float4(result, .8f);
+    result += reflection * 0.5f;
+
+    return float4(result, 0.8f);
 }

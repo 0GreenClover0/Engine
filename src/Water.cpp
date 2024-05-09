@@ -15,6 +15,7 @@ std::shared_ptr<Water> Water::create()
     auto const shader = ResourceManager::get_instance().load_shader("./res/shaders/water.hlsl", "./res/shaders/water.hlsl");
     auto material = Material::create(shader);
     material->casts_shadows = false;
+    material->needs_skybox = true;
 
     auto water = std::make_shared<Water>(AK::Badge<Water> {}, material);
     water->tesselation_level = 5;
