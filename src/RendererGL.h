@@ -21,6 +21,8 @@ protected:
     virtual void update_material(std::shared_ptr<Material> const& material) const override;
     virtual void update_object(std::shared_ptr<Drawable> const& drawable, std::shared_ptr<Material> const& material, glm::mat4 const& projection_view) const override;
 
+    virtual void unbind_material(std::shared_ptr<Material> const &material) const override;
+
 private:
     virtual void initialize_global_renderer_settings() override;
     virtual void initialize_buffers(size_t const max_size) override;

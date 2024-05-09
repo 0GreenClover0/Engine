@@ -279,6 +279,8 @@ void Renderer::draw(std::shared_ptr<Material> const& material, glm::mat4 const& 
 
         drawable->draw();
     }
+
+    unbind_material(material);
 }
 
 void Renderer::draw_instanced(std::shared_ptr<Material> const& material, glm::mat4 const& projection_view, glm::mat4 const& projection_view_no_translation) const

@@ -40,11 +40,14 @@ private:
 
     [[nodiscard]] std::shared_ptr<Texture> load_texture(std::string const &path, TextureType const type,
                                                         TextureSettings const &settings = {});
-    [[nodiscard]] std::shared_ptr<Texture> load_cubemap(std::vector<std::string> const &paths, TextureType const type,
-                                                        TextureSettings const &settings = {});
+    [[nodiscard]] std::shared_ptr<Texture> load_cubemap(std::vector<std::string> const& paths, TextureType const type,
+                                                        TextureSettings const& settings = {});
+    [[nodiscard]] std::shared_ptr<Texture> load_cubemap(std::string const& path, TextureType const type,
+                                                        TextureSettings const& settings = {});
 
     TextureData virtual texture_from_file(std::string const& path, TextureSettings const settings) = 0;
     TextureData virtual cubemap_from_files(std::vector<std::string> const& paths, TextureSettings const settings) = 0;
+    TextureData virtual cubemap_from_file(std::string const& path, TextureSettings const settings) = 0;
 
     friend class ResourceManager;
 };

@@ -34,6 +34,8 @@
 #include "Port.h"
 #include "Player.h"
 #include "Water.h"
+#include "Skybox.h"
+#include "SkyboxFactory.h"
 
 Game::Game(std::shared_ptr<Window> const& window) : window(window)
 {
@@ -146,4 +148,7 @@ void Game::initialize()
     water_comp->waves[1].amplitude = 0.035f;
 
     water->transform->set_local_scale(glm::vec3(0.245f, 1.0f, 0.172f));
+
+    auto const skybox = Entity::create("skybox");
+    skybox->add_component(SkyboxFactory::create());
 }

@@ -87,6 +87,8 @@ protected:
     void virtual update_material(std::shared_ptr<Material> const& material) const = 0;
     void virtual update_object(std::shared_ptr<Drawable> const& drawable, std::shared_ptr<Material> const& material, glm::mat4 const& projection_view) const = 0;
 
+    void virtual unbind_material(std::shared_ptr<Material> const& material) const = 0;
+
     void virtual initialize_global_renderer_settings() = 0;
     void virtual initialize_buffers(size_t const max_size) = 0;
     void virtual perform_frustum_culling(std::shared_ptr<Material> const& material) const = 0;

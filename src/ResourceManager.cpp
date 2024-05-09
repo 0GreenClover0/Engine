@@ -28,9 +28,11 @@ std::shared_ptr<Texture> ResourceManager::load_texture(std::string const& path, 
     return resource_ptr;
 }
 
-std::shared_ptr<Texture> ResourceManager::load_cubemap(std::vector<std::string> const& paths, TextureType const type,
-                                                       TextureSettings const& settings)
+std::shared_ptr<Texture> ResourceManager::load_cubemap(std::vector<std::string> const &paths, TextureType const type,
+                                                       TextureSettings const &settings)
 {
+    assert(paths.size() >= 6);
+
     std::stringstream stream;
     stream << paths[0] << paths[1] << paths[2] << paths[3] << paths[4] << paths[5];
     std::string const& key = generate_key(stream);
@@ -40,6 +42,24 @@ std::shared_ptr<Texture> ResourceManager::load_cubemap(std::vector<std::string> 
         return resource_ptr;
 
     resource_ptr = TextureLoader::get_instance()->load_cubemap(paths, type, settings);
+    m_textures.emplace_back(resource_ptr);
+    names_to_textures.insert(std::make_pair(key, m_textures.size() - 1));
+
+    return resource_ptr;
+}
+
+std::shared_ptr<Texture> ResourceManager::load_cubemap(std::string const& path, TextureType const type,
+                                                       TextureSettings const& settings)
+{
+    std::stringstream stream;
+    stream << path;
+    std::string const& key = generate_key(stream);
+    std::shared_ptr<Texture> resource_ptr = get_from_vector<Texture>(key);
+
+    if (resource_ptr != nullptr)
+        return resource_ptr;
+
+    resource_ptr = TextureLoader::get_instance()->load_cubemap(path, type, settings);
     m_textures.emplace_back(resource_ptr);
     names_to_textures.insert(std::make_pair(key, m_textures.size() - 1));
 

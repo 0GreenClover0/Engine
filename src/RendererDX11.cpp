@@ -12,6 +12,7 @@
 #include <array>
 
 #include "ResourceManager.h"
+#include "Skybox.h"
 
 std::shared_ptr<RendererDX11> RendererDX11::create()
 {
@@ -76,7 +77,6 @@ std::shared_ptr<RendererDX11> RendererDX11::create()
 
     renderer->m_shadow_shader = ResourceManager::get_instance().load_shader("./res/shaders/shadow_mapping.hlsl", "./res/shaders/shadow_mapping.hlsl");
     renderer->m_point_shadow_shader = ResourceManager::get_instance().load_shader("./res/shaders/point_shadow_mapping.hlsl", "./res/shaders/point_shadow_mapping.hlsl");
-
 
     return renderer;
 }
@@ -153,6 +153,11 @@ ID3D11DeviceContext* RendererDX11::get_device_context() const
 ID3D11ShaderResourceView* RendererDX11::get_render_texture_view() const
 {
     return m_render_target_texture_view;
+}
+
+ID3D11DepthStencilState* RendererDX11::get_depth_stencil_state() const
+{
+    return m_depth_stencil_state;
 }
 
 void RendererDX11::render_shadow_maps() const
@@ -291,6 +296,8 @@ void RendererDX11::update_shader(std::shared_ptr<Shader> const& shader, glm::mat
 
 void RendererDX11::update_material(std::shared_ptr<Material> const& material) const
 {
+    if (Skybox::get_instance() != nullptr && material->needs_skybox)
+        Skybox::get_instance()->bind();
 }
 
 void RendererDX11::update_object(std::shared_ptr<Drawable> const& drawable, std::shared_ptr<Material> const& material,
@@ -315,6 +322,12 @@ void RendererDX11::update_object(std::shared_ptr<Drawable> const& drawable, std:
     get_device_context()->VSSetConstantBuffers(0, 1, &m_constant_buffer_per_object);
 
     set_light_buffer(drawable);
+}
+
+void RendererDX11::unbind_material(std::shared_ptr<Material> const &material) const
+{
+    if (Skybox::get_instance() != nullptr && material->needs_skybox)
+        Skybox::get_instance()->unbind();
 }
 
 void RendererDX11::initialize_global_renderer_settings()
@@ -586,6 +599,14 @@ void RendererDX11::create_depth_stencil()
     assert(SUCCEEDED(hr));
 
     g_pd3dDeviceContext->OMSetRenderTargets(1, &g_mainRenderTargetView, m_depth_stencil_view);
+
+    D3D11_DEPTH_STENCIL_DESC dssDesc = {};
+    dssDesc.DepthEnable = true;
+    dssDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+    dssDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
+
+    hr = g_pd3dDevice->CreateDepthStencilState(&dssDesc, &m_depth_stencil_state);
+    assert(SUCCEEDED(hr));
 }
 
 void RendererDX11::cleanup_depth_stencil()

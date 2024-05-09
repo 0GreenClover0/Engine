@@ -124,6 +124,11 @@ TextureData TextureLoaderGL::cubemap_from_files(std::vector<std::string> const& 
     return { texture_id, static_cast<u32>(width), static_cast<u32>(height), static_cast<u32>(channel_count) };
 }
 
+TextureData TextureLoaderGL::cubemap_from_file(std::string const& path, TextureSettings const settings)
+{
+    return {};
+}
+
 GLint TextureLoaderGL::convert_wrap_mode(TextureWrapMode const wrap_mode)
 {
     switch (wrap_mode)
