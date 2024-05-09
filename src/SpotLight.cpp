@@ -17,6 +17,15 @@ std::shared_ptr<SpotLight> SpotLight::create()
 void SpotLight::draw_editor()
 {
     Light::draw_editor();
+    ImGui::Text("Attenuation:");
+    ImGui::SliderFloat("Linear", &linear, 0.0f, 1.0f);
+    ImGui::SliderFloat("Quadratic", &quadratic, 0.0f, 1.0f);
+
+    ImGui::Text("Cut off:");
+    ImGui::SliderFloat("Cut off", &m_cut_off_degrees, 0.0f, 90.0f);
+    cut_off = glm::cos(glm::radians(m_cut_off_degrees));
+    ImGui::SliderFloat("Outer cut off", &m_outer_cut_off_degrees, 0.0f, 90.0f);
+    outer_cut_off = glm::cos(glm::radians(m_outer_cut_off_degrees));
 }
 
 void SpotLight::set_render_target_for_shadow_mapping() const
