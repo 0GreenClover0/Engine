@@ -35,6 +35,9 @@ public:
     std::weak_ptr<Curve> ships_limit_curve = {};
     u32 ships_limit = 0;
 
+    std::weak_ptr<Curve> ships_speed_curve = {};
+    float ships_speed = 0.0f;
+
 private:
     inline static std::shared_ptr<LevelController> m_instance;
 
