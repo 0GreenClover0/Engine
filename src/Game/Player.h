@@ -30,6 +30,7 @@ public:
     i32 packages = 2;
     NON_SERIALIZED
     i32 lighthouse_level = 0;
+
     NON_SERIALIZED
     float range = 0.0f;
     NON_SERIALIZED
@@ -37,7 +38,7 @@ public:
     NON_SERIALIZED
     float turn_speed = 0.0f;
     NON_SERIALIZED
-    float pirates_in_control = 1.0f;
+    float pirates_in_control = 0.0f;
 
 private:
     inline static std::shared_ptr<Player> m_instance;

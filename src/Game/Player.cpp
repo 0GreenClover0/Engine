@@ -90,4 +90,5 @@ void Player::draw_editor()
     ImGui::Text(("Ships Range: " + std::to_string(Player::get_instance()->range)).c_str());
     ImGui::Text(("Ships Turn: " + std::to_string(Player::get_instance()->turn_speed)).c_str());
     ImGui::Text(("Ships Additional Speed: " + std::to_string(Player::get_instance()->additional_ship_speed)).c_str());
+    ImGui::Text(("Pirates In Control: " + std::to_string(Player::get_instance()->pirates_in_control)).c_str());
 }

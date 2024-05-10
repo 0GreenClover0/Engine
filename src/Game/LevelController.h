@@ -42,6 +42,7 @@ public:
     std::weak_ptr<Curve> ships_range_curve = {};
     std::weak_ptr<Curve> ships_turn_curve = {};
     std::weak_ptr<Curve> ships_additional_speed_curve = {};
+    std::weak_ptr<Curve> pirates_in_control_curve = {};
 
 private:
     inline static std::shared_ptr<LevelController> m_instance;
