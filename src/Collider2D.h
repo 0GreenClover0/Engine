@@ -34,7 +34,7 @@ public:
     virtual void initialize() override;
     virtual void uninitialize() override;
 
-    virtual void start() override;
+    virtual void awake() override;
     virtual void update() override;
 
     // CIRCLE X CIRCLE
