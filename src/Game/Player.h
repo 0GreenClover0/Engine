@@ -35,7 +35,7 @@ public:
     NON_SERIALIZED
     float additional_ship_speed = 0.2f * 0.005f;
     NON_SERIALIZED
-    float turn_speed = 15.0f;
+    float turn_speed = 0.0f;
     NON_SERIALIZED
     float pirates_in_control = 1.0f;
 
