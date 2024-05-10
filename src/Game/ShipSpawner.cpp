@@ -124,7 +124,8 @@ void ShipSpawner::spawn_ship()
     ship->transform->set_local_position({ spawn_position.x, 0.0f, spawn_position.y });
 
     auto const ship_comp = ship->add_component(Ship::create(light.lock(), std::static_pointer_cast<ShipSpawner>(shared_from_this())));
-    ship->add_component<Collider2D>(Collider2D::create({ 0.5f, 0.5f }));
+    auto const collider = ship->add_component<Collider2D>(Collider2D::create({ 0.1f, 0.1f }));
+    collider->set_is_trigger(true);
     ship_comp->on_ship_destroyed.attach(&ShipSpawner::remove_ship, shared_from_this());
 
     m_ships.emplace_back(ship_comp);
