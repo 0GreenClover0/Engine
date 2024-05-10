@@ -688,7 +688,7 @@ void Editor::draw_inspector(std::shared_ptr<EditorWindow> const& window)
 
         // NOTE: This only returns unmangled name while using the MSVC compiler
         std::string const typeid_name = typeid(*component).name();
-        std::string const name = typeid_name.substr(6);
+        std::string const name = typeid_name.substr(6) + " " + component->custom_name;
 
         bool const component_open = ImGui::TreeNode((name + guid).c_str());
 
