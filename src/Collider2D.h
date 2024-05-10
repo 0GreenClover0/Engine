@@ -7,6 +7,7 @@
 #include "glm/glm.hpp"
 
 #include <array>
+#include <unordered_map>
 
 enum class ColliderType2D
 {
@@ -58,6 +59,17 @@ public:
     bool overlaps(Collider2D& other);
     void apply_mtv(bool const sign, bool const is_static) const;
 
+    // Internal functions meant to be used by the PhysicsEngine
+    bool is_inside_trigger(std::string const& guid) const;
+    std::weak_ptr<Collider2D> get_inside_trigger(std::string const& guid) const;
+    std::vector<std::weak_ptr<Collider2D>> get_inside_trigger_vector() const;
+    void add_inside_trigger(std::string const& guid, std::shared_ptr<Collider2D> const& collider);
+    void set_inside_trigger(std::unordered_map<std::string, std::weak_ptr<Collider2D>> const& map, std::vector<std::weak_ptr<Collider2D>> const& vector);
+
+    std::vector<std::weak_ptr<Collider2D>> get_all_overlapping_this_frame() const;
+    void add_overlapped_this_frame(std::shared_ptr<Collider2D> const& collider);
+    void clear_overlapped_this_frame();
+
 private:
     glm::vec2 get_perpendicular_axis(std::array<glm::vec2, 4> const& passed_corners, u8 const index) const;
     glm::vec2 get_normal(glm::vec2 const& v) const;
@@ -83,4 +95,10 @@ private:
 
     float m_radius = 0.0f; // For circle
     glm::vec2 m_mtv = {};  // Minimal translation vector
+
+    std::unordered_map<std::string, std::weak_ptr<Collider2D>> m_inside_trigger = {};
+    std::vector<std::weak_ptr<Collider2D>> m_inside_trigger_vector = {};
+
+    std::vector<std::weak_ptr<Collider2D>> m_overlapped_this_frame = {};
+    std::unordered_map<std::string, std::weak_ptr<Collider2D>> m_overlapped_this_frame_map = {};
 };

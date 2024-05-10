@@ -95,7 +95,18 @@ void PhysicsEngine::solve_collisions() const
                 {
                     if (should_overlap_as_trigger)
                     {
-                        Debug::log("Overlap");
+                        collider1->add_overlapped_this_frame(collider2);
+
+#if _DEBUG
+                        if (collider1->is_inside_trigger(collider2->guid))
+                        {
+                            assert(collider2->is_inside_trigger(collider1->guid));
+                        }
+                        else
+                        {
+                            assert(!collider2->is_inside_trigger(collider1->guid));
+                        }
+#endif
                     }
                     else
                     {
@@ -127,7 +138,18 @@ void PhysicsEngine::solve_collisions() const
                 {
                     if (should_overlap_as_trigger)
                     {
-                        Debug::log("Overlap");
+                        collider1->add_overlapped_this_frame(collider2);
+
+#if _DEBUG
+                        if (collider1->is_inside_trigger(collider2->guid))
+                        {
+                            assert(collider2->is_inside_trigger(collider1->guid));
+                        }
+                        else
+                        {
+                            assert(!collider2->is_inside_trigger(collider1->guid));
+                        }
+#endif
                     }
                     else
                     {
@@ -159,7 +181,18 @@ void PhysicsEngine::solve_collisions() const
                 {
                     if (should_overlap_as_trigger)
                     {
-                        Debug::log("Overlap");
+                        collider1->add_overlapped_this_frame(collider2);
+
+#if _DEBUG
+                        if (collider1->is_inside_trigger(collider2->guid))
+                        {
+                            assert(collider2->is_inside_trigger(collider1->guid));
+                        }
+                        else
+                        {
+                            assert(!collider2->is_inside_trigger(collider1->guid));
+                        }
+#endif
                     }
                     else
                     {
@@ -192,5 +225,43 @@ void PhysicsEngine::solve_collisions() const
                 std::unreachable();
             }
         }
+    }
+
+    for (auto const& collider : colliders)
+    {
+        std::unordered_map<std::string, std::weak_ptr<Collider2D>> new_inside_trigger = {};
+        std::vector<std::weak_ptr<Collider2D>> new_inside_trigger_vector = {};
+
+        for (auto const& other : collider->get_all_overlapping_this_frame())
+        {
+            if (other.expired())
+                continue;
+
+            auto const other_locked = other.lock();
+
+            new_inside_trigger.emplace(other_locked->guid, other);
+            new_inside_trigger_vector.emplace_back(other);
+
+            if (!collider->is_inside_trigger(other_locked->guid))
+            {
+                on_trigger_enter(collider, other_locked);
+            }
+        }
+
+        for (auto const& other : collider->get_inside_trigger_vector())
+        {
+            if (other.expired())
+                continue;
+
+            auto const other_locked = other.lock();
+
+            if (!new_inside_trigger.contains(other_locked->guid))
+            {
+                on_trigger_exit(collider, other_locked);
+            }
+        }
+
+        collider->set_inside_trigger(new_inside_trigger, new_inside_trigger_vector);
+        collider->clear_overlapped_this_frame();
     }
 }

@@ -182,10 +182,53 @@ void Collider2D::apply_mtv(bool const sign, bool const is_static) const
     entity->transform->set_local_position(AK::convert_2d_to_3d(new_position, entity->transform->get_position().y));
 }
 
+bool Collider2D::is_inside_trigger(std::string const& guid) const
+{
+    return m_inside_trigger.contains(guid);
+}
+
+std::weak_ptr<Collider2D> Collider2D::get_inside_trigger(std::string const& guid) const
+{
+    return m_inside_trigger.at(guid);
+}
+
+std::vector<std::weak_ptr<Collider2D>> Collider2D::get_inside_trigger_vector() const
+{
+    return m_inside_trigger_vector;
+}
+
+void Collider2D::add_inside_trigger(std::string const& guid, std::shared_ptr<Collider2D> const& collider)
+{
+    m_inside_trigger.emplace(guid, collider);
+    m_inside_trigger_vector.emplace_back(collider);
+}
+
+auto Collider2D::set_inside_trigger(std::unordered_map<std::string, std::weak_ptr<Collider2D>> const &map,
+                                    std::vector<std::weak_ptr<Collider2D>> const &vector) -> void
+{
+    m_inside_trigger = map;
+    m_inside_trigger_vector = vector;
+}
+
+std::vector<std::weak_ptr<Collider2D>> Collider2D::get_all_overlapping_this_frame() const
+{
+    return m_overlapped_this_frame;
+}
+
+void Collider2D::add_overlapped_this_frame(std::shared_ptr<Collider2D> const& collider)
+{
+    m_overlapped_this_frame.emplace_back(collider);
+    m_overlapped_this_frame_map.emplace(collider->guid, collider);
+}
+
+void Collider2D::clear_overlapped_this_frame()
+{
+    m_overlapped_this_frame.clear();
+    m_overlapped_this_frame_map.clear();
+}
+
 void Collider2D::update()
 {
-    Component::update();
-
     // NOTE+FIXME: destroy_immediate might break assumption that entity is not null, it probably should not do that.
     if (entity != nullptr)
     {
