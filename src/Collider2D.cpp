@@ -72,6 +72,19 @@ void Collider2D::uninitialize()
     PhysicsEngine::get_instance()->remove_collider(std::dynamic_pointer_cast<Collider2D>(shared_from_this()));
 }
 
+void Collider2D::awake()
+{
+    set_can_tick(true);
+
+    // NOTE+FIXME: destroy_immediate might break assumption that entity is not null, it probably should not do that.
+    if (entity != nullptr)
+    {
+        glm::vec2 const position = AK::convert_3d_to_2d(entity->transform->get_position());
+        float const angle = glm::radians(entity->transform->get_euler_angles().y);
+        compute_axes(position, angle);
+    }
+}
+
 void Collider2D::separate(Collider2D const& other, bool const is_static)
 {
     // This is for circle x circle
@@ -180,14 +193,6 @@ void Collider2D::update()
         float const angle = glm::radians(entity->transform->get_euler_angles().y);
         compute_axes(position, angle);
     }
-}
-
-void Collider2D::start()
-{
-    Component::start();
-
-    set_can_tick(true);
-    compute_axes({ 0.0f, 0.0f }, 0.0f);
 }
 
 // NOTE: Should be called everytime the position has changed.
