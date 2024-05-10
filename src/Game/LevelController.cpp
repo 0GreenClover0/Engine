@@ -43,6 +43,7 @@ void LevelController::awake()
     time = map_time;
 
     ships_limit_curve = entity->add_component<Curve>(Curve::create());
+    ships_limit_curve.lock()->custom_name = "Ships limit";
     ships_limit_curve.lock()->add_points({
         { 0.0f, 2.0f }, 
         { 0.1f, 2.0f }, 
@@ -51,6 +52,7 @@ void LevelController::awake()
         });
 
     ships_speed_curve = entity->add_component<Curve>(Curve::create());
+    ships_speed_curve.lock()->custom_name = "Ships speed";
     ships_speed_curve.lock()->add_points({
         { 0.0f, 0.21f },
         { 0.756f, 0.26f },
@@ -58,6 +60,7 @@ void LevelController::awake()
         });
 
     ships_range_curve = entity->add_component<Curve>(Curve::create());
+    ships_range_curve.lock()->custom_name = "Ships range";
     ships_range_curve.lock()->add_points({
         { 0.0f, 0.4f },
         { 0.5f, 0.6f },

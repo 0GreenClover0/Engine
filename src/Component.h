@@ -49,6 +49,9 @@ public:
 
     std::string guid = "";
 
+    NON_SERIALIZED
+    std::string custom_name = "";
+
 private:
     bool m_enabled = true;
     bool m_can_tick = false;
