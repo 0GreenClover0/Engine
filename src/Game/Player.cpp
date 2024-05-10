@@ -87,4 +87,5 @@ void Player::draw_editor()
     {
         LevelController::get_instance()->on_lighthouse_upgraded();
     }
+    ImGui::Text(("Ships Range: " + std::to_string(Player::get_instance()->range)).c_str());
 }

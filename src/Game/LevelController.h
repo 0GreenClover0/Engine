@@ -39,6 +39,8 @@ public:
     std::weak_ptr<Curve> ships_speed_curve = {};
     float ships_speed = 0.0f;
 
+    std::weak_ptr<Curve> ships_range_curve = {};
+
 private:
     inline static std::shared_ptr<LevelController> m_instance;
 
