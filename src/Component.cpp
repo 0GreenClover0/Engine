@@ -55,6 +55,14 @@ void Component::on_collision_exit(std::shared_ptr<Collider2D> const& other)
 {
 }
 
+void Component::on_trigger_enter(std::shared_ptr<Collider2D> const &other)
+{
+}
+
+void Component::on_trigger_exit(std::shared_ptr<Collider2D> const &other)
+{
+}
+
 void Component::destroy_immediate()
 {
     assert(entity != nullptr);

@@ -32,6 +32,24 @@ void PhysicsEngine::on_collision_exit(std::shared_ptr<Collider2D> const &collide
     }
 }
 
+void PhysicsEngine::on_trigger_enter(std::shared_ptr<Collider2D> const &collider,
+                                     std::shared_ptr<Collider2D> const &other)
+{
+    for (auto const& component : collider->entity->components)
+    {
+        component->on_trigger_enter(other);
+    }
+}
+
+void PhysicsEngine::on_trigger_exit(std::shared_ptr<Collider2D> const &collider,
+                                    std::shared_ptr<Collider2D> const &other)
+{
+    for (auto const& component : collider->entity->components)
+    {
+        component->on_trigger_exit(other);
+    }
+}
+
 void PhysicsEngine::emplace_collider(std::shared_ptr<Collider2D> const& collider)
 {
     colliders.emplace_back(collider);
