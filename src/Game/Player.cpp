@@ -83,4 +83,8 @@ void Player::update()
 
 void Player::draw_editor()
 {
+    if (ImGui::SliderInt("Lighthouse Level", &lighthouse_level, 0, LevelController::get_instance()->maximum_lighthouse_level))
+    {
+        LevelController::get_instance()->on_lighthouse_upgraded();
+    }
 }
