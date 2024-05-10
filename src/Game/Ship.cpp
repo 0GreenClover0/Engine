@@ -147,6 +147,9 @@ void Ship::update()
 
 void Ship::destroy()
 {
+    if (is_destroyed)
+        return;
+
     is_destroyed = true;
     m_destroyed_counter = m_destroy_time;
 }
