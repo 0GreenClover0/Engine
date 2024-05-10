@@ -18,7 +18,7 @@ Port::Port(AK::Badge<Port>)
 {
 }
 
-void Port::on_collision_enter(std::shared_ptr<Collider2D> const &other)
+void Port::on_trigger_enter(std::shared_ptr<Collider2D> const &other)
 {
     auto const ship = other->entity->get_component<Ship>();
     if (ship != nullptr && !ship->is_in_port())
