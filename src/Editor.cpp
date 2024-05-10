@@ -6,6 +6,7 @@
 #include <imgui.h>
 #include <ImGuizmo.h>
 #include "imgui_extensions.h"
+#include "imgui_stdlib.h"
 
 #include "Camera.h"
 #include "ComponentList.h"
@@ -722,12 +723,30 @@ void Editor::draw_inspector(std::shared_ptr<EditorWindow> const& window)
 
     if (ImGui::BeginListBox("##empty", ImVec2(-FLT_MIN, -FLT_MIN)))
     {
+        ImGui::Text("Search bar");
+
+        ImGui::SetNextItemWidth(-FLT_MIN);
+        ImGui::PushItemWidth(-FLT_MIN);
+        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(ImGui::GetStyle().FramePadding.x, 5));
+        ImGui::InputText("##filter", &m_search_filter);
+        ImGui::PopStyleVar();
+        ImGui::PopItemWidth();
+
+        std::ranges::transform(m_search_filter, m_search_filter.begin(), [](u8 const c) { return std::tolower(c); });
+
         if constexpr (false)
             ;
 #define CONCAT_CLASS(name) class name
-#define ENUMERATE_COMPONENT(name, ui_name)                       \
-        else if (ImGui::Button(ui_name, ImVec2(-FLT_MIN, 20)))   \
-            entity->add_component<CONCAT_CLASS(name)>(##name::create());
+#define ENUMERATE_COMPONENT(name, ui_name)                                                            \
+        {                                                                                             \
+            std::string ui_name_lower(ui_name);                                                       \
+            std::ranges::transform(ui_name_lower, ui_name_lower.begin(),                              \
+                           [](u8 const c) { return std::tolower(c); });                               \
+            if (m_search_filter.empty() || ui_name_lower.find(m_search_filter) != std::string::npos) {\
+                if (ImGui::Button(ui_name, ImVec2(-FLT_MIN, 20)))                                     \
+                    entity->add_component<CONCAT_CLASS(name)>(##name::create());                      \
+            }                                                                                         \
+        }
         ENUMERATE_COMPONENTS
 #undef ENUMERATE_COMPONENT
 

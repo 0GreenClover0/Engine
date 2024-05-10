@@ -234,6 +234,8 @@ private:
 
     std::string content_path = "./res/";
     std::array<std::string, 3> m_known_model_formats = { ".gltf", ".obj", ".fbx" };
+
+    std::string m_search_filter = {};
 };
 
 }
