@@ -74,6 +74,14 @@ void LevelController::awake()
         { 1.0f, 60.0f }
         });
 
+    ships_additional_speed_curve = entity->add_component<Curve>(Curve::create());
+    ships_additional_speed_curve.lock()->custom_name = "Ships additional speed";
+    ships_additional_speed_curve.lock()->add_points({
+        { 0.0f, 0.001f },
+        { 0.2f, 0.0025f },
+        { 1.0f, 0.01f }
+        });
+
     set_can_tick(true);
 
     on_lighthouse_upgraded();
@@ -118,4 +126,5 @@ void LevelController::on_lighthouse_upgraded() const
     float const lighthouse_level_ratio = static_cast<float>(Player::get_instance()->lighthouse_level) / static_cast<float>(maximum_lighthouse_level);
     Player::get_instance()->range = ships_range_curve.lock()->get_y_at(lighthouse_level_ratio);
     Player::get_instance()->turn_speed = ships_turn_curve.lock()->get_y_at(lighthouse_level_ratio);
+    Player::get_instance()->additional_ship_speed = ships_additional_speed_curve.lock()->get_y_at(lighthouse_level_ratio);
 }
