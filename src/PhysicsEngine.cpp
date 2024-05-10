@@ -57,7 +57,7 @@ void PhysicsEngine::solve_collisions() const
             ColliderType2D const collider1_type = colliders[i]->get_collider_type();
             ColliderType2D const collider2_type = colliders[j]->get_collider_type();
 
-            bool const should_overlap_as_trigger = collider1->is_trigger() || collider2->is_trigger() && collider1->is_trigger() != collider2->is_trigger();
+            bool const should_overlap_as_trigger = collider1->is_trigger() || collider2->is_trigger();
 
             auto collision_type = CollisionType::Undefined;
 
