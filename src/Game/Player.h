@@ -31,7 +31,7 @@ public:
     NON_SERIALIZED
     i32 lighthouse_level = 0;
     NON_SERIALIZED
-    float range = 100.0f * 0.005f;
+    float range = 0.0f;
     NON_SERIALIZED
     float additional_ship_speed = 0.2f * 0.005f;
     NON_SERIALIZED
