@@ -52,6 +52,8 @@ public:
     virtual void on_destroyed() override;
     virtual void draw_editor() override;
 
+    virtual void on_trigger_enter(std::shared_ptr<Collider2D> const &other) override;
+
     void destroy();
     void stop();
     bool is_in_port() const;

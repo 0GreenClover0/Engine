@@ -4,12 +4,14 @@
 #include <glm/vec2.hpp>
 #include <glm/gtc/random.hpp>
 
+#include "Collider2D.h"
 #include "Entity.h"
 #include "Input.h"
 #include "Ship.h"
 
 #include "imgui_extensions.h"
 #include "Globals.h"
+#include "LighthouseKeeper.h"
 #include "AK/AK.h"
 #include "Player.h"
 #include "ShipSpawner.h"
@@ -159,6 +161,17 @@ void Ship::draw_editor()
     ImGui::DragFloat("Speed", &maximum_speed, 0.001f, 0.0f, 0.5f);
 
     ImGuiEx::draw_ptr("Light", light);
+}
+
+void Ship::on_trigger_enter(std::shared_ptr<Collider2D> const& other)
+{
+    if (is_destroyed)
+        return;
+
+    if (other->entity->get_component<LighthouseKeeper>() != nullptr)
+    {
+        destroy();
+    }
 }
 
 void Ship::stop()
