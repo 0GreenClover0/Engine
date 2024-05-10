@@ -49,6 +49,13 @@ void LevelController::awake()
         { 1.0f, 6.0f } 
         });
 
+    ships_speed_curve = entity->add_component<Curve>(Curve::create());
+    ships_speed_curve.lock()->add_points({
+        { 0.0f, 0.21f },
+        { 0.756f, 0.26f },
+        { 1.0f, 0.26f }
+        });
+
     set_can_tick(true);
 }
 
@@ -62,6 +69,7 @@ void LevelController::update()
     float x = (((time / map_time) * -1.0) + 1.0f);
 
     ships_limit = glm::ceil(ships_limit_curve.lock()->get_y_at(x));
+    ships_speed = ships_speed_curve.lock()->get_y_at(x);
 }
 
 void LevelController::draw_editor()
@@ -81,6 +89,7 @@ void LevelController::draw_editor()
 
     ImGui::Text(("Time: " + std::to_string(time)).c_str());
     ImGui::Text(("Ships Limit: " + std::to_string(ships_limit)).c_str());
+    ImGui::Text(("Ships Speed: " + std::to_string(ships_speed)).c_str());
 }
 
 void LevelController::on_lighthouse_upgraded()

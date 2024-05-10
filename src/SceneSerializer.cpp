@@ -278,18 +278,8 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "factories" << YAML::Value << levelcontroller->factories;
         out << YAML::Key << "ships_limit_curve" << YAML::Value << levelcontroller->ships_limit_curve;
         out << YAML::Key << "ships_limit" << YAML::Value << levelcontroller->ships_limit;
-        out << YAML::EndMap;
-    }
-    else
-    if (auto const lighthouse = std::dynamic_pointer_cast<class Lighthouse>(component); lighthouse != nullptr)
-    {
-        out << YAML::BeginMap;
-        out << YAML::Key << "ComponentName" << YAML::Value << "LighthouseComponent";
-        out << YAML::Key << "guid" << YAML::Value << lighthouse->guid;
-        out << YAML::Key << "enterable_distance" << YAML::Value << lighthouse->enterable_distance;
-        out << YAML::Key << "light" << YAML::Value << lighthouse->light;
-        out << YAML::Key << "port" << YAML::Value << lighthouse->port;
-        out << YAML::Key << "spawn_position" << YAML::Value << lighthouse->spawn_position;
+        out << YAML::Key << "ships_speed_curve" << YAML::Value << levelcontroller->ships_speed_curve;
+        out << YAML::Key << "ships_speed" << YAML::Value << levelcontroller->ships_speed;
         out << YAML::EndMap;
     }
     else
@@ -773,26 +763,8 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             deserialized_component->factories = component["factories"].as<std::vector<std::weak_ptr<Factory>>>();
             deserialized_component->ships_limit_curve = component["ships_limit_curve"].as<std::weak_ptr<Curve>>();
             deserialized_component->ships_limit = component["ships_limit"].as<u32>();
-            deserialized_entity->add_component(deserialized_component);
-            deserialized_component->reprepare();
-        }
-    }
-        else
-    if (component_name == "LighthouseComponent")
-    {
-        if (first_pass)
-        {
-            auto const deserialized_component = Lighthouse::create();
-            deserialized_component->guid = component["guid"].as<std::string>();
-            deserialized_pool.emplace_back(deserialized_component);
-        }
-        else
-        {
-            auto const deserialized_component = std::dynamic_pointer_cast<class Lighthouse>(get_from_pool(component["guid"].as<std::string>()));
-            deserialized_component->enterable_distance = component["enterable_distance"].as<float>();
-            deserialized_component->light = component["light"].as<std::weak_ptr<LighthouseLight>>();
-            deserialized_component->port = component["port"].as<std::weak_ptr<Port>>();
-            deserialized_component->spawn_position = component["spawn_position"].as<std::weak_ptr<Entity>>();
+            deserialized_component->ships_speed_curve = component["ships_speed_curve"].as<std::weak_ptr<Curve>>();
+            deserialized_component->ships_speed = component["ships_speed"].as<float>();
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
         }

@@ -127,6 +127,7 @@ void ShipSpawner::spawn_ship()
     auto const collider = ship->add_component<Collider2D>(Collider2D::create({ 0.1f, 0.1f }));
     collider->set_is_trigger(true);
     ship_comp->on_ship_destroyed.attach(&ShipSpawner::remove_ship, shared_from_this());
+    ship_comp->maximum_speed = LevelController::get_instance()->ships_speed;
 
     m_ships.emplace_back(ship_comp);
 
