@@ -82,6 +82,13 @@ void LevelController::awake()
         { 1.0f, 0.01f }
         });
 
+    pirates_in_control_curve = entity->add_component<Curve>(Curve::create());
+    pirates_in_control_curve.lock()->custom_name = "Pirates in control";
+    pirates_in_control_curve.lock()->add_points({
+        { 0.0f, 0.16f },
+        { 1.0f, 1.66f }
+        });
+
     set_can_tick(true);
 
     on_lighthouse_upgraded();
@@ -122,9 +129,9 @@ void LevelController::draw_editor()
 
 void LevelController::on_lighthouse_upgraded() const
 {
-    //TODO add getting values from curves
     float const lighthouse_level_ratio = static_cast<float>(Player::get_instance()->lighthouse_level) / static_cast<float>(maximum_lighthouse_level);
     Player::get_instance()->range = ships_range_curve.lock()->get_y_at(lighthouse_level_ratio);
     Player::get_instance()->turn_speed = ships_turn_curve.lock()->get_y_at(lighthouse_level_ratio);
     Player::get_instance()->additional_ship_speed = ships_additional_speed_curve.lock()->get_y_at(lighthouse_level_ratio);
+    Player::get_instance()->pirates_in_control = pirates_in_control_curve.lock()->get_y_at(lighthouse_level_ratio);
 }
