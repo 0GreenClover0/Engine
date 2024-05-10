@@ -9,6 +9,7 @@
 
 #include "Globals.h"
 #include "Ship.h"
+#include "Player.h"
 
 std::shared_ptr<LevelController> LevelController::create()
 {
@@ -92,7 +93,7 @@ void LevelController::draw_editor()
     ImGui::Text(("Ships Speed: " + std::to_string(ships_speed)).c_str());
 }
 
-void LevelController::on_lighthouse_upgraded()
+void LevelController::on_lighthouse_upgraded() const
 {
     //TODO add getting values from curves
     Ship::on_lighthouse_upgraded(360.0f, 300.0f * 0.005f, 50.0f * 0.005f, 2.0f);

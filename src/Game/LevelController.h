@@ -20,9 +20,10 @@ public:
     virtual void update() override;
     virtual void draw_editor() override;
 
-    void on_lighthouse_upgraded();
+    void on_lighthouse_upgraded() const;
 
     float map_time = 180.0f;
+    i32 maximum_lighthouse_level = 10;
     NON_SERIALIZED
     float time = 0.0f;
 
