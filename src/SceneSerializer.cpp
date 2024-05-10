@@ -282,6 +282,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "ships_speed_curve" << YAML::Value << levelcontroller->ships_speed_curve;
         out << YAML::Key << "ships_speed" << YAML::Value << levelcontroller->ships_speed;
         out << YAML::Key << "ships_range_curve" << YAML::Value << levelcontroller->ships_range_curve;
+        out << YAML::Key << "ships_turn_curve" << YAML::Value << levelcontroller->ships_turn_curve;
         out << YAML::EndMap;
     }
     else
@@ -769,6 +770,7 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             deserialized_component->ships_speed_curve = component["ships_speed_curve"].as<std::weak_ptr<Curve>>();
             deserialized_component->ships_speed = component["ships_speed"].as<float>();
             deserialized_component->ships_range_curve = component["ships_range_curve"].as<std::weak_ptr<Curve>>();
+            deserialized_component->ships_turn_curve = component["ships_turn_curve"].as<std::weak_ptr<Curve>>();
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
         }
