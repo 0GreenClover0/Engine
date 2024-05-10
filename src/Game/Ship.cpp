@@ -171,7 +171,7 @@ void Ship::on_trigger_enter(std::shared_ptr<Collider2D> const& other)
     if (is_destroyed)
         return;
 
-    if (other->entity->get_component<LighthouseKeeper>() != nullptr)
+    if (!m_is_in_port && other->entity->get_component<LighthouseKeeper>() != nullptr)
     {
         destroy();
     }
