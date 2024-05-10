@@ -33,7 +33,7 @@ public:
     NON_SERIALIZED
     float range = 0.0f;
     NON_SERIALIZED
-    float additional_ship_speed = 0.2f * 0.005f;
+    float additional_ship_speed = 0.0f;
     NON_SERIALIZED
     float turn_speed = 0.0f;
     NON_SERIALIZED
