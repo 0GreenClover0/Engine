@@ -275,6 +275,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "ComponentName" << YAML::Value << "LevelControllerComponent";
         out << YAML::Key << "guid" << YAML::Value << levelcontroller->guid;
         out << YAML::Key << "map_time" << YAML::Value << levelcontroller->map_time;
+        out << YAML::Key << "map_food" << YAML::Value << levelcontroller->map_food;
         out << YAML::Key << "maximum_lighthouse_level" << YAML::Value << levelcontroller->maximum_lighthouse_level;
         out << YAML::Key << "factories" << YAML::Value << levelcontroller->factories;
         out << YAML::Key << "ships_limit_curve" << YAML::Value << levelcontroller->ships_limit_curve;
@@ -765,6 +766,7 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component = std::dynamic_pointer_cast<class LevelController>(get_from_pool(component["guid"].as<std::string>()));
             deserialized_component->map_time = component["map_time"].as<float>();
+            deserialized_component->map_food = component["map_food"].as<u32>();
             deserialized_component->maximum_lighthouse_level = component["maximum_lighthouse_level"].as<i32>();
             deserialized_component->factories = component["factories"].as<std::vector<std::weak_ptr<Factory>>>();
             deserialized_component->ships_limit_curve = component["ships_limit_curve"].as<std::weak_ptr<Curve>>();

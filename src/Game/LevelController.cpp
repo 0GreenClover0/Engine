@@ -111,18 +111,27 @@ void LevelController::draw_editor()
 {
     static i32 minutes = 0;
     static i32 seconds = 0;
-    bool is_changed = false;
+    bool is_time_changed = false;
 
     ImGui::Text("Map Time");
-    is_changed |= ImGui::InputInt("Minutes: ", &minutes);
-    is_changed |= ImGui::InputInt("Seconds: ", &seconds);
+    is_time_changed |= ImGui::InputInt("Minutes: ", &minutes);
+    is_time_changed |= ImGui::InputInt("Seconds: ", &seconds);
 
-    if (is_changed)
+    if (is_time_changed)
     {
         map_time = minutes * 60 + seconds;
     }
-
     ImGui::Text(("Time: " + std::to_string(time)).c_str());
+
+    ImGui::Separator();
+
+    ImGui::Text("Map Food");
+    ImGui::InputScalar("Food: ", ImGuiDataType_U32, &map_food);
+
+    ImGui::Text(("Food: " + std::to_string(Player::get_instance()->food) + " / " + std::to_string(map_food)).c_str());
+
+    ImGui::Separator();
+
     ImGui::Text(("Ships Limit: " + std::to_string(ships_limit)).c_str());
     ImGui::Text(("Ships Speed: " + std::to_string(ships_speed)).c_str());
 }
