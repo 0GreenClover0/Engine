@@ -23,30 +23,6 @@ Curve::Curve() = default;
 
 void Curve::draw_editor()
 {
-    for (u32 i = 0; i < points.size(); i++)
-    {
-        ImGuiEx::InputFloat2(("Position##" + std::to_string(i)).c_str(), glm::value_ptr(points[i]));
-        ImGui::SameLine();
-        if (ImGui::Button(("Remove point##" + std::to_string(i)).c_str()))
-        {
-            points.erase(points.begin() + i);
-        }
-    }
-
-    if (ImGui::Button("Add point"))
-    {
-        if (points.size() == 0)
-        {
-            points.push_back({ 0.1f, 0.5f });
-        }
-        else
-        {
-            points.push_back({ points.back().x + 0.1f, points.back().y });
-
-            points.back().x = glm::clamp(points.back().x, 0.0f, 1.0f);
-        }
-    }
-
     if (ImPlot::BeginPlot("Path visualised")) 
     {
         ImPlot::PushStyleVar(ImPlotStyleVar_LineWeight, 2.0f);
@@ -89,6 +65,30 @@ void Curve::draw_editor()
         }
 
         ImPlot::EndPlot();
+    }
+
+    if (ImGui::Button("Add point"))
+    {
+        if (points.size() == 0)
+        {
+            points.push_back({ 0.1f, 0.5f });
+        }
+        else
+        {
+            points.push_back({ points.back().x + 0.1f, points.back().y });
+
+            points.back().x = glm::clamp(points.back().x, 0.0f, 1.0f);
+        }
+    }
+
+    for (u32 i = 0; i < points.size(); i++)
+    {
+        ImGuiEx::InputFloat2(("Position##" + std::to_string(i)).c_str(), glm::value_ptr(points[i]));
+        ImGui::SameLine();
+        if (ImGui::Button(("Remove point##" + std::to_string(i)).c_str()))
+        {
+            points.erase(points.begin() + i);
+        }
     }
 }
 
