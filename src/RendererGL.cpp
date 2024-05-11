@@ -53,6 +53,16 @@ void RendererGL::render_shadow_maps() const
 {
 }
 
+void RendererGL::set_rasterizer_draw_type(RasterizerDrawType const rasterizer_draw_type)
+{
+    std::unreachable();
+}
+
+void RendererGL::restore_default_rasterizer_draw_type()
+{
+    std::unreachable();
+}
+
 void RendererGL::update_shader(std::shared_ptr<Shader> const& shader, glm::mat4 const& projection_view, glm::mat4 const& projection_view_no_translation) const
 {
     // TODO: Ultimately we would probably want to cache the uniform location instead of retrieving them by name

@@ -54,6 +54,9 @@ public:
 
     void set_vsync(bool const enabled);
 
+    virtual void set_rasterizer_draw_type(RasterizerDrawType const rasterizer_draw_type) = 0;
+    virtual void restore_default_rasterizer_draw_type() = 0;
+
     static std::shared_ptr<Renderer> get_instance()
     {
         return m_instance;
