@@ -44,26 +44,17 @@ void DebugDrawing::initialize()
     Component::initialize();
 
     set_can_tick(true);
-    
-    auto const light_source_shader = ResourceManager::get_instance().load_shader("./res/shaders/light_source.hlsl", "./res/shaders/light_source.hlsl");
-    auto const plain = Material::create(light_source_shader);
-    std::shared_ptr<Sphere> sphere = nullptr;
-    std::shared_ptr<Cube> box = nullptr;
+    m_light_source_shader = ResourceManager::get_instance().load_shader("./res/shaders/light_source.hlsl", "./res/shaders/light_source.hlsl");
+    m_plain_material = Material::create(m_light_source_shader);
 
     switch (m_type)
     {
     case DrawingType::Sphere:
-        sphere = entity->add_component<Sphere>(Sphere::create(m_radius, 10, 10,"./res/textures/white.jpg", plain));
-        entity->transform->set_local_position(m_position);
-        sphere->set_rasterizer_draw_type(RasterizerDrawType::Wireframe);
+        create_sphere(false);
         break;
 
     case DrawingType::Box:
-        box = entity->add_component<Cube>(Cube::create(plain));
-        entity->transform->set_local_position(m_position);
-        entity->transform->set_euler_angles(m_euler_angles);
-        entity->transform->set_local_scale(m_extents);
-        box->set_rasterizer_draw_type(RasterizerDrawType::Wireframe);
+        create_box(false);
         break;
 
     default:
@@ -86,8 +77,91 @@ void DebugDrawing::draw_editor()
 {
     Component::draw_editor();
 
+    std::array const drawing_types = {"Sphere", "Box"};
+    i32 current_item_index = static_cast<i32>(m_type);
+    if (ImGui::Combo("Debug Drawing Type", &current_item_index, drawing_types.data(), drawing_types.size()))
+    {
+        m_previous_drawing_type = m_type;
+        m_type = static_cast<DrawingType>(current_item_index);
+        reprepare();
+    }
+
     if (glm::abs(m_lifetime) < 0.000001)
         ImGui::Text("Time set to 0 will render the drawing infinitely.");
 
-    ImGui::InputDouble("Time", &m_lifetime);
+    ImGui::InputDouble("Lifetime (in game)", &m_lifetime);
+
+    if (m_type == DrawingType::Sphere)
+    {
+        ImGui::InputFloat("Radius", &m_radius);
+        entity->transform->set_local_scale(glm::vec3(m_radius * 10.0f));
+    }
+    else if (m_type == DrawingType::Box)
+    {
+        std::array extents = {m_extents.x, m_extents.y, m_extents.z};
+        ImGui::InputFloat3("Extents", extents.data());
+        m_extents = { extents[0], extents[1], extents[2] };
+        entity->transform->set_local_scale(glm::vec3(extents[0], extents[1], extents[2]));
+    }
+}
+
+void DebugDrawing::reprepare()
+{
+    Component::reprepare();
+
+    switch (m_previous_drawing_type)
+    {
+    case DrawingType::Sphere:
+        m_sphere_component->destroy_immediate();
+        m_sphere_component = nullptr;
+        break;
+
+    case DrawingType::Box:
+        m_box_component->destroy_immediate();
+        m_box_component = nullptr;
+        break;
+
+    default:
+        break;
+    }
+
+    switch (m_type)
+    {
+    case DrawingType::Sphere:
+        create_sphere(true);
+        break;
+
+    case DrawingType::Box:
+        create_box(true);
+        break;
+
+    default:
+        break;
+    }
+}
+
+void DebugDrawing::create_box(bool const is_reload)
+{
+    m_box_component = entity->add_component<Cube>(Cube::create(m_plain_material));
+
+    if (!is_reload)
+    {
+        entity->transform->set_local_position(m_position);
+        entity->transform->set_euler_angles(m_euler_angles);
+        entity->transform->set_local_scale(m_extents);
+    }
+
+    m_box_component->set_rasterizer_draw_type(RasterizerDrawType::Wireframe);
+}
+
+void DebugDrawing::create_sphere(bool const is_reload)
+{
+    m_sphere_component = entity->add_component<Sphere>(Sphere::create(m_radius * 10.0f, 10, 10, "./res/textures/white.jpg", m_plain_material));
+
+    if (!is_reload)
+    {
+        entity->transform->set_local_position(m_position);
+    }
+
+    m_sphere_component->set_rasterizer_draw_type(RasterizerDrawType::Wireframe);
 }
