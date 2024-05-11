@@ -83,9 +83,12 @@ void Player::update()
 
 void Player::draw_editor()
 {
-    if (ImGui::SliderInt("Lighthouse Level", &lighthouse_level, 0, LevelController::get_instance()->maximum_lighthouse_level))
+    if (Engine::is_game_running())
     {
-        LevelController::get_instance()->on_lighthouse_upgraded();
+        if (ImGui::SliderInt("Lighthouse Level", &lighthouse_level, 0, LevelController::get_instance()->maximum_lighthouse_level))
+        {
+            LevelController::get_instance()->on_lighthouse_upgraded();
+        }
     }
     ImGui::Text(("Ships Range: " + std::to_string(Player::get_instance()->range)).c_str());
     ImGui::Text(("Ships Turn: " + std::to_string(Player::get_instance()->turn_speed)).c_str());
