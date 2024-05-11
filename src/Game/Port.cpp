@@ -21,7 +21,7 @@ Port::Port(AK::Badge<Port>)
 void Port::on_trigger_enter(std::shared_ptr<Collider2D> const &other)
 {
     auto const ship = other->entity->get_component<Ship>();
-    if (ship != nullptr && !ship->is_in_port())
+    if (ship != nullptr && !ship->is_in_port() && ship->type!=ShipType::Pirates)
     {
         ship->stop();
         ships_inside.emplace_back(ship);
