@@ -26,9 +26,9 @@ std::shared_ptr<Sphere> Sphere::create(float radius, u32 sectors, u32 stacks, st
     return sphere;
 }
 
-void Sphere::start()
+void Sphere::initialize()
 {
-    Model::start();
+    Model::initialize();
     entity->transform->set_local_scale(glm::vec3(radius, radius, radius));
 }
 
