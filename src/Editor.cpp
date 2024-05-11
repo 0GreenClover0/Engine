@@ -595,6 +595,8 @@ void Editor::draw_inspector(std::shared_ptr<EditorWindow> const& window)
     float const input_width = ImGui::CalcItemWidth() / 3.0f  - ImGui::GetStyle().ItemSpacing.x * 0.66f;
 
     ImGui::SameLine();
+    ImGui::Text(" | ");
+    ImGui::SameLine();
 
     if (ImGui::Button("Copy##1"))
     {
@@ -608,6 +610,8 @@ void Editor::draw_inspector(std::shared_ptr<EditorWindow> const& window)
     ImGuiEx::InputFloat3("Rotation", glm::value_ptr(rotation));
     entity->transform->set_euler_angles(rotation);
 
+    ImGui::SameLine();
+    ImGui::Text(" | ");
     ImGui::SameLine();
 
     if (ImGui::Button("Copy##2"))
@@ -646,6 +650,8 @@ void Editor::draw_inspector(std::shared_ptr<EditorWindow> const& window)
 
     entity->transform->set_local_scale(scale);
 
+    ImGui::SameLine();
+    ImGui::Text("    | ");
     ImGui::SameLine();
 
     if (ImGui::Button("Copy##3"))
@@ -705,6 +711,10 @@ void Editor::draw_inspector(std::shared_ptr<EditorWindow> const& window)
             component->set_enabled(enabled);
 
             component->draw_editor();
+
+            ImGui::Spacing();
+            ImGui::Separator();
+            ImGui::Spacing();
 
             ImGui::TreePop();
         }
