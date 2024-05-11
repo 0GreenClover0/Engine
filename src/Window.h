@@ -14,6 +14,7 @@ public:
 
     [[nodiscard]] GLFWwindow* get_glfw_window() const;
     [[nodiscard]] HWND get_win32_window() const;
+    void maximize_glfw_window() const;
 
 private:
     GLFWwindow* m_window;

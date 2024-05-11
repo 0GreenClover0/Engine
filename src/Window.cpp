@@ -70,3 +70,8 @@ HWND Window::get_win32_window() const
 {
     return glfwGetWin32Window(m_window);
 }
+
+void Window::maximize_glfw_window() const
+{
+    glfwMaximizeWindow(m_window);
+}
