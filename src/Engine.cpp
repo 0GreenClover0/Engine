@@ -59,6 +59,10 @@ i32 Engine::initialize()
         InternalMeshData::initialize();
     }
 
+    // It shouldn't be done too early, that's why it's here
+    // and not eg. in Window class right after glfw window creation.
+    window->maximize_glfw_window();
+
     m_editor = Editor::Editor::create();
 
     return 0;
