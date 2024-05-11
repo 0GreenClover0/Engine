@@ -38,6 +38,7 @@
 #include "Game/Player.h"
 #include "Game/LevelController.h"
 #include "Water.h"
+#include "DebugDrawing.h"
 // # Put new header here
 
 SceneSerializer::SceneSerializer(std::shared_ptr<Scene> const& scene) : m_scene(scene)
