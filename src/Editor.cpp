@@ -596,6 +596,8 @@ void Editor::draw_inspector(std::shared_ptr<EditorWindow> const& window)
     ImGuiEx::InputFloat3("Position", glm::value_ptr(position));
 
     ImGui::SameLine();
+    ImGui::Text(" | ");
+    ImGui::SameLine();
 
     if (ImGui::Button("Copy##1"))
     {
@@ -610,6 +612,8 @@ void Editor::draw_inspector(std::shared_ptr<EditorWindow> const& window)
     entity->transform->set_euler_angles(rotation);
 
     ImGui::SameLine();
+    ImGui::Text(" | ");
+    ImGui::SameLine();
 
     if (ImGui::Button("Copy##2"))
     {
@@ -621,6 +625,8 @@ void Editor::draw_inspector(std::shared_ptr<EditorWindow> const& window)
     ImGuiEx::InputFloat3("Scale", glm::value_ptr(scale));
     entity->transform->set_local_scale(scale);
 
+    ImGui::SameLine();
+    ImGui::Text("    | ");
     ImGui::SameLine();
 
     if (ImGui::Button("Copy##3"))
@@ -660,6 +666,10 @@ void Editor::draw_inspector(std::shared_ptr<EditorWindow> const& window)
             component->set_enabled(enabled);
 
             component->draw_editor();
+
+            ImGui::Spacing();
+            ImGui::Separator();
+            ImGui::Spacing();
 
             ImGui::TreePop();
         }
