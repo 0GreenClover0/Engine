@@ -1,6 +1,8 @@
 #include "Model.h"
 
 #include <iostream>
+#include <filesystem>
+
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
@@ -16,8 +18,7 @@
 #include "Texture.h"
 #include "Vertex.h"
 #include "AK/Types.h"
-
-#include <filesystem>
+#include "Renderer.h"
 
 std::shared_ptr<Model> Model::create()
 {
@@ -69,6 +70,15 @@ void Model::draw_editor()
     {
         reprepare();
     }
+
+    // Choose rasterizer draw mode for individual model
+    std::array const draw_type_items = { "Default", "Wireframe", "Solid"};
+
+    i32 current_item_index = static_cast<i32>(m_rasterizer_draw_type);
+    if (ImGui::Combo("Rasterizer Draw Type", &current_item_index, draw_type_items.data(), draw_type_items.size()))
+    {
+        m_rasterizer_draw_type = static_cast<RasterizerDrawType>(current_item_index);
+    }
 }
 
 void Model::calculate_bounding_box()
@@ -105,8 +115,13 @@ Model::Model(std::shared_ptr<Material> const& material) : Drawable(material)
 
 void Model::draw() const
 {
+    // Either wireframe or solid for individual model
+    Renderer::get_instance()->set_rasterizer_draw_type(m_rasterizer_draw_type);
+
     for (auto const& mesh : m_meshes)
         mesh->draw();
+
+    Renderer::get_instance()->restore_default_rasterizer_draw_type();
 }
 
 void Model::draw_instanced(i32 const size)

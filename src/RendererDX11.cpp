@@ -125,8 +125,7 @@ void RendererDX11::on_window_resize(GLFWwindow* window, i32 const width, i32 con
 
 void RendererDX11::begin_frame() const
 {
-    // This function could be called like an event, instead is called every frame (could slow down, but I do not think so).
-    get_instance_dx11()->create_rasterizer_state();
+    get_instance_dx11()->update_rasterizer_state();
 
     Renderer::begin_frame();
 
@@ -163,6 +162,30 @@ ID3D11DeviceContext* RendererDX11::get_device_context() const
 ID3D11ShaderResourceView* RendererDX11::get_render_texture_view() const
 {
     return m_render_target_texture_view;
+}
+
+void RendererDX11::set_rasterizer_draw_type(RasterizerDrawType const rasterizer_draw_type)
+{
+    switch (rasterizer_draw_type)
+    {
+    case RasterizerDrawType::Wireframe:
+        g_pd3dDeviceContext->RSSetState(g_rasterizer_state_wireframe);
+        break;
+
+    case RasterizerDrawType::Solid:
+        g_pd3dDeviceContext->RSSetState(g_rasterizer_state_solid);
+        break;
+
+    case RasterizerDrawType::Default:
+    default:
+        g_pd3dDeviceContext->RSSetState(g_rasterizer_state);
+        break;
+    }
+}
+
+void RendererDX11::restore_default_rasterizer_draw_type()
+{
+    g_pd3dDeviceContext->RSSetState(g_rasterizer_state);
 }
 
 ID3D11DepthStencilState* RendererDX11::get_depth_stencil_state() const
@@ -407,7 +430,7 @@ void RendererDX11::set_light_buffer(std::shared_ptr<Drawable> const& drawable) c
         // Sort lights by distance
         std::ranges::sort(m_point_lights, [drawable](std::shared_ptr<PointLight> const& a, std::shared_ptr<PointLight> const& b) {
             return glm::length(drawable->entity->transform->get_position() - a->entity->transform->get_position()) <
-                   glm::length(drawable->entity->transform->get_position() - b->entity->transform->get_position());
+                glm::length(drawable->entity->transform->get_position() - b->entity->transform->get_position());
         });
     }
 
@@ -436,7 +459,7 @@ void RendererDX11::set_light_buffer(std::shared_ptr<Drawable> const& drawable) c
         // Sort lights by distance
         std::ranges::sort(m_spot_lights, [drawable](std::shared_ptr<SpotLight> const& a, std::shared_ptr<SpotLight> const& b) {
             return glm::length(drawable->entity->transform->get_position() - a->entity->transform->get_position()) <
-                   glm::length(drawable->entity->transform->get_position() - b->entity->transform->get_position());
+                glm::length(drawable->entity->transform->get_position() - b->entity->transform->get_position());
         });
     }
 
@@ -582,20 +605,37 @@ void RendererDX11::create_render_target()
 void RendererDX11::create_rasterizer_state()
 {
     D3D11_RASTERIZER_DESC wfdesc = {};
-    if (wireframe_mode_active)
-    {
-        wfdesc.FillMode = D3D11_FILL_WIREFRAME;
-    }
-    else 
-    {
-        wfdesc.FillMode = D3D11_FILL_SOLID;
-    }
+
+    // Rasterizer settings for wireframe mode
+    wfdesc.FillMode = D3D11_FILL_WIREFRAME;
+    wfdesc.CullMode = D3D11_CULL_NONE;
+
+    HRESULT hr = g_pd3dDevice->CreateRasterizerState(&wfdesc, &g_rasterizer_state_wireframe);
+    assert(SUCCEEDED(hr));
+
+    // Rasterizer settings for solid mode
+    wfdesc.FillMode = D3D11_FILL_SOLID;
     wfdesc.CullMode = D3D11_CULL_BACK;
     wfdesc.FrontCounterClockwise = true;
 
-    HRESULT const hr = g_pd3dDevice->CreateRasterizerState(&wfdesc, &g_rasterizer_state);
-
+    hr = g_pd3dDevice->CreateRasterizerState(&wfdesc, &g_rasterizer_state_solid);
     assert(SUCCEEDED(hr));
+
+    update_rasterizer_state();
+}
+
+void RendererDX11::update_rasterizer_state()
+{
+    // We don't use set_rasterizer_draw_type() because we DEFINE DEFAULT VALUES for what wireframe, solid and default mode,
+    // really are. And we define g_rasterizer_state, so the main "Polygon Mode" field represents default mode.
+    if (wireframe_mode_active)
+    {
+        g_rasterizer_state = g_rasterizer_state_wireframe;
+    }
+    else
+    {
+        g_rasterizer_state = g_rasterizer_state_solid;
+    }
 
     g_pd3dDeviceContext->RSSetState(g_rasterizer_state);
 }

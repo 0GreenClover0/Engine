@@ -20,6 +20,16 @@ BoundingBox Drawable::get_adjusted_bounding_box(glm::mat4 const& model_matrix) c
     return {};
 }
 
+RasterizerDrawType Drawable::get_rasterizer_draw_type() const
+{
+    return m_rasterizer_draw_type;
+}
+
+void Drawable::set_rasterizer_draw_type(RasterizerDrawType const new_draw_mode)
+{
+    m_rasterizer_draw_type = new_draw_mode;
+}
+
 void Drawable::initialize()
 {
     Renderer::get_instance()->register_drawable(std::dynamic_pointer_cast<Drawable>(shared_from_this()));

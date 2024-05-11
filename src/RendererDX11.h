@@ -31,6 +31,9 @@ public:
     ID3D11RenderTargetView* g_emptyRenderTargetView = nullptr;
     inline static float constexpr SHADOW_MAP_SIZE = 1024.0f;
 
+    virtual void set_rasterizer_draw_type(RasterizerDrawType const rasterizer_draw_type) override;
+    virtual void restore_default_rasterizer_draw_type() override;
+
 protected:
     virtual void update_shader(std::shared_ptr<Shader> const& shader, glm::mat4 const& projection_view, glm::mat4 const& projection_view_no_translation) const override;
     virtual void update_material(std::shared_ptr<Material> const& material) const override;
@@ -54,6 +57,7 @@ private:
     void create_render_texture();
     void cleanup_render_texture();
     void create_rasterizer_state();
+    void update_rasterizer_state();
     void create_depth_stencil();
     void cleanup_depth_stencil();
     static void set_instance_dx11(std::shared_ptr<RendererDX11> const& renderer)
@@ -77,6 +81,8 @@ private:
     ID3D11RenderTargetView* g_mainRenderTargetView = nullptr;
     ID3D11RenderTargetView* g_textureRenderTargetView = nullptr;
 
+    ID3D11RasterizerState* g_rasterizer_state_solid = nullptr;
+    ID3D11RasterizerState* g_rasterizer_state_wireframe = nullptr;
     ID3D11RasterizerState* g_rasterizer_state = nullptr;
     ID3D11Buffer* m_constant_buffer_light = nullptr;
     ID3D11Buffer* m_constant_buffer_camera_position = nullptr;

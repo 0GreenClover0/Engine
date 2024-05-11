@@ -16,6 +16,9 @@ public:
     virtual void begin_frame() const override;
     virtual void render_shadow_maps() const override;
 
+    virtual void set_rasterizer_draw_type(RasterizerDrawType const rasterizer_draw_type) override;
+    virtual void restore_default_rasterizer_draw_type() override;
+
 protected:
     virtual void update_shader(std::shared_ptr<Shader> const& shader, glm::mat4 const& projection_view, glm::mat4 const& projection_view_no_translation) const override;
     virtual void update_material(std::shared_ptr<Material> const& material) const override;
