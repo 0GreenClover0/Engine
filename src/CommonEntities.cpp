@@ -17,7 +17,7 @@ namespace CommonEntities
 std::shared_ptr<Entity> create_skybox(std::string const& skybox_texture_path, std::shared_ptr<Transform> const& parent)
 {
     auto skybox = Entity::create("Skybox");
-    auto const skybox_shader = ResourceManager::get_instance().load_shader("./res/shaders/skybox.vert", "./res/shaders/skybox.frag");
+    auto const skybox_shader = ResourceManager::get_instance().load_shader("./res/shaders/glsl/skybox.vert", "./res/shaders/glsl/skybox.frag");
     auto const skybox_material = Material::create(skybox_shader, SKYBOX_RENDER_ORDER);
 
     auto const skybox_comp = skybox->add_component<Skybox>(SkyboxFactory::create(skybox_material, skybox_texture_path));
@@ -29,7 +29,7 @@ std::shared_ptr<Entity> create_skybox(std::string const& skybox_texture_path, st
 
 std::shared_ptr<Entity> create_directional_light(glm::vec3 const& diffuse, glm::vec3 const& angles, std::shared_ptr<Transform> const& parent)
 {
-    auto const light_shader = ResourceManager::get_instance().load_shader("./res/shaders/light.vert", "./res/shaders/light.frag");
+    auto const light_shader = ResourceManager::get_instance().load_shader("./res/shaders/glsl/light.vert", "./res/shaders/glsl/light.frag");
     auto const light_material = Material::create(light_shader);
 
     auto directional_light = Entity::create("DirectionalLight");
@@ -45,7 +45,7 @@ std::shared_ptr<Entity> create_directional_light(glm::vec3 const& diffuse, glm::
 
 std::shared_ptr<Entity> create_point_light(glm::vec3 const& diffuse, std::shared_ptr<Transform> const& parent)
 {
-    auto const light_shader = ResourceManager::get_instance().load_shader("./res/shaders/light.vert", "./res/shaders/light.frag");
+    auto const light_shader = ResourceManager::get_instance().load_shader("./res/shaders/glsl/light.vert", "./res/shaders/glsl/light.frag");
     auto const light_material = Material::create(light_shader);
 
     auto point_light = Entity::create("PointLight");
@@ -60,7 +60,7 @@ std::shared_ptr<Entity> create_point_light(glm::vec3 const& diffuse, std::shared
 
 std::shared_ptr<Entity> create_spot_light(glm::vec3 const& diffuse, std::shared_ptr<Transform> const& parent)
 {
-    auto const light_shader = ResourceManager::get_instance().load_shader("./res/shaders/light.vert", "./res/shaders/light.frag");
+    auto const light_shader = ResourceManager::get_instance().load_shader("./res/shaders/glsl/light.vert", "./res/shaders/glsl/light.frag");
     auto const light_material = Material::create(light_shader);
 
     auto spot_light = Entity::create("SpotLight");

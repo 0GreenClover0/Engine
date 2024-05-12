@@ -21,7 +21,7 @@ std::shared_ptr<RendererGL> RendererGL::create()
 
     TextureLoaderGL::create();
 
-    renderer->m_frustum_culling_shader = ResourceManager::get_instance().load_shader("./res/shaders/frustum_culling.glsl");
+    renderer->m_frustum_culling_shader = ResourceManager::get_instance().load_shader("./res/shaders/glsl/frustum_culling.glsl");
 
     return renderer;
 }
