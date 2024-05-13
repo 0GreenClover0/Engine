@@ -16,14 +16,19 @@ public:
     virtual void update() override;
     virtual void draw_editor() override;
 
-    glm::vec2 find_nearest_non_pirate_ship(std::shared_ptr<Ship> const& center_ship);
+    glm::vec2 find_nearest_non_pirate_ship(std::shared_ptr<Ship> const& center_ship) const;
+    glm::vec2 find_nearest_ship(glm::vec2 center_position) const;
 
     std::vector<std::weak_ptr<Path>> paths = {};
 
     std::weak_ptr<LighthouseLight> light = {};
 
+    float const spawn_warning_time = 5.0f;
+    float const minimum_spawn_distance = 1.25f;
+
 private:
     void spawn_ship();
+    void prepare_for_spawn();
     void remove_ship(std::shared_ptr<Ship> const& ship_to_remove);
     bool is_spawn_possible() const;
 
@@ -44,6 +49,10 @@ private:
 
     std::vector<SpawnEvent> m_main_spawn = {};
     std::vector<SpawnEvent> m_backup_spawn = {};
+
+    std::vector<std::weak_ptr<Entity>> m_warning_lights = {};
+    float m_spawn_warning_counter = 0.0f;
+    glm::vec2 m_spawn_position = {};
 
     std::vector<std::weak_ptr<Ship>> m_ships = {};
 };
