@@ -40,6 +40,12 @@ set (ddstextureloader_SOURCE_DIR ${DDSTEXTURELOADER_DIR} CACHE INTERNAL "")
 add_library(ddstextureloader STATIC ${DDSTEXTURELOADER_DIR}/DDSTextureLoader11.cpp)
 target_include_directories(ddstextureloader PRIVATE ${DDSTEXTURELOADER_DIR})
 
+# ImGui implementations
+set(IMGUI_IMPL_DIR ${CMAKE_CURRENT_LIST_DIR}/imgui_impl)
+set(imgui_impl_SOURCE_DIR ${IMGUI_IMPL_DIR} CACHE INTERNAL "")
+add_library(imgui_impl STATIC ${IMGUI_IMPL_DIR}/imgui_impl_dx11.cpp ${IMGUI_IMPL_DIR}/imgui_impl_glfw.cpp ${IMGUI_IMPL_DIR}/imgui_impl_opengl3.cpp)
+target_include_directories(imgui_impl PRIVATE ${IMGUI_IMPL_DIR})
+
 # disable most assimp importers
 SET (ASSIMP_BUILD_AMF_IMPORTER OFF)
 SET (ASSIMP_BUILD_3DS_IMPORTER OFF)
@@ -121,8 +127,11 @@ add_library(imgui STATIC ${imgui_SOURCE_DIR}/imgui.cpp
                          ${imgui_SOURCE_DIR}/imgui_tables.cpp
                          ${imgui_SOURCE_DIR}/imgui_widgets.cpp)
 
+set(glfw_SOURCE_DIR ${glfw_SOURCE_DIR} CACHE INTERNAL "")
+
 target_include_directories(imguizmo PRIVATE ${imgui_SOURCE_DIR})
 target_include_directories(implot PRIVATE ${imgui_SOURCE_DIR})
+target_include_directories(imgui_impl PRIVATE ${imgui_SOURCE_DIR} ${glfw_SOURCE_DIR})
 
 set_target_properties(glad
                       stb_image
@@ -130,6 +139,7 @@ set_target_properties(glad
                       glfw
                       glm
                       imgui
+                      imgui_impl
                       spdlog
                       yaml-cpp
                       miniaudio

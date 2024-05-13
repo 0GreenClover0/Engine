@@ -26,6 +26,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
                                                   ${glad_SOURCE_DIR}
                                                   ${stb_image_SOURCE_DIR}
                                                   ${imgui_SOURCE_DIR}
+                                                  ${imgui_impl_SOURCE_DIR}
                                                   ${miniaudio_SOURCE_DIR}
                                                   ${FW1_SOURCE_DIR}
                                                   ${imguizmo_SOURCE_DIR}
@@ -42,6 +43,7 @@ target_link_libraries(${PROJECT_NAME} stb_image)
 target_link_libraries(${PROJECT_NAME} assimp)
 target_link_libraries(${PROJECT_NAME} glfw)
 target_link_libraries(${PROJECT_NAME} imgui)
+target_link_libraries(${PROJECT_NAME} imgui_impl)
 target_link_libraries(${PROJECT_NAME} spdlog)
 target_link_libraries(${PROJECT_NAME} glm::glm)
 target_link_libraries(${PROJECT_NAME} yaml-cpp)
