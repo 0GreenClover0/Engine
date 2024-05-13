@@ -147,7 +147,7 @@ glm::mat4 const& Transform::get_model_matrix()
 // Version for no parent
 void Transform::compute_model_matrix()
 {
-    assert(AK::is_uninitialized(parent));
+    assert(parent.expired());
 
     assert(m_local_dirty || m_parent_dirty);
 
@@ -203,7 +203,7 @@ void Transform::recompute_model_matrix_if_needed()
 {
     if (m_local_dirty || m_parent_dirty)
     {
-        if (AK::is_uninitialized(parent))
+        if (parent.expired())
             compute_model_matrix();
         else
             compute_model_matrix(parent.lock()->get_model_matrix());
