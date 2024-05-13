@@ -30,6 +30,32 @@ ShipSpawner::ShipSpawner(AK::Badge<ShipSpawner>)
 
 void ShipSpawner::awake()
 {
+    SpawnEvent s1 = {};
+    s1.spawn_list.emplace_back(ShipType::FoodSmall);
+    s1.spawn_type = SpawnType::Sequence;
+
+    SpawnEvent s2 = {};
+    s2.spawn_list.emplace_back(ShipType::FoodMedium);
+    s2.spawn_type = SpawnType::Sequence;
+
+    SpawnEvent s3 = {};
+    s3.spawn_list.emplace_back(ShipType::FoodBig);
+    s3.spawn_type = SpawnType::Sequence;
+
+    SpawnEvent s4 = {};
+    s4.spawn_list.emplace_back(ShipType::Tool);
+    s4.spawn_type = SpawnType::Sequence;
+
+    SpawnEvent s5 = {};
+    s5.spawn_list.emplace_back(ShipType::Pirates);
+    s5.spawn_type = SpawnType::Sequence;
+
+    m_backup_spawn.emplace_back(s1);
+    m_backup_spawn.emplace_back(s2);
+    m_backup_spawn.emplace_back(s3);
+    m_backup_spawn.emplace_back(s4);
+    m_backup_spawn.emplace_back(s5);
+
     m_main_spawn = m_backup_spawn;
 
     auto const seed = std::chrono::system_clock::now().time_since_epoch().count();
