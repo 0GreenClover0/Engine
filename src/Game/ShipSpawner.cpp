@@ -77,7 +77,7 @@ void ShipSpawner::awake()
 
 void ShipSpawner::update()
 {
-    spawn_ship();
+    prepare_for_spawn();
 }
 
 void ShipSpawner::draw_editor()
@@ -102,6 +102,10 @@ void ShipSpawner::draw_editor()
 
         index++;
     }
+
+    ImGui::Separator();
+
+    ImGui::Text(("Next ship counter " + std::to_string(m_spawn_warning_counter)).c_str());
 
     ImGui::Separator();
 
@@ -204,8 +208,8 @@ void ShipSpawner::draw_editor()
     }
 }
 
-void ShipSpawner::spawn_ship()
-{       
+void ShipSpawner::prepare_for_spawn()
+{
     if (paths.size() == 0)
     {
         Debug::log("No available paths to create ships on!", DebugType::Warning);
@@ -217,15 +221,63 @@ void ShipSpawner::spawn_ship()
         return;
     }
 
+    if (m_spawn_warning_counter > 0.0f)
+    {
+        m_spawn_warning_counter -= delta_time;
+        return;
+    }
+
+    if (m_warning_lights.size() != 0)
+    {
+        assert(m_warning_lights.size() == 1);
+
+        if (m_ships.size() != 0)
+        {
+            if (glm::distance(find_nearest_ship(m_spawn_position), m_spawn_position) < minimum_spawn_distance)
+            {
+                // There is no room near the spawning point, delay until next spawn time
+                m_spawn_warning_counter = spawn_warning_time;
+                return;
+            }
+        }
+
+        m_warning_lights[0].lock()->destroy_immediate();
+        m_warning_lights.erase(m_warning_lights.begin());
+
+        spawn_ship();
+
+        return;
+    }
+
     std::weak_ptr<Path> const path = paths[std::rand() % paths.size()];
 
-    glm::vec2 spawn_position = path.lock()->get_point_at(glm::linearRand(0.0f, 1.0f));
+    m_spawn_position = path.lock()->get_point_at(glm::linearRand(0.0f, 1.0f));
 
+    m_spawn_warning_counter = spawn_warning_time;
+
+    auto const warning = Entity::create("Warning");
+    auto const warning_light_component = warning->add_component(SpotLight::create());
+
+    warning_light_component->ambient = glm::vec3(1.0f);
+    warning_light_component->diffuse = glm::vec3(1.0f);
+    warning_light_component->specular = glm::vec3(1.0f);
+
+    warning_light_component->linear = 0.0f;
+    warning_light_component->quadratic = 0.0f;
+
+    warning->transform->set_local_position({ m_spawn_position.x - glm::sign(m_spawn_position.x), 0.2f, m_spawn_position.y });
+    warning->transform->set_euler_angles({ -90.0f, 0.0f, 0.0f });
+
+    m_warning_lights.emplace_back(warning);
+}
+
+void ShipSpawner::spawn_ship()
+{
     auto const standard_shader = ResourceManager::get_instance().load_shader("./res/shaders/lit.hlsl", "./res/shaders/lit.hlsl");
     auto const standard_material = Material::create(standard_shader);
 
     auto const ship = Entity::create("ship");
-    ship->transform->set_local_position({ spawn_position.x, 0.0f, spawn_position.y });
+    ship->transform->set_local_position({ m_spawn_position.x, 0.0f, m_spawn_position.y });
 
     auto const ship_comp = ship->add_component(Ship::create(light.lock(), std::static_pointer_cast<ShipSpawner>(shared_from_this())));
     auto const collider = ship->add_component<Collider2D>(Collider2D::create({ 0.1f, 0.1f }));
@@ -235,6 +287,12 @@ void ShipSpawner::spawn_ship()
 
     m_ships.emplace_back(ship_comp);
 
+    if (m_backup_spawn.empty())
+    {
+        Debug::log("Ship spawn list is empty!", DebugType::Error);
+        return;
+    }
+
     if (m_main_spawn.back().spawn_list.empty())
     {
         m_main_spawn.pop_back();
@@ -243,6 +301,7 @@ void ShipSpawner::spawn_ship()
     if (m_main_spawn.empty())
     {
         m_main_spawn = m_backup_spawn;
+        return;
     }
 
     SpawnEvent* being_spawn = &m_main_spawn.back();
@@ -316,12 +375,12 @@ void ShipSpawner::remove_ship(std::shared_ptr<Ship> const& ship_to_remove)
     AK::swap_and_erase(m_ships, ship_to_remove);
 }
 
-glm::vec2 ShipSpawner::find_nearest_non_pirate_ship(std::shared_ptr<Ship> const& center_ship)
+glm::vec2 ShipSpawner::find_nearest_non_pirate_ship(std::shared_ptr<Ship> const& center_ship) const
 {
     auto const& nearest = m_ships[0];
-    glm::vec2 ship_position = AK::convert_3d_to_2d(center_ship->entity->transform->get_local_position());
+    glm::vec2 const ship_position = AK::convert_3d_to_2d(center_ship->entity->transform->get_local_position());
     glm::vec2 nearest_position = AK::convert_3d_to_2d(nearest.lock()->entity->transform->get_local_position());
-    float distance = glm::distance(ship_position, nearest_position);
+    float nearest_distance = glm::distance(ship_position, nearest_position);
 
     for (auto const& ship : m_ships)
     {
@@ -331,13 +390,36 @@ glm::vec2 ShipSpawner::find_nearest_non_pirate_ship(std::shared_ptr<Ship> const&
             continue;
         }
 
-        glm::vec2 check_position = AK::convert_3d_to_2d(ship_locked->entity->transform->get_local_position());
-        float check_distance = glm::distance(ship_position, check_position);
+        glm::vec2 position = AK::convert_3d_to_2d(ship_locked->entity->transform->get_local_position());
+        float const distance = glm::distance(ship_position, position);
 
-        if (distance < check_distance)
+        if (nearest_distance < distance)
         {
-            distance = check_distance;
-            nearest_position = check_position;
+            nearest_distance = distance;
+            nearest_position = position;
+        }
+    }
+
+    return nearest_position;
+}
+
+glm::vec2 ShipSpawner::find_nearest_ship(glm::vec2 const center_position) const
+{
+    auto const& nearest = m_ships[0];
+    glm::vec2 nearest_position = AK::convert_3d_to_2d(nearest.lock()->entity->transform->get_local_position());
+    float nearest_distance = glm::distance(center_position, nearest_position);
+
+    for (auto const& ship : m_ships)
+    {
+        auto const ship_locked = ship.lock();
+
+        glm::vec2 position = AK::convert_3d_to_2d(ship_locked->entity->transform->get_local_position());
+        float const distance = glm::distance(center_position, position);
+
+        if (nearest_distance < distance)
+        {
+            nearest_distance = distance;
+            nearest_position = position;
         }
     }
 
