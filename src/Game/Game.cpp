@@ -90,16 +90,16 @@ void Game::initialize()
     directional_light_component->diffuse = glm::vec3(1.0f);
     directional_light_component->specular = glm::vec3(1.0f);
 
-    auto const scene = Entity::create("scene");
+    auto const scene = Entity::create("Scene");
     scene->add_component(Model::create("./res/models/scene/scene.gltf", standard_material));
 
-    auto const light = Entity::create("light");
+    auto const light = Entity::create("Light");
     auto const light_comp = light->add_component(LighthouseLight::create());
 
     auto const port = Entity::create("Port");
     auto const port_comp = port->add_component<Port>(Port::create());
-    port->transform->set_local_position({ -0.113047f, 0.022923f, 2.162429f });
-    port->transform->set_local_scale({ 2.866844f, 0.323763f, 1.0f });
+    port->transform->set_local_position({ -0.113047f, -0.25f, 2.162429f });
+    port->transform->set_local_scale({ 3.5f, 0.323763f, 1.0f });
     port->add_component(Cube::create("./res/textures/skybox/interstellar/interstellar_bk.tga", standard_material));
     auto const collider = port->add_component<Collider2D>(Collider2D::create({ port->transform->get_local_scale().x / 2.0f, port->transform->get_local_scale().z / 2.0f }, true));
     collider->set_is_trigger(true);
@@ -120,7 +120,7 @@ void Game::initialize()
     generator_comp->set_type(FactoryType::Generator);
     generator->transform->set_local_position({ 3.0f, 1.0f, 3.0f });
 
-    auto const workshop = Entity::create("Generator");
+    auto const workshop = Entity::create("Workshop");
     auto const workshop_comp = workshop->add_component<Factory>(Factory::create());
     workshop_comp->set_type(FactoryType::Workshop);
     workshop->transform->set_local_position({ -3.0f, 0.0f, 3.0f });
@@ -149,8 +149,12 @@ void Game::initialize()
     water_comp->waves[1].wave_length = 500.0f;
     water_comp->waves[1].amplitude = 0.035f;
 
-    water->transform->set_local_scale(glm::vec3(0.245f, 1.0f, 0.172f));
+    water->transform->set_local_scale(glm::vec3(0.27f, 1.0f, 0.172f));
 
-    auto const skybox = Entity::create("skybox");
+    auto const skybox = Entity::create("Skybox");
     skybox->add_component(SkyboxFactory::create());
+
+    auto const sea_floor = Entity::create("Sea Floor");
+    sea_floor->transform->set_local_position({ 0.0f, -0.3f, 0.0f });
+    sea_floor->add_component(Model::create("./res/models/water/water.gltf", standard_material));
 }
