@@ -151,10 +151,6 @@ void Editor::draw_debug_window(std::shared_ptr<EditorWindow> const& window)
     draw_window_menu_bar(window);
 
     ImGui::Checkbox("Polygon mode", &m_polygon_mode_active);
-    if (ImGui::Button("Reset camera"))
-    {
-        reset_camera();
-    }
     ImGui::Text("Application average %.3f ms/frame", m_average_ms_per_frame);
     draw_scene_save();
 
@@ -277,6 +273,11 @@ void Editor::draw_game(std::shared_ptr<EditorWindow> const& window)
                 float fov_angle = glm::degrees(Camera::get_main_camera()->fov);
                 ImGui::SliderFloat("Camera FoV", &fov_angle, 1.0f, 90.0f);
                 Camera::get_main_camera()->fov = glm::radians(fov_angle);
+
+                if (ImGui::Button("Reset camera"))
+                {
+                    reset_camera();
+                }
 
                 ImGui::EndMenu();
             }
