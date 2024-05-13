@@ -269,6 +269,15 @@ void Editor::draw_game(std::shared_ptr<EditorWindow> const& window)
         else
         {
             ImGui::PushStyleColor(ImGuiCol_Button, IM_COL32(0, 0, 0, 50));
+
+            if (ImGui::BeginMenu("Camera"))
+            {
+                float fov_angle = glm::degrees(Camera::get_main_camera()->fov);
+                ImGui::SliderFloat("Camera FoV", &fov_angle, 1.0f, 90.0f);
+                Camera::get_main_camera()->fov = glm::radians(fov_angle);
+
+                ImGui::EndMenu();
+            }
         }
 
         if (ImGui::Button("Play", ImVec2(50.0f, 20.0f)))
