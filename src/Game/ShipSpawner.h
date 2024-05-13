@@ -30,9 +30,11 @@ private:
     enum class SpawnType
     {
         Sequence,
-        Imidiet,
+        Immediate,
         Rapid
     };
+
+    static std::string spawn_type_to_string(SpawnType const type);
 
     struct SpawnEvent
     {
