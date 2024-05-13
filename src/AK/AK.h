@@ -12,13 +12,6 @@
 namespace AK
 {
 
-template <typename T>
-bool is_uninitialized(std::weak_ptr<T> const& weak)
-{
-    using wt = std::weak_ptr<T>;
-    return !weak.owner_before(wt{}) && !wt{}.owner_before(weak);
-}
-
 #pragma region GUID_creation
 
 // https://lowrey.me/guid-generation-in-c-11/
