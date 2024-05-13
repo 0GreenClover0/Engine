@@ -30,27 +30,6 @@ ShipSpawner::ShipSpawner(AK::Badge<ShipSpawner>)
 
 void ShipSpawner::awake()
 {
-    SpawnEvent s1 = {};
-    s1.spawn_list.emplace_back(ShipType::FoodSmall);
-    s1.spawn_type = SpawnType::Sequence;
-    
-    SpawnEvent s2 = {};
-    s2.spawn_list.emplace_back(ShipType::FoodSmall);
-    s2.spawn_type = SpawnType::Sequence;
-
-    SpawnEvent s3 = {};
-    s3.spawn_list.emplace_back(ShipType::FoodSmall);
-    s3.spawn_type = SpawnType::Sequence;
-
-    SpawnEvent s4 = {};
-    s4.spawn_list.emplace_back(ShipType::Tool);
-    s4.spawn_type = SpawnType::Sequence;
-
-    m_backup_spawn.emplace_back(s1);
-    m_backup_spawn.emplace_back(s2);
-    m_backup_spawn.emplace_back(s3);
-    m_backup_spawn.emplace_back(s4);
-
     m_main_spawn = m_backup_spawn;
 
     auto const seed = std::chrono::system_clock::now().time_since_epoch().count();
@@ -77,11 +56,11 @@ void ShipSpawner::update()
 
 void ShipSpawner::draw_editor()
 {
-    u32 i = 0;
+    u32 index = 0;
     for (auto const& ship : m_ships)
     {
         auto const ship_locked = ship.lock();
-        ImGui::Text(("Ship " + std::to_string(i)).c_str());
+        ImGui::Text(("Ship " + std::to_string(index)).c_str());
         ImGui::SameLine();
         std::string type_string = ship_type_to_string(ship_locked->type);
 
@@ -89,13 +68,113 @@ void ShipSpawner::draw_editor()
         if (!ship_locked->is_destroyed)
         {
             ImGui::SameLine();
-            if (ImGui::Button(("Destroy##" + std::to_string(i)).c_str()))
+            if (ImGui::Button(("Destroy##" + std::to_string(index)).c_str()))
             {
                 ship_locked->destroy();
             }
         }
 
-        i++;
+        index++;
+    }
+
+    ImGui::Separator();
+
+    if (ImGui::Button("Add Event"))
+    {
+        SpawnEvent new_element = {};
+        m_backup_spawn.emplace_back(new_element);
+    }
+
+    for (u32 i = 0; i < m_backup_spawn.size(); i++) 
+    {
+        if (ImGui::Button(("Add Ship##" + std::to_string(i)).c_str()))
+        {
+            m_backup_spawn[i].spawn_list.emplace_back(ShipType::FoodSmall);
+        }
+
+        ImGui::SameLine();
+        if (ImGui::Button(("Remove Event##" + std::to_string(i)).c_str()))
+        {
+            m_backup_spawn.erase(m_backup_spawn.begin() + i);
+            i = i - 1;
+            continue;
+        }
+
+        ImGui::SameLine();
+        if (ImGui::BeginCombo(("##SpawnType" + std::to_string(i)).c_str(), spawn_type_to_string(m_backup_spawn[i].spawn_type).c_str()))
+        {
+            for (u32 j = static_cast<u32>(SpawnType::Sequence); j <= static_cast<u32>(SpawnType::Rapid); j++)
+            {
+                bool const is_selected = m_backup_spawn[i].spawn_type == static_cast<SpawnType>(j);
+
+                if (ImGui::Selectable(spawn_type_to_string(static_cast<SpawnType>(j)).c_str(), is_selected))
+                {
+                    m_backup_spawn[i].spawn_type = static_cast<SpawnType>(j);
+                }
+
+                if (is_selected)
+                {
+                    ImGui::SetItemDefaultFocus();
+                }
+            }
+            ImGui::EndCombo();
+        }
+
+        for (u32 j = 0; j < m_backup_spawn[i].spawn_list.size(); j++)
+        {
+            ImGui::PushID(j);
+
+            if (ImGui::BeginCombo(("##ShipType" + std::to_string(i) + std::to_string(j)).c_str(), ship_type_to_string(m_backup_spawn[i].spawn_list[j]).c_str()))
+            {
+                for (u32 k = static_cast<u32>(ShipType::FoodSmall); k <= static_cast<u32>(ShipType::Tool); k++)
+                {
+                    bool const is_selected = m_backup_spawn[i].spawn_list[j] == static_cast<ShipType>(k);
+
+                    if (ImGui::Selectable(ship_type_to_string(static_cast<ShipType>(k)).c_str(), is_selected))
+                    {
+                        m_backup_spawn[i].spawn_list[j] = static_cast<ShipType>(k);
+                    }
+
+                    if (is_selected)
+                    {
+                        ImGui::SetItemDefaultFocus();
+                    }
+                }
+                ImGui::EndCombo();
+            }
+
+            ImGui::SameLine();
+            if (ImGui::Button(("Remove ship##" + std::to_string(i) + std::to_string(j)).c_str()))
+            {
+                m_backup_spawn[i].spawn_list.erase(m_backup_spawn[i].spawn_list.begin() + j);
+                j = j - 1;
+                ImGui::PopID();
+                continue;
+            }
+
+            if (m_backup_spawn[i].spawn_type == SpawnType::Rapid)
+            {
+                if (j != 0)
+                {
+                    ImGui::SameLine();
+                    if (ImGui::ArrowButton(("##Up" + std::to_string(j)).c_str(), 2))
+                    {
+                        std::swap(m_backup_spawn[i].spawn_list[j], m_backup_spawn[i].spawn_list[j - 1]);
+                    }
+                }
+
+                if (j != m_backup_spawn[i].spawn_list.size() - 1)
+                {
+                    ImGui::SameLine();
+                    if (ImGui::ArrowButton(("##Down" + std::to_string(j)).c_str(), 3))
+                    {
+                        std::swap(m_backup_spawn[i].spawn_list[j], m_backup_spawn[i].spawn_list[j + 1]);
+                    }
+                }
+            }
+
+            ImGui::PopID();
+        }
     }
 }
 
@@ -166,6 +245,24 @@ bool ShipSpawner::is_spawn_possible() const
     }
 
     return false;
+}
+
+std::string ShipSpawner::spawn_type_to_string(SpawnType const type)
+{
+    switch (type)
+    {
+    case SpawnType::Sequence:
+        return "Sequence";
+
+    case SpawnType::Immediate:
+        return "Immediate";
+
+    case SpawnType::Rapid:
+        return "Rapid";
+
+    default:
+        return "Undefined spawn";
+    }
 }
 
 void ShipSpawner::remove_ship(std::shared_ptr<Ship> const& ship_to_remove)
