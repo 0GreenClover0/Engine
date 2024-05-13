@@ -2,6 +2,8 @@
 
 #include <glm/glm.hpp>
 
+#include "AK/Types.h"
+
 i32 constexpr MAX_POINT_LIGHTS = 20;
 i32 constexpr MAX_SPOT_LIGHTS = 20;
 

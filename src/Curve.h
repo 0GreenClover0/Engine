@@ -1,5 +1,8 @@
 #pragma once
 
+#include <glm/glm.hpp>
+
+#include "AK/Badge.h"
 #include "Component.h"
 
 class Curve : public Component
