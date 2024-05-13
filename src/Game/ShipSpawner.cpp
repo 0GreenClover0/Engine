@@ -199,7 +199,6 @@ void ShipSpawner::spawn_ship()
     auto const standard_material = Material::create(standard_shader);
 
     auto const ship = Entity::create("ship");
-    ship->add_component(Model::create("./res/models/ship/ship.gltf", standard_material));
     ship->transform->set_local_position({ spawn_position.x, 0.0f, spawn_position.y });
 
     auto const ship_comp = ship->add_component(Ship::create(light.lock(), std::static_pointer_cast<ShipSpawner>(shared_from_this())));
@@ -223,6 +222,27 @@ void ShipSpawner::spawn_ship()
     SpawnEvent* being_spawn = &m_main_spawn.back();
 
     ship_comp->type = being_spawn->spawn_list.back();
+
+    if (ship_comp->type == ShipType::FoodSmall)
+    {
+        ship->add_component(Model::create("./res/models/shipSmall/shipSmall.gltf", standard_material));
+    }
+    else if (ship_comp->type == ShipType::FoodMedium)
+    {
+        ship->add_component(Model::create("./res/models/shipMedium/shipMedium.gltf", standard_material));
+    }
+    else if (ship_comp->type == ShipType::FoodBig)
+    {
+        ship->add_component(Model::create("./res/models/shipBig/shipBig.gltf", standard_material));
+    }
+    else if (ship_comp->type == ShipType::Pirates)
+    {
+        ship->add_component(Model::create("./res/models/shipPirates/shipPirates.gltf", standard_material));
+    }
+    else if (ship_comp->type == ShipType::Tool)
+    {
+        ship->add_component(Model::create("./res/models/shipTool/shipTool.gltf", standard_material));
+    }
 
     being_spawn->spawn_list.pop_back();
 }
