@@ -1,5 +1,6 @@
 #include "Collider2D.h"
 
+#include "DebugDrawing.h"
 #include "Engine.h"
 #include "Entity.h"
 #include "Globals.h"
@@ -46,12 +47,12 @@ bool Collider2D::is_point_inside_obb(glm::vec2 const& point, std::array<glm::vec
 }
 
 Collider2D::Collider2D(AK::Badge<Collider2D>, float const radius, bool const is_static)
-    : m_collider_type(ColliderType2D::Circle), m_is_static(is_static), m_radius(radius)
+    : m_is_static(is_static), m_collider_type(ColliderType2D::Circle), m_radius(radius)
 {
 }
 
 Collider2D::Collider2D(AK::Badge<Collider2D>, glm::vec2 const bounds_dimensions, bool const is_static)
-    : m_collider_type(ColliderType2D::Rectangle), m_is_static(is_static), m_width(bounds_dimensions.x), m_height(bounds_dimensions.y)
+    : m_is_static(is_static), m_collider_type(ColliderType2D::Rectangle), m_width(bounds_dimensions.x), m_height(bounds_dimensions.y)
 {
 }
 
@@ -64,6 +65,26 @@ void Collider2D::initialize()
 {
     Component::initialize();
     PhysicsEngine::get_instance()->emplace_collider(std::dynamic_pointer_cast<Collider2D>(shared_from_this()));
+
+    switch (m_collider_type)
+    {
+    case ColliderType2D::Circle:
+        m_debug_drawing_entity = Debug::draw_debug_sphere({0.0f, 0.0f, 0.0f}, m_radius);
+        m_debug_drawing_entity->transform->set_parent(entity->transform);
+        break;
+
+    case ColliderType2D::Rectangle:
+        m_debug_drawing_entity = Debug::draw_debug_box({0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {m_width * 2.0f, 0.5f, m_height * 2.0f});
+        m_debug_drawing_entity->transform->set_parent(entity->transform);
+        break;
+
+    default:
+        std::unreachable();
+    }
+
+    m_debug_drawing = m_debug_drawing_entity->get_component<DebugDrawing>();
+    m_debug_drawing->set_radius(m_radius);
+    m_debug_drawing->set_extents({m_width * 2.0f, 0.25f, m_height * 2.0f});
 }
 
 void Collider2D::uninitialize()
@@ -203,8 +224,8 @@ void Collider2D::add_inside_trigger(std::string const& guid, std::shared_ptr<Col
     m_inside_trigger_vector.emplace_back(collider);
 }
 
-auto Collider2D::set_inside_trigger(std::unordered_map<std::string, std::weak_ptr<Collider2D>> const &map,
-                                    std::vector<std::weak_ptr<Collider2D>> const &vector) -> void
+auto Collider2D::set_inside_trigger(std::unordered_map<std::string, std::weak_ptr<Collider2D>> const& map,
+    std::vector<std::weak_ptr<Collider2D>> const& vector) -> void
 {
     m_inside_trigger = map;
     m_inside_trigger_vector = vector;
@@ -271,6 +292,9 @@ void Collider2D::compute_axes(glm::vec2 const& center, float const angle)
     {
         m_axes[a] /= glm::pow(glm::length(m_axes[a]), 2);
     }
+
+    m_debug_drawing->set_radius(m_radius);
+    m_debug_drawing->set_extents({m_width * 2.0f, 0.25f, m_height * 2.0f});
 }
 
 glm::vec2 Collider2D::get_normal(glm::vec2 const& v) const
@@ -314,7 +338,7 @@ glm::vec2 Collider2D::project_on_axis(std::array<glm::vec2, 4> const& vertices, 
 }
 
 glm::vec2 Collider2D::line_intersection(glm::vec2 const& point1, glm::vec2 const& point2, glm::vec2 const& point3,
-                                        const glm::vec2& point4) const
+    const glm::vec2& point4) const
 {
     float const x1 = point1.x, x2 = point2.x, x3 = point3.x, x4 = point4.x;
     float const y1 = point1.y, y2 = point2.y, y3 = point3.y, y4 = point4.y;
@@ -445,7 +469,7 @@ bool Collider2D::test_collision_circle_rectangle(Collider2D& obb1, Collider2D& o
 
     // Pretty intuitive: We have collision if any side of the rectangle intersects with a circle.
     if ((intersect_circle(center, radius, corners[0], corners[1]) || intersect_circle(center, radius, corners[1], corners[2])
-         || intersect_circle(center, radius, corners[2], corners[3]) || intersect_circle(center, radius, corners[3], corners[0]))
+        || intersect_circle(center, radius, corners[2], corners[3]) || intersect_circle(center, radius, corners[3], corners[0]))
         && !is_point_inside_obb(center, corners))
     {
         return true;

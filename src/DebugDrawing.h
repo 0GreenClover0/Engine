@@ -31,8 +31,17 @@ public:
 
     virtual void initialize() override;
     virtual void update() override;
+
+    // TODO: This should be in an update_editor() method
     virtual void draw_editor() override;
+
     virtual void reprepare() override;
+
+    float get_radius() const;
+    void set_radius(float const radius);
+
+    glm::vec3 get_extents() const;
+    void set_extents(glm::vec3 const& extents);
 
 private:
     void create_box(bool const is_reload);
