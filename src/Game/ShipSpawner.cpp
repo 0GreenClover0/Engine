@@ -30,31 +30,49 @@ ShipSpawner::ShipSpawner(AK::Badge<ShipSpawner>)
 
 void ShipSpawner::awake()
 {
-    SpawnEvent s1 = {};
-    s1.spawn_list.emplace_back(ShipType::FoodSmall);
-    s1.spawn_type = SpawnType::Sequence;
+    if (m_is_test_spawn_enable)
+    {
+        SpawnEvent s1 = {};
+        s1.spawn_list.emplace_back(ShipType::FoodSmall);
+        s1.spawn_type = SpawnType::Sequence;
 
-    SpawnEvent s2 = {};
-    s2.spawn_list.emplace_back(ShipType::FoodMedium);
-    s2.spawn_type = SpawnType::Sequence;
+        SpawnEvent s2 = {};
+        s2.spawn_list.emplace_back(ShipType::FoodMedium);
+        s2.spawn_type = SpawnType::Sequence;
 
-    SpawnEvent s3 = {};
-    s3.spawn_list.emplace_back(ShipType::FoodBig);
-    s3.spawn_type = SpawnType::Sequence;
+        SpawnEvent s3 = {};
+        s3.spawn_list.emplace_back(ShipType::FoodBig);
+        s3.spawn_type = SpawnType::Sequence;
 
-    SpawnEvent s4 = {};
-    s4.spawn_list.emplace_back(ShipType::Tool);
-    s4.spawn_type = SpawnType::Sequence;
+        SpawnEvent s4 = {};
+        s4.spawn_list.emplace_back(ShipType::Tool);
+        s4.spawn_type = SpawnType::Sequence;
 
-    SpawnEvent s5 = {};
-    s5.spawn_list.emplace_back(ShipType::Pirates);
-    s5.spawn_type = SpawnType::Sequence;
+        SpawnEvent s5 = {};
+        s5.spawn_list.emplace_back(ShipType::Pirates);
+        s5.spawn_type = SpawnType::Sequence;
 
-    m_backup_spawn.emplace_back(s1);
-    m_backup_spawn.emplace_back(s2);
-    m_backup_spawn.emplace_back(s3);
-    m_backup_spawn.emplace_back(s4);
-    m_backup_spawn.emplace_back(s5);
+        m_backup_spawn.emplace_back(s1);
+        m_backup_spawn.emplace_back(s2);
+        m_backup_spawn.emplace_back(s3);
+        m_backup_spawn.emplace_back(s4);
+        m_backup_spawn.emplace_back(s5);
+    }
+    else
+    {
+        m_backup_spawn.insert(m_backup_spawn.end(), m_main_event_spawn.begin(), m_main_event_spawn.end());
+        m_main_event_spawn.clear();
+    }
+
+    for (u32 i = 0; i < m_backup_spawn.size(); i++)
+    {
+        if (m_backup_spawn[i].spawn_list.size() == 0)
+        {
+            Debug::log("Removed empty event!", DebugType::Warning);
+            m_backup_spawn.erase(m_backup_spawn.begin() + i);
+            i--;
+        }
+    }
 
     m_main_spawn = m_backup_spawn;
 
@@ -107,62 +125,48 @@ void ShipSpawner::draw_editor()
 
     ImGui::Text(("Next ship counter " + std::to_string(m_spawn_warning_counter)).c_str());
 
-    ImGui::Separator();
+    ImGui::Checkbox("Test spawn events", &m_is_test_spawn_enable);
 
-    if (ImGui::Button("Add Event"))
+    if (!m_is_test_spawn_enable)
     {
-        SpawnEvent new_element = {};
-        m_backup_spawn.emplace_back(new_element);
-    }
+        ImGui::Separator();
 
-    for (u32 i = 0; i < m_backup_spawn.size(); i++) 
-    {
-        if (ImGui::Button(("Add Ship##" + std::to_string(i)).c_str()))
+        ImVec2 const available = ImGui::GetContentRegionAvail();
+
+        float const half_width = available.x * 0.5f - ImGui::GetStyle().ItemSpacing.x;
+        float const third_width = available.x * 0.33f - ImGui::GetStyle().ItemSpacing.x;
+
+        std::string const main_event_header = "MAIN EVENT";
+        ImVec2 text_size = ImGui::CalcTextSize(main_event_header.c_str());
+
+        float offset_x = (available.x - text_size.x) * 0.5f;
+        ImGui::SetCursorPosX(ImGui::GetCursorPosX() + offset_x);
+
+        ImGui::Text("%s", main_event_header.c_str());
+
+        if (ImGui::Button("Add Ship##MainEvent", ImVec2(-FLT_MIN, 20.0f)))
         {
-            m_backup_spawn[i].spawn_list.emplace_back(ShipType::FoodSmall);
+            SpawnEvent new_element = {};
+            new_element.spawn_list.emplace_back(ShipType::FoodSmall);
+            new_element.spawn_type = SpawnType::Sequence;
+
+            m_main_event_spawn.emplace_back(new_element);
         }
 
-        ImGui::SameLine();
-        if (ImGui::Button(("Remove Event##" + std::to_string(i)).c_str()))
+        for (u32 i = 0; i < m_main_event_spawn.size(); i++)
         {
-            m_backup_spawn.erase(m_backup_spawn.begin() + i);
-            i = i - 1;
-            continue;
-        }
+            ImGui::PushID(i);
 
-        ImGui::SameLine();
-        if (ImGui::BeginCombo(("##SpawnType" + std::to_string(i)).c_str(), spawn_type_to_string(m_backup_spawn[i].spawn_type).c_str()))
-        {
-            for (u32 j = static_cast<u32>(SpawnType::Sequence); j <= static_cast<u32>(SpawnType::Rapid); j++)
-            {
-                bool const is_selected = m_backup_spawn[i].spawn_type == static_cast<SpawnType>(j);
-
-                if (ImGui::Selectable(spawn_type_to_string(static_cast<SpawnType>(j)).c_str(), is_selected))
-                {
-                    m_backup_spawn[i].spawn_type = static_cast<SpawnType>(j);
-                }
-
-                if (is_selected)
-                {
-                    ImGui::SetItemDefaultFocus();
-                }
-            }
-            ImGui::EndCombo();
-        }
-
-        for (u32 j = 0; j < m_backup_spawn[i].spawn_list.size(); j++)
-        {
-            ImGui::PushID(j);
-
-            if (ImGui::BeginCombo(("##ShipType" + std::to_string(i) + std::to_string(j)).c_str(), ship_type_to_string(m_backup_spawn[i].spawn_list[j]).c_str()))
+            ImGui::SetNextItemWidth(half_width);
+            if (ImGui::BeginCombo(("Add Ship##" + std::to_string(i)).c_str(), ship_type_to_string(m_main_event_spawn[i].spawn_list[0]).c_str()))
             {
                 for (u32 k = static_cast<u32>(ShipType::FoodSmall); k <= static_cast<u32>(ShipType::Tool); k++)
                 {
-                    bool const is_selected = m_backup_spawn[i].spawn_list[j] == static_cast<ShipType>(k);
+                    bool const is_selected = m_main_event_spawn[i].spawn_list[0] == static_cast<ShipType>(k);
 
                     if (ImGui::Selectable(ship_type_to_string(static_cast<ShipType>(k)).c_str(), is_selected))
                     {
-                        m_backup_spawn[i].spawn_list[j] = static_cast<ShipType>(k);
+                        m_main_event_spawn[i].spawn_list[0] = static_cast<ShipType>(k);
                     }
 
                     if (is_selected)
@@ -174,36 +178,133 @@ void ShipSpawner::draw_editor()
             }
 
             ImGui::SameLine();
-            if (ImGui::Button(("Remove ship##" + std::to_string(i) + std::to_string(j)).c_str()))
+            if (ImGui::Button(("Remove ship##" + std::to_string(i)).c_str(), ImVec2(half_width, 20)))
             {
-                m_backup_spawn[i].spawn_list.erase(m_backup_spawn[i].spawn_list.begin() + j);
-                j = j - 1;
+                m_main_event_spawn.erase(m_main_event_spawn.begin() + i);
+                i = i - 1;
                 ImGui::PopID();
                 continue;
             }
 
-            if (m_backup_spawn[i].spawn_type == SpawnType::Rapid)
-            {
-                if (j != 0)
-                {
-                    ImGui::SameLine();
-                    if (ImGui::ArrowButton(("##Up" + std::to_string(j)).c_str(), 2))
-                    {
-                        std::swap(m_backup_spawn[i].spawn_list[j], m_backup_spawn[i].spawn_list[j - 1]);
-                    }
-                }
+            ImGui::PopID();
+        }
 
-                if (j != m_backup_spawn[i].spawn_list.size() - 1)
-                {
-                    ImGui::SameLine();
-                    if (ImGui::ArrowButton(("##Down" + std::to_string(j)).c_str(), 3))
-                    {
-                        std::swap(m_backup_spawn[i].spawn_list[j], m_backup_spawn[i].spawn_list[j + 1]);
-                    }
-                }
+        ImGui::Spacing();
+
+        std::string const custom_events_header = "CUSTOM EVENTS";
+        text_size = ImGui::CalcTextSize(custom_events_header.c_str());
+
+        offset_x = (available.x - text_size.x) * 0.5f;
+        ImGui::SetCursorPosX(ImGui::GetCursorPosX() + offset_x);
+
+        ImGui::Text("%s", custom_events_header.c_str());
+
+        if (ImGui::Button("Add Event", ImVec2(-FLT_MIN, 20)))
+        {
+            SpawnEvent new_element = {};
+            m_backup_spawn.emplace_back(new_element);
+        }
+
+        ImGui::Spacing();
+
+        for (u32 i = 0; i < m_backup_spawn.size(); i++)
+        {
+            ImGui::PushStyleColor(ImGuiCol_Separator, IM_COL32(110, 110, 110, 255));
+            ImGui::Separator();
+            ImGui::PopStyleColor();
+
+            std::string const event_header = "EVENT";
+            text_size = ImGui::CalcTextSize(event_header.c_str());
+
+            offset_x = (available.x - text_size.x) * 0.5f;
+            ImGui::SetCursorPosX(ImGui::GetCursorPosX() + offset_x);
+
+            ImGui::Text("%s", event_header.c_str());
+
+            if (ImGui::Button(("Add Ship##" + std::to_string(i)).c_str(), ImVec2(third_width, 20)))
+            {
+                m_backup_spawn[i].spawn_list.emplace_back(ShipType::FoodSmall);
             }
 
-            ImGui::PopID();
+            ImGui::SameLine();
+            ImGui::SetNextItemWidth(third_width);
+            if (ImGui::BeginCombo(("##SpawnType" + std::to_string(i)).c_str(), spawn_type_to_string(m_backup_spawn[i].spawn_type).c_str()))
+            {
+                for (u32 j = static_cast<u32>(SpawnType::Sequence); j <= static_cast<u32>(SpawnType::Rapid); j++)
+                {
+                    bool const is_selected = m_backup_spawn[i].spawn_type == static_cast<SpawnType>(j);
+
+                    if (ImGui::Selectable(spawn_type_to_string(static_cast<SpawnType>(j)).c_str(), is_selected))
+                    {
+                        m_backup_spawn[i].spawn_type = static_cast<SpawnType>(j);
+                    }
+
+                    if (is_selected)
+                    {
+                        ImGui::SetItemDefaultFocus();
+                    }
+                }
+                ImGui::EndCombo();
+            }
+            ImGui::SameLine();
+            if (ImGui::Button(("Remove Event##" + std::to_string(i)).c_str(), ImVec2(third_width, 20)))
+            {
+                m_backup_spawn.erase(m_backup_spawn.begin() + i);
+                i = i - 1;
+                continue;
+            }
+
+            if (m_backup_spawn[i].spawn_list.size() == 0)
+            {
+                ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 250, 0, 255));
+
+                std::string const empty_event_warning = "Empty events will be removed!";
+                text_size = ImGui::CalcTextSize(empty_event_warning.c_str());
+
+                offset_x = (available.x - text_size.x) * 0.5f;
+                ImGui::SetCursorPosX(ImGui::GetCursorPosX() + offset_x);
+
+                ImGui::Text("%s", empty_event_warning.c_str());
+                ImGui::PopStyleColor();
+            }
+
+            for (u32 j = 0; j < m_backup_spawn[i].spawn_list.size(); j++)
+            {
+                ImGui::PushID(j);
+
+                ImGui::SetNextItemWidth(half_width);
+                if (ImGui::BeginCombo(("##ShipType" + std::to_string(i) + std::to_string(j)).c_str(), ship_type_to_string(m_backup_spawn[i].spawn_list[j]).c_str()))
+                {
+                    for (u32 k = static_cast<u32>(ShipType::FoodSmall); k <= static_cast<u32>(ShipType::Tool); k++)
+                    {
+                        bool const is_selected = (m_backup_spawn[i].spawn_list[j] == static_cast<ShipType>(k));
+
+                        if (ImGui::Selectable(ship_type_to_string(static_cast<ShipType>(k)).c_str(), is_selected))
+                        {
+                            m_backup_spawn[i].spawn_list[j] = static_cast<ShipType>(k);
+                        }
+
+                        if (is_selected)
+                        {
+                            ImGui::SetItemDefaultFocus();
+                        }
+                    }
+                    ImGui::EndCombo();
+                }
+
+                ImGui::SameLine();
+                if (ImGui::Button(("Remove ship##" + std::to_string(i) + std::to_string(j)).c_str(), ImVec2(half_width, 0.0f)))
+                {
+                    m_backup_spawn[i].spawn_list.erase(m_backup_spawn[i].spawn_list.begin() + j);
+                    j = j - 1;
+                    ImGui::PopID();
+                    continue;
+                }
+
+                ImGui::PopID();
+            }
+
+            ImGui::Spacing();
         }
     }
 }
