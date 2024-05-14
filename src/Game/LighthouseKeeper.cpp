@@ -96,6 +96,16 @@ void LighthouseKeeper::draw_editor()
     ImGuiEx::draw_ptr("Lighthouse", lighthouse);
 }
 
+bool LighthouseKeeper::is_inside_port() const
+{
+    return m_is_inside_port;
+}
+
+void LighthouseKeeper::set_is_inside_port(bool const value)
+{
+    m_is_inside_port = value;
+}
+
 void LighthouseKeeper::handle_input() const
 {
     auto const& factories = LevelController::get_instance()->factories;
@@ -139,9 +149,11 @@ void LighthouseKeeper::handle_input() const
         glm::vec2 const keeper_position = AK::convert_3d_to_2d(entity->transform->get_position());
         glm::vec2 const port_position = AK::convert_3d_to_2d(port_transform->get_position());
 
-        if (distance(keeper_position, port_position) < port_locked->get_interactable_distance())
+        if (is_inside_port())
         {
-            if (port_locked->interact())
+            bool const has_interacted = port_locked->interact();
+
+            if (has_interacted)
             {
                 return;
             }
