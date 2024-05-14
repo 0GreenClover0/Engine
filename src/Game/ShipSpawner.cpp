@@ -37,26 +37,23 @@ void ShipSpawner::awake()
         s1.spawn_type = SpawnType::Sequence;
 
         SpawnEvent s2 = {};
-        s2.spawn_list.emplace_back(ShipType::FoodMedium);
+        s2.spawn_list.emplace_back(ShipType::FoodSmall);
         s2.spawn_type = SpawnType::Sequence;
 
         SpawnEvent s3 = {};
-        s3.spawn_list.emplace_back(ShipType::FoodBig);
+        s3.spawn_list.emplace_back(ShipType::FoodSmall);
         s3.spawn_type = SpawnType::Sequence;
 
         SpawnEvent s4 = {};
-        s4.spawn_list.emplace_back(ShipType::Tool);
-        s4.spawn_type = SpawnType::Sequence;
-
-        SpawnEvent s5 = {};
-        s5.spawn_list.emplace_back(ShipType::Pirates);
-        s5.spawn_type = SpawnType::Sequence;
+        s4.spawn_list.emplace_back(ShipType::Pirates);
+        s4.spawn_list.emplace_back(ShipType::Pirates);
+        s4.spawn_list.emplace_back(ShipType::Pirates);
+        s4.spawn_type = SpawnType::Immediate;
 
         m_backup_spawn.emplace_back(s1);
         m_backup_spawn.emplace_back(s2);
         m_backup_spawn.emplace_back(s3);
         m_backup_spawn.emplace_back(s4);
-        m_backup_spawn.emplace_back(s5);
     }
     else
     {
@@ -127,6 +124,7 @@ void ShipSpawner::draw_editor()
     ImGui::Separator();
 
     ImGui::Text(("Next ship counter " + std::to_string(m_spawn_warning_counter)).c_str());
+    ImGui::Text(("Type " + spawn_type_to_string(m_spawn_type)).c_str());
 
     ImGui::Checkbox("Test spawn events", &m_is_test_spawn_enable);
 
@@ -355,53 +353,8 @@ void ShipSpawner::draw_editor()
     }
 }
 
-void ShipSpawner::prepare_for_spawn()
+void ShipSpawner::add_warning()
 {
-    if (paths.size() == 0)
-    {
-        Debug::log("No available paths to create ships on!", DebugType::Warning);
-        return;
-    }
-
-    if (!is_spawn_possible())
-    {
-        return;
-    }
-
-    if (m_spawn_warning_counter > 0.0f)
-    {
-        m_spawn_warning_counter -= delta_time;
-        return;
-    }
-
-    if (m_warning_lights.size() != 0)
-    {
-        assert(m_warning_lights.size() == 1);
-
-        if (m_ships.size() != 0)
-        {
-            if (glm::distance(find_nearest_ship(m_spawn_position), m_spawn_position) < minimum_spawn_distance)
-            {
-                // There is no room near the spawning point, delay until next spawn time
-                m_spawn_warning_counter = spawn_warning_time;
-                return;
-            }
-        }
-
-        m_warning_lights[0].lock()->destroy_immediate();
-        m_warning_lights.erase(m_warning_lights.begin());
-
-        spawn_ship();
-
-        return;
-    }
-
-    std::weak_ptr<Path> const path = paths[std::rand() % paths.size()];
-
-    m_spawn_position = path.lock()->get_point_at(glm::linearRand(0.0f, 1.0f));
-
-    m_spawn_warning_counter = spawn_warning_time;
-
     auto const warning = Entity::create("Warning");
     auto const warning_light_component = warning->add_component(SpotLight::create());
 
@@ -412,28 +365,14 @@ void ShipSpawner::prepare_for_spawn()
     warning_light_component->linear = 0.0f;
     warning_light_component->quadratic = 0.0f;
 
-    warning->transform->set_local_position({ m_spawn_position.x - glm::sign(m_spawn_position.x), 0.2f, m_spawn_position.y });
+    warning->transform->set_local_position({ m_spawn_position.back().x - glm::sign(m_spawn_position.back().x), 0.2f, m_spawn_position.back().y});
     warning->transform->set_euler_angles({ -90.0f, 0.0f, 0.0f });
 
     m_warning_lights.emplace_back(warning);
 }
 
-void ShipSpawner::spawn_ship()
+void ShipSpawner::prepare_for_spawn()
 {
-    auto const standard_shader = ResourceManager::get_instance().load_shader("./res/shaders/lit.hlsl", "./res/shaders/lit.hlsl");
-    auto const standard_material = Material::create(standard_shader);
-
-    auto const ship = Entity::create("ship");
-    ship->transform->set_local_position({ m_spawn_position.x, 0.0f, m_spawn_position.y });
-
-    auto const ship_comp = ship->add_component(Ship::create(light.lock(), std::static_pointer_cast<ShipSpawner>(shared_from_this())));
-    auto const collider = ship->add_component<Collider2D>(Collider2D::create({ 0.1f, 0.1f }));
-    collider->set_is_trigger(true);
-    ship_comp->on_ship_destroyed.attach(&ShipSpawner::remove_ship, shared_from_this());
-    ship_comp->maximum_speed = LevelController::get_instance()->ships_speed;
-
-    m_ships.emplace_back(ship_comp);
-
     if (m_backup_spawn.empty())
     {
         Debug::log("Ship spawn list is empty!", DebugType::Error);
@@ -442,6 +381,10 @@ void ShipSpawner::spawn_ship()
 
     if (m_main_spawn.back().spawn_list.empty())
     {
+        if (m_spawn_type == SpawnType::Immediate)
+        {
+            m_spawn_warning_counter = spawn_warning_time;
+        }
         m_main_spawn.pop_back();
     }
 
@@ -451,7 +394,124 @@ void ShipSpawner::spawn_ship()
         return;
     }
 
+    if (paths.size() == 0)
+    {
+        Debug::log("No available paths to create ships on!", DebugType::Warning);
+        return;
+    }
+
     SpawnEvent* being_spawn = &m_main_spawn.back();
+    m_spawn_type = being_spawn->spawn_type;
+
+    if (m_spawn_warning_counter > 0.0f)
+    {
+        m_spawn_warning_counter -= delta_time;
+        return;
+    }
+
+    if (m_spawn_type == SpawnType::Sequence)
+    {
+        if (!is_spawn_possible())
+        {
+            return;
+        }
+
+        if (m_warning_lights.size() != 0)
+        {
+            if (m_ships.size() != 0)
+            {
+                auto const nearest_ship_position = find_nearest_ship(m_spawn_position.back());
+                assert(nearest_ship_position.has_value());
+
+                if (glm::distance(nearest_ship_position.value(), m_spawn_position.back()) < minimum_spawn_distance)
+                {
+                    // There is no room near the spawning point, delay until next spawn time
+                    m_spawn_warning_counter = spawn_warning_time;
+                    return;
+                }
+            }
+
+            m_warning_lights.back().lock()->destroy_immediate();
+            m_warning_lights.pop_back();
+
+            spawn_ship(being_spawn);
+
+            m_spawn_position.pop_back();
+
+            being_spawn->spawn_list.pop_back();
+
+            return;
+        }
+
+        std::weak_ptr<Path> const path = paths[std::rand() % paths.size()];
+        m_spawn_position.emplace_back(path.lock()->get_point_at(glm::linearRand(0.0f, 1.0f)));
+
+        add_warning();
+
+        m_spawn_warning_counter = spawn_warning_time;
+    }
+
+    if (m_spawn_type == SpawnType::Immediate)
+    {
+        if (m_warning_lights.size() != 0)
+        {
+            for (i32 i = m_warning_lights.size() - 1; i >= 0; i--)
+            {
+                m_warning_lights[i].lock()->destroy_immediate();
+                m_warning_lights.pop_back();
+
+                spawn_ship(being_spawn);
+
+                m_spawn_position.pop_back();
+
+                being_spawn->spawn_list.pop_back();
+            }
+        }
+        else
+        {
+            for (auto const& spawn : being_spawn->spawn_list)
+            {
+                glm::vec2 potential_spawn_point = {};
+
+                // NOTE: 100 is an arbitrary number of tries that we perform to find a suitable spawn point.
+                //       If this number is reached we just don't spawn any more ships from this event.
+                for (u32 i = 0; i < 100; i++)
+                {
+                    std::weak_ptr<Path> const path = paths[std::rand() % paths.size()];
+                    potential_spawn_point = path.lock()->get_point_at(glm::linearRand(0.0f, 1.0f));
+
+                    auto nearest_ship_position = find_nearest_ship(potential_spawn_point);
+                    if (!nearest_ship_position.has_value() || glm::distance(nearest_ship_position.value(), potential_spawn_point) >= minimum_spawn_distance)
+                    {
+                        break;
+                    }
+                }
+
+                m_spawn_position.emplace_back(potential_spawn_point);
+
+                add_warning();
+            }
+
+            m_spawn_warning_counter = spawn_warning_time;
+        }
+    }
+}
+
+void ShipSpawner::spawn_ship(SpawnEvent const* being_spawn)
+{
+    auto const standard_shader = ResourceManager::get_instance().load_shader("./res/shaders/lit.hlsl", "./res/shaders/lit.hlsl");
+    auto const standard_material = Material::create(standard_shader);
+
+    auto const ship = Entity::create("Ship");
+    ship->transform->set_local_position({ m_spawn_position.back().x, 0.0f, m_spawn_position.back().y });
+
+    auto const ship_comp = ship->add_component(Ship::create(light.lock(), std::static_pointer_cast<ShipSpawner>(shared_from_this())));
+    auto const collider = ship->add_component<Collider2D>(Collider2D::create({ 0.1f, 0.1f }));
+    collider->set_is_trigger(true);
+    ship_comp->on_ship_destroyed.attach(&ShipSpawner::remove_ship, shared_from_this());
+    ship_comp->maximum_speed = LevelController::get_instance()->ships_speed;
+
+    m_ships.emplace_back(ship_comp);
 
     ship_comp->type = being_spawn->spawn_list.back();
 
@@ -475,8 +535,6 @@ void ShipSpawner::spawn_ship()
     {
         ship->add_component(Model::create("./res/models/shipTool/shipTool.gltf", standard_material));
     }
-
-    being_spawn->spawn_list.pop_back();
 }
 
 bool ShipSpawner::is_spawn_possible() const
@@ -550,8 +608,13 @@ glm::vec2 ShipSpawner::find_nearest_non_pirate_ship(std::shared_ptr<Ship> const&
     return nearest_position;
 }
 
-glm::vec2 ShipSpawner::find_nearest_ship(glm::vec2 const center_position) const
+std::optional<glm::vec2> ShipSpawner::find_nearest_ship(glm::vec2 center_position) const
 {
+    if (m_ships.empty()) 
+    {
+        return std::nullopt;
+    }
+
     auto const& nearest = m_ships[0];
     glm::vec2 nearest_position = AK::convert_3d_to_2d(nearest.lock()->entity->transform->get_local_position());
     float nearest_distance = glm::distance(center_position, nearest_position);
