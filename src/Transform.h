@@ -19,6 +19,7 @@ public:
 
     [[nodiscard]] glm::quat get_rotation();
 
+    void set_scale(glm::vec3 const& scale);
     [[nodiscard]] glm::vec3 get_scale();
 
     void set_local_position(glm::vec3 const&);
