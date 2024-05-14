@@ -3,6 +3,7 @@
 #include "Collider2D.h"
 #include "Cube.h"
 #include "Entity.h"
+#include "LighthouseKeeper.h"
 #include "Player.h"
 #include "ResourceManager.h"
 #include "Ship.h"
@@ -18,13 +19,26 @@ Port::Port(AK::Badge<Port>)
 {
 }
 
-void Port::on_trigger_enter(std::shared_ptr<Collider2D> const &other)
+void Port::on_trigger_enter(std::shared_ptr<Collider2D> const& other)
 {
     auto const ship = other->entity->get_component<Ship>();
-    if (ship != nullptr && !ship->is_in_port() && ship->type!=ShipType::Pirates)
+    if (ship != nullptr && !ship->is_in_port() && ship->type != ShipType::Pirates)
     {
         ship->stop();
         ships_inside.emplace_back(ship);
+    }
+
+    if (auto const keeper = other->entity->get_component<LighthouseKeeper>(); keeper != nullptr)
+    {
+        keeper->set_is_inside_port(true);
+    }
+}
+
+void Port::on_trigger_exit(std::shared_ptr<Collider2D> const& other)
+{
+    if (auto const keeper = other->entity->get_component<LighthouseKeeper>(); keeper != nullptr)
+    {
+        keeper->set_is_inside_port(false);
     }
 }
 

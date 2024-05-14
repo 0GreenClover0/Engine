@@ -18,6 +18,9 @@ public:
     virtual void update() override;
     virtual void draw_editor() override;
 
+    bool is_inside_port() const;
+    void set_is_inside_port(bool const value);
+
     float maximum_speed = 3.17f;
     float acceleration = 0.14f;
     float deceleration = acceleration;
@@ -29,6 +32,8 @@ public:
 
 private:
     void handle_input() const;
+
+    bool m_is_inside_port = false;
 
     glm::vec2 m_speed = glm::vec2(0.0f, 0.0f);
 };

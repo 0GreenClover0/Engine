@@ -13,7 +13,8 @@ public:
 
     explicit Port(AK::Badge<Port>);
 
-    virtual void on_trigger_enter(std::shared_ptr<Collider2D> const &other) override;
+    virtual void on_trigger_enter(std::shared_ptr<Collider2D> const& other) override;
+    virtual void on_trigger_exit(std::shared_ptr<Collider2D> const& other) override;
 
     [[nodiscard]] bool interact();
 

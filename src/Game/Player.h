@@ -11,7 +11,7 @@ public:
 
     static std::shared_ptr<Player> get_instance();
 
-    Player(AK::Badge<Player>);
+    explicit Player(AK::Badge<Player>);
 
     virtual void awake() override;
     virtual void update() override;
