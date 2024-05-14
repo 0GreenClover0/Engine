@@ -26,6 +26,29 @@ glm::quat Transform::get_rotation()
     return m_rotation;
 }
 
+void Transform::set_scale(glm::vec3 const& scale)
+{
+    if (parent.expired()) // If there's no parent, global scale is the same as local scale
+    {
+        m_local_scale = scale;
+    }
+    else
+    {
+        glm::vec3 const parent_global_scale = parent.lock()->get_scale();
+        glm::vec3 const new_local_scale = scale / parent_global_scale;
+
+        auto const is_scale_modified = glm::epsilonNotEqual(new_local_scale, m_local_scale, 0.0001f);
+        if (!is_scale_modified.x && !is_scale_modified.y && !is_scale_modified.z)
+        {
+            return;
+        }
+
+        m_local_scale = new_local_scale;
+    }
+
+    set_dirty();
+}
+
 glm::vec3 Transform::get_scale()
 {
     recompute_model_matrix_if_needed();
