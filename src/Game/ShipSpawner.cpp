@@ -112,10 +112,13 @@ void ShipSpawner::draw_editor()
         if (!ship_locked->is_destroyed)
         {
             ImGui::SameLine();
+            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0f, 0.0f, 0.0f, 1.0f));
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.0f, 0.5f, 0.5f, 1.0f));
             if (ImGui::Button(("Destroy##" + std::to_string(index)).c_str()))
             {
                 ship_locked->destroy();
             }
+            ImGui::PopStyleColor(2);
         }
 
         index++;
@@ -157,6 +160,16 @@ void ShipSpawner::draw_editor()
         {
             ImGui::PushID(i);
 
+            ImVec4 bg_color = {};
+            ImVec4 text_color = {};
+
+            ship_type_to_color(m_main_event_spawn[i].spawn_list[0], bg_color, text_color);
+
+            ImGui::PushStyleColor(ImGuiCol_Text, text_color);
+            ImGui::PushStyleColor(ImGuiCol_FrameBg, bg_color);
+            ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, bg_color);
+            ImGui::PushStyleColor(ImGuiCol_FrameBgActive, bg_color);
+
             ImGui::SetNextItemWidth(half_width);
             if (ImGui::BeginCombo(("Add Ship##" + std::to_string(i)).c_str(), ship_type_to_string(m_main_event_spawn[i].spawn_list[0]).c_str()))
             {
@@ -164,7 +177,14 @@ void ShipSpawner::draw_editor()
                 {
                     bool const is_selected = m_main_event_spawn[i].spawn_list[0] == static_cast<ShipType>(k);
 
-                    if (ImGui::Selectable(ship_type_to_string(static_cast<ShipType>(k)).c_str(), is_selected))
+                    ship_type_to_color(static_cast<ShipType>(k), bg_color, text_color);
+
+                    ImGui::PushStyleColor(ImGuiCol_Text, text_color);
+                    ImGui::PushStyleColor(ImGuiCol_Header, bg_color);
+                    ImGui::PushStyleColor(ImGuiCol_HeaderHovered, ImVec4(bg_color.x + 0.2f, bg_color.y + 0.2f, bg_color.z + 0.2f, 1.0f));
+                    ImGui::PushStyleColor(ImGuiCol_HeaderActive, bg_color);
+
+                    if (ImGui::Selectable(ship_type_to_string(static_cast<ShipType>(k)).c_str(), true))
                     {
                         m_main_event_spawn[i].spawn_list[0] = static_cast<ShipType>(k);
                     }
@@ -173,9 +193,13 @@ void ShipSpawner::draw_editor()
                     {
                         ImGui::SetItemDefaultFocus();
                     }
+
+                    ImGui::PopStyleColor(4);
                 }
                 ImGui::EndCombo();
             }
+
+            ImGui::PopStyleColor(4);
 
             ImGui::SameLine();
             if (ImGui::Button(("Remove ship##" + std::to_string(i)).c_str(), ImVec2(half_width, 20)))
@@ -228,6 +252,7 @@ void ShipSpawner::draw_editor()
 
             ImGui::SameLine();
             ImGui::SetNextItemWidth(third_width);
+
             if (ImGui::BeginCombo(("##SpawnType" + std::to_string(i)).c_str(), spawn_type_to_string(m_backup_spawn[i].spawn_type).c_str()))
             {
                 for (u32 j = static_cast<u32>(SpawnType::Sequence); j <= static_cast<u32>(SpawnType::Rapid); j++)
@@ -273,13 +298,29 @@ void ShipSpawner::draw_editor()
                 ImGui::PushID(j);
 
                 ImGui::SetNextItemWidth(half_width);
+
+                ImVec4 bg_color, text_color;
+                ship_type_to_color(m_backup_spawn[i].spawn_list[j], bg_color, text_color);
+
+                ImGui::PushStyleColor(ImGuiCol_Text, text_color);
+                ImGui::PushStyleColor(ImGuiCol_FrameBg, bg_color);
+                ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, bg_color);
+                ImGui::PushStyleColor(ImGuiCol_FrameBgActive, bg_color);
+
                 if (ImGui::BeginCombo(("##ShipType" + std::to_string(i) + std::to_string(j)).c_str(), ship_type_to_string(m_backup_spawn[i].spawn_list[j]).c_str()))
                 {
                     for (u32 k = static_cast<u32>(ShipType::FoodSmall); k <= static_cast<u32>(ShipType::Tool); k++)
                     {
                         bool const is_selected = (m_backup_spawn[i].spawn_list[j] == static_cast<ShipType>(k));
 
-                        if (ImGui::Selectable(ship_type_to_string(static_cast<ShipType>(k)).c_str(), is_selected))
+                        ship_type_to_color(static_cast<ShipType>(k), bg_color, text_color);
+
+                        ImGui::PushStyleColor(ImGuiCol_Text, text_color);
+                        ImGui::PushStyleColor(ImGuiCol_Header, bg_color);
+                        ImGui::PushStyleColor(ImGuiCol_HeaderHovered, ImVec4(bg_color.x + 0.2f, bg_color.y + 0.2f, bg_color.z + 0.2f, 1.0f));
+                        ImGui::PushStyleColor(ImGuiCol_HeaderActive, bg_color);
+
+                        if (ImGui::Selectable(ship_type_to_string(static_cast<ShipType>(k)).c_str(), true))
                         {
                             m_backup_spawn[i].spawn_list[j] = static_cast<ShipType>(k);
                         }
@@ -288,9 +329,14 @@ void ShipSpawner::draw_editor()
                         {
                             ImGui::SetItemDefaultFocus();
                         }
+
+                        ImGui::PopStyleColor(4);
                     }
+
                     ImGui::EndCombo();
                 }
+
+                ImGui::PopStyleColor(4);
 
                 ImGui::SameLine();
                 if (ImGui::Button(("Remove ship##" + std::to_string(i) + std::to_string(j)).c_str(), ImVec2(half_width, 0.0f)))
