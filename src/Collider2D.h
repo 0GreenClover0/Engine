@@ -9,6 +9,8 @@
 #include <array>
 #include <unordered_map>
 
+class DebugDrawing;
+
 enum class ColliderType2D
 {
     Rectangle,
@@ -101,4 +103,7 @@ private:
 
     std::vector<std::weak_ptr<Collider2D>> m_overlapped_this_frame = {};
     std::unordered_map<std::string, std::weak_ptr<Collider2D>> m_overlapped_this_frame_map = {};
+
+    std::shared_ptr<Entity> m_debug_drawing_entity = nullptr;
+    std::shared_ptr<DebugDrawing> m_debug_drawing = nullptr;
 };
