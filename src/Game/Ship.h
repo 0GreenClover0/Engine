@@ -13,6 +13,45 @@ enum class ShipType
     Tool
 };
 
+static void ship_type_to_color(ShipType const type, ImVec4& bg_color, ImVec4& text_color)
+{
+    auto constexpr light_green_color = ImVec4(0.0f, 0.91f, 0.118f, 1.0f);
+    auto constexpr green_color = ImVec4(0.0f, 0.729f, 0.118f, 1.0f);
+    auto constexpr dark_green_color = ImVec4(0.0f, 0.549f, 0.118f, 1.0f);
+    auto constexpr gray_color = ImVec4(0.2f, 0.2f, 0.2f, 1.0f);
+    auto constexpr pink_color = ImVec4(0.671f, 0.2f, 0.62f, 1.0f);
+    auto constexpr white_color = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
+    auto constexpr black_color = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
+
+    switch (type)
+    {
+    case ShipType::FoodSmall:
+        bg_color = light_green_color;
+        text_color = black_color;
+        break;
+    case ShipType::FoodMedium:
+        bg_color = green_color;
+        text_color = black_color;
+        break;
+    case ShipType::FoodBig:
+        bg_color = dark_green_color;
+        text_color = black_color;
+        break;
+    case ShipType::Pirates:
+        bg_color = gray_color;
+        text_color = white_color;
+        break;
+    case ShipType::Tool:
+        bg_color = pink_color;
+        text_color = white_color;
+        break;
+    default:
+        bg_color = white_color;
+        text_color = black_color;
+        break;
+    }
+}
+
 static std::string ship_type_to_string(ShipType const type)
 {
     switch (type)
