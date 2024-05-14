@@ -47,6 +47,8 @@ private:
         SpawnType spawn_type = SpawnType::Sequence;
     };
 
+    std::vector<SpawnEvent> m_main_event_spawn = {};
+
     std::vector<SpawnEvent> m_main_spawn = {};
     std::vector<SpawnEvent> m_backup_spawn = {};
 
@@ -55,4 +57,6 @@ private:
     glm::vec2 m_spawn_position = {};
 
     std::vector<std::weak_ptr<Ship>> m_ships = {};
+
+    bool m_is_test_spawn_enable = false;
 };
