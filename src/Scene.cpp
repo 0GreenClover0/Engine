@@ -128,6 +128,9 @@ void Scene::run_frame()
     auto const components_copy = tickable_components;
     for (auto const& component : components_copy)
     {
+        if (component == nullptr || component->entity == nullptr)
+            continue;
+
         component->update();
     }
 }
