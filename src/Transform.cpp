@@ -78,6 +78,7 @@ void Transform::set_euler_angles(glm::vec3 const& euler_angles)
     }
 
     m_euler_angles = euler_angles;
+    m_local_rotation = glm::quat(glm::radians(euler_angles));
 
     set_dirty();
 }
@@ -143,12 +144,7 @@ void Transform::compute_model_matrix(glm::mat4 const& parent_global_model_matrix
 
 void Transform::compute_local_model_matrix()
 {
-    glm::mat4 const transform_x = glm::rotate(glm::mat4(1.0f), glm::radians(m_euler_angles.x), glm::vec3(1.0f, 0.0f, 0.0f));
-    glm::mat4 const transform_y = glm::rotate(glm::mat4(1.0f), glm::radians(m_euler_angles.y), glm::vec3(0.0f, 1.0f, 0.0f));
-    glm::mat4 const transform_z = glm::rotate(glm::mat4(1.0f), glm::radians(m_euler_angles.z), glm::vec3(0.0f, 0.0f, 1.0f));
-
-    glm::mat4 const rotation_matrix = transform_y * transform_x * transform_z;
-
+    glm::mat4 const rotation_matrix = glm::mat4_cast(m_local_rotation);
     m_local_model_matrix = glm::translate(glm::mat4(1.0f), m_local_position) * rotation_matrix * glm::scale(glm::mat4(1.0f), m_local_scale);
     m_local_dirty = false;
 }
