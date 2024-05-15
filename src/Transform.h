@@ -39,7 +39,9 @@ public:
     [[nodiscard]] glm::mat4 const& get_model_matrix();
 
     void compute_model_matrix();
-    void compute_model_matrix(glm::mat4 const&);
+    void compute_model_matrix(glm::mat4 const& parent_global_model_matrix);
+
+    void set_model_matrix(glm::mat4 const& matrix);
 
     void compute_local_model_matrix();
 
