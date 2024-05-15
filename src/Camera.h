@@ -52,7 +52,7 @@ public:
     float fov = 1.0f;
 
     float near_plane = 0.1f;
-    float far_plane = 1000000.0f;
+    float far_plane = 1000.0f;
 
 private:
     void update_internals();
