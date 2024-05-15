@@ -54,6 +54,7 @@ public:
 protected:
     glm::vec3 m_local_position = { 0.0f, 0.0f, 0.0f };
     glm::vec3 m_euler_angles = { 0.0f, 0.0f, 0.0f };
+    glm::quat m_local_rotation = { 1.0f, 0.0f, 0.0f, 0.0f };
     glm::vec3 m_local_scale = { 1.0f, 1.0f, 1.0f };
 
     glm::vec3 m_position = {};
