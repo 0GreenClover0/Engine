@@ -185,6 +185,8 @@ private:
 
     void mouse_callback(double const x, double const y);
 
+    glm::vec3 update_locked_value(glm::vec3 new_value, glm::vec3 const old_value) const;
+
     glm::dvec2 m_last_mouse_position = glm::dvec2(1280.0 / 2.0, 720.0 / 2.0);
     float m_yaw = 0.0f;
     float m_pitch = 10.0f;
@@ -219,6 +221,10 @@ private:
 
     bool m_rendering_to_editor = true;
     bool m_gizmo_snapping = false;
+
+    bool m_lock_scale = false;
+    glm::vec3 m_lock_ratio = {};
+    glm::bvec3 m_disabled_scale = {};
 
     GuizmoOperationType m_operation_type = GuizmoOperationType::Translate;
 

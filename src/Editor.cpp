@@ -591,6 +591,8 @@ void Editor::draw_inspector(std::shared_ptr<EditorWindow> const& window)
     glm::vec3 position = entity->transform->get_local_position();
     ImGuiEx::InputFloat3("Position", glm::value_ptr(position));
 
+    float const input_width = ImGui::CalcItemWidth() / 3.0f  - ImGui::GetStyle().ItemSpacing.x * 0.66f;
+
     ImGui::SameLine();
 
     if (ImGui::Button("Copy##1"))
@@ -614,7 +616,33 @@ void Editor::draw_inspector(std::shared_ptr<EditorWindow> const& window)
     }
 
     glm::vec3 scale = entity->transform->get_local_scale();
-    ImGuiEx::InputFloat3("Scale", glm::value_ptr(scale));
+    glm::vec3 old_scale = scale;
+
+    ImGui::PushItemWidth(input_width);
+
+    ImGui::BeginDisabled(m_lock_scale && m_disabled_scale.x);
+    ImGuiEx::InputFloat("##x", &scale.x);
+    ImGui::EndDisabled();
+
+    ImGui::SameLine();
+
+    ImGui::BeginDisabled(m_lock_scale && m_disabled_scale.y);
+    ImGuiEx::InputFloat("##y", &scale.y);
+    ImGui::EndDisabled();
+
+    ImGui::SameLine();
+
+    ImGui::BeginDisabled(m_lock_scale && m_disabled_scale.z);
+    ImGuiEx::InputFloat("Scale##z", &scale.z);
+    ImGui::EndDisabled();
+
+    ImGui::PopItemWidth();
+
+    if (scale != old_scale && m_lock_scale)
+    {
+        scale = update_locked_value(scale, old_scale);
+    }
+
     entity->transform->set_local_scale(scale);
 
     ImGui::SameLine();
@@ -623,6 +651,26 @@ void Editor::draw_inspector(std::shared_ptr<EditorWindow> const& window)
     {
         std::string const cpy = glm::to_string(scale);
         ImGui::SetClipboardText(cpy.c_str());
+    }
+
+    ImGui::SameLine();
+
+    if (ImGui::Checkbox("LOCK", &m_lock_scale))
+    {
+        if (!m_lock_scale)
+        {
+            m_disabled_scale = {false, false, false};
+        }
+        else
+        {
+            m_lock_ratio = entity->transform->get_local_scale();
+
+            m_disabled_scale.x = glm::epsilonEqual(m_lock_ratio.x, 0.0f, 0.0001f);
+
+            m_disabled_scale.y = glm::epsilonEqual(m_lock_ratio.y, 0.0f, 0.0001f);
+
+            m_disabled_scale.z = glm::epsilonEqual(m_lock_ratio.z, 0.0f, 0.0001f);
+        }
     }
 
     auto const components_copy = entity->components;
@@ -930,6 +978,50 @@ void Editor::mouse_callback(double const x, double const y)
     m_pitch = glm::clamp(m_pitch + y_offset, -89.0, 89.0);
 
     m_camera_entity->transform->set_euler_angles(glm::vec3(m_pitch, -m_yaw, 0.0f));
+}
+
+glm::vec3 Editor::update_locked_value(glm::vec3 new_value, glm::vec3 const old_value) const
+{
+    if (glm::epsilonNotEqual(new_value.x, old_value.x, 0.0001f))
+    {
+        if (m_disabled_scale.x)
+        {
+            return old_value;
+        }
+
+        float const y = (m_lock_ratio.y / m_lock_ratio.x) * new_value.x;
+        float const z = (m_lock_ratio.z / m_lock_ratio.x) * new_value.x;
+
+        return {new_value.x, y, z};
+    }
+
+    if (glm::epsilonNotEqual(new_value.y, old_value.y, 0.0001f))
+    {
+        if (m_disabled_scale.y)
+        {
+            return old_value;
+        }
+
+        float const x = (m_lock_ratio.x / m_lock_ratio.y) * new_value.y;
+        float const z = (m_lock_ratio.z / m_lock_ratio.y) * new_value.y;
+
+        return {x, new_value.y, z};
+    }
+
+    if (glm::epsilonNotEqual(new_value.z, old_value.z, 0.0001f))
+    {
+        if (m_disabled_scale.z)
+        {
+            return old_value;
+        }
+
+        float const x = (m_lock_ratio.x / m_lock_ratio.z) * new_value.z;
+        float const y = (m_lock_ratio.y / m_lock_ratio.z) * new_value.z;
+
+        return {x, y, new_value.z};
+    }
+
+    return new_value;
 }
 
 void Editor::handle_input()
