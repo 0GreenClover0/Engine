@@ -106,24 +106,6 @@ void Collider2D::awake()
     }
 }
 
-void Collider2D::separate(Collider2D const& other, bool const is_static)
-{
-    // This is for circle x circle
-    glm::vec2 const center1_2d = get_center_2d();
-    glm::vec2 const center2_2d = other.get_center_2d();
-
-    // Here and below in second separate function multiply by 2 if static.
-    m_mtv = 0.5f * glm::normalize(center1_2d - center2_2d) * (get_radius_2d() + other.get_radius_2d() - glm::distance(center1_2d, center2_2d));
-
-    apply_mtv(true, is_static);
-}
-
-void Collider2D::separate(bool const sign, bool const is_static)
-{
-    // This is for rectangle x rectangle and for circle x rectangle
-    apply_mtv(sign, is_static);
-}
-
 ColliderType2D Collider2D::get_collider_type() const
 {
     return m_collider_type;
@@ -161,7 +143,7 @@ float Collider2D::get_radius_2d() const
 
 glm::vec2 Collider2D::get_center_2d() const
 {
-    return AK::convert_3d_to_2d(entity->transform->get_local_position());
+    return AK::convert_3d_to_2d(entity->transform->get_position());
 }
 
 glm::vec2 Collider2D::get_bounds_dimensions_2d() const
@@ -169,37 +151,47 @@ glm::vec2 Collider2D::get_bounds_dimensions_2d() const
     return { m_width, m_height };
 }
 
-bool Collider2D::overlaps(Collider2D& other)
+CollisionInfo Collider2D::overlaps(Collider2D const& other)
 {
+    CollisionInfo const ci = {};
+    bool const any_trigger = m_is_trigger || other.is_trigger();
+
     if (!Engine::is_game_running())
-        return false;
+        return ci;
 
-    if (m_collider_type == ColliderType2D::Circle && other.get_collider_type() == ColliderType2D::Circle)
-        return test_collision_circle_circle(*this, other);
+    // Stupid hack for making both triggers and statics work
+    if(any_trigger)
+    {
+        if (m_collider_type == ColliderType2D::Circle && other.get_collider_type() == ColliderType2D::Circle)
+            return test_collision_circle_circle(*this, other);
 
-    if (m_collider_type == ColliderType2D::Rectangle && other.get_collider_type() == ColliderType2D::Rectangle)
-        return test_collision_rectangle_rectangle(*this, other);
+        if (m_collider_type == ColliderType2D::Rectangle && other.get_collider_type() == ColliderType2D::Rectangle)
+            return test_collision_rectangle_rectangle(*this, other);
 
-    if (m_collider_type == ColliderType2D::Circle && other.get_collider_type() == ColliderType2D::Rectangle)
-        return test_collision_circle_rectangle(*this, other);
+        if ((m_collider_type == ColliderType2D::Circle && other.get_collider_type() == ColliderType2D::Rectangle)
+            || (m_collider_type == ColliderType2D::Rectangle && other.get_collider_type() == ColliderType2D::Circle)
+            && (m_is_trigger || other.is_trigger()))
+            return test_collision_circle_rectangle(*this, other);
+    }
+    else
+    {
+        if (m_collider_type == ColliderType2D::Circle && other.get_collider_type() == ColliderType2D::Circle)
+            return test_collision_circle_circle(*this, other);
 
-    if (m_collider_type == ColliderType2D::Rectangle && other.get_collider_type() == ColliderType2D::Circle)
-        return test_collision_circle_rectangle(other, *this);
+        if (m_collider_type == ColliderType2D::Rectangle && other.get_collider_type() == ColliderType2D::Rectangle)
+            return test_collision_rectangle_rectangle(*this, other);
 
-    return false;
+        if (m_collider_type == ColliderType2D::Circle && other.get_collider_type() == ColliderType2D::Rectangle)
+            return test_collision_circle_rectangle(*this, other);
+    }
+
+    return ci;
 }
 
-void Collider2D::apply_mtv(bool const sign, bool const is_static) const
+void Collider2D::apply_mtv(bool const sign, CollisionInfo const& ci) const
 {
     float const factor = sign ? 1.0f : -1.0f;
-
-    // I will leave this commented out to remember that this used to exist in case doubling the MTV might
-    // still be needed after further investigation and using collisions in game for a longer period.
-
-    // if (is_static)
-    //     factor *= 2.0f;
-
-    glm::vec2 const new_position = AK::convert_3d_to_2d(entity->transform->get_position()) + m_mtv * 0.5f * factor;
+    glm::vec2 const new_position = AK::convert_3d_to_2d(entity->transform->get_position()) + ci.mtv * 0.5f * factor;
     entity->transform->set_local_position(AK::convert_2d_to_3d(new_position, entity->transform->get_position().y));
 }
 
@@ -377,8 +369,10 @@ float get_overlap_length(glm::vec2 const& a, glm::vec2 const& b)
     return std::min(a.y, b.y) - std::max(a.x, b.x);
 }
 
-bool Collider2D::test_collision_rectangle_rectangle(Collider2D const& obb1, Collider2D const& obb2)
+CollisionInfo Collider2D::test_collision_rectangle_rectangle(Collider2D const& obb1, Collider2D const& obb2)
 {
+    CollisionInfo ci = {};
+
     std::array const corners1 = { obb1.m_corners[0], obb1.m_corners[1] , obb1.m_corners[2] , obb1.m_corners[3] };
     std::array const corners2 = { obb2.m_corners[0], obb2.m_corners[1] , obb2.m_corners[2] , obb2.m_corners[3] };
 
@@ -402,14 +396,18 @@ bool Collider2D::test_collision_rectangle_rectangle(Collider2D const& obb1, Coll
             // Shapes are not overlapping
             if (overlap == 0.0f)
             {
-                m_mtv = { 0.0f, 0.0f };
-                return false;
+                // m_mtv = { 0.0f, 0.0f };
+                ci.is_overlapping = false;
+                ci.mtv = {0.0f, 0.0f};
+                return ci;
             }
 
             if (overlap < min_overlap)
             {
                 min_overlap = overlap;
-                m_mtv = axis[i] * min_overlap;
+                ci.mtv = axis[i] * min_overlap;
+                ci.is_overlapping = true;
+                // m_mtv = axis[i] * min_overlap;
             }
         }
     }
@@ -418,16 +416,18 @@ bool Collider2D::test_collision_rectangle_rectangle(Collider2D const& obb1, Coll
     glm::vec2 const center2 = AK::convert_3d_to_2d(obb2.entity->transform->get_position());
 
     // Need to reverse MTV if center offset and overlap are not pointing in the same direction.
-    if (glm::dot(center1 - center2, m_mtv) < 0.0f)
-        m_mtv = -m_mtv;
+    if (glm::dot(center1 - center2, ci.mtv) < 0.0f)
+        ci.mtv = -ci.mtv;
 
-    return true;
+    return ci;
 }
 
-bool Collider2D::test_collision_circle_circle(Collider2D const& obb1, Collider2D const& obb2) const
+CollisionInfo Collider2D::test_collision_circle_circle(Collider2D const& obb1, Collider2D const& obb2) const
 {
-    glm::vec3 const position1 = obb1.entity->transform->get_local_position();
-    glm::vec3 const position2 = obb2.entity->transform->get_local_position();
+    CollisionInfo ci = {};
+
+    glm::vec3 const position1 = obb1.entity->transform->get_position();
+    glm::vec3 const position2 = obb2.entity->transform->get_position();
 
     glm::vec2 const position1_2d = AK::convert_3d_to_2d(position1);
     glm::vec2 const position2_2d = AK::convert_3d_to_2d(position2);
@@ -435,13 +435,25 @@ bool Collider2D::test_collision_circle_circle(Collider2D const& obb1, Collider2D
     float const positions_distance = glm::distance(position1_2d, position2_2d);
     float const radius_sum = obb1.get_radius_2d() + obb2.get_radius_2d();
 
-    return positions_distance < radius_sum;
+    auto const mtv = 0.5f * glm::normalize(position1_2d - position2_2d) * (get_radius_2d() + obb2.get_radius_2d() - glm::distance(position1_2d, position2_2d));
+
+    if (positions_distance < radius_sum)
+    {
+        ci.mtv = mtv;
+        ci.is_overlapping = true;
+    }
+    else
+    {
+        ci.is_overlapping = false;
+    }
+
+    return ci;
 }
 
-bool Collider2D::intersect_circle(glm::vec2 const& center, float const radius, glm::vec2 const& p1, glm::vec2 const& p2)
+CollisionInfo Collider2D::intersect_circle(glm::vec2 const& center, float const radius, glm::vec2 const& p1, glm::vec2 const& p2)
 {
+    CollisionInfo ci = {};
     glm::vec2 const v = center - p1;
-
     glm::vec2 const segment = p2 - p1;
     float const segment_length_squared = glm::dot(segment, segment);
 
@@ -453,26 +465,55 @@ bool Collider2D::intersect_circle(glm::vec2 const& center, float const radius, g
 
     if (distance <= radius)
     {
-        m_mtv = glm::normalize(center - closest_point) * (radius - distance);
-        return distance <= radius;
+        ci.mtv = glm::normalize(center - closest_point) * (radius - distance);
+        ci.is_overlapping = true;
     }
 
-    return false;
+    return ci;
 }
 
-bool Collider2D::test_collision_circle_rectangle(Collider2D& obb1, Collider2D& obb2)
+CollisionInfo Collider2D::test_collision_circle_rectangle(Collider2D const& obb1, Collider2D const& obb2)
 {
     // Function works in a way that obb1 is always a circle.
-    glm::vec2 const center = obb1.get_center_2d();
-    float const radius = obb1.get_radius_2d();
-    std::array const corners = { obb2.m_corners[0], obb2.m_corners[1], obb2.m_corners[2], obb2.m_corners[3] };
+    Collider2D const col1 = obb1.get_collider_type() == ColliderType2D::Circle ? obb1 : obb2;
+    Collider2D const col2 = obb1.get_collider_type() == ColliderType2D::Rectangle ? obb1 : obb2;
 
-    // Pretty intuitive: We have collision if any side of the rectangle intersects with a circle.
-    if ((intersect_circle(center, radius, corners[0], corners[1]) || intersect_circle(center, radius, corners[1], corners[2])
-        || intersect_circle(center, radius, corners[2], corners[3]) || intersect_circle(center, radius, corners[3], corners[0]))
-        && !is_point_inside_obb(center, corners))
+    CollisionInfo ci = {};
+
+    glm::vec2 const center = col1.get_center_2d();
+    float const radius = col1.get_radius_2d();
+    std::array const corners = { col2.m_corners[0], col2.m_corners[1], col2.m_corners[2], col2.m_corners[3] };
+    CollisionInfo collision_info[4] = {};
+
+    glm::vec2 accumulated_mtv = {};
+    bool any_overlapped = false;
+
+    // Don't check for intersection if it's a case of circle INSIDE the rectangle. It's handled later.
+    if (!is_point_inside_obb(center, corners))
     {
-        return true;
+        collision_info[0] = intersect_circle(center, radius, corners[0], corners[1]);
+        collision_info[1] = intersect_circle(center, radius, corners[1], corners[2]);
+        collision_info[2] = intersect_circle(center, radius, corners[2], corners[3]);
+        collision_info[3] = intersect_circle(center, radius, corners[3], corners[0]);
+    }
+
+    // Check CollisionInfo of each rectangle, therefore support for intersection between multiple borders in one frame.
+    for(u8 i = 0; i < 4; i++)
+    {
+        if(collision_info[i].is_overlapping)
+        {
+            any_overlapped = true;
+
+            // Accumulate MTV if colliding with multiple borders, therefore when a corner is inside the circle.
+            accumulated_mtv += collision_info[i].mtv;
+        }
+    }
+
+    // Apply total MTV, might be even two MTVs of borders accumulated when intersecting with a corner.
+    if(any_overlapped)
+    {
+        ci = {true, accumulated_mtv};
+        return ci;
     }
 
     // Check for the case where a circle is inside a rectangle. Therefore, it doesn't intersect with rectangle's
@@ -480,7 +521,7 @@ bool Collider2D::test_collision_circle_rectangle(Collider2D& obb1, Collider2D& o
     if (is_point_inside_obb(center, corners))
     {
         // Calculate MTV, needed when spawning a circle inside a rect or fast movement.
-        float const max_rect_length = std::max(obb2.m_width, obb2.m_height);
+        float const max_rect_length = std::max(col2.m_width, col2.m_height);
         auto min_distance_vector = glm::vec2(1.0f);
         auto new_min_distance_vector = glm::vec2(0.0f);
         glm::vec2 cast_point = {};
@@ -502,11 +543,13 @@ bool Collider2D::test_collision_circle_rectangle(Collider2D& obb1, Collider2D& o
                 min_distance_vector = new_min_distance_vector;
         }
 
-        obb1.m_mtv = min_distance_vector + radius;
-        obb2.m_mtv = -min_distance_vector - radius;
+        ci.is_overlapping = true;
 
-        return true;
+        // Change MTV in case of sphere being inside a rectangle
+        if (!col1.m_is_trigger && !col2.m_is_trigger)
+        {
+            ci.mtv = min_distance_vector + radius;
+        }
     }
-
-    return false;
+    return ci;
 }

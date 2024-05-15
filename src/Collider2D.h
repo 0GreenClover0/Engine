@@ -11,6 +11,12 @@
 
 class DebugDrawing;
 
+struct CollisionInfo
+{
+    bool is_overlapping = false;
+    glm::vec2 mtv = {0, 0};
+};
+
 enum class ColliderType2D
 {
     Rectangle,
@@ -40,11 +46,8 @@ public:
     virtual void awake() override;
     virtual void update() override;
 
-    // CIRCLE X CIRCLE
-    void separate(Collider2D const& other, bool const is_static);
-
-    // RECTANGLE X RECTANGLE, CIRCLE X RECTANGLE
-    void separate(bool const sign, bool const is_static);
+    CollisionInfo overlaps(Collider2D const& other);
+    void apply_mtv(bool const sign, CollisionInfo const& ci) const;
 
     ColliderType2D get_collider_type() const;
 
@@ -57,9 +60,6 @@ public:
     float get_radius_2d() const;
     glm::vec2 get_center_2d() const;
     glm::vec2 get_bounds_dimensions_2d() const;
-
-    bool overlaps(Collider2D& other);
-    void apply_mtv(bool const sign, bool const is_static) const;
 
     // Internal functions meant to be used by the PhysicsEngine
     bool is_inside_trigger(std::string const& guid) const;
@@ -78,11 +78,11 @@ private:
     glm::vec2 project_on_axis(std::array<glm::vec2, 4> const& vertices, glm::vec2 const& axis) const;
     glm::vec2 line_intersection(glm::vec2 const& point1, glm::vec2 const& point2, glm::vec2 const& point3, glm::vec2 const& point4) const;
     void compute_axes(glm::vec2 const& center, float const angle);
-    bool intersect_circle(glm::vec2 const& center, float const radius, glm::vec2 const& p1, glm::vec2 const& p2);
+    CollisionInfo intersect_circle(glm::vec2 const& center, float const radius, glm::vec2 const& p1, glm::vec2 const& p2);
 
-    bool test_collision_rectangle_rectangle(Collider2D const& obb1, Collider2D const& obb2);
-    bool test_collision_circle_circle(Collider2D const& obb1, Collider2D const& obb2) const;
-    bool test_collision_circle_rectangle(Collider2D& obb1, Collider2D& obb2);
+    CollisionInfo test_collision_rectangle_rectangle(Collider2D const& obb1, Collider2D const& obb2);
+    CollisionInfo test_collision_circle_circle(Collider2D const& obb1, Collider2D const& obb2) const;
+    CollisionInfo test_collision_circle_rectangle(Collider2D const& obb1, Collider2D const& obb2);
 
     bool m_is_trigger = false;
     bool m_is_static = false;
@@ -96,7 +96,6 @@ private:
     float m_height = 1.0f; // For rectangle
 
     float m_radius = 0.0f; // For circle
-    glm::vec2 m_mtv = {};  // Minimal translation vector
 
     std::unordered_map<std::string, std::weak_ptr<Collider2D>> m_inside_trigger = {};
     std::vector<std::weak_ptr<Collider2D>> m_inside_trigger_vector = {};

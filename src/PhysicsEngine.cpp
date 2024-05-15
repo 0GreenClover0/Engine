@@ -24,7 +24,7 @@ void PhysicsEngine::on_collision_enter(std::shared_ptr<Collider2D> const& collid
     }
 }
 
-void PhysicsEngine::on_collision_exit(std::shared_ptr<Collider2D> const &collider, std::shared_ptr<Collider2D> const& other)
+void PhysicsEngine::on_collision_exit(std::shared_ptr<Collider2D> const& collider, std::shared_ptr<Collider2D> const& other)
 {
     for (auto const& component : collider->entity->components)
     {
@@ -32,8 +32,8 @@ void PhysicsEngine::on_collision_exit(std::shared_ptr<Collider2D> const &collide
     }
 }
 
-void PhysicsEngine::on_trigger_enter(std::shared_ptr<Collider2D> const &collider,
-                                     std::shared_ptr<Collider2D> const &other)
+void PhysicsEngine::on_trigger_enter(std::shared_ptr<Collider2D> const& collider,
+    std::shared_ptr<Collider2D> const& other)
 {
     for (auto const& component : collider->entity->components)
     {
@@ -41,8 +41,8 @@ void PhysicsEngine::on_trigger_enter(std::shared_ptr<Collider2D> const &collider
     }
 }
 
-void PhysicsEngine::on_trigger_exit(std::shared_ptr<Collider2D> const &collider,
-                                    std::shared_ptr<Collider2D> const &other)
+void PhysicsEngine::on_trigger_exit(std::shared_ptr<Collider2D> const& collider,
+    std::shared_ptr<Collider2D> const& other)
 {
     for (auto const& component : collider->entity->components)
     {
@@ -75,6 +75,10 @@ void PhysicsEngine::solve_collisions() const
             ColliderType2D const collider1_type = colliders[i]->get_collider_type();
             ColliderType2D const collider2_type = colliders[j]->get_collider_type();
 
+            CollisionInfo ci_1 = {};
+            CollisionInfo ci_2 = {};
+            CollisionInfo ci_3 = {};
+
             bool const should_overlap_as_trigger = collider1->is_trigger() || collider2->is_trigger();
 
             auto collision_type = CollisionType::Undefined;
@@ -88,10 +92,11 @@ void PhysicsEngine::solve_collisions() const
             if (collider1_type != collider2_type)
                 collision_type = CollisionType::CircleRectangle;
 
-            switch(collision_type)
+            switch (collision_type)
             {
             case CollisionType::CircleCircle:
-                if (collider1->overlaps(*collider2))
+                ci_1 = collider1->overlaps(*collider2);
+                if (ci_1.is_overlapping)
                 {
                     if (should_overlap_as_trigger)
                     {
@@ -115,26 +120,27 @@ void PhysicsEngine::solve_collisions() const
 
                         if (!collider1->is_static() && !collider2->is_static())
                         {
-                            collider2->separate(*collider1, false);
-                            collider1->separate(*collider2, false);
+                            collider1->apply_mtv(true, ci_1);
+                            collider2->apply_mtv(false, ci_1);
                         }
                         else if (collider1->is_static())
                         {
-                            collider2->separate(*collider1, true);
+                            collider2->apply_mtv(false, ci_1);
                         }
                         else if (collider2->is_static())
                         {
-                            collider1->separate(*collider2, true);
+                            collider1->apply_mtv(true, ci_1);
                         }
 
                         on_collision_exit(collider1, collider2);
                         on_collision_exit(collider2, collider1);
                     }
-                }
-                break;
+
+                    break;
 
             case CollisionType::RectangleRectangle:
-                if (collider1->overlaps(*collider2))
+                ci_2 = collider1->overlaps(*collider2);
+                if (ci_2.is_overlapping)
                 {
                     if (should_overlap_as_trigger)
                     {
@@ -158,16 +164,16 @@ void PhysicsEngine::solve_collisions() const
 
                         if (!collider1->is_static() && !collider2->is_static())
                         {
-                            collider1->separate(true, false);
-                            collider2->separate(true, false);
+                            collider1->apply_mtv(true, ci_2);
+                            collider2->apply_mtv(false, ci_2);
                         }
                         else if (collider1->is_static())
                         {
-                            collider2->separate(true, true);
+                            collider2->apply_mtv(false, ci_2);
                         }
                         else if (collider2->is_static())
                         {
-                            collider1->separate(true, true);
+                            collider1->apply_mtv(true, ci_2);
                         }
 
                         on_collision_exit(collider1, collider2);
@@ -177,7 +183,8 @@ void PhysicsEngine::solve_collisions() const
                 break;
 
             case CollisionType::CircleRectangle:
-                if (collider1->overlaps(*collider2))
+                ci_3 = collider1->overlaps(*collider2);
+                if (ci_3.is_overlapping)
                 {
                     if (should_overlap_as_trigger)
                     {
@@ -201,16 +208,16 @@ void PhysicsEngine::solve_collisions() const
 
                         if (!collider1->is_static() && !collider2->is_static())
                         {
-                            collider1->separate(true, false);
-                            collider2->separate(true, false);
+                            collider1->apply_mtv(true, ci_3);
+                            collider2->apply_mtv(false, ci_3);
                         }
                         else if (collider1->is_static())
                         {
-                            collider2->separate(true, true);
+                            collider2->apply_mtv(false, ci_3);
                         }
                         else if (collider2->is_static())
                         {
-                            collider1->separate(true, true);
+                            collider1->apply_mtv(true, ci_3);
                         }
 
                         on_collision_exit(collider1, collider2);
@@ -223,6 +230,7 @@ void PhysicsEngine::solve_collisions() const
             default:
                 Debug::log("Undefined collision detected", DebugType::Error);
                 std::unreachable();
+                }
             }
         }
     }
