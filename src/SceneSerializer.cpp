@@ -1,7 +1,9 @@
 #include "SceneSerializer.h"
 
+#include <filesystem>
 #include <fstream>
 #include <iostream>
+#include <unordered_set>
 
 #include <yaml-cpp/yaml.h>
 
@@ -63,6 +65,18 @@ std::shared_ptr<Component> SceneSerializer::get_from_pool(std::string const &gui
             return obj;
     }
 
+    if (m_deserialization_mode == DeserializationMode::Normal)
+        return nullptr;
+
+    for (auto const& entity : MainScene::get_instance()->entities)
+    {
+        for (auto const& component : entity->components)
+        {
+            if (component->guid == guid)
+                return component;
+        }
+    }
+
     return nullptr;
 }
 
@@ -72,6 +86,15 @@ std::shared_ptr<Entity> SceneSerializer::get_entity_from_pool(std::string const 
     {
         if (obj->guid == guid)
             return obj;
+    }
+
+    if (m_deserialization_mode == DeserializationMode::Normal)
+        return nullptr;
+
+    for (auto const& entity : MainScene::get_instance()->entities)
+    {
+        if (entity->guid == guid)
+            return entity;
     }
 
     return nullptr;
@@ -426,6 +449,19 @@ void SceneSerializer::serialize_entity(YAML::Emitter& out, std::shared_ptr<Entit
     out << YAML::EndSeq; // Components
 
     out << YAML::EndMap; // Entity
+}
+
+void SceneSerializer::serialize_entity_recursively(YAML::Emitter& out, std::shared_ptr<Entity> const& entity)
+{
+    serialize_entity(out, entity);
+
+    for (auto const& child : entity->transform->children)
+    {
+        if (child->entity.expired())
+            continue;
+
+        serialize_entity_recursively(out, child->entity.lock());
+    }
 }
 
 void SceneSerializer::auto_deserialize_component(YAML::Node const& component, std::shared_ptr<Entity> const& deserialized_entity, bool const first_pass)
@@ -1015,6 +1051,185 @@ std::shared_ptr<Entity> SceneSerializer::deserialize_entity_first_pass(YAML::Nod
 void SceneSerializer::deserialize_entity_second_pass(YAML::Node const& entity, std::shared_ptr<Entity> const& deserialized_entity)
 {
     deserialize_components(entity, deserialized_entity, false);
+}
+
+// Serialize one entity (including its children) to a file.
+void SceneSerializer::serialize_this_entity(std::shared_ptr<Entity> const& entity, std::string const& file_path) const
+{
+    YAML::Emitter out;
+    out << YAML::BeginMap;
+    out << YAML::Key << "Scene" << YAML::Value << "Untitled";
+    out << YAML::Key << "Entities";
+    out << YAML::Value << YAML::BeginSeq;
+
+    serialize_entity_recursively(out, entity);
+
+    out << YAML::EndSeq;
+    out << YAML::EndMap;
+
+    std::filesystem::path const path = file_path;
+
+    if (!path.has_parent_path())
+    {
+        Debug::log("Path to serialize an entity doesn't have a directory. Aborting.", DebugType::Error);
+        return;
+    }
+
+    if (!std::filesystem::exists(path.parent_path()))
+    {
+        create_directory(path.parent_path());
+    }
+
+    std::ofstream scene_file(file_path);
+
+    if (!scene_file.is_open())
+    {
+        std::cout << "Could not serialize an entity to a file: " << file_path << "\n";
+        return;
+    }
+
+    scene_file << out.c_str();
+    scene_file.close();
+}
+
+// Deserialize entity (might include its children) from a file.
+// Replaces all guids that are not present in the scene with newly generated ones.
+bool SceneSerializer::deserialize_this_entity(std::string const& file_path)
+{
+    std::ifstream scene_file(file_path);
+
+    if (!scene_file.is_open())
+    {
+        Debug::log("Could not open a scene file: " + file_path + "\n", DebugType::Error);
+        return false;
+    }
+
+    std::stringstream stream;
+    stream << scene_file.rdbuf();
+    scene_file.close();
+
+    std::unordered_set<std::string> included_guids = {};
+    std::string line = {};
+    bool next_line_new_guid = false;
+    while (std::getline(stream, line))
+    {
+        size_t component_search = line.find("ComponentName:");
+        size_t entity_search = line.find("Entity:");
+
+        if (component_search != std::string::npos || entity_search != std::string::npos)
+        {
+            next_line_new_guid = true;
+            continue;
+        }
+
+        if (next_line_new_guid)
+        {
+            size_t guid_search = line.find("guid:");
+            if (guid_search == std::string::npos)
+            {
+                Debug::log("Copied entity might be corrupted, missing guid after component or entity?", DebugType::Error);
+                next_line_new_guid = false;
+                continue;
+            }
+
+            size_t first_guid_char_offset = guid_search + 6;
+            std::string guid = line.substr(first_guid_char_offset);
+            included_guids.emplace(guid);
+
+            next_line_new_guid = false;
+        }
+    }
+
+    stream.clear();
+    stream.seekg(0);
+
+    std::stringstream output = {};
+    while (std::getline(stream, line))
+    {
+        size_t guid_search = line.find("guid:");
+
+        if (guid_search == std::string::npos)
+        {
+            output << line << "\n";
+            continue;
+        }
+
+        // Replace guid
+        size_t first_guid_char_offset = guid_search + 6;
+        std::string guid = line.substr(first_guid_char_offset);
+
+        if (guid == "\"\"")
+        {
+            output << line << "\n";
+            continue;
+        }
+
+        if (m_replaced_guids_map.contains(guid))
+        {
+            line.replace(first_guid_char_offset, guid.size(), m_replaced_guids_map.at(guid));
+        }
+        else if (included_guids.contains(guid))
+        {
+            std::string new_guid = AK::generate_guid();
+            m_replaced_guids_map.emplace(guid, new_guid);
+            line.replace(first_guid_char_offset, guid.size(), new_guid);
+        }
+
+        output << line << "\n";
+    }
+
+    YAML::Node data = YAML::Load(output.str());
+
+    if (!data["Scene"])
+        return false;
+
+    DeserializationMode const previous_mode = m_deserialization_mode;
+    m_deserialization_mode = DeserializationMode::InjectFromFile;
+
+    auto const scene_name = data["Scene"].as<std::string>();
+
+    if (auto const entities = data["Entities"])
+    {
+        std::vector<std::pair<std::shared_ptr<Entity>, YAML::Node>> deserialized_entities = {};
+        deserialized_entities.reserve(entities.size());
+
+        // First pass. Create all entities and components.
+        for (auto const entity : entities)
+        {
+            auto const deserialized_entity = deserialize_entity_first_pass(entity);
+            if (deserialized_entity == nullptr)
+            {
+                m_deserialization_mode = previous_mode;
+                return false;
+            }
+
+            deserialized_entities_pool.emplace_back(deserialized_entity);
+            deserialized_entities.emplace_back(deserialized_entity, entity);
+        }
+
+        // Second pass. Assign components' values including references to other components.
+        // Assign appropriate parent for each entity.
+        for (const auto& [entity, node] : deserialized_entities)
+        {
+            deserialize_entity_second_pass(node, entity);
+
+            if (entity->m_parent_guid.empty())
+                continue;
+
+            for (const auto& [other_entity, other_node] : deserialized_entities)
+            {
+                if (entity->m_parent_guid == other_entity->guid)
+                {
+                    entity->transform->set_parent(other_entity->transform);
+                    break;
+                }
+            }
+        }
+    }
+
+    m_deserialization_mode = previous_mode;
+
+    return true;
 }
 
 void SceneSerializer::serialize(std::string const& file_path) const
