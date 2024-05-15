@@ -510,6 +510,21 @@ bool Editor::draw_entity_popup(std::shared_ptr<Entity> const& entity)
             m_selected_entity = entity;
         }
 
+        if (ImGui::Button("Rename"))
+        {
+            ImGui::OpenPopup("RenamePopup");
+        }
+
+        if (ImGui::BeginPopup("RenamePopup"))
+        {
+            if (ImGui::InputText("##empty", &entity->name, ImGuiInputTextFlags_EnterReturnsTrue))
+            {
+                ImGui::CloseCurrentPopup();
+            }
+
+            ImGui::EndPopup();
+        }
+
         if (ImGui::Button("Delete"))
         {
             delete_selected_entity();
