@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <unordered_map>
 #include <yaml-cpp/node/node.h>
 
 #include "Material.h"
@@ -10,6 +11,12 @@ namespace YAML
 {
     class Emitter;
 }
+
+enum class DeserializationMode
+{
+    Normal,
+    InjectFromFile, // Tries to deserialize entities from a file into an existing scene. All guids are replaced with new ones.
+};
 
 class SceneSerializer
 {
@@ -22,11 +29,15 @@ public:
     [[nodiscard]] std::shared_ptr<Component> get_from_pool(std::string const& guid) const;
     [[nodiscard]] std::shared_ptr<Entity> get_entity_from_pool(std::string const& guid) const;
 
+    void serialize_this_entity(std::shared_ptr<Entity> const& entity, std::string const& file_path) const;
+    bool deserialize_this_entity(std::string const& file_path);
+
     void serialize(std::string const& file_path) const;
     bool deserialize(std::string const& file_path);
 
 private:
     static void serialize_entity(YAML::Emitter& out, std::shared_ptr<Entity> const& entity);
+    static void serialize_entity_recursively(YAML::Emitter& out, std::shared_ptr<Entity> const& entity);
     static void auto_serialize_component(YAML::Emitter& out, std::shared_ptr<Component> const& component);
     void auto_deserialize_component(YAML::Node const& component, std::shared_ptr<Entity> const& deserialized_entity, bool const first_pass);
 
@@ -38,6 +49,10 @@ private:
     std::vector<std::shared_ptr<Component>> deserialized_pool = {};
     std::vector<std::shared_ptr<Entity>> deserialized_entities_pool = {};
     std::shared_ptr<Scene> m_scene;
+
+    std::unordered_map<std::string, std::string> m_replaced_guids_map = {};
+
+    DeserializationMode m_deserialization_mode = DeserializationMode::Normal;
 
     inline static std::shared_ptr<SceneSerializer> m_instance;
 };

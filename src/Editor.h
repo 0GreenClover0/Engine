@@ -182,10 +182,14 @@ private:
     void switch_gizmo_snapping();
 
     void delete_selected_entity() const;
+    void copy_selected_entity() const;
+    void paste_entity() const;
 
     void mouse_callback(double const x, double const y);
 
     glm::vec3 update_locked_value(glm::vec3 new_value, glm::vec3 const old_value) const;
+
+    std::string m_copied_entity_path = "./.editor/copied_entity.txt";
 
     glm::dvec2 m_last_mouse_position = glm::dvec2(1280.0 / 2.0, 720.0 / 2.0);
     float m_yaw = 0.0f;

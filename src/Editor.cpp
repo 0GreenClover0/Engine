@@ -417,6 +417,24 @@ void Editor::draw_scene_hierarchy(std::shared_ptr<EditorWindow> const& window)
 
         draw_entity_recursively(entity->transform);
     }
+
+    if (ImGui::IsMouseReleased(ImGuiMouseButton_Right) && ImGui::IsWindowHovered(ImGuiHoveredFlags_AllowWhenBlockedByPopup)
+     && !ImGui::IsAnyItemHovered())
+    {
+        ImGui::OpenPopup("HierarchyPopup");
+    }
+
+    if (ImGui::BeginPopup("HierarchyPopup", ImGuiPopupFlags_MouseButtonRight))
+    {
+        if (ImGui::Button("Paste"))
+        {
+            paste_entity();
+            ImGui::CloseCurrentPopup();
+        }
+
+        ImGui::EndPopup();
+    }
+
     ImGui::End();
 }
 
@@ -474,6 +492,13 @@ bool Editor::draw_entity_popup(std::shared_ptr<Entity> const& entity)
             delete_selected_entity();
             ImGui::EndPopup();
             return false;
+        }
+
+        if (ImGui::Button("Copy"))
+        {
+            copy_selected_entity();
+            ImGui::EndPopup();
+            return true;
         }
 
         ImGui::EndPopup();
@@ -983,6 +1008,23 @@ void Editor::delete_selected_entity() const
     {
         m_selected_entity.lock()->destroy_immediate();
     }
+}
+
+void Editor::copy_selected_entity() const
+{
+    if (m_selected_entity.expired())
+        return;
+
+    auto const scene_serializer = std::make_shared<SceneSerializer>(m_open_scene);
+    scene_serializer->set_instance(scene_serializer);
+    scene_serializer->serialize_this_entity(m_selected_entity.lock(), m_copied_entity_path);
+}
+
+void Editor::paste_entity() const
+{
+    auto const scene_serializer = std::make_shared<SceneSerializer>(m_open_scene);
+    scene_serializer->set_instance(scene_serializer);
+    scene_serializer->deserialize_this_entity("./.editor/copied_entity.txt");
 }
 
 void Editor::mouse_callback(double const x, double const y)
