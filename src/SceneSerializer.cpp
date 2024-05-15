@@ -380,7 +380,8 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
 void SceneSerializer::serialize_entity(YAML::Emitter& out, std::shared_ptr<Entity> const& entity)
 {
     out << YAML::BeginMap; // Entity
-    out << YAML::Key << "Entity" << YAML::Value << entity->guid;
+    out << YAML::Key << "Entity" << YAML::Value << entity->name;
+    out << YAML::Key << "guid" << YAML::Value << entity->guid;
     out << YAML::Key << "Name" << YAML::Value << entity->name;
 
     {
@@ -392,9 +393,19 @@ void SceneSerializer::serialize_entity(YAML::Emitter& out, std::shared_ptr<Entit
         out << YAML::Key << "Scale" << YAML::Value << entity->transform->get_local_scale();
 
         if (!entity->transform->parent.expired())
-            out << YAML::Key << "Parent" << YAML::Value << entity->transform->parent.lock()->entity.lock()->guid;
+        {
+            out << YAML::Key << "Parent";
+            out << YAML::BeginMap;
+            out << YAML::Key << "guid" << YAML::Value << entity->transform->parent.lock()->entity.lock()->guid;
+            out << YAML::EndMap;
+        }
         else
-            out << YAML::Key << "Parent" << YAML::Value << "";
+        {
+            out << YAML::Key << "Parent";
+            out << YAML::BeginMap;
+            out << YAML::Key << "guid" << YAML::Value << "";
+            out << YAML::EndMap;
+        }
 
         out << YAML::EndMap; // TransformComponent
     }
@@ -966,7 +977,7 @@ void SceneSerializer::deserialize_components(YAML::Node const &entity_node, std:
 
 std::shared_ptr<Entity> SceneSerializer::deserialize_entity_first_pass(YAML::Node const& entity)
 {
-    auto const entity_node = entity["Entity"];
+    auto const entity_node = entity["guid"];
     if (!entity_node)
     {
         std::cout << "Deserialization of a scene failed. Broken entity. No guid present." << "\n";
@@ -994,7 +1005,7 @@ std::shared_ptr<Entity> SceneSerializer::deserialize_entity_first_pass(YAML::Nod
     deserialized_entity->transform->set_local_position(transform["Translation"].as<glm::vec3>());
     deserialized_entity->transform->set_euler_angles(transform["Rotation"].as<glm::vec3>());
     deserialized_entity->transform->set_local_scale(transform["Scale"].as<glm::vec3>());
-    deserialized_entity->m_parent_guid = transform["Parent"].as<std::string>();
+    deserialized_entity->m_parent_guid = transform["Parent"]["guid"].as<std::string>();
 
     deserialize_components(entity, deserialized_entity, true);
 
