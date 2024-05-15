@@ -230,7 +230,7 @@ void Transform::set_dirty()
 {
     if (!m_local_dirty)
     {
-        for (auto&& child : children)
+        for (auto const& child : children)
         {
             child->set_parent_dirty();
         }
@@ -244,7 +244,7 @@ void Transform::set_parent_dirty()
 {
     if (!m_parent_dirty)
     {
-        for (auto&& child : children)
+        for (auto const& child : children)
         {
             child->set_parent_dirty();
         }
