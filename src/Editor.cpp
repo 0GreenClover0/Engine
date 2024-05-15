@@ -74,6 +74,16 @@ Editor::Editor(AK::Badge<Editor>)
         Camera::set_main_camera(m_editor_camera);
 }
 
+Editor::~Editor()
+{
+    std::filesystem::path const copied_entity_path = m_copied_entity_path;
+
+    if (std::filesystem::exists(copied_entity_path))
+    {
+        std::filesystem::remove(copied_entity_path);
+    }
+}
+
 std::shared_ptr<Editor> Editor::create()
 {
     auto editor = std::make_shared<Editor>(AK::Badge<Editor> {});

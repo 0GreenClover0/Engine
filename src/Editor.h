@@ -141,6 +141,7 @@ public:
     static std::shared_ptr<Editor> create();
 
     explicit Editor(AK::Badge<Editor>);
+    ~Editor();
 
     void draw();
     void set_scene(std::shared_ptr<Scene> const& scene);
