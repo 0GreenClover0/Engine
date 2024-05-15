@@ -179,6 +179,8 @@ private:
 
     void reset_camera();
 
+    void switch_gizmo_snapping();
+
     void delete_selected_entity() const;
 
     void mouse_callback(double const x, double const y);
@@ -216,8 +218,13 @@ private:
     double m_average_ms_per_frame = 0.0;
 
     bool m_rendering_to_editor = true;
+    bool m_gizmo_snapping = false;
 
     GuizmoOperationType m_operation_type = GuizmoOperationType::Translate;
+
+    glm::vec3 const m_scale_snap = { 0.1f, 0.1f, 0.1f };
+    glm::vec3 const m_rotation_snap = { 1.0f, 1.0f, 1.0f };
+    glm::vec3 const m_position_snap = { 0.1f, 0.1f, 0.1f };
 
     std::string content_path = "./res/";
     std::array<std::string, 3> m_known_model_formats = { ".gltf", ".obj", ".fbx" };
