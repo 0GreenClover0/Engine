@@ -1,0 +1,275 @@
+Scene: Untitled
+Entities:
+  - Entity: 23ac349f2e3aee8499eb0d7f9803ea55e14ec25249c4cd622babed7478d7a83c
+    Name: Camera
+    TransformComponent:
+      Translation: [0, 11.3000002, 11.3000002]
+      Rotation: [-45, 0, 0]
+      Scale: [1, 1, 1]
+      Parent: f1635d2772b83169e360a797561a01fc9429006de89950ddfa568d2590d0ea5f
+    Components:
+      - ComponentName: SoundListenerComponent
+        guid: 79cff663878b3918d2927b91aa261072ab9cdcd1762442ae1a1624152b14ed45
+      - ComponentName: CameraComponent
+        guid: 97327153a430cdca3bb42804df0106c9cf3befc46e226a86a79b133fd4f971ff
+        width: 1280
+        height: 720
+        fov: 0.30560714
+        near_plane: 0.100000001
+        far_plane: 1000000
+  - Entity: 5c2ff9b2fb4e99e2306ffe139328d759f979f6b24f3b2e4a38362c6951ff99f1
+    Name: Player
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent: ""
+    Components:
+      - ComponentName: PlayerInputComponent
+        guid: 367517f99870ae8cd343ec6bd5a18f5156c59f4d4420b46eabd72a44867a9892
+        player_speed: 5
+        camera_speed: 12.5
+  - Entity: f1635d2772b83169e360a797561a01fc9429006de89950ddfa568d2590d0ea5f
+    Name: CameraParent
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent: 5c2ff9b2fb4e99e2306ffe139328d759f979f6b24f3b2e4a38362c6951ff99f1
+    Components:
+      []
+  - Entity: 6a210c107417874bab1939c80490b6811542ed0e15e626fe21c3047fbea7ecc0
+    Name: Directional light
+    TransformComponent:
+      Translation: [0, 14, 0]
+      Rotation: [-90, 0, 0]
+      Scale: [1, 1, 1]
+      Parent: ""
+    Components:
+      - ComponentName: SphereComponent
+        guid: 23815e07104f562a64197e520f79d57ccf830e5cb676cdfe52f5460c4f377e1e
+        sector_count: 10
+        stack_count: 10
+        texture_path: ./res/textures/container.png
+        radius: 0.100000001
+        model_path: ""
+        material:
+          Shader:
+            VertexPath: ./res/shaders/light_source.hlsl
+            FragmentPath: ./res/shaders/light_source.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+      - ComponentName: DirectionalLightComponent
+        guid: a9d7d0d9c4fb1f0534771226a94e2109f0c6898a5717003a0733f68e58e0b977
+        ambient: [1, 1, 1]
+        diffuse: [1, 1, 1]
+        specular: [1, 1, 1]
+        m_near_plane: 0.100000001
+        m_far_plane: 25
+  - Entity: d8cb4b48054cdbe30244c92d6bcc2fec144bfe99d1329bdcb01125182b3e55e1
+    Name: scene
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent: ""
+    Components:
+      - ComponentName: ModelComponent
+        guid: a4fce55abe1902a6aabf299bf675692dfe340241b28512255a86bc42b88654a3
+        model_path: ./res/models/scene/scene.gltf
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+  - Entity: 609e8b927fee64e04d90d86c0ff86601552e205833432fb8f39004edf7aea46a
+    Name: light
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent: ""
+    Components:
+      - ComponentName: LighthouseLightComponent
+        guid: 2fe778d9033d5ab8905f5e2e58068dd38d03973b288ee630c81eb85d2850430d
+  - Entity: 98dd33bf8590848ff9f0d4a3c9d39cee3592932da3d55e21fd463cd7b030f78a
+    Name: Port
+    TransformComponent:
+      Translation: [-0.113046996, 0.0229230002, 2.16242909]
+      Rotation: [0, 0, 0]
+      Scale: [2.86684394, 0.323763013, 1]
+      Parent: ""
+    Components:
+      - ComponentName: PortComponent
+        guid: 7e44a4543af635bc9c0680f78e1a378ce47acfeecea5130faa9e92b2533842fd
+      - ComponentName: CubeComponent
+        guid: f15a7b500c77f9819751217eb15ea8419fb824911ce40c858be98a994a508d64
+        diffuse_texture_path: ./res/textures/skybox/interstellar/interstellar_bk.tga
+        specular_texture_path: ""
+        model_path: ""
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+      - ComponentName: Collider2DComponent
+        guid: 592e48eb4cd7f4a6ef80523b299957d565cf3ad037cd52362a86b404ca005f4e
+  - Entity: 852e30519b44fb7fc14a690efaddb7ffd60f32b7178ae8129961ecc6eaf78db2
+    Name: Lighthouse
+    TransformComponent:
+      Translation: [2.29456306, 0.223798007, 2.37870193]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent: ""
+    Components:
+      - ComponentName: ModelComponent
+        guid: bc7c302b60a5a5c442d3dc7d90f0fc9f4188c4104ad5f1dd43945bdad374f771
+        model_path: ./res/models/lighthouseNew/lighthouse.gltf
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+      - ComponentName: LighthouseComponent
+        guid: e3953bfeefa9a2669b8ef5d66ccaadf24f46629dad127ab825ef681d2f46c9e5
+        enterable_distance: 0.600000024
+        light:
+          guid: 2fe778d9033d5ab8905f5e2e58068dd38d03973b288ee630c81eb85d2850430d
+        port:
+          guid: 7e44a4543af635bc9c0680f78e1a378ce47acfeecea5130faa9e92b2533842fd
+        spawn_position:
+          guid: 7680e57f4f0d7773782422af610b4c1e31bb07436dec7351642af98880ca39d8
+  - Entity: 7680e57f4f0d7773782422af610b4c1e31bb07436dec7351642af98880ca39d8
+    Name: Spawn
+    TransformComponent:
+      Translation: [0, 0, 0.400000006]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent: 852e30519b44fb7fc14a690efaddb7ffd60f32b7178ae8129961ecc6eaf78db2
+    Components:
+      []
+  - Entity: bd3443df62b6d03810f6ea5d8719f810c092fecfcf75d4d38693239068557b1b
+    Name: Generator
+    TransformComponent:
+      Translation: [3, 1, 3]
+      Rotation: [0, 0, 0]
+      Scale: [0.0500000007, 0.100000001, 0.0500000007]
+      Parent: ""
+    Components:
+      - ComponentName: FactoryComponent
+        guid: a1a393d79941174f8fee05a664be010bd39f84e2fa167dc2aa8a742f5f2fee65
+      - ComponentName: ModelComponent
+        guid: efe5c5d7b9b3d61afc48862ca472f7388d0b50affff013336d793eb1442ac40e
+        model_path: ./res/models/hubert/floor.gltf
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+  - Entity: 0cd6609b84a867c9c727cafcf876665c44661edc909f88c1ed8b4934ad9cd6b2
+    Name: Generator
+    TransformComponent:
+      Translation: [-3, 0, 3]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent: ""
+    Components:
+      - ComponentName: FactoryComponent
+        guid: ebae6a79b812aece28148916a763bc606bbf068c36a40f9a09ce2a88ceeb33a7
+      - ComponentName: ModelComponent
+        guid: 8b5b69ae717cf0d04db3b394abcd43394d7f8507f0041d91eadda471f571b81d
+        model_path: ./res/models/lighthouseOld/lighthouse.gltf
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+  - Entity: e3fbccf662a8a6e6fe39df775a1a3dcf9e5f8d5934b645dfa8a95c262fb23017
+    Name: Level Controller
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent: ""
+    Components:
+      - ComponentName: LevelControllerComponent
+        guid: 337d706e0942c97a26b3d9935870aa83bea7239b415ba3707b46b67416d27861
+        map_time: 180
+        map_food: 20
+        maximum_lighthouse_level: 10
+        factories:
+          - guid: a1a393d79941174f8fee05a664be010bd39f84e2fa167dc2aa8a742f5f2fee65
+          - guid: ebae6a79b812aece28148916a763bc606bbf068c36a40f9a09ce2a88ceeb33a7
+        ships_limit_curve:
+          guid: nullptr
+        ships_limit: 0
+        ships_speed_curve:
+          guid: nullptr
+        ships_speed: 0
+        ships_range_curve:
+          guid: nullptr
+        ships_turn_curve:
+          guid: nullptr
+        ships_additional_speed_curve:
+          guid: nullptr
+        pirates_in_control_curve:
+          guid: nullptr
+      - ComponentName: PlayerComponent
+        guid: de409a3d07e8a777ddb680f11e5805ee376893dcc375bfe5093bb50cd5fd8324
+      - ComponentName: ShipSpawnerComponent
+        guid: bf8c9054e0b1c294b11d0e0c1afd552f95a296efbbf0f2f4026fbde1687dd718
+        paths:
+          []
+        light:
+          guid: 2fe778d9033d5ab8905f5e2e58068dd38d03973b288ee630c81eb85d2850430d
+  - Entity: a72ff0d24cc42220eb96e3d53636d68c5941694cd5709e1bc8c6406cac2d7b3e
+    Name: Water
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [0.245000005, 1, 0.172000006]
+      Parent: ""
+    Components:
+      - ComponentName: WaterComponent
+        guid: e320f969a69c67562035d69e4ab56e0a1ca895eb16215bcdc2aa8f9f546b80e0
+        texture_path: res/textures/water.jpg
+        waves:
+          - [[1, 0.5], [0, 0], 116, 0.699999988, 115, 0.0399999991]
+          - [[-0.600000024, 0.100000001], [0, 0], 100, 0.899999976, 500, 0.0350000001]
+        tesselation_level: 5
+        model_path: ""
+        material:
+          Shader:
+            VertexPath: ./res/shaders/water.hlsl
+            FragmentPath: ./res/shaders/water.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+  - Entity: 012b95a4eb087067096869569dba89586ca954b027a773b7eee2c3c97ee8796e
+    Name: skybox
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent: ""
+    Components:
+      - ComponentName: DrawableComponent
+        guid: 21f790a19f21a17406abd2e3df3ebb0e2c20034c8d43016dc627311e941e6655
+        material:
+          Shader:
+            VertexPath: ./res/shaders/skybox.hlsl
+            FragmentPath: ./res/shaders/skybox.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0

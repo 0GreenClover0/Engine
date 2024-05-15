@@ -48,7 +48,7 @@ void ShipSpawner::awake()
         s4.spawn_list.emplace_back(ShipType::Pirates);
         s4.spawn_list.emplace_back(ShipType::Pirates);
         s4.spawn_list.emplace_back(ShipType::Pirates);
-        s4.spawn_type = SpawnType::Immediate;
+        s4.spawn_type = SpawnType::Rapid;
 
         m_backup_spawn.emplace_back(s1);
         m_backup_spawn.emplace_back(s2);
@@ -365,10 +365,17 @@ void ShipSpawner::add_warning()
     warning_light_component->linear = 0.0f;
     warning_light_component->quadratic = 0.0f;
 
-    warning->transform->set_local_position({ m_spawn_position.back().x - glm::sign(m_spawn_position.back().x), 0.2f, m_spawn_position.back().y});
+    warning->transform->set_local_position({ m_spawn_position[0].x - glm::sign(m_spawn_position[0].x), 0.2f, m_spawn_position[0].y });
     warning->transform->set_euler_angles({ -90.0f, 0.0f, 0.0f });
 
-    m_warning_lights.emplace_back(warning);
+    if (m_spawn_type == SpawnType::Rapid)
+    {
+        m_warning_lights.insert(m_warning_lights.begin(), warning);
+    }
+    else
+    {
+        m_warning_lights.emplace_back(warning);
+    }
 }
 
 void ShipSpawner::prepare_for_spawn()
@@ -381,7 +388,7 @@ void ShipSpawner::prepare_for_spawn()
 
     if (m_main_spawn.back().spawn_list.empty())
     {
-        if (m_spawn_type == SpawnType::Immediate)
+        if (m_spawn_type == SpawnType::Immediate || m_spawn_type == SpawnType::Rapid)
         {
             m_spawn_warning_counter = spawn_warning_time;
         }
@@ -405,6 +412,73 @@ void ShipSpawner::prepare_for_spawn()
 
     if (m_spawn_warning_counter > 0.0f)
     {
+        if (m_spawn_type != SpawnType::Rapid)
+        {
+            m_spawn_warning_counter -= delta_time;
+            return;
+        }
+
+        if (m_spawn_warning_counter > spawn_rapid_time || m_is_half_rapid_done)
+        {
+            m_spawn_warning_counter -= delta_time;
+            return;
+        }
+
+        if (m_warning_lights.size() == 2)
+        {
+            if (m_ships.size() != 0)
+            {
+                auto const nearest_ship_position = find_nearest_ship(m_spawn_position.back());
+                assert(nearest_ship_position .has_value());
+
+                if (glm::distance(nearest_ship_position.value(), m_spawn_position.back()) < minimum_spawn_distance)
+                {
+                    m_spawn_warning_counter = spawn_warning_time;
+                    return;
+                }
+            }
+
+            m_warning_lights.back().lock()->destroy_immediate();
+            m_warning_lights.pop_back();
+
+            spawn_ship(being_spawn);
+
+            m_spawn_position.pop_back();
+
+            being_spawn->spawn_list.pop_back();
+
+            if (being_spawn->spawn_list.size() > 1)
+            {
+                std::weak_ptr<Path> const path = paths[std::rand() % paths.size()];
+                m_spawn_position.insert(m_spawn_position.begin(), path.lock()->get_point_at(glm::linearRand(0.0f, 1.0f)));
+
+                add_warning();
+            }
+        }
+        else
+        {
+            if (being_spawn->spawn_list.size() > 1)
+            {
+                std::weak_ptr<Path> const path = paths[std::rand() % paths.size()];
+                m_spawn_position.insert(m_spawn_position.begin(), path.lock()->get_point_at(glm::linearRand(0.0f, 1.0f)));
+
+                add_warning();
+            }
+            else
+            {
+                m_warning_lights.back().lock()->destroy_immediate();
+                m_warning_lights.pop_back();
+
+                spawn_ship(being_spawn);
+
+                m_spawn_position.pop_back();
+
+                being_spawn->spawn_list.pop_back();
+            }
+        }
+
+        m_is_half_rapid_done = true;
+
         m_spawn_warning_counter -= delta_time;
         return;
     }
@@ -494,6 +568,67 @@ void ShipSpawner::prepare_for_spawn()
 
             m_spawn_warning_counter = spawn_warning_time;
         }
+    }
+
+    if (m_spawn_type == SpawnType::Rapid)
+    {
+        if (m_warning_lights.size() == 2)
+        {
+            if (m_ships.size() != 0)
+            {
+                auto const nearest_ship_position = find_nearest_ship(m_spawn_position.back());
+                assert(nearest_ship_position.has_value());
+
+                if (glm::distance(nearest_ship_position.value(), m_spawn_position.back()) < minimum_spawn_distance)
+                {
+                    // There is no room near the spawning point, delay until next spawn time
+                    m_spawn_warning_counter = spawn_warning_time;
+                    return;
+                }
+            }
+
+            m_warning_lights.back().lock()->destroy_immediate();
+            m_warning_lights.pop_back();
+
+            spawn_ship(being_spawn);
+
+            m_spawn_position.pop_back();
+
+            being_spawn->spawn_list.pop_back();
+
+            if (being_spawn->spawn_list.size() > 1)
+            {
+                std::weak_ptr<Path> const path = paths[std::rand() % paths.size()];
+                m_spawn_position.insert(m_spawn_position.begin(), path.lock()->get_point_at(glm::linearRand(0.0f, 1.0f)));
+
+                add_warning();
+            }
+        }
+        else
+        {
+            if (being_spawn->spawn_list.size() > 1)
+            {
+                std::weak_ptr<Path> const path = paths[std::rand() % paths.size()];
+                m_spawn_position.insert(m_spawn_position.begin(), path.lock()->get_point_at(glm::linearRand(0.0f, 1.0f)));
+
+                add_warning();
+            }
+            else
+            {
+                m_warning_lights.back().lock()->destroy_immediate();
+                m_warning_lights.pop_back();
+
+                spawn_ship(being_spawn);
+
+                m_spawn_position.pop_back();
+
+                being_spawn->spawn_list.pop_back();
+            }
+        }
+
+        m_is_half_rapid_done = false;
+
+        m_spawn_warning_counter = spawn_warning_time;
     }
 }
 

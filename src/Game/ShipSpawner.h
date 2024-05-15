@@ -24,6 +24,7 @@ public:
     std::weak_ptr<LighthouseLight> light = {};
 
     float const spawn_warning_time = 5.0f;
+    float const spawn_rapid_time = 2.5f;
     float const minimum_spawn_distance = 1.25f;
 
 private:
@@ -61,6 +62,7 @@ private:
     std::vector<std::weak_ptr<Ship>> m_ships = {};
 
     bool m_is_test_spawn_enable = false;
+    bool m_is_half_rapid_done = false;
 
     SpawnType m_spawn_type = SpawnType::Sequence;
 };
