@@ -278,6 +278,26 @@ void Editor::draw_game(std::shared_ptr<EditorWindow> const& window)
 
                 ImGui::EndMenu();
             }
+
+            ImVec4 constexpr active_button = {0.2f, 0.5f, 0.4f, 1.0f};
+            ImVec4 constexpr inactive_button = {0.05f, 0.05f, 0.05f, 0.54f};
+
+            if (m_gizmo_snapping)
+                ImGui::PushStyleColor(ImGuiCol_Button, active_button);
+            else
+                ImGui::PushStyleColor(ImGuiCol_Button, inactive_button);
+
+            if (ImGui::Button("Gizmo snapping"))
+            {
+                switch_gizmo_snapping();
+            }
+
+            if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
+            {
+                ImGui::SetTooltip("Shortcut: \\");
+            }
+
+            ImGui::PopStyleColor();
         }
 
         if (ImGui::Button("Play", ImVec2(50.0f, 20.0f)))
@@ -334,13 +354,13 @@ void Editor::draw_game(std::shared_ptr<EditorWindow> const& window)
     switch (m_operation_type)
     {
     case GuizmoOperationType::Translate:
-        was_transform_changed = ImGuizmo::Manipulate(glm::value_ptr(camera->get_view_matrix()), glm::value_ptr(camera->get_projection()), ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::MODE::WORLD, glm::value_ptr(global_model));
+        was_transform_changed = ImGuizmo::Manipulate(glm::value_ptr(camera->get_view_matrix()), glm::value_ptr(camera->get_projection()), ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::MODE::WORLD, glm::value_ptr(global_model), nullptr, m_gizmo_snapping ? glm::value_ptr(m_position_snap) : nullptr);
         break;
     case GuizmoOperationType::Scale:
-        was_transform_changed = ImGuizmo::Manipulate(glm::value_ptr(camera->get_view_matrix()), glm::value_ptr(camera->get_projection()), ImGuizmo::OPERATION::SCALE, ImGuizmo::MODE::WORLD, glm::value_ptr(global_model));
+        was_transform_changed = ImGuizmo::Manipulate(glm::value_ptr(camera->get_view_matrix()), glm::value_ptr(camera->get_projection()), ImGuizmo::OPERATION::SCALE, ImGuizmo::MODE::WORLD, glm::value_ptr(global_model), nullptr, m_gizmo_snapping ? glm::value_ptr(m_scale_snap) : nullptr);
         break;
     case GuizmoOperationType::Rotate:
-        was_transform_changed = ImGuizmo::Manipulate(glm::value_ptr(camera->get_view_matrix()), glm::value_ptr(camera->get_projection()), ImGuizmo::OPERATION::ROTATE, ImGuizmo::MODE::WORLD, glm::value_ptr(global_model));
+        was_transform_changed = ImGuizmo::Manipulate(glm::value_ptr(camera->get_view_matrix()), glm::value_ptr(camera->get_projection()), ImGuizmo::OPERATION::ROTATE, ImGuizmo::MODE::WORLD, glm::value_ptr(global_model), nullptr, m_gizmo_snapping ? glm::value_ptr(m_rotation_snap) : nullptr);
         break;
     case GuizmoOperationType::None:
     default:
@@ -837,6 +857,11 @@ void Editor::non_camera_input()
     {
         m_operation_type = GuizmoOperationType::None;
     }
+
+    if (Input::input->get_key_down(GLFW_KEY_BACKSLASH))
+    {
+        switch_gizmo_snapping();
+    }
 }
 
 void Editor::reset_camera()
@@ -844,6 +869,33 @@ void Editor::reset_camera()
     m_camera_entity->transform->set_local_position(m_camera_default_position);
     m_camera_entity->transform->set_euler_angles(m_camera_default_rotation);
     m_editor_camera->set_fov(glm::radians(m_camera_default_fov));
+}
+
+void Editor::switch_gizmo_snapping()
+{
+    m_gizmo_snapping = !m_gizmo_snapping;
+
+    if (m_selected_entity.expired())
+        return;
+
+    auto const entity = m_selected_entity.lock();
+
+    // FIXME: We should probably run this when selected entity changes as well.
+    switch (m_operation_type)
+    {
+    case GuizmoOperationType::Translate:
+        entity->transform->set_local_position(glm::round(entity->transform->get_local_position() * 100.0f) / 100.0f);
+        break;
+    case GuizmoOperationType::Scale:
+        entity->transform->set_local_scale(glm::round(entity->transform->get_local_position() * 100.0f) / 100.0f);
+        break;
+    case GuizmoOperationType::Rotate:
+        entity->transform->set_euler_angles(glm::round(entity->transform->get_euler_angles()));
+        break;
+    case GuizmoOperationType::None:
+    default:
+        break;
+    }
 }
 
 void Editor::delete_selected_entity() const
