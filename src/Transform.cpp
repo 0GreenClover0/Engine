@@ -149,6 +149,24 @@ void Transform::compute_local_model_matrix()
     m_local_dirty = false;
 }
 
+void Transform::set_model_matrix(glm::mat4 const& matrix)
+{
+    m_model_matrix = matrix;
+
+    if (parent.expired())
+    {
+        glm::decompose(m_model_matrix, m_local_scale, m_local_rotation, m_local_position, m_skew, m_perpective);
+        m_euler_angles = glm::degrees(glm::eulerAngles(m_local_rotation));
+    }
+    else
+    {
+        glm::decompose(glm::inverse(parent.lock()->get_model_matrix()) * m_model_matrix, m_local_scale, m_local_rotation, m_local_position, m_skew, m_perpective);
+        m_euler_angles = glm::degrees(glm::eulerAngles(m_local_rotation));
+    }
+
+    set_dirty();
+}
+
 glm::mat4 Transform::get_local_model_matrix()
 {
     if (!m_local_dirty)

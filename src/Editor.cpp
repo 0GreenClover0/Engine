@@ -334,13 +334,13 @@ void Editor::draw_game(std::shared_ptr<EditorWindow> const& window)
     switch (m_operation_type)
     {
     case GuizmoOperationType::Translate:
-        was_transform_changed = ImGuizmo::Manipulate(glm::value_ptr(camera->get_view_matrix()), glm::value_ptr(camera->get_projection()), ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::MODE::LOCAL, glm::value_ptr(global_model), nullptr, nullptr);
+        was_transform_changed = ImGuizmo::Manipulate(glm::value_ptr(camera->get_view_matrix()), glm::value_ptr(camera->get_projection()), ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::MODE::WORLD, glm::value_ptr(global_model));
         break;
     case GuizmoOperationType::Scale:
-        was_transform_changed = ImGuizmo::Manipulate(glm::value_ptr(camera->get_view_matrix()), glm::value_ptr(camera->get_projection()), ImGuizmo::OPERATION::SCALE, ImGuizmo::MODE::LOCAL, glm::value_ptr(global_model), nullptr, nullptr);
+        was_transform_changed = ImGuizmo::Manipulate(glm::value_ptr(camera->get_view_matrix()), glm::value_ptr(camera->get_projection()), ImGuizmo::OPERATION::SCALE, ImGuizmo::MODE::WORLD, glm::value_ptr(global_model));
         break;
     case GuizmoOperationType::Rotate:
-        was_transform_changed = ImGuizmo::Manipulate(glm::value_ptr(camera->get_view_matrix()), glm::value_ptr(camera->get_projection()), ImGuizmo::OPERATION::ROTATE, ImGuizmo::MODE::LOCAL, glm::value_ptr(global_model), nullptr, nullptr);
+        was_transform_changed = ImGuizmo::Manipulate(glm::value_ptr(camera->get_view_matrix()), glm::value_ptr(camera->get_projection()), ImGuizmo::OPERATION::ROTATE, ImGuizmo::MODE::WORLD, glm::value_ptr(global_model));
         break;
     case GuizmoOperationType::None:
     default:
@@ -349,30 +349,7 @@ void Editor::draw_game(std::shared_ptr<EditorWindow> const& window)
 
     if (was_transform_changed)
     {
-        glm::mat4 local = global_model;
-
-        auto const parent = entity->transform->parent.lock();
-        if (parent != nullptr)
-        {
-            local = glm::inverse(parent->get_model_matrix()) * local;
-        }
-
-        glm::vec3 position;
-        glm::vec3 rotation;
-        glm::vec3 scale;
-        ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(local), glm::value_ptr(position), glm::value_ptr(rotation), glm::value_ptr(scale));
-        if (m_operation_type == GuizmoOperationType::Translate)
-        {
-            entity->transform->set_local_position(position);
-        }
-        else if (m_operation_type == GuizmoOperationType::Rotate)
-        {
-            entity->transform->set_euler_angles(rotation);
-        }
-        else if (m_operation_type == GuizmoOperationType::Scale)
-        {
-            entity->transform->set_local_scale(scale);
-        }
+        entity->transform->set_model_matrix(global_model);
     }
 
     ImGui::End();
