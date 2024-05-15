@@ -500,6 +500,7 @@ bool Editor::draw_entity_popup(std::shared_ptr<Entity> const& entity)
         if (ImGui::Button("Delete"))
         {
             delete_selected_entity();
+            ImGui::CloseCurrentPopup();
             ImGui::EndPopup();
             return false;
         }
@@ -507,6 +508,7 @@ bool Editor::draw_entity_popup(std::shared_ptr<Entity> const& entity)
         if (ImGui::Button("Copy"))
         {
             copy_selected_entity();
+            ImGui::CloseCurrentPopup();
             ImGui::EndPopup();
             return true;
         }
