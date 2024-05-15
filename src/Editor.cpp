@@ -436,10 +436,23 @@ void Editor::draw_scene_hierarchy(std::shared_ptr<EditorWindow> const& window)
 
     if (ImGui::BeginPopup("HierarchyPopup", ImGuiPopupFlags_MouseButtonRight))
     {
+        std::filesystem::path const copied_entity_path = m_copied_entity_path;
+        bool const copied_entity_exists = std::filesystem::exists(copied_entity_path);
+
+        if (!copied_entity_exists)
+        {
+            ImGui::BeginDisabled(true);
+        }
+
         if (ImGui::Button("Paste"))
         {
             paste_entity();
             ImGui::CloseCurrentPopup();
+        }
+
+        if (!copied_entity_exists)
+        {
+            ImGui::EndDisabled();
         }
 
         ImGui::EndPopup();
