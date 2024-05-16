@@ -73,10 +73,6 @@ public:
     void clear_overlapped_this_frame();
 
 private:
-    glm::vec2 get_perpendicular_axis(std::array<glm::vec2, 4> const& passed_corners, u8 const index) const;
-    glm::vec2 get_normal(glm::vec2 const& v) const;
-    glm::vec2 project_on_axis(std::array<glm::vec2, 4> const& vertices, glm::vec2 const& axis) const;
-    glm::vec2 line_intersection(glm::vec2 const& point1, glm::vec2 const& point2, glm::vec2 const& point3, glm::vec2 const& point4) const;
     void compute_axes(glm::vec2 const& center, float const angle);
     CollisionInfo intersect_circle(glm::vec2 const& center, float const radius, glm::vec2 const& p1, glm::vec2 const& p2);
 
