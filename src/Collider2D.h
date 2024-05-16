@@ -46,8 +46,7 @@ public:
     virtual void awake() override;
     virtual void update() override;
 
-    CollisionInfo overlaps(Collider2D const& other);
-    void apply_mtv(bool const sign, CollisionInfo const& ci) const;
+    void apply_mtv(glm::vec2 const mtv) const;
 
     ColliderType2D get_collider_type() const;
 
@@ -60,6 +59,8 @@ public:
     float get_radius_2d() const;
     glm::vec2 get_center_2d() const;
     glm::vec2 get_bounds_dimensions_2d() const;
+    std::array<glm::vec2, 4> get_corners() const;
+    std::array<glm::vec2, 2> get_axes() const;
 
     // Internal functions meant to be used by the PhysicsEngine
     bool is_inside_trigger(std::string const& guid) const;
@@ -74,11 +75,6 @@ public:
 
 private:
     void compute_axes(glm::vec2 const& center, float const angle);
-    CollisionInfo intersect_circle(glm::vec2 const& center, float const radius, glm::vec2 const& p1, glm::vec2 const& p2);
-
-    CollisionInfo test_collision_rectangle_rectangle(Collider2D const& obb1, Collider2D const& obb2);
-    CollisionInfo test_collision_circle_circle(Collider2D const& obb1, Collider2D const& obb2) const;
-    CollisionInfo test_collision_circle_rectangle(Collider2D const& obb1, Collider2D const& obb2);
 
     bool m_is_trigger = false;
     bool m_is_static = false;
