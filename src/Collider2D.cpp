@@ -69,7 +69,94 @@ void Collider2D::draw_editor()
 {
     Component::draw_editor();
 
+    bool is_dirty = false;
+
+    glm::vec2 const previous_offset = offset;
     ImGuiEx::InputFloat2("Offset", glm::value_ptr(offset));
+
+    if (glm::epsilonEqual(previous_offset, offset, {0.0001f, 0.0001f}) != glm::bvec2(true, true))
+    {
+        is_dirty = true;
+    }
+
+    ImGui::Spacing();
+    ImGui::Spacing();
+
+    if (m_collider_type == ColliderType2D::Circle)
+    {
+        ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Use RADIUS to control collider size.");
+        m_debug_drawing->set_drawing_type(DrawingType::Sphere);
+    }
+    else if (m_collider_type == ColliderType2D::Rectangle)
+    {
+        ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Use EXTENTS to control collider size.");
+        m_debug_drawing->set_drawing_type(DrawingType::Box);
+    }
+
+    ImGui::Spacing();
+    ImGui::Spacing();
+
+    // Dropdown list
+    std::array const collider_types = {"Rectangle", "Circle"};
+    i32 current_item_index = static_cast<i32>(m_collider_type);
+    if (ImGui::Combo("Collider Type", &current_item_index, collider_types.data(), collider_types.size()))
+    {
+        m_previous_collider_type = m_collider_type;
+
+        is_dirty = true;
+
+        m_collider_type = static_cast<ColliderType2D>(current_item_index);
+    }
+
+    if (m_collider_type == ColliderType2D::Circle)
+    {
+        float const previous_radius = m_radius;
+        ImGui::InputFloat("Radius", &m_radius);
+
+        if (!AK::Math::are_nearly_equal(previous_radius, m_radius))
+        {
+            is_dirty = true;
+            set_radius_2d(m_radius);
+            m_debug_drawing->set_radius(m_radius);
+        }
+    }
+    else if (m_collider_type == ColliderType2D::Rectangle)
+    {
+        std::array extents = {m_width, m_height};
+        std::array const previous_extents = extents;
+        ImGui::InputFloat2("Extents", extents.data());
+
+        if (!AK::Math::are_nearly_equal(previous_extents[0], extents[0]) || !AK::Math::are_nearly_equal(previous_extents[1], extents[1]))
+        {
+            is_dirty = true;
+            set_extents({extents[0], extents[1]});
+        }
+    }
+
+    ImGui::Spacing();
+    ImGui::Spacing();
+
+    ImGui::Checkbox("Trigger", &m_is_trigger);
+
+    ImGui::Checkbox("Static", &m_is_static);
+
+    ImGui::Spacing();
+    ImGui::Spacing();
+
+    if (is_dirty)
+    {
+        Debug::log("changed");
+        if (m_collider_type == ColliderType2D::Circle)
+        {
+            m_debug_drawing->set_drawing_type(DrawingType::Sphere);
+        }
+        else if (m_collider_type == ColliderType2D::Rectangle)
+        {
+            m_debug_drawing->set_drawing_type(DrawingType::Box);
+        }
+
+        update_center_and_corners();
+    }
 }
 
 void Collider2D::initialize()
@@ -96,6 +183,7 @@ void Collider2D::initialize()
     m_debug_drawing = m_debug_drawing_entity->get_component<DebugDrawing>();
     m_debug_drawing->set_radius(m_radius);
     m_debug_drawing->set_extents({m_width * 2.0f, 0.25f, m_height * 2.0f});
+    update_center_and_corners();
 }
 
 void Collider2D::uninitialize()
@@ -141,9 +229,25 @@ void Collider2D::set_is_static(bool const value)
     m_is_static = value;
 }
 
+void Collider2D::set_radius_2d(float const new_radius)
+{
+    m_radius = new_radius;
+}
+
 float Collider2D::get_radius_2d() const
 {
     return m_radius;
+}
+
+void Collider2D::set_extents(glm::vec2 const extents)
+{
+    m_width = extents.x;
+    m_height = extents.y;
+}
+
+glm::vec2 Collider2D::get_extents() const
+{
+    return {m_width, m_height};
 }
 
 glm::vec2 Collider2D::get_center_2d() const
@@ -165,11 +269,6 @@ glm::vec2 Collider2D::get_center_2d() const
 
     // Calculate the collider's center position
     return entity_position + rotated_offset;
-}
-
-glm::vec2 Collider2D::get_bounds_dimensions_2d() const
-{
-    return {m_width, m_height};
 }
 
 std::array<glm::vec2, 4> Collider2D::get_corners() const

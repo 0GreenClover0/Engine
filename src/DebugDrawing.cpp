@@ -120,6 +120,13 @@ void DebugDrawing::draw_editor()
     }
 }
 
+void DebugDrawing::set_drawing_type(DrawingType const new_type)
+{
+    m_previous_drawing_type = m_type;
+    m_type = new_type;
+    reprepare();
+}
+
 void DebugDrawing::reprepare()
 {
     Component::reprepare();

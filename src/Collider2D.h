@@ -19,8 +19,8 @@ struct CollisionInfo
 
 enum class ColliderType2D
 {
-    Rectangle,
-    Circle
+    Rectangle = 0,
+    Circle = 1,
 };
 
 class Collider2D final : public Component
@@ -58,9 +58,13 @@ public:
     bool is_static() const;
     void set_is_static(bool const value);
 
+    void set_radius_2d(float const new_radius);
     float get_radius_2d() const;
+
+    void set_extents(glm::vec2 const extents);
+    glm::vec2 get_extents() const;
+
     glm::vec2 get_center_2d() const;
-    glm::vec2 get_bounds_dimensions_2d() const;
     std::array<glm::vec2, 4> get_corners() const;
     std::array<glm::vec2, 2> get_axes() const;
 
@@ -86,6 +90,7 @@ private:
     bool m_is_static = false;
 
     ColliderType2D m_collider_type = ColliderType2D::Circle;
+    ColliderType2D m_previous_collider_type = ColliderType2D::Circle;
 
     std::array<glm::vec2, 4> m_corners = {}; // For rectangle, calculated each frame
     std::array<glm::vec2, 2> m_axes = {}; // For rectangle, calculated each frame
@@ -93,7 +98,7 @@ private:
     float m_width = 1.0f; // For rectangle
     float m_height = 1.0f; // For rectangle
 
-    float m_radius = 0.0f; // For circle
+    float m_radius = 1.0f; // For circle
 
     std::unordered_map<std::string, std::weak_ptr<Collider2D>> m_inside_trigger = {};
     std::vector<std::weak_ptr<Collider2D>> m_inside_trigger_vector = {};

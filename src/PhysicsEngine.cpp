@@ -285,7 +285,7 @@ bool PhysicsEngine::test_collision_circle_rectangle(Collider2D const& circle_col
     else
     {
         // Calculate MTV, needed when spawning a circle inside a rect or fast movement.
-        glm::vec2 const dimensions = rect_collider.get_bounds_dimensions_2d();
+        glm::vec2 const dimensions = rect_collider.get_extents();
         float const max_rect_length = std::max(dimensions.x, dimensions.y);
 
         auto min_distance_vector = glm::vec2(1.0f);
