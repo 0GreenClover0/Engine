@@ -198,9 +198,11 @@ void Renderer::render() const
     glm::mat4 const projection_view_no_translation = Camera::get_main_camera()->get_projection() * glm::mat4(glm::mat3(Camera::get_main_camera()->get_view_matrix()));
     
     // Renders to G-Buffer
-
     render_geometry_pass(projection_view);
 
+    render_ssao();
+
+    // Renders opaque objects
     render_lighting_pass();
 
     // Renders transparent objects and UI
@@ -208,6 +210,10 @@ void Renderer::render() const
 }
 
 void Renderer::render_geometry_pass(glm::mat4 const& projection_view) const
+{
+}
+
+void Renderer::render_ssao() const
 {
 }
 

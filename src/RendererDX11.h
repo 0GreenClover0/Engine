@@ -3,6 +3,7 @@
 #include "Engine.h"
 #include "GBuffer.h"
 #include "Renderer.h"
+#include "SSAO.h"
 
 class RendererDX11 final : public Renderer
 {
@@ -76,10 +77,12 @@ private:
 
     virtual void render_lighting_pass() const override;
     virtual void render_geometry_pass(glm::mat4 const& projection_view) const override;
+    virtual void render_ssao() const override;
 
     inline static std::shared_ptr<RendererDX11> m_instance_dx11;
 
     std::shared_ptr<GBuffer> m_gbuffer = nullptr;
+    std::shared_ptr<SSAO> m_ssao = nullptr;
 
     D3D11_VIEWPORT m_viewport = {};
     D3D11_VIEWPORT m_shadow_map_viewport = {};
@@ -109,6 +112,8 @@ private:
     ID3D11RasterizerState* g_shadow_rasterizer_state = nullptr;
     ID3D11SamplerState* m_shadow_sampler_state = nullptr;
     ID3D11SamplerState* m_default_sampler_state = nullptr;
+    ID3D11SamplerState* m_repeat_sampler_state = nullptr;
+
     ID3D11BlendState* m_deferred_blend_state = nullptr;
     ID3D11BlendState* m_forward_blend_state = nullptr;
 

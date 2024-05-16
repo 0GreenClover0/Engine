@@ -91,7 +91,7 @@ float directional_shadow_calculation(DirectionalLight light, float3 world_pos, f
     return shadow;
 }
 
-float3 calculate_directional_light(DirectionalLight light, float3 normal, float3 view_dir, float3 diffuse_texture, float3 world_pos, bool calculate_shadows)
+float3 calculate_directional_light(DirectionalLight light, float3 normal, float3 view_dir, float3 diffuse_texture, float3 world_pos, bool calculate_shadows, float ambient_occlusion = 1.0f)
 {
     float3 light_direction = normalize(-light.direction);
     // Diffuse
@@ -102,7 +102,7 @@ float3 calculate_directional_light(DirectionalLight light, float3 normal, float3
     float3 halfway_dir = normalize(light_direction + view_dir); // Blinn-Phong
     float spec = pow(max(dot(view_dir, halfway_dir), 0.0f), 32); // TODO: Take shininess from the material
 
-    float3 ambient = light.ambient * diffuse_texture; // We should be sampling diffuse map
+    float3 ambient = light.ambient * diffuse_texture * ambient_occlusion; // We should be sampling diffuse map
     float3 diffuse = light.diffuse * diff * diffuse_texture; // We should be sampling diffuse map
     float3 specular = light.specular * spec * diffuse_texture; // We should be sampling specular map
 

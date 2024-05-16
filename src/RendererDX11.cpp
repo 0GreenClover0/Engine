@@ -74,6 +74,14 @@ std::shared_ptr<RendererDX11> RendererDX11::create()
     camera_buffer_desc.ByteWidth = sizeof(ConstantBufferCameraPosition);
 
     hr = renderer->get_device()->CreateBuffer(&camera_buffer_desc, nullptr, &renderer->m_constant_buffer_camera_position);
+    D3D11_BUFFER_DESC ssao_buffer_desc = {};
+    ssao_buffer_desc.Usage = D3D11_USAGE_DYNAMIC;
+    ssao_buffer_desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    ssao_buffer_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    ssao_buffer_desc.MiscFlags = 0;
+    ssao_buffer_desc.ByteWidth = sizeof(ConstantBufferSSAO);
+
+    hr = renderer->get_device()->CreateBuffer(&ssao_buffer_desc, nullptr, &renderer->m_constant_buffer_ssao);
     assert(SUCCEEDED(hr));
 
     renderer->create_depth_stencil();
@@ -90,7 +98,21 @@ std::shared_ptr<RendererDX11> RendererDX11::create()
     renderer->m_point_shadow_shader = ResourceManager::get_instance().load_shader("./res/shaders/point_shadow_mapping.hlsl", "./res/shaders/point_shadow_mapping.hlsl");
 
     renderer->m_gbuffer = GBuffer::create();
+    renderer->m_ssao = SSAO::create();
     renderer->m_lighting_pass_shader = ResourceManager::get_instance().load_shader("./res/shaders/deferred_lighting.hlsl", "./res/shaders/deferred_lighting.hlsl");
+
+    // FIXME: Maybe move this somewhere else
+    D3D11_SAMPLER_DESC repeat_sampler_desc = {};
+    repeat_sampler_desc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+    repeat_sampler_desc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+    repeat_sampler_desc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+    repeat_sampler_desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+    repeat_sampler_desc.MipLODBias = 0.0f;
+    repeat_sampler_desc.MaxAnisotropy = 1;
+    repeat_sampler_desc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+
+    hr = renderer->get_device()->CreateSamplerState(&repeat_sampler_desc, &renderer->m_repeat_sampler_state);
+    assert(SUCCEEDED(hr));
 
     D3D11_SAMPLER_DESC default_sampler_desc = {};
     default_sampler_desc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
@@ -138,6 +160,7 @@ void RendererDX11::on_window_resize(GLFWwindow* window, i32 const width, i32 con
     renderer->m_viewport = create_viewport(width, height);
     renderer->g_pd3dDeviceContext->RSSetViewports(1, &renderer->m_viewport);
     renderer->m_gbuffer->update();
+    renderer->m_ssao->update();
 }
 
 void RendererDX11::begin_frame() const
@@ -205,6 +228,38 @@ void RendererDX11::render_geometry_pass(glm::mat4 const& projection_view) const
             }
         }
     }
+}
+
+void RendererDX11::render_ssao() const
+{
+    g_pd3dDeviceContext->RSSetState(g_rasterizer_state);
+
+    ConstantBufferSSAO ssao_data = {};
+    ssao_data.projection = Camera::get_main_camera()->get_projection();
+
+    auto const& ssao_kernel = m_ssao->get_ssao_kernel();
+    for (u32 i = 0; i < ssao_kernel.size(); ++i)
+    {
+        ssao_data.kernel_samples[i] = ssao_kernel[i];
+    }
+
+    D3D11_MAPPED_SUBRESOURCE mapped_resource = {};
+    HRESULT const hr = get_device_context()->Map(m_constant_buffer_ssao, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped_resource);
+    assert(SUCCEEDED(hr));
+
+    CopyMemory(mapped_resource.pData, &ssao_data, sizeof(ConstantBufferSSAO));
+    get_device_context()->Unmap(m_constant_buffer_ssao, 0);
+    get_device_context()->PSSetConstantBuffers(1, 1, &m_constant_buffer_ssao);
+
+    m_ssao->use_shader();
+    m_ssao->bind_render_targets();
+
+    m_gbuffer->bind_shader_resources();
+
+    g_pd3dDeviceContext->PSSetSamplers(0, 1, &m_default_sampler_state);
+    g_pd3dDeviceContext->PSSetSamplers(1, 1, &m_repeat_sampler_state);
+
+    FullscreenQuad::get_instance()->draw();
 }
 
 ID3D11Device* RendererDX11::get_device() const
@@ -326,6 +381,7 @@ void RendererDX11::render_lighting_pass() const
     }
     
     m_gbuffer->bind_shader_resources();
+    m_ssao->bind_shader_resources();
     m_lighting_pass_shader->use();
 
     FullscreenQuad::get_instance()->draw();
