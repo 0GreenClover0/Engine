@@ -157,9 +157,6 @@ CollisionInfo Collider2D::overlaps(Collider2D const& other)
     CollisionInfo const ci = {};
     bool const any_trigger = m_is_trigger || other.is_trigger();
 
-    if (!Engine::is_game_running())
-        return ci;
-
     // Stupid hack for making both triggers and statics work
     if(any_trigger)
     {

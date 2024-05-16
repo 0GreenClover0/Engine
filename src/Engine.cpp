@@ -120,10 +120,9 @@ void Engine::run()
 
         Renderer::get_instance()->begin_frame();
 
-        PhysicsEngine::get_instance()->update_physics();
-
         if (m_is_game_running)
         {
+            PhysicsEngine::get_instance()->update_physics();
             MainScene::get_instance()->run_frame();
         }
 
