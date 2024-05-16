@@ -7,7 +7,7 @@
 std::shared_ptr<ScreenText> ScreenText::create()
 {
     auto const ui_shader = ResourceManager::get_instance().load_shader("./res/shaders/ui.hlsl", "./res/shaders/ui.hlsl");
-    auto const ui_material = Material::create(ui_shader);
+    auto const ui_material = Material::create(ui_shader, 1);
     auto text = std::make_shared<ScreenText>(AK::Badge<ScreenText> {}, ui_material);
 
     return text;
