@@ -1,5 +1,6 @@
 #pragma once
 
+#include "BlurPassContainer.h"
 #include "Engine.h"
 #include "GBuffer.h"
 #include "Renderer.h"
@@ -83,6 +84,7 @@ private:
 
     std::shared_ptr<GBuffer> m_gbuffer = nullptr;
     std::shared_ptr<SSAO> m_ssao = nullptr;
+    std::shared_ptr<BlurPassContainer> m_ssao_blur = nullptr;
 
     D3D11_VIEWPORT m_viewport = {};
     D3D11_VIEWPORT m_shadow_map_viewport = {};
