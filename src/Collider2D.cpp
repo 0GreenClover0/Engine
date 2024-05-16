@@ -6,6 +6,7 @@
 #include "Globals.h"
 #include "PhysicsEngine.h"
 #include "AK/AK.h"
+#include "AK/Math.h"
 
 std::shared_ptr<Collider2D> Collider2D::create()
 {
@@ -289,86 +290,6 @@ void Collider2D::compute_axes(glm::vec2 const& center, float const angle)
     m_debug_drawing->set_extents({m_width * 2.0f, 0.25f, m_height * 2.0f});
 }
 
-glm::vec2 Collider2D::get_normal(glm::vec2 const& v) const
-{
-    glm::vec2 const norm = { -v.y, v.x };
-    return glm::normalize(norm);
-}
-
-glm::vec2 Collider2D::get_perpendicular_axis(std::array<glm::vec2, 4> const& passed_corners, u8 const index) const
-{
-    u8 const first = index;
-    u8 next = index + 1;
-
-    if (index + 1 == 4)
-        next = 0;
-
-    return get_normal(passed_corners[next] - passed_corners[first]);
-}
-
-glm::vec2 Collider2D::project_on_axis(std::array<glm::vec2, 4> const& vertices, glm::vec2 const& axis) const
-{
-    float min = std::numeric_limits<float>::infinity();
-    float max = -std::numeric_limits<float>::infinity();
-
-    for (u8 i = 0; i < 4; ++i)
-    {
-        float const projection = glm::dot(vertices[i], axis);
-
-        if (projection < min)
-        {
-            min = projection;
-        }
-
-        if (projection > max)
-        {
-            max = projection;
-        }
-    }
-
-    return { min, max };
-}
-
-glm::vec2 Collider2D::line_intersection(glm::vec2 const& point1, glm::vec2 const& point2, glm::vec2 const& point3,
-    const glm::vec2& point4) const
-{
-    float const x1 = point1.x, x2 = point2.x, x3 = point3.x, x4 = point4.x;
-    float const y1 = point1.y, y2 = point2.y, y3 = point3.y, y4 = point4.y;
-
-    // Calculate the determinant of the coefficient matrix.
-    float const det = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
-    if (glm::abs(det) < 0.001f) // epsilon
-    {
-        // The lines are parallel (or coincident, if the segments overlap).
-        // Shouldn't be vector zero but it won't be used when there's no intersection so whatever.
-        return { 0.0f, 0.0f };
-    }
-
-    // Calculate the x and y coordinates of the intersection point.
-    glm::vec2 intersection;
-    intersection.x = ((x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)) / det;
-    intersection.y = ((x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)) / det;
-
-    return intersection;
-}
-
-bool are_overlapping(glm::vec2 const& a, glm::vec2 const& b)
-{
-    // A and B are ranges and it's assumed that a.x <= a.y and b.x <= b.y
-    return a.x <= b.y && a.y >= b.x;
-}
-
-float get_overlap_length(glm::vec2 const& a, glm::vec2 const& b)
-{
-    // A and B are ranges and it's assumed that a.x <= a.y and b.x <= b.y
-    if (!are_overlapping(a, b))
-    {
-        return 0.f;
-    }
-
-    return std::min(a.y, b.y) - std::max(a.x, b.x);
-}
-
 CollisionInfo Collider2D::test_collision_rectangle_rectangle(Collider2D const& obb1, Collider2D const& obb2)
 {
     CollisionInfo ci = {};
@@ -377,8 +298,8 @@ CollisionInfo Collider2D::test_collision_rectangle_rectangle(Collider2D const& o
     std::array const corners2 = { obb2.m_corners[0], obb2.m_corners[1] , obb2.m_corners[2] , obb2.m_corners[3] };
 
     // Get the axes of both rectangles.
-    std::array axes1 = { get_perpendicular_axis(corners1, 0), get_perpendicular_axis(corners1, 1) };
-    std::array axes2 = { get_perpendicular_axis(corners2, 0), get_perpendicular_axis(corners2, 1) };
+    std::array axes1 = { AK::Math::get_perpendicular_axis(corners1, 0), AK::Math::get_perpendicular_axis(corners1, 1) };
+    std::array axes2 = { AK::Math::get_perpendicular_axis(corners2, 0), AK::Math::get_perpendicular_axis(corners2, 1) };
 
     // We need to find the minimal overlap and axis on which it happens.
     float min_overlap = std::numeric_limits<float>::infinity();
@@ -388,10 +309,10 @@ CollisionInfo Collider2D::test_collision_rectangle_rectangle(Collider2D const& o
     {
         for (u32 i = 0; i < 2; ++i)
         {
-            glm::vec2 projection1 = project_on_axis(corners1, axis[i]);
-            glm::vec2 projection2 = project_on_axis(corners2, axis[i]);
+            glm::vec2 projection1 = AK::Math::project_on_axis(corners1, axis[i]);
+            glm::vec2 projection2 = AK::Math::project_on_axis(corners2, axis[i]);
 
-            float const overlap = get_overlap_length(projection1, projection2);
+            float const overlap = AK::Math::get_ranges_overlap_length(projection1, projection2);
 
             // Shapes are not overlapping
             if (overlap == 0.0f)
@@ -537,7 +458,7 @@ CollisionInfo Collider2D::test_collision_circle_rectangle(Collider2D const& obb1
                 next = 0;
 
             cast_point = center + borders[i] * max_rect_length;
-            new_min_distance_vector = line_intersection(center, cast_point, m_corners[first], m_corners[next]) - center;
+            new_min_distance_vector = AK::Math::line_intersection(center, cast_point, m_corners[first], m_corners[next]) - center;
 
             if (glm::length(new_min_distance_vector) < glm::length(min_distance_vector))
                 min_distance_vector = new_min_distance_vector;
