@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Engine.h"
+#include "GBuffer.h"
 #include "Renderer.h"
 
 class RendererDX11 final : public Renderer
@@ -27,6 +28,8 @@ public:
     [[nodiscard]] ID3D11DeviceContext* get_device_context() const;
     [[nodiscard]] ID3D11ShaderResourceView* get_render_texture_view() const;
     [[nodiscard]] ID3D11DepthStencilState* get_depth_stencil_state() const;
+    [[nodiscard]] ID3D11DepthStencilView* get_depth_stencil_view() const;
+    [[nodiscard]] D3D11_VIEWPORT get_main_view_port() const;
 
     ID3D11RenderTargetView* g_emptyRenderTargetView = nullptr;
     inline static float constexpr SHADOW_MAP_SIZE = 1024.0f;
@@ -70,7 +73,13 @@ private:
     void set_RS_for_shadow_mapping() const;
     void update_depth_shader(std::shared_ptr<Light> const& light) const;
     virtual void render_shadow_maps() const override;
+
+    virtual void render_lighting_pass() const override;
+    virtual void render_geometry_pass(glm::mat4 const& projection_view) const override;
+
     inline static std::shared_ptr<RendererDX11> m_instance_dx11;
+
+    std::shared_ptr<GBuffer> m_gbuffer = nullptr;
 
     D3D11_VIEWPORT m_viewport = {};
     D3D11_VIEWPORT m_shadow_map_viewport = {};
@@ -84,10 +93,12 @@ private:
     ID3D11RasterizerState* g_rasterizer_state_solid = nullptr;
     ID3D11RasterizerState* g_rasterizer_state_wireframe = nullptr;
     ID3D11RasterizerState* g_rasterizer_state = nullptr;
+    ID3D11RasterizerState* g_wireframe_rasterizer_state = nullptr;
     ID3D11Buffer* m_constant_buffer_light = nullptr;
     ID3D11Buffer* m_constant_buffer_camera_position = nullptr;
     ID3D11Buffer* m_constant_buffer_per_object = nullptr;
     ID3D11Buffer* m_constant_buffer_point_shadows = nullptr;
+    ID3D11Buffer* m_constant_buffer_ssao = nullptr;
     ID3D11DepthStencilView* m_depth_stencil_view = nullptr;
     ID3D11Texture2D* m_depth_stencil_buffer = nullptr;
     ID3D11DepthStencilState* m_depth_stencil_state = nullptr;
@@ -97,6 +108,9 @@ private:
     // Shadow mapping variables
     ID3D11RasterizerState* g_shadow_rasterizer_state = nullptr;
     ID3D11SamplerState* m_shadow_sampler_state = nullptr;
+    ID3D11SamplerState* m_default_sampler_state = nullptr;
+    ID3D11BlendState* m_deferred_blend_state = nullptr;
+    ID3D11BlendState* m_forward_blend_state = nullptr;
 
     inline static u32 constexpr spot_light_shadow_register_offset = 20;
     inline static u32 constexpr point_light_shadow_register_offset = 40;

@@ -1,6 +1,8 @@
 #include "RendererDX11.h"
 
+#include <array>
 #include <iostream>
+
 #include "TextureLoaderDX11.h"
 #include "Drawable.h"
 #include "Entity.h"
@@ -8,9 +10,8 @@
 #include "Camera.h"
 #include "ShaderFactory.h"
 #include "Water.h"
-
-#include <array>
-
+#include "FullscreenQuad.h"
+#include "GBuffer.h"
 #include "ResourceManager.h"
 #include "Skybox.h"
 
@@ -88,6 +89,21 @@ std::shared_ptr<RendererDX11> RendererDX11::create()
     renderer->m_shadow_shader = ResourceManager::get_instance().load_shader("./res/shaders/shadow_mapping.hlsl", "./res/shaders/shadow_mapping.hlsl");
     renderer->m_point_shadow_shader = ResourceManager::get_instance().load_shader("./res/shaders/point_shadow_mapping.hlsl", "./res/shaders/point_shadow_mapping.hlsl");
 
+    renderer->m_gbuffer = GBuffer::create();
+    renderer->m_lighting_pass_shader = ResourceManager::get_instance().load_shader("./res/shaders/deferred_lighting.hlsl", "./res/shaders/deferred_lighting.hlsl");
+
+    D3D11_SAMPLER_DESC default_sampler_desc = {};
+    default_sampler_desc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+    default_sampler_desc.AddressU = D3D11_TEXTURE_ADDRESS_BORDER;
+    default_sampler_desc.AddressV = D3D11_TEXTURE_ADDRESS_BORDER;
+    default_sampler_desc.AddressW = D3D11_TEXTURE_ADDRESS_BORDER;
+    default_sampler_desc.MipLODBias = 0.0f;
+    default_sampler_desc.MaxAnisotropy = 1;
+    default_sampler_desc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+
+    hr = renderer->get_device()->CreateSamplerState(&default_sampler_desc, &renderer->m_default_sampler_state);
+    assert(SUCCEEDED(hr));
+
     return renderer;
 }
 
@@ -121,6 +137,7 @@ void RendererDX11::on_window_resize(GLFWwindow* window, i32 const width, i32 con
 
     renderer->m_viewport = create_viewport(width, height);
     renderer->g_pd3dDeviceContext->RSSetViewports(1, &renderer->m_viewport);
+    renderer->m_gbuffer->update();
 }
 
 void RendererDX11::begin_frame() const
@@ -133,6 +150,8 @@ void RendererDX11::begin_frame() const
     g_pd3dDeviceContext->ClearRenderTargetView(g_mainRenderTargetView, clear_color_with_alpha);
     g_pd3dDeviceContext->ClearRenderTargetView(g_textureRenderTargetView, clear_color_with_alpha);
     g_pd3dDeviceContext->ClearDepthStencilView(m_depth_stencil_view, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+
+    m_gbuffer->clear_render_targets();
 }
 
 void RendererDX11::end_frame() const
@@ -147,6 +166,45 @@ void RendererDX11::present() const
     Renderer::present();
 
     g_pSwapChain->Present(vsync_enabled, 0);
+}
+
+void RendererDX11::render_geometry_pass(glm::mat4 const& projection_view) const
+{
+    std::array constexpr blend_factor = { 0.0f, 0.0f, 0.0f, 0.0f };
+    get_device_context()->OMSetBlendState(m_deferred_blend_state, blend_factor.data(), 0xffffffff);
+
+    m_gbuffer->bind_render_targets();
+
+    if (wireframe_mode_active)
+    {
+        g_pd3dDeviceContext->RSSetState(g_wireframe_rasterizer_state);
+    }
+    else
+    {
+        g_pd3dDeviceContext->RSSetState(g_rasterizer_state);
+    }
+
+    g_pd3dDeviceContext->RSSetViewports(1, &m_viewport);
+    m_gbuffer->use_shader();
+
+    for (auto const& shader : m_shaders)
+    {
+        for (auto const& material : shader->materials)
+        {
+            if (material->needs_forward_rendering)
+                continue;
+
+            if (material->is_gpu_instanced)
+            {
+                // GPU instancing is not implemented in DX11
+                std::unreachable();
+            }
+            else
+            {
+                draw(material, projection_view);
+            }
+        }
+    }
 }
 
 ID3D11Device* RendererDX11::get_device() const
@@ -193,6 +251,16 @@ ID3D11DepthStencilState* RendererDX11::get_depth_stencil_state() const
     return m_depth_stencil_state;
 }
 
+ID3D11DepthStencilView* RendererDX11::get_depth_stencil_view() const
+{
+    return m_depth_stencil_view;
+}
+
+D3D11_VIEWPORT RendererDX11::get_main_view_port() const
+{
+    return m_viewport;
+}
+
 void RendererDX11::render_shadow_maps() const
 {
     set_RS_for_shadow_mapping();
@@ -222,8 +290,7 @@ void RendererDX11::render_shadow_maps() const
         }
     }
 
-
-    //Spot lights
+    // Spot lights
 
     if (m_spot_lights.size() > 0)
     {
@@ -238,11 +305,43 @@ void RendererDX11::render_shadow_maps() const
     }
 }
 
-void RendererDX11::bind_for_render_frame() const
+void RendererDX11::render_lighting_pass() const
 {
+    set_light_buffer();
+
     g_pd3dDeviceContext->RSSetState(g_rasterizer_state);
     g_pd3dDeviceContext->RSSetViewports(1, &m_viewport);
 
+    update_shader(nullptr, glm::mat4(1.0f), glm::mat4(1.0f));
+
+    g_pd3dDeviceContext->PSSetSamplers(0, 1, &m_default_sampler_state);
+    
+    if (m_render_to_texture)
+    {
+        g_pd3dDeviceContext->OMSetRenderTargets(1, &g_textureRenderTargetView, nullptr);
+    }
+    else
+    {
+        g_pd3dDeviceContext->OMSetRenderTargets(1, &g_mainRenderTargetView, nullptr);
+    }
+    
+    m_gbuffer->bind_shader_resources();
+    m_lighting_pass_shader->use();
+
+    FullscreenQuad::get_instance()->draw();
+}
+
+void RendererDX11::bind_for_render_frame() const
+{
+    if (wireframe_mode_active)
+    {
+        g_pd3dDeviceContext->RSSetState(g_wireframe_rasterizer_state);
+    }
+    else
+    {
+        g_pd3dDeviceContext->RSSetState(g_rasterizer_state);
+    }
+    
     if (m_render_to_texture)
     {
         g_pd3dDeviceContext->OMSetRenderTargets(1, &g_textureRenderTargetView, m_depth_stencil_view);
@@ -251,6 +350,9 @@ void RendererDX11::bind_for_render_frame() const
     {
         g_pd3dDeviceContext->OMSetRenderTargets(1, &g_mainRenderTargetView, m_depth_stencil_view);
     }
+
+    std::array constexpr blend_factor = { 0.0f, 0.0f, 0.0f, 0.0f };
+    get_device_context()->OMSetBlendState(m_forward_blend_state, blend_factor.data(), 0xffffffff);
 }
 
 void RendererDX11::setup_shadow_mapping()
@@ -359,10 +461,9 @@ void RendererDX11::unbind_material(std::shared_ptr<Material> const &material) co
 
 void RendererDX11::initialize_global_renderer_settings()
 {
-    ID3D11BlendState* blend_state = nullptr;
     D3D11_BLEND_DESC blend_desc = {};
 
-    blend_desc.RenderTarget[0].BlendEnable = true;
+    blend_desc.RenderTarget[0].BlendEnable = false;
     blend_desc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
     blend_desc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
     blend_desc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
@@ -371,12 +472,13 @@ void RendererDX11::initialize_global_renderer_settings()
     blend_desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
     blend_desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 
-    HRESULT const hr = get_device()->CreateBlendState(&blend_desc, &blend_state);
-
+    HRESULT hr = get_device()->CreateBlendState(&blend_desc, &m_deferred_blend_state);
     assert(SUCCEEDED(hr));
 
-    std::array constexpr blend_factor = { 0.0f, 0.0f, 0.0f, 0.0f };
-    get_device_context()->OMSetBlendState(blend_state, blend_factor.data(), 0xffffffff);
+    blend_desc.RenderTarget[0].BlendEnable = true;
+
+    hr = get_device()->CreateBlendState(&blend_desc, &m_forward_blend_state);
+    assert(SUCCEEDED(hr));
 }
 
 void RendererDX11::initialize_buffers(size_t const max_size)

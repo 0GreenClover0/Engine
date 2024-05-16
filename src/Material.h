@@ -47,6 +47,8 @@ public:
 
     bool casts_shadows = true;
 
+    bool needs_forward_rendering = false;
+
     // TODO: GPU instancing on one material currently supports only the first mesh that was bound to the material.
     bool is_gpu_instanced = false;
 
