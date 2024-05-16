@@ -14,6 +14,10 @@
 - `t0` is always the object's texture
 - `t1` is for the directional shadow map
 - `t10`, `t11`, `t12` are for deferred shading textures
+- `t14` is for ambient occlusion
+- `t15` is for the SkyBox resource
+- `t20` to `t39` are for spotlight shadow maps
+- `t40` to `t59` are for point shadow maps
 - `t20` to `t39` are for spotlight shadow maps
 - `t40` to `t59` are for point shadow maps
 
