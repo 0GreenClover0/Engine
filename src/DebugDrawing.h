@@ -35,6 +35,7 @@ public:
     // TODO: This should be in an update_editor() method
     virtual void draw_editor() override;
 
+    void set_drawing_type(DrawingType const new_type);
     virtual void reprepare() override;
 
     float get_radius() const;
