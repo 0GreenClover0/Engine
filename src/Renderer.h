@@ -126,6 +126,7 @@ protected:
     std::vector<std::shared_ptr<Material>> m_instanced_materials = {};
     std::shared_ptr<Shader> m_shadow_shader = nullptr;
     std::shared_ptr<Shader> m_point_shadow_shader = nullptr;
+    std::shared_ptr<Shader> m_blur_shader = nullptr;
     std::shared_ptr<Shader> m_lighting_pass_shader = nullptr;
 
 private:

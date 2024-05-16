@@ -99,6 +99,7 @@ std::shared_ptr<RendererDX11> RendererDX11::create()
 
     renderer->m_gbuffer = GBuffer::create();
     renderer->m_ssao = SSAO::create();
+    renderer->m_ssao_blur = BlurPassContainer::create();
     renderer->m_lighting_pass_shader = ResourceManager::get_instance().load_shader("./res/shaders/deferred_lighting.hlsl", "./res/shaders/deferred_lighting.hlsl");
 
     // FIXME: Maybe move this somewhere else
@@ -161,6 +162,7 @@ void RendererDX11::on_window_resize(GLFWwindow* window, i32 const width, i32 con
     renderer->g_pd3dDeviceContext->RSSetViewports(1, &renderer->m_viewport);
     renderer->m_gbuffer->update();
     renderer->m_ssao->update();
+    renderer->m_ssao_blur->update();
 }
 
 void RendererDX11::begin_frame() const
@@ -170,6 +172,7 @@ void RendererDX11::begin_frame() const
     Renderer::begin_frame();
 
     float const clear_color_with_alpha[4] = { clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w };
+    
     g_pd3dDeviceContext->ClearRenderTargetView(g_mainRenderTargetView, clear_color_with_alpha);
     g_pd3dDeviceContext->ClearRenderTargetView(g_textureRenderTargetView, clear_color_with_alpha);
     g_pd3dDeviceContext->ClearDepthStencilView(m_depth_stencil_view, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
@@ -258,6 +261,13 @@ void RendererDX11::render_ssao() const
 
     g_pd3dDeviceContext->PSSetSamplers(0, 1, &m_default_sampler_state);
     g_pd3dDeviceContext->PSSetSamplers(1, 1, &m_repeat_sampler_state);
+
+    FullscreenQuad::get_instance()->draw();
+    
+    m_ssao_blur->use_shader();
+    m_ssao_blur->bind_render_targets();
+
+    m_ssao->bind_shader_resources();
 
     FullscreenQuad::get_instance()->draw();
 }
@@ -365,7 +375,6 @@ void RendererDX11::render_lighting_pass() const
     set_light_buffer();
 
     g_pd3dDeviceContext->RSSetState(g_rasterizer_state);
-    g_pd3dDeviceContext->RSSetViewports(1, &m_viewport);
 
     update_shader(nullptr, glm::mat4(1.0f), glm::mat4(1.0f));
 
@@ -381,7 +390,7 @@ void RendererDX11::render_lighting_pass() const
     }
     
     m_gbuffer->bind_shader_resources();
-    m_ssao->bind_shader_resources();
+    m_ssao_blur->bind_shader_resources();
     m_lighting_pass_shader->use();
 
     FullscreenQuad::get_instance()->draw();
