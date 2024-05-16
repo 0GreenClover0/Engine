@@ -104,160 +104,52 @@ void PhysicsEngine::solve_collisions() const
 
             std::shared_ptr<Collider2D> collider1 = colliders[i];
             std::shared_ptr<Collider2D> collider2 = colliders[j];
-            ColliderType2D const collider1_type = colliders[i]->get_collider_type();
-            ColliderType2D const collider2_type = colliders[j]->get_collider_type();
 
             bool const should_overlap_as_trigger = collider1->is_trigger() || collider2->is_trigger();
 
-            auto collision_type = CollisionType::Undefined;
-
-            if (collider1_type == collider2_type && collider1_type == ColliderType2D::Circle)
-                collision_type = CollisionType::CircleCircle;
-
-            if (collider1_type == collider2_type && collider1_type == ColliderType2D::Rectangle)
-                collision_type = CollisionType::RectangleRectangle;
-
-            if (collider1_type != collider2_type)
-                collision_type = CollisionType::CircleRectangle;
-
             glm::vec2 mtv = {};
 
-            switch (collision_type)
+            if (!compute_penetration(collider1, collider2, mtv))
             {
-            case CollisionType::CircleCircle:
-                if (compute_penetration(collider1, collider2, mtv))
-                {
-                    if (should_overlap_as_trigger)
-                    {
-                        collider1->add_overlapped_this_frame(collider2);
+                continue;
+            }
+
+            if (should_overlap_as_trigger)
+            {
+                collider1->add_overlapped_this_frame(collider2);
 
 #if _DEBUG
-                        if (collider1->is_inside_trigger(collider2->guid))
-                        {
-                            assert(collider2->is_inside_trigger(collider1->guid));
-                        }
-                        else
-                        {
-                            assert(!collider2->is_inside_trigger(collider1->guid));
-                        }
-#endif
-                    }
-                    else
-                    {
-                        on_collision_enter(collider1, collider2);
-                        on_collision_enter(collider2, collider1);
-
-                        if (!collider1->is_static() && !collider2->is_static())
-                        {
-                            collider1->apply_mtv(mtv);
-                            collider2->apply_mtv(-mtv);
-                        }
-                        else if (collider1->is_static())
-                        {
-                            collider2->apply_mtv(-mtv);
-                        }
-                        else if (collider2->is_static())
-                        {
-                            collider1->apply_mtv(mtv);
-                        }
-
-                        on_collision_exit(collider1, collider2);
-                        on_collision_exit(collider2, collider1);
-                    }
-
-                    break;
-                }
-
-            case CollisionType::RectangleRectangle:
-                if (compute_penetration(collider1, collider2, mtv))
+                if (collider1->is_inside_trigger(collider2->guid))
                 {
-                    if (should_overlap_as_trigger)
-                    {
-                        collider1->add_overlapped_this_frame(collider2);
-
-#if _DEBUG
-                        if (collider1->is_inside_trigger(collider2->guid))
-                        {
-                            assert(collider2->is_inside_trigger(collider1->guid));
-                        }
-                        else
-                        {
-                            assert(!collider2->is_inside_trigger(collider1->guid));
-                        }
-#endif
-                    }
-                    else
-                    {
-                        on_collision_enter(collider1, collider2);
-                        on_collision_enter(collider2, collider1);
-
-                        if (!collider1->is_static() && !collider2->is_static())
-                        {
-                            collider1->apply_mtv(mtv);
-                            collider2->apply_mtv(-mtv);
-                        }
-                        else if (collider1->is_static())
-                        {
-                            collider2->apply_mtv(-mtv);
-                        }
-                        else if (collider2->is_static())
-                        {
-                            collider1->apply_mtv(mtv);
-                        }
-
-                        on_collision_exit(collider1, collider2);
-                        on_collision_exit(collider2, collider1);
-                    }
+                    assert(collider2->is_inside_trigger(collider1->guid));
                 }
-                break;
-
-            case CollisionType::CircleRectangle:
-                if (compute_penetration(collider1, collider2, mtv))
+                else
                 {
-                    if (should_overlap_as_trigger)
-                    {
-                        collider1->add_overlapped_this_frame(collider2);
-
-#if _DEBUG
-                        if (collider1->is_inside_trigger(collider2->guid))
-                        {
-                            assert(collider2->is_inside_trigger(collider1->guid));
-                        }
-                        else
-                        {
-                            assert(!collider2->is_inside_trigger(collider1->guid));
-                        }
-#endif
-                    }
-                    else
-                    {
-                        on_collision_enter(collider1, collider2);
-                        on_collision_enter(collider2, collider1);
-
-                        if (!collider1->is_static() && !collider2->is_static())
-                        {
-                            collider1->apply_mtv(mtv);
-                            collider2->apply_mtv(-mtv);
-                        }
-                        else if (collider1->is_static())
-                        {
-                            collider2->apply_mtv(-mtv);
-                        }
-                        else if (collider2->is_static())
-                        {
-                            collider1->apply_mtv(mtv);
-                        }
-
-                        on_collision_exit(collider1, collider2);
-                        on_collision_exit(collider2, collider1);
-                    }
+                    assert(!collider2->is_inside_trigger(collider1->guid));
                 }
-                break;
+#endif
+            }
+            else
+            {
+                on_collision_enter(collider1, collider2);
+                on_collision_enter(collider2, collider1);
 
-            case CollisionType::Undefined:
-            default:
-                Debug::log("Undefined collision detected", DebugType::Error);
-                std::unreachable();
+                if (!collider1->is_static() && !collider2->is_static())
+                {
+                    collider1->apply_mtv(mtv);
+                    collider2->apply_mtv(-mtv);
+                }
+                else if (collider1->is_static())
+                {
+                    collider2->apply_mtv(-mtv);
+                }
+                else if (collider2->is_static())
+                {
+                    collider1->apply_mtv(mtv);
+                }
+
+                on_collision_exit(collider1, collider2);
+                on_collision_exit(collider2, collider1);
             }
         }
     }
