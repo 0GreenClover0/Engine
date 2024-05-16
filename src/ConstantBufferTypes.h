@@ -118,3 +118,9 @@ struct ConstantBufferDepth : public ConstantBuffer
     glm::vec3 light_pos;
     float far_plane;
 };
+
+struct ConstantBufferSSAO
+{
+    glm::mat4 projection;
+    glm::vec4 kernel_samples[64];
+};
