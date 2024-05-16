@@ -12,6 +12,8 @@ SkyboxDX11::SkyboxDX11(AK::Badge<SkyboxFactory>, std::shared_ptr<Material> const
 {
     create_cube();
 
+    material->needs_forward_rendering = true;
+
     m_texture = ResourceManager::get_instance().load_cubemap(path, TextureType::Diffuse);
 }
 

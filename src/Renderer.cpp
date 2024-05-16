@@ -193,12 +193,27 @@ void Renderer::render() const
         return;
 
     render_shadow_maps();
-
-    bind_for_render_frame();
-
     // Premultiply projection and view matrices
     glm::mat4 const projection_view = Camera::get_main_camera()->get_projection() * Camera::get_main_camera()->get_view_matrix();
     glm::mat4 const projection_view_no_translation = Camera::get_main_camera()->get_projection() * glm::mat4(glm::mat3(Camera::get_main_camera()->get_view_matrix()));
+    
+    // Renders to G-Buffer
+
+    render_geometry_pass(projection_view);
+
+    render_lighting_pass();
+
+    // Renders transparent objects and UI
+    render_forward_pass(projection_view, projection_view_no_translation);
+}
+
+void Renderer::render_geometry_pass(glm::mat4 const& projection_view) const
+{
+}
+
+void Renderer::render_forward_pass(glm::mat4 const& projection_view, glm::mat4 const& projection_view_no_translation) const
+{
+    bind_for_render_frame();
 
     for (auto const& shader : m_shaders)
     {
@@ -208,6 +223,9 @@ void Renderer::render() const
 
         for (auto const& material : shader->materials)
         {
+            if (!material->needs_forward_rendering)
+                continue;
+
             if (material->has_custom_render_order())
                 continue;
 
@@ -229,6 +247,10 @@ void Renderer::render() const
         else
             draw(material, projection_view);
     }
+}
+
+void Renderer::render_lighting_pass() const
+{
 }
 
 void Renderer::render_single_shadow_map(glm::mat4 const& projection_view) const
