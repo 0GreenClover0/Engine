@@ -58,20 +58,10 @@ public:
     void stop();
     bool is_in_port() const;
 
-    static void on_lighthouse_upgraded(float _turn_speed, float _range, float _additional_ship_speed, float _pirates_in_control);
-
     NON_SERIALIZED
     float minimum_speed = 0.11f;
     NON_SERIALIZED
     float maximum_speed = 0.23f;
-    NON_SERIALIZED
-    inline static float turn_speed = 15.0f;
-    NON_SERIALIZED
-    inline static float range = 100.0f * 0.005f;
-    NON_SERIALIZED
-    inline static float additional_ship_speed = 0.2f * 0.005f;
-    NON_SERIALIZED
-    inline static float pirates_in_control = 10.0f;
 
     NON_SERIALIZED
     ShipType type = ShipType::FoodSmall;
