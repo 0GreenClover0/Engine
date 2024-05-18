@@ -58,6 +58,8 @@ void LevelController::awake()
         });
 
     set_can_tick(true);
+
+    on_lighthouse_upgraded();
 }
 
 void LevelController::update()
@@ -96,5 +98,4 @@ void LevelController::draw_editor()
 void LevelController::on_lighthouse_upgraded() const
 {
     //TODO add getting values from curves
-    Ship::on_lighthouse_upgraded(360.0f, 300.0f * 0.005f, 50.0f * 0.005f, 2.0f);
 }

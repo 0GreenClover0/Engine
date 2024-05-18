@@ -97,14 +97,14 @@ void Ship::update()
 
             float const distance_to_light = glm::distance(ship_position, target_position);
 
-            if (distance_to_light < range)
+            if (distance_to_light < Player::get_instance()->range)
             {
                 follow_point(ship_position, target_position);
-                m_speed = minimum_speed + ((maximum_speed + additional_ship_speed - minimum_speed) * (distance_to_light / range));
+                m_speed = minimum_speed + ((maximum_speed + Player::get_instance()->additional_ship_speed - minimum_speed) * (distance_to_light / Player::get_instance()->range));
 
                 if (type == ShipType::Pirates)
                 {
-                    m_pirates_in_control_counter = pirates_in_control;
+                    m_pirates_in_control_counter = Player::get_instance()->pirates_in_control;
                 }
             }
             else
@@ -187,14 +187,6 @@ bool Ship::is_in_port() const
     return m_is_in_port;
 }
 
-void Ship::on_lighthouse_upgraded(float _turn_speed, float _range, float _additional_ship_speed, float _pirates_in_control)
-{
-    turn_speed = _turn_speed;
-    range = _range;
-    additional_ship_speed = _additional_ship_speed;
-    pirates_in_control = _pirates_in_control;
-}
-
 void Ship::follow_point(glm::vec2 ship_position, glm::vec2 target_position)
 {
     glm::vec2 const ship_direction = glm::normalize(glm::vec2(cos(glm::radians(m_direction)), sin(glm::radians(m_direction))));
@@ -206,7 +198,7 @@ void Ship::follow_point(glm::vec2 ship_position, glm::vec2 target_position)
     {
         i32 const rotate_direction = glm::sign(ship_direction.x * target_direction.y - ship_direction.y * target_direction.x);
 
-        m_direction += rotate_direction * turn_speed * delta_time;
+        m_direction += rotate_direction * Player::get_instance()->turn_speed * delta_time;
     }
 }
 
