@@ -715,9 +715,22 @@ void ShipSpawner::remove_ship(std::shared_ptr<Ship> const& ship_to_remove)
     AK::swap_and_erase(m_ships, ship_to_remove);
 }
 
-glm::vec2 ShipSpawner::find_nearest_non_pirate_ship(std::shared_ptr<Ship> const& center_ship) const
+std::optional<glm::vec2> ShipSpawner::find_nearest_non_pirate_ship(std::shared_ptr<Ship> const& center_ship) const
 {
-    auto const& nearest = m_ships[0];
+    bool found_non_pirate_ship = false;
+    std::weak_ptr<Ship> nearest = {};
+    for (auto const& ship : m_ships)
+    {
+        if (ship.lock()->type == ShipType::Pirates)
+            continue;
+
+        found_non_pirate_ship = true;
+        nearest = ship;
+    }
+
+    if (!found_non_pirate_ship)
+        return std::nullopt;
+
     glm::vec2 const ship_position = AK::convert_3d_to_2d(center_ship->entity->transform->get_local_position());
     glm::vec2 nearest_position = AK::convert_3d_to_2d(nearest.lock()->entity->transform->get_local_position());
     float nearest_distance = glm::distance(ship_position, nearest_position);

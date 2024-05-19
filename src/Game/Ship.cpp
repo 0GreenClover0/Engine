@@ -119,8 +119,12 @@ void Ship::update()
 
                     if (type == ShipType::Pirates)
                     {
-                        glm::vec2 const target_position = spawner.lock()->find_nearest_non_pirate_ship(std::static_pointer_cast<Ship>(shared_from_this()));
-                        follow_point(ship_position, target_position);
+                        auto const nearest_non_pirate_ship_position = spawner.lock()->find_nearest_non_pirate_ship(std::static_pointer_cast<Ship>(shared_from_this()));
+                        if (nearest_non_pirate_ship_position.has_value())
+                        {
+                            glm::vec2 const target_position = nearest_non_pirate_ship_position.value();
+                            follow_point(ship_position, target_position);
+                        }
                     }
                 }
             }
