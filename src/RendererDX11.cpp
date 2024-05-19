@@ -342,9 +342,6 @@ void RendererDX11::update_object(std::shared_ptr<Drawable> const& drawable, std:
     data.model = drawable->entity->transform->get_model_matrix();
     data.projection_view = projection_view;
 
-    if (m_directional_light != nullptr)
-        data.light_projection_view_model = m_directional_light->get_projection_view_matrix() * model;
-
     D3D11_MAPPED_SUBRESOURCE mapped_resource;
     HRESULT const hr = get_device_context()->Map(m_constant_buffer_per_object, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped_resource);
     assert(SUCCEEDED(hr));
@@ -354,7 +351,7 @@ void RendererDX11::update_object(std::shared_ptr<Drawable> const& drawable, std:
     get_device_context()->Unmap(m_constant_buffer_per_object, 0);
     get_device_context()->VSSetConstantBuffers(0, 1, &m_constant_buffer_per_object);
 
-    set_light_buffer(drawable);
+    set_light_buffer();
     set_camera_position_buffer(drawable);
 }
 
@@ -406,7 +403,7 @@ D3D11_VIEWPORT RendererDX11::create_viewport(i32 const width, i32 const height)
     };
 }
 
-void RendererDX11::set_light_buffer(std::shared_ptr<Drawable> const& drawable) const
+void RendererDX11::set_light_buffer() const
 {
     ConstantBufferLight light_data = {};
 
@@ -416,6 +413,7 @@ void RendererDX11::set_light_buffer(std::shared_ptr<Drawable> const& drawable) c
         light_data.directional_light.ambient = m_directional_light->ambient;
         light_data.directional_light.diffuse = m_directional_light->diffuse;
         light_data.directional_light.specular = m_directional_light->specular;
+        light_data.directional_light.light_projection_view = m_directional_light->get_projection_view_matrix();
     }
 
     i32 num_point_lights;
@@ -481,7 +479,7 @@ void RendererDX11::set_light_buffer(std::shared_ptr<Drawable> const& drawable) c
         light_data.spot_lights[i].near_plane = m_spot_lights[i]->m_near_plane;
         light_data.spot_lights[i].far_plane = m_spot_lights[i]->m_far_plane;
 
-        light_data.spot_lights[i].light_projection_view_model = m_spot_lights[i]->get_projection_view_matrix() * drawable->entity->transform->get_model_matrix();
+        light_data.spot_lights[i].light_projection_view = m_spot_lights[i]->get_projection_view_matrix();
     }
 
     light_data.camera_pos = Camera::get_main_camera()->entity->transform->get_position();

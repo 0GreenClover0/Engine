@@ -47,7 +47,7 @@ private:
     virtual void perform_frustum_culling(std::shared_ptr<Material> const& material) const override;
 
     [[nodiscard]] static D3D11_VIEWPORT create_viewport(i32 const width, i32 const height);
-    void set_light_buffer(std::shared_ptr<Drawable> const& drawable) const;
+    void set_light_buffer() const;
     void set_camera_position_buffer(std::shared_ptr<Drawable> const& drawable) const;
 
     [[nodiscard]] bool create_device_d3d(HWND const hwnd);
