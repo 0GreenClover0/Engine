@@ -52,6 +52,213 @@ void Ship::awake()
     set_can_tick(true);
 }
 
+void Ship::update_position() const
+{
+    float const delta_speed = m_speed * delta_time;
+    glm::vec2 const speed_vector = glm::vec2(cos(glm::radians(m_direction)), sin(glm::radians(m_direction))) * delta_speed;
+    if (glm::epsilonEqual(Player::get_instance()->flash_counter, 0.0f, 0.0001f))
+    {
+        entity->transform->set_local_position(entity->transform->get_local_position() + glm::vec3(speed_vector.x, 0.0f, speed_vector.y));
+    }
+}
+
+void Ship::update_rotation() const
+{
+    entity->transform->set_euler_angles(glm::vec3(0.0f, -m_direction - 90.0f, 0.0f));
+}
+
+// --- State change
+
+bool Ship::normal_state_change()
+{
+    m_behavioral_state = BehavioralState::Normal;
+    return true;
+}
+
+bool Ship::pirate_state_change()
+{
+    if (type == ShipType::Pirates && m_pirates_in_control_counter <= 0.0f)
+    {
+        m_behavioral_state = BehavioralState::Pirate;
+        return true;
+    }
+
+    return false;
+}
+
+bool Ship::control_state_change()
+{
+    if (!light.expired() && light.lock()->enabled())
+    {
+        glm::vec2 const ship_position = AK::convert_3d_to_2d(entity->transform->get_local_position());
+
+        auto const light_locked = light.lock();
+        glm::vec2 const target_position = light_locked->get_position();
+
+        float const distance_to_light = glm::distance(ship_position, target_position);
+
+        if (distance_to_light < Player::get_instance()->range)
+        {
+            m_behavioral_state = BehavioralState::Control;
+            return true;
+        }
+    }
+
+    return false;
+}
+
+// TODO: Add avoid state change
+bool Ship::avoid_state_change()
+{
+    if (false)
+    {
+        m_behavioral_state = BehavioralState::Avoid;
+        return true;
+    }
+
+    return false;
+}
+
+bool Ship::destroyed_state_change()
+{
+    if (is_destroyed)
+    {
+        m_behavioral_state = BehavioralState::Destroyed;
+        return true;
+    }
+
+    return false;
+}
+
+bool Ship::in_port_state_change()
+{
+    if (m_is_in_port)
+    {
+        m_behavioral_state = BehavioralState::InPort;
+        return true;
+    }
+
+    return false;
+}
+
+// --- State ended
+
+bool Ship::control_state_ended()
+{
+    bool result = false;
+
+    if (!light.expired() && light.lock()->enabled())
+    {
+        glm::vec2 const ship_position = AK::convert_3d_to_2d(entity->transform->get_local_position());
+
+        auto const light_locked = light.lock();
+        glm::vec2 const target_position = light_locked->get_position();
+
+        float const distance_to_light = glm::distance(ship_position, target_position);
+
+        if (distance_to_light >= Player::get_instance()->range)
+        {
+            result = true;
+        }
+    }
+    else
+    {
+        result = true;
+    }
+
+    if (type == ShipType::Pirates && result)
+    {
+        m_pirates_in_control_counter = Player::get_instance()->pirates_in_control;
+    }
+
+    return result;
+}
+
+// TODO: Add avoid state ended
+bool Ship::avoid_state_ended()
+{
+    if (true)
+    {
+        return true;
+    }
+
+    return false;
+}
+
+// --- Behaviour
+
+void Ship::normal_behavior()
+{
+    m_speed = maximum_speed;
+
+    if (m_pirates_in_control_counter > 0.0f)
+    {
+        m_pirates_in_control_counter -= delta_time;
+    }
+}
+
+void Ship::pirate_behavior()
+{
+    m_speed = maximum_speed;
+
+    glm::vec2 const ship_position = AK::convert_3d_to_2d(entity->transform->get_local_position());
+
+    auto const nearest_non_pirate_ship_position =
+        spawner.lock()->find_nearest_non_pirate_ship(std::static_pointer_cast<Ship>(shared_from_this()));
+
+    if (nearest_non_pirate_ship_position.has_value())
+    {
+        glm::vec2 const target_position = nearest_non_pirate_ship_position.value();
+        follow_point(ship_position, target_position);
+    }
+}
+
+void Ship::control_behavior()
+{
+    m_speed = maximum_speed;
+
+    glm::vec2 const ship_position = AK::convert_3d_to_2d(entity->transform->get_local_position());
+
+    auto const light_locked = light.lock();
+    glm::vec2 const target_position = light_locked->get_position();
+
+    float const distance_to_light = glm::distance(ship_position, target_position);
+
+    follow_point(ship_position, target_position);
+    m_speed = minimum_speed
+            + ((maximum_speed + Player::get_instance()->additional_ship_speed - minimum_speed)
+               * (distance_to_light / Player::get_instance()->range));
+}
+
+// TODO: Add avoid behaviour
+void Ship::avoid_behavior()
+{
+    m_speed = maximum_speed;
+}
+
+void Ship::destroyed_behavior()
+{
+    if (m_destroyed_counter > 0.0f)
+    {
+        m_destroyed_counter -= delta_time;
+        entity->transform->set_local_position({entity->transform->get_local_position().x,
+                                               ((m_destroyed_counter / m_destroy_time) - 1) * m_how_deep_sink_factor,
+                                               entity->transform->get_local_position().z});
+    }
+    else
+    {
+        entity->destroy_immediate();
+    }
+}
+
+void Ship::in_port_behavior()
+{
+    m_speed -= m_deceleration_speed * delta_time;
+
+    if (m_speed < 0.0f)
+        m_speed = 0.0f;
+}
+
 void Ship::update()
 {
     if (is_out_of_room())
@@ -60,95 +267,134 @@ void Ship::update()
         return;
     }
 
-    //TODO Add correct conditions for destroying ships
+    // TODO: Add correct conditions for destroying ships
     if (Input::input->get_key_down(GLFW_KEY_F3))
     {
         destroy();
     }
 
-    if (is_destroyed)
+    //TODO: Check whether it is better if there is no behavior on the tick or there is old behavior. Look for a better way
+    switch (m_behavioral_state)
     {
-        if (m_destroyed_counter > 0.0f)
+    case BehavioralState::Normal:
+
+        if (in_port_state_change())
         {
-            m_destroyed_counter -= delta_time;
-            entity->transform->set_local_position({entity->transform->get_local_position().x,
-                                                   ((m_destroyed_counter / m_destroy_time) - 1) * m_how_deep_sink_factor,
-                                                   entity->transform->get_local_position().z});
+            break;
         }
-        else
+        if (destroyed_state_change())
         {
-            entity->destroy_immediate();
+            break;
         }
 
-        return;
-    }
-
-    if (!m_is_in_port)
-    {
-        m_speed = maximum_speed;
-
-        glm::vec2 const ship_position = AK::convert_3d_to_2d(entity->transform->get_local_position());
-
-        if (!light.expired() && light.lock()->enabled())
+        if (avoid_state_change())
         {
-            auto const light_locked = light.lock();
-            glm::vec2 const target_position = light_locked->get_position();
+            break;
+        }
+        if (control_state_change())
+        {
+            break;
+        }
+        if (pirate_state_change())
+        {
+            break;
+        }
 
-            float const distance_to_light = glm::distance(ship_position, target_position);
+        normal_behavior();
+        update_position();
+        update_rotation();
+        break;
 
-            if (distance_to_light < Player::get_instance()->range)
+    case BehavioralState::Pirate:
+
+        if (destroyed_state_change())
+        {
+            break;
+        }
+
+        if (avoid_state_change())
+        {
+            break;
+        }
+        if (control_state_change())
+        {
+            break;
+        }
+
+        pirate_behavior();
+        update_position();
+        update_rotation();
+        break;
+
+    case BehavioralState::Control:
+
+        if (in_port_state_change())
+        {
+            break;
+        }
+        if (destroyed_state_change())
+        {
+            break;
+        }
+
+        if (control_state_ended())
+        {
+            if (normal_state_change())
             {
-                follow_point(ship_position, target_position);
-                m_speed = minimum_speed
-                        + ((maximum_speed + Player::get_instance()->additional_ship_speed - minimum_speed)
-                           * (distance_to_light / Player::get_instance()->range));
-
-                if (type == ShipType::Pirates)
-                {
-                    m_pirates_in_control_counter = Player::get_instance()->pirates_in_control;
-                }
-            }
-            else
-            {
-                if (m_pirates_in_control_counter > 0.0f)
-                {
-                    m_pirates_in_control_counter -= delta_time;
-                }
-                else
-                {
-                    m_pirates_in_control_counter = 0.0f;
-
-                    if (type == ShipType::Pirates)
-                    {
-                        auto const nearest_non_pirate_ship_position =
-                            spawner.lock()->find_nearest_non_pirate_ship(std::static_pointer_cast<Ship>(shared_from_this()));
-                        if (nearest_non_pirate_ship_position.has_value())
-                        {
-                            glm::vec2 const target_position = nearest_non_pirate_ship_position.value();
-                            follow_point(ship_position, target_position);
-                        }
-                    }
-                }
+                break;
             }
         }
+
+        control_behavior();
+        update_position();
+        update_rotation();
+        break;
+
+    case BehavioralState::Avoid:
+
+        if (in_port_state_change())
+        {
+            break;
+        }
+        if (destroyed_state_change())
+        {
+            break;
+        }
+
+        if (avoid_state_ended())
+        {
+            if (pirate_state_change())
+            {
+                break;
+            }
+            if (normal_state_change())
+            {
+                break;
+            }
+        }
+
+        avoid_behavior();
+        update_position();
+        update_rotation();
+        break;
+
+    case BehavioralState::Destroyed:
+
+        destroyed_behavior();
+        break;
+
+    case BehavioralState::InPort:
+
+        if (destroyed_state_change())
+        {
+            break;
+        }
+
+        in_port_behavior();
+        update_position();
+        update_rotation();
+        break;
     }
-    else
-    {
-        m_speed -= m_deceleration_speed * delta_time;
-
-        if (m_speed < 0.0f)
-            m_speed = 0.0f;
-    }
-
-    float delta_speed = m_speed * delta_time;
-
-    glm::vec2 speed_vector = glm::vec2(cos(glm::radians(m_direction)), sin(glm::radians(m_direction))) * delta_speed;
-
-    if (glm::epsilonEqual(Player::get_instance()->flash_counter, 0.0f, 0.0001f))
-    {
-        entity->transform->set_local_position(entity->transform->get_local_position() + glm::vec3(speed_vector.x, 0.0f, speed_vector.y));
-    }
-    entity->transform->set_euler_angles(glm::vec3(0.0f, -m_direction - 90.0f, 0.0f));
 }
 
 void Ship::destroy()
