@@ -3,8 +3,8 @@
 cbuffer light_buffer : register(b0)
 {
     DirectionalLight directional_light;
-    PointLight point_lights[4];
-    SpotLight spot_lights[4];
+    PointLight point_lights[20];
+    SpotLight spot_lights[20];
     float3 camera_pos;
     int number_of_point_lights;
     int number_of_spot_lights;
@@ -13,8 +13,8 @@ cbuffer light_buffer : register(b0)
 SamplerState shadow_map_sampler : register(s1);
 
 Texture2D directional_shadow_map : register(t1);
-Texture2D spot_light_shadow_maps[4] : register(t6);
-TextureCube point_light_shadow_maps[4]: register(t2);
+Texture2D spot_light_shadow_maps[20] : register(t20);
+TextureCube point_light_shadow_maps[20]: register(t40);
 
 float point_shadow_calculation(PointLight light, float3 world_pos, int index)
 {

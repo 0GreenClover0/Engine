@@ -2,8 +2,8 @@
 
 #include <glm/glm.hpp>
 
-i32 constexpr MAX_POINT_LIGHTS = 4;
-i32 constexpr MAX_SPOT_LIGHTS = 4;
+i32 constexpr MAX_POINT_LIGHTS = 20;
+i32 constexpr MAX_SPOT_LIGHTS = 20;
 
 struct ConstantBuffer
 {

@@ -102,11 +102,25 @@ void Renderer::register_light(std::shared_ptr<Light> const& light)
 {
     if (auto const potential_point_light = std::dynamic_pointer_cast<PointLight>(light))
     {
-        m_point_lights.emplace_back(potential_point_light);
+        if (m_point_lights.size() >= MAX_POINT_LIGHTS)
+        {
+            Debug::log("You've reached the limit of point lights!", DebugType::Error);
+        }
+        else
+        {
+            m_point_lights.emplace_back(potential_point_light);
+        }
     }
     else if (auto const potential_spot_light = std::dynamic_pointer_cast<SpotLight>(light))
     {
-        m_spot_lights.emplace_back(potential_spot_light);
+        if (m_spot_lights.size() >= MAX_SPOT_LIGHTS)
+        {
+            Debug::log("You've reached the limit of spot lights!", DebugType::Error);
+        }
+        else
+        {
+            m_spot_lights.emplace_back(potential_spot_light);
+        }
     }
     else if (auto const potential_directional_light = std::dynamic_pointer_cast<DirectionalLight>(light))
     {
