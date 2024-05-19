@@ -309,19 +309,15 @@ void RendererDX11::update_shader(std::shared_ptr<Shader> const& shader, glm::mat
     {
         g_pd3dDeviceContext->PSSetShaderResources(1, 1, m_directional_light->get_shadow_shader_resource_view_address());
     }
-
-    // There are 4 designated registers for point shadow cubemaps, registers 2-5
+    for (u32 i = 0; i < m_spot_lights.size(); ++i)
+    {
+        u32 const register_slot = i + spot_light_shadow_register_offset;
+        g_pd3dDeviceContext->PSSetShaderResources(register_slot, 1, m_spot_lights[i]->get_shadow_shader_resource_view_address());
+    }
     for (u32 i = 0; i < m_point_lights.size(); ++i)
     {
-        u32 const register_slot = i + 2;
+        u32 const register_slot = i + point_light_shadow_register_offset;
         g_pd3dDeviceContext->PSSetShaderResources(register_slot, 1, m_point_lights[i]->get_shadow_shader_resource_view_address());
-    }
-
-    // There are 4 designated registers for spot shadow maps, registers 6-9
-    for (u32 i = 0; i < m_spot_lights.size(); i++)
-    {
-        u32 const register_slot = i + 6;
-        g_pd3dDeviceContext->PSSetShaderResources(register_slot, 1, m_spot_lights[i]->get_shadow_shader_resource_view_address());
     }
 
     g_pd3dDeviceContext->PSSetSamplers(1, 1, &m_shadow_sampler_state);
@@ -416,23 +412,7 @@ void RendererDX11::set_light_buffer() const
         light_data.directional_light.light_projection_view = m_directional_light->get_projection_view_matrix();
     }
 
-    i32 num_point_lights;
-    if (m_point_lights.size() < MAX_POINT_LIGHTS)
-    {
-        num_point_lights = m_point_lights.size();
-    }
-    else
-    {
-        num_point_lights = MAX_POINT_LIGHTS;
-
-        // Sort lights by distance
-        std::ranges::sort(m_point_lights, [drawable](std::shared_ptr<PointLight> const& a, std::shared_ptr<PointLight> const& b) {
-            return glm::length(drawable->entity->transform->get_position() - a->entity->transform->get_position()) <
-                glm::length(drawable->entity->transform->get_position() - b->entity->transform->get_position());
-        });
-    }
-
-    for (i32 i = 0; i < num_point_lights; i++)
+    for (i32 i = 0; i < m_point_lights.size(); i++)
     {
         light_data.point_lights[i].position = m_point_lights[i]->entity->transform->get_position();
         light_data.point_lights[i].ambient = m_point_lights[i]->ambient;
@@ -445,23 +425,7 @@ void RendererDX11::set_light_buffer() const
         light_data.point_lights[i].near_plane = m_point_lights[i]->m_near_plane;
     }
 
-    i32 num_spot_lights;
-    if (m_spot_lights.size() < MAX_SPOT_LIGHTS)
-    {
-        num_spot_lights = m_spot_lights.size();
-    }
-    else
-    {
-        num_spot_lights = MAX_SPOT_LIGHTS;
-
-        // Sort lights by distance
-        std::ranges::sort(m_spot_lights, [drawable](std::shared_ptr<SpotLight> const& a, std::shared_ptr<SpotLight> const& b) {
-            return glm::length(drawable->entity->transform->get_position() - a->entity->transform->get_position()) <
-                glm::length(drawable->entity->transform->get_position() - b->entity->transform->get_position());
-        });
-    }
-
-    for (i32 i = 0; i < num_spot_lights; i++)
+    for (i32 i = 0; i < m_spot_lights.size(); i++)
     {
         light_data.spot_lights[i].position = m_spot_lights[i]->entity->transform->get_position();
         light_data.spot_lights[i].direction = m_spot_lights[i]->entity->transform->get_forward();
@@ -483,8 +447,8 @@ void RendererDX11::set_light_buffer() const
     }
 
     light_data.camera_pos = Camera::get_main_camera()->entity->transform->get_position();
-    light_data.number_of_point_lights = num_point_lights;
-    light_data.number_of_spot_lights = num_spot_lights;
+    light_data.number_of_point_lights = m_point_lights.size();
+    light_data.number_of_spot_lights = m_spot_lights.size();
 
     D3D11_MAPPED_SUBRESOURCE mapped_light_buffer_resource = {};
     HRESULT const hr = get_device_context()->Map(m_constant_buffer_light, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped_light_buffer_resource);

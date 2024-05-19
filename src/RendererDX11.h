@@ -98,6 +98,8 @@ private:
     ID3D11RasterizerState* g_shadow_rasterizer_state = nullptr;
     ID3D11SamplerState* m_shadow_sampler_state = nullptr;
 
+    inline static u32 constexpr spot_light_shadow_register_offset = 20;
+    inline static u32 constexpr point_light_shadow_register_offset = 40;
 
     inline static DXGI_FORMAT m_render_target_format = DXGI_FORMAT_R32G32B32A32_FLOAT;
 };
