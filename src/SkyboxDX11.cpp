@@ -17,7 +17,7 @@ SkyboxDX11::SkyboxDX11(AK::Badge<SkyboxFactory>, std::shared_ptr<Material> const
 
 void SkyboxDX11::bind()
 {
-    RendererDX11::get_instance_dx11()->get_device_context()->PSSetShaderResources(10, 1, &m_texture->shader_resource_view);
+    RendererDX11::get_instance_dx11()->get_device_context()->PSSetShaderResources(15, 1, &m_texture->shader_resource_view);
 }
 
 void SkyboxDX11::unbind()

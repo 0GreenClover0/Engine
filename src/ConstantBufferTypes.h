@@ -66,7 +66,7 @@ struct DXSpotLight
     glm::vec3 specular;
     float padding6;
 
-    glm::mat4 light_projection_view_model;
+    glm::mat4 light_projection_view;
 };
 
 struct DXDirectionalLight
@@ -79,13 +79,14 @@ struct DXDirectionalLight
     float padding3;
     glm::vec3 specular;
     float padding4;
+
+    glm::mat4 light_projection_view;
 };
 
 struct ConstantBufferPerObject
 {
     glm::mat4 projection_view_model;
     glm::mat4 model;
-    glm::mat4 light_projection_view_model;
     glm::mat4 projection_view;
 };
 

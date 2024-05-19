@@ -19,6 +19,7 @@ struct DirectionalLight
     float3 ambient;
     float3 diffuse;
     float3 specular;
+    float4x4 projection_view;
 };
 
 struct SpotLight
@@ -38,7 +39,7 @@ struct SpotLight
     float near_plane;
     float3 specular;
 
-    float4x4 projection_view_model;
+    float4x4 projection_view;
 };
 
 struct Wave
