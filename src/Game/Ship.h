@@ -114,7 +114,39 @@ public:
     Event<void(std::shared_ptr<Ship>)> on_ship_destroyed;
 
 private:
+    enum class BehavioralState
+    {
+        Normal,
+        Pirate,
+        Control,
+        Avoid,
+        Destroyed,
+        InPort,
+    };
+
+    BehavioralState m_behavioral_state = BehavioralState::Normal;
+
     void follow_point(glm::vec2 ship_position, glm::vec2 target_position);
+
+    void update_position() const;
+    void update_rotation() const;
+
+    bool normal_state_change();
+    bool pirate_state_change();
+    bool control_state_change();
+    bool avoid_state_change();
+    bool destroyed_state_change();
+    bool in_port_state_change();
+
+    bool control_state_ended();
+    bool avoid_state_ended();
+
+    void normal_behavior();
+    void pirate_behavior();
+    void control_behavior();
+    void avoid_behavior();
+    void destroyed_behavior();
+    void in_port_behavior();
 
     bool is_out_of_room() const;
 
