@@ -359,6 +359,8 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "guid" << YAML::Value << shipspawner->guid;
         out << YAML::Key << "paths" << YAML::Value << shipspawner->paths;
         out << YAML::Key << "light" << YAML::Value << shipspawner->light;
+        out << YAML::Key << "last_chance_food_threshold" << YAML::Value << shipspawner->last_chance_food_threshold;
+        out << YAML::Key << "last_chance_time_threshold" << YAML::Value << shipspawner->last_chance_time_threshold;
         out << YAML::EndMap;
     }
     else if (auto const playerinput = std::dynamic_pointer_cast<class PlayerInput>(component); playerinput != nullptr)
@@ -935,6 +937,8 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
                 std::dynamic_pointer_cast<class ShipSpawner>(get_from_pool(component["guid"].as<std::string>()));
             deserialized_component->paths = component["paths"].as<std::vector<std::weak_ptr<Path>>>();
             deserialized_component->light = component["light"].as<std::weak_ptr<LighthouseLight>>();
+            deserialized_component->last_chance_food_threshold = component["last_chance_food_threshold"].as<u32>();
+            deserialized_component->last_chance_time_threshold = component["last_chance_time_threshold"].as<float>();
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
         }
