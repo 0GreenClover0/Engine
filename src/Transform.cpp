@@ -12,6 +12,30 @@ Transform::Transform(std::shared_ptr<Entity> const& entity) : entity(entity)
 {
 }
 
+void Transform::set_position(glm::vec3 const& position)
+{
+    if (parent.expired())
+    {
+        m_local_position = position;
+    }
+    else
+    {
+        glm::vec3 const parent_global_position = parent.lock()->get_position();
+        glm::vec3 new_local_position = position - parent_global_position;
+        new_local_position = glm::inverse(parent.lock()->get_rotation()) * new_local_position;
+
+        auto const is_position_modified = glm::epsilonNotEqual(new_local_position, m_local_position, 0.0001f);
+        if (!is_position_modified.x && !is_position_modified.y && !is_position_modified.z)
+        {
+            return;
+        }
+
+        m_local_position = new_local_position;
+    }
+
+    set_dirty();
+}
+
 glm::vec3 Transform::get_position()
 {
     recompute_model_matrix_if_needed();
