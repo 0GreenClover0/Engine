@@ -713,8 +713,7 @@ void ShipSpawner::spawn_ship(SpawnEvent const* being_spawn)
     ship->transform->set_local_position({m_spawn_position.back().x, 0.0f, m_spawn_position.back().y});
 
     auto const ship_comp = ship->add_component(Ship::create(light.lock(), std::static_pointer_cast<ShipSpawner>(shared_from_this())));
-    auto const collider = ship->add_component<Collider2D>(Collider2D::create({0.1f, 0.1f}));
-    collider->set_is_trigger(true);
+    auto const collider = ship->add_component<Collider2D>(Collider2D::create(1.0f, 1.0f));
     ship_comp->on_ship_destroyed.attach(&ShipSpawner::remove_ship, shared_from_this());
     ship_comp->maximum_speed = LevelController::get_instance()->ships_speed;
 
@@ -725,23 +724,38 @@ void ShipSpawner::spawn_ship(SpawnEvent const* being_spawn)
     if (ship_comp->type == ShipType::FoodSmall)
     {
         ship->add_component(Model::create("./res/models/shipSmall/shipSmall.gltf", standard_material));
+        collider->offset = {0.0f, 0.035f};
+        collider->set_bounds_dimensions_2d(0.25f / 2.0f, 0.65f / 2.0f);
+        collider->offset = {0.0f, 0.035f};
     }
     else if (ship_comp->type == ShipType::FoodMedium)
     {
         ship->add_component(Model::create("./res/models/shipMedium/shipMedium.gltf", standard_material));
+        collider->set_bounds_dimensions_2d(0.5f / 2.0f, 1.1f / 2.0f);
     }
     else if (ship_comp->type == ShipType::FoodBig)
     {
         ship->add_component(Model::create("./res/models/shipBig/shipBig.gltf", standard_material));
+        collider->offset = {0.0f, 0.005f};
+        collider->set_bounds_dimensions_2d(0.5f / 2.0f, 1.6f / 2.0f);
+        collider->offset = {0.0f, 0.005f};
     }
     else if (ship_comp->type == ShipType::Pirates)
     {
         ship->add_component(Model::create("./res/models/shipPirates/shipPirates.gltf", standard_material));
+        collider->offset = {0.0f, 0.035f};
+        collider->set_bounds_dimensions_2d(0.25f / 2.0f, 0.65f / 2.0f);
+        collider->offset = {0.0f, 0.035f};
     }
     else if (ship_comp->type == ShipType::Tool)
     {
         ship->add_component(Model::create("./res/models/shipTool/shipTool.gltf", standard_material));
+        collider->offset = {0.0f, 0.035f};
+        collider->set_bounds_dimensions_2d(0.25f / 2.0f, 0.65f / 2.0f);
+        collider->offset = {0.0f, 0.035f};
     }
+
+    collider->set_is_trigger(true);
 }
 
 bool ShipSpawner::is_spawn_possible() const
