@@ -11,16 +11,16 @@ std::shared_ptr<Mesh> MeshFactory::create(std::vector<Vertex> const& vertices, s
     switch (Renderer::renderer_api)
     {
     case Renderer::RendererApi::OpenGL:
-        {
-            auto mesh = std::make_shared<MeshGL>(AK::Badge<MeshFactory> {}, vertices, indices, textures, draw_type, material, draw_function);
-            return mesh;
-        }
+    {
+        auto mesh = std::make_shared<MeshGL>(AK::Badge<MeshFactory> {}, vertices, indices, textures, draw_type, material, draw_function);
+        return mesh;
+    }
 
     case Renderer::RendererApi::DirectX11:
-        {
-            auto mesh = std::make_shared<MeshDX11>(AK::Badge<MeshFactory> {}, vertices, indices, textures, draw_type, material, draw_function);
-            return mesh;
-        }
+    {
+        auto mesh = std::make_shared<MeshDX11>(AK::Badge<MeshFactory> {}, vertices, indices, textures, draw_type, material, draw_function);
+        return mesh;
+    }
 
     default:
         std::unreachable();

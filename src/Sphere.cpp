@@ -1,11 +1,11 @@
 #include "Sphere.h"
 
-#include <sstream>
 #include <glm/ext/scalar_constants.hpp>
+#include <sstream>
 #include <utility>
 
-#include "Globals.h"
 #include "Entity.h"
+#include "Globals.h"
 #include "MeshFactory.h"
 #include "Model.h"
 #include "ResourceManager.h"
@@ -85,7 +85,7 @@ std::shared_ptr<Mesh> Sphere::create_sphere() const
 
         if (!texture_path.empty())
         {
-            std::vector diffuse_maps = { ResourceManager::get_instance().load_texture(texture_path, TextureType::Diffuse) };
+            std::vector diffuse_maps = {ResourceManager::get_instance().load_texture(texture_path, TextureType::Diffuse)};
             textures.insert(textures.end(), diffuse_maps.begin(), diffuse_maps.end());
         }
 
@@ -143,7 +143,7 @@ std::shared_ptr<Mesh> Sphere::create_sphere() const
 
     if (!texture_path.empty())
     {
-        std::vector diffuse_maps = { ResourceManager::get_instance().load_texture(texture_path, TextureType::Diffuse) };
+        std::vector diffuse_maps = {ResourceManager::get_instance().load_texture(texture_path, TextureType::Diffuse)};
         textures.insert(textures.end(), diffuse_maps.begin(), diffuse_maps.end());
     }
 

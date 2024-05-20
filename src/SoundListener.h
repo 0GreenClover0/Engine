@@ -1,14 +1,16 @@
 #pragma once
 
-#include "Component.h"
 #include "AK/Badge.h"
+#include "Component.h"
 
 class SoundListener final : public Component
 {
 public:
     static std::shared_ptr<SoundListener> create();
 
-    explicit SoundListener(AK::Badge<SoundListener>) {}
+    explicit SoundListener(AK::Badge<SoundListener>)
+    {
+    }
 
     virtual void uninitialize() override;
     virtual void update() override;

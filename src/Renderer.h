@@ -5,6 +5,7 @@
 
 #include <glm/mat4x4.hpp>
 
+#include "ConstantBufferTypes.h"
 #include "DirectionalLight.h"
 #include "Drawable.h"
 #include "Light.h"
@@ -13,7 +14,6 @@
 #include "SpotLight.h"
 #include "Texture.h"
 #include "Vertex.h"
-#include "ConstantBufferTypes.h"
 
 class Camera;
 
@@ -86,9 +86,11 @@ protected:
         m_instance = renderer;
     }
 
-    void virtual update_shader(std::shared_ptr<Shader> const& shader, glm::mat4 const& projection_view, glm::mat4 const& projection_view_no_translation) const = 0;
+    void virtual update_shader(std::shared_ptr<Shader> const& shader, glm::mat4 const& projection_view,
+                               glm::mat4 const& projection_view_no_translation) const = 0;
     void virtual update_material(std::shared_ptr<Material> const& material) const = 0;
-    void virtual update_object(std::shared_ptr<Drawable> const& drawable, std::shared_ptr<Material> const& material, glm::mat4 const& projection_view) const = 0;
+    void virtual update_object(std::shared_ptr<Drawable> const& drawable, std::shared_ptr<Material> const& material,
+                               glm::mat4 const& projection_view) const = 0;
 
     void virtual unbind_material(std::shared_ptr<Material> const& material) const = 0;
 
@@ -119,7 +121,8 @@ protected:
     i32 m_max_spot_lights = 4;
 
     void draw(std::shared_ptr<Material> const& material, glm::mat4 const& projection_view) const;
-    void draw_instanced(std::shared_ptr<Material> const& material, glm::mat4 const& projection_view, glm::mat4 const& projection_view_no_translation) const;
+    void draw_instanced(std::shared_ptr<Material> const& material, glm::mat4 const& projection_view,
+                        glm::mat4 const& projection_view_no_translation) const;
 
     std::vector<std::shared_ptr<Shader>> m_shaders = {};
     std::vector<std::shared_ptr<Light>> m_lights = {};
@@ -140,7 +143,6 @@ private:
             return render_order < b.render_order;
         }
     };
-
 
     std::multiset<MaterialWithOrder> m_custom_render_order_materials = {};
 

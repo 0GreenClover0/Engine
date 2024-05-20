@@ -48,12 +48,7 @@ void SSAO::update()
 
     for (u32 i = 0; i < kernel_size; ++i)
     {
-        glm::vec4 sample(
-            random_floats(generator) * 2.0f - 1.0f,
-            random_floats(generator) * 2.0f - 1.0f,
-            random_floats(generator),
-            0.0f
-        );
+        glm::vec4 sample(random_floats(generator) * 2.0f - 1.0f, random_floats(generator) * 2.0f - 1.0f, random_floats(generator), 0.0f);
 
         sample = glm::normalize(sample);
         sample *= random_floats(generator);
@@ -67,7 +62,7 @@ void SSAO::update()
     std::array<glm::vec3, noise_size> ssao_noise = {};
     for (u32 i = 0; i < noise_size; ++i)
     {
-        ssao_noise[i] = {random_floats(generator) * 2.0f - 1.0f, random_floats(generator) * 2.0f - 1.0f,0.0f};
+        ssao_noise[i] = {random_floats(generator) * 2.0f - 1.0f, random_floats(generator) * 2.0f - 1.0f, 0.0f};
     }
 
     D3D11_TEXTURE2D_DESC rotations_tex_desc = {};
@@ -117,7 +112,8 @@ void SSAO::update()
     rotations_srv_desc.Texture2D.MostDetailedMip = 0;
     rotations_srv_desc.Texture2D.MipLevels = 1;
 
-    hr = renderer->get_device()->CreateShaderResourceView(m_ssao_kernel_rotations_buffer, &rotations_srv_desc, &m_ssao_kernel_rotations_srv);
+    hr =
+        renderer->get_device()->CreateShaderResourceView(m_ssao_kernel_rotations_buffer, &rotations_srv_desc, &m_ssao_kernel_rotations_srv);
     assert(SUCCEEDED(hr));
 
     D3D11_RENDER_TARGET_VIEW_DESC rtv_desc = {};

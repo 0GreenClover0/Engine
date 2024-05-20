@@ -8,7 +8,7 @@ namespace AK
 
 glm::vec2 Math::get_normal(glm::vec2 const& v)
 {
-    glm::vec2 const norm = { -v.y, v.x };
+    glm::vec2 const norm = {-v.y, v.x};
     return glm::normalize(norm);
 }
 
@@ -43,7 +43,7 @@ glm::vec2 Math::project_on_axis(std::array<glm::vec2, 4> const& vertices, glm::v
         }
     }
 
-    return { min, max };
+    return {min, max};
 }
 
 bool Math::are_ranges_overlapping(glm::vec2 const& a, glm::vec2 const& b)
@@ -68,7 +68,7 @@ bool Math::are_nearly_equal(float const x, float const y)
     return glm::epsilonEqual(x, y, 0.001f);
 }
 
-glm::vec2 Math::line_intersection(glm::vec2 const& point1, glm::vec2 const& point2, glm::vec2 const& point3, const glm::vec2& point4)
+glm::vec2 Math::line_intersection(glm::vec2 const& point1, glm::vec2 const& point2, glm::vec2 const& point3, glm::vec2 const& point4)
 {
     float const x1 = point1.x, x2 = point2.x, x3 = point3.x, x4 = point4.x;
     float const y1 = point1.y, y2 = point2.y, y3 = point3.y, y4 = point4.y;
@@ -79,7 +79,7 @@ glm::vec2 Math::line_intersection(glm::vec2 const& point1, glm::vec2 const& poin
     {
         // The lines are parallel (or coincident, if the segments overlap).
         // Shouldn't be vector zero but it won't be used when there's no intersection so whatever.
-        return { 0.0f, 0.0f };
+        return {0.0f, 0.0f};
     }
 
     // Calculate the x and y coordinates of the intersection point.

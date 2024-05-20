@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Model.h"
 #include "AK/Badge.h"
+#include "Model.h"
 
 class Sprite final : public Model
 {
@@ -20,4 +20,3 @@ public:
 private:
     [[nodiscard]] std::shared_ptr<Mesh> create_sprite() const;
 };
-

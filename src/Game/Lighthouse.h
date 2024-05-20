@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Component.h"
 #include "AK/Badge.h"
+#include "Component.h"
 
 class Port;
 class LighthouseLight;

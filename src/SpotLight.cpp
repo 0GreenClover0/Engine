@@ -1,11 +1,11 @@
 #include "SpotLight.h"
 
-#include <imgui.h>
 #include <glm/glm.hpp>
+#include <imgui.h>
 
+#include "Entity.h"
 #include "Renderer.h"
 #include "RendererDX11.h"
-#include "Entity.h"
 
 std::shared_ptr<SpotLight> SpotLight::create()
 {
@@ -46,7 +46,9 @@ glm::mat4 SpotLight::get_projection_view_matrix()
         float const aspect = renderer->SHADOW_MAP_SIZE / renderer->SHADOW_MAP_SIZE;
 
         glm::mat4 const projection_matrix = glm::perspective(glm::radians(90.0f), aspect, m_near_plane, m_far_plane);
-        glm::mat4 const view_matrix = glm::lookAt(entity->transform->get_position(), entity->transform->get_position() + entity->transform->get_forward(), entity->transform->get_up());
+        glm::mat4 const view_matrix =
+            glm::lookAt(entity->transform->get_position(), entity->transform->get_position() + entity->transform->get_forward(),
+                        entity->transform->get_up());
         m_projection_view_matrix = projection_matrix * view_matrix;
     }
 
@@ -88,6 +90,7 @@ void SpotLight::set_up_shadow_mapping()
     shadow_shader_resource_view_desc.Texture2D.MostDetailedMip = 0;
     shadow_shader_resource_view_desc.Texture2D.MipLevels = shadow_texture_desc.MipLevels;
 
-    hr = renderer->get_device()->CreateShaderResourceView(m_shadow_texture, &shadow_shader_resource_view_desc, &m_shadow_shader_resource_view);
+    hr = renderer->get_device()->CreateShaderResourceView(m_shadow_texture, &shadow_shader_resource_view_desc,
+                                                          &m_shadow_shader_resource_view);
     assert(SUCCEEDED(hr));
 }

@@ -1,10 +1,10 @@
 #include "PhysicsEngine.h"
 
+#include "AK/AK.h"
+#include "AK/Math.h"
 #include "Debug.h"
 #include "Engine.h"
 #include "Entity.h"
-#include "AK/AK.h"
-#include "AK/Math.h"
 
 void PhysicsEngine::initialize()
 {
@@ -33,8 +33,7 @@ void PhysicsEngine::on_collision_exit(std::shared_ptr<Collider2D> const& collide
     }
 }
 
-void PhysicsEngine::on_trigger_enter(std::shared_ptr<Collider2D> const& collider,
-    std::shared_ptr<Collider2D> const& other)
+void PhysicsEngine::on_trigger_enter(std::shared_ptr<Collider2D> const& collider, std::shared_ptr<Collider2D> const& other)
 {
     for (auto const& component : collider->entity->components)
     {
@@ -42,8 +41,7 @@ void PhysicsEngine::on_trigger_enter(std::shared_ptr<Collider2D> const& collider
     }
 }
 
-void PhysicsEngine::on_trigger_exit(std::shared_ptr<Collider2D> const& collider,
-    std::shared_ptr<Collider2D> const& other)
+void PhysicsEngine::on_trigger_exit(std::shared_ptr<Collider2D> const& collider, std::shared_ptr<Collider2D> const& other)
 {
     for (auto const& component : collider->entity->components)
     {
@@ -61,8 +59,8 @@ void PhysicsEngine::remove_collider(std::shared_ptr<Collider2D> const& collider)
     AK::swap_and_erase(colliders, collider);
 }
 
-bool PhysicsEngine::compute_penetration(std::shared_ptr<Collider2D> const& collider,
-                                        std::shared_ptr<Collider2D> const& other, glm::vec2& mtv)
+bool PhysicsEngine::compute_penetration(std::shared_ptr<Collider2D> const& collider, std::shared_ptr<Collider2D> const& other,
+                                        glm::vec2& mtv)
 {
     assert(collider != nullptr);
     assert(other != nullptr);
@@ -199,14 +197,14 @@ bool PhysicsEngine::test_collision_rectangle_rectangle(Collider2D const& obb1, C
     std::array const corners2 = obb2.get_corners();
 
     // Get the axes of both rectangles.
-    std::array axes1 = { AK::Math::get_perpendicular_axis(corners1, 0), AK::Math::get_perpendicular_axis(corners1, 1) };
-    std::array axes2 = { AK::Math::get_perpendicular_axis(corners2, 0), AK::Math::get_perpendicular_axis(corners2, 1) };
+    std::array axes1 = {AK::Math::get_perpendicular_axis(corners1, 0), AK::Math::get_perpendicular_axis(corners1, 1)};
+    std::array axes2 = {AK::Math::get_perpendicular_axis(corners2, 0), AK::Math::get_perpendicular_axis(corners2, 1)};
 
     // We need to find the minimal overlap and axis on which it happens.
     float min_overlap = std::numeric_limits<float>::infinity();
 
     // Check overlap along the axes of both rectangles.
-    for (auto& axis : { axes1, axes2 })
+    for (auto& axis : {axes1, axes2})
     {
         for (u32 i = 0; i < 2; ++i)
         {
@@ -295,7 +293,7 @@ bool PhysicsEngine::test_collision_circle_rectangle(Collider2D const& circle_col
         glm::vec2 cast_point = {};
 
         auto const axes = rect_collider.get_axes();
-        std::array const borders = { axes[0], -axes[1], -axes[0], axes[1] };
+        std::array const borders = {axes[0], -axes[1], -axes[0], axes[1]};
 
         for (u8 i = 0; i < 4; ++i)
         {

@@ -25,8 +25,8 @@ void ExampleUIBar::awake()
     m_sprite_value->add_component<Sprite>(Sprite::create(ui_material, "./res/textures/white.jpg"));
 
     m_sprite_background->add_component<Sprite>(Sprite::create(ui_material, "./res/textures/black.jpg"));
-    m_sprite_background->transform->set_local_position({ -1.0f, -1.0f, 0.0f });
-    m_sprite_background->transform->set_local_scale({ 0.5f, 0.1f, 1.0f });
+    m_sprite_background->transform->set_local_position({-1.0f, -1.0f, 0.0f});
+    m_sprite_background->transform->set_local_scale({0.5f, 0.1f, 1.0f});
 
     m_sprite_value->transform->set_parent(m_sprite_background->transform);
 }
@@ -34,7 +34,7 @@ void ExampleUIBar::awake()
 void ExampleUIBar::update()
 {
     value = sin(glfwGetTime());
-    m_sprite_value->transform->set_local_scale({ value * 0.98f, 0.9f, 1.0f });
+    m_sprite_value->transform->set_local_scale({value * 0.98f, 0.9f, 1.0f});
 }
 
 void ExampleUIBar::draw_editor()

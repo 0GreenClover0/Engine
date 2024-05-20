@@ -68,7 +68,7 @@ void Scene::remove_component_to_start(std::shared_ptr<Component> const& componen
     }
 }
 
-std::shared_ptr<Component> Scene::get_component_by_guid(std::string const &guid) const
+std::shared_ptr<Component> Scene::get_component_by_guid(std::string const& guid) const
 {
     // TODO: Cache components in an unordered map with guids as keys
     for (auto const& entity : entities)

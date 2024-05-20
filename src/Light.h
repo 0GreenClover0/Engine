@@ -1,7 +1,7 @@
 #pragma once
 
-#include <glm/glm.hpp>
 #include <d3d11.h>
+#include <glm/glm.hpp>
 
 #include "Component.h"
 

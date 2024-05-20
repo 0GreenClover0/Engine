@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Skybox.h"
 #include "AK/Types.h"
+#include "Skybox.h"
 
 class SkyboxFactory;
 

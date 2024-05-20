@@ -1,10 +1,10 @@
 #pragma once
 
+#include "AK/Badge.h"
 #include "Component.h"
 #include "Drawable.h"
 #include "MainScene.h"
 #include "Transform.h"
-#include "AK/Badge.h"
 
 class Entity : public std::enable_shared_from_this<Entity>
 {
@@ -18,7 +18,7 @@ public:
 
     void destroy_immediate();
 
-    template <class T>
+    template<class T>
     std::shared_ptr<T> add_component()
     {
         auto component = std::make_shared<T>();
@@ -51,7 +51,7 @@ public:
         return component;
     }
 
-    template <class T>
+    template<class T>
     std::shared_ptr<T> add_component(std::shared_ptr<T> component)
     {
         components.emplace_back(component);
@@ -83,7 +83,7 @@ public:
         return component;
     }
 
-    template <class T, typename... TArgs>
+    template<class T, typename... TArgs>
     std::shared_ptr<T> add_component(TArgs&&... args)
     {
         auto component = std::make_shared<T>(std::forward<TArgs>(args)...);
@@ -118,7 +118,7 @@ public:
 
     // Component that is not tied to any scene.
     // It will not be awaken, started or updated. Only initialized.
-    template <class T>
+    template<class T>
     std::shared_ptr<T> add_component_internal(std::shared_ptr<T> component)
     {
         components.emplace_back(component);
@@ -164,7 +164,6 @@ public:
     std::vector<std::shared_ptr<Component>> components = {};
 
 private:
-
     std::string m_parent_guid; // NOTE: Only for serialization
 
     friend class SceneSerializer;

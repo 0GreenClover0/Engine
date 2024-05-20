@@ -2,12 +2,12 @@
 
 #include <vector>
 
+#include "AK/Types.h"
 #include "Bounds.h"
-#include "Drawable.h"
 #include "DrawType.h"
+#include "Drawable.h"
 #include "Texture.h"
 #include "Vertex.h"
-#include "AK/Types.h"
 
 class Mesh
 {

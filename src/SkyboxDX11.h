@@ -2,11 +2,11 @@
 
 #include <memory>
 
+#include "IndexBufferDX11.h"
 #include "Skybox.h"
 #include "SkyboxFactory.h"
-#include "VertexBufferDX11.h"
-#include "IndexBufferDX11.h"
 #include "TextureLoader.h"
+#include "VertexBufferDX11.h"
 
 class SkyboxDX11 final : public Skybox
 {

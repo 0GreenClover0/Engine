@@ -1,9 +1,9 @@
 #include "TextureLoaderDX11.h"
 
-#include <stb_image.h>
 #include <DDSTextureLoader11.h>
-#include <d3d11.h>
 #include <codecvt>
+#include <d3d11.h>
+#include <stb_image.h>
 
 #include "RendererDX11.h"
 

@@ -21,7 +21,7 @@ public:
 
     static bool are_nearly_equal(float const x, float const y);
 
-    static glm::vec2 line_intersection(glm::vec2 const& point1, glm::vec2 const& point2, glm::vec2 const& point3, const glm::vec2& point4);
+    static glm::vec2 line_intersection(glm::vec2 const& point1, glm::vec2 const& point2, glm::vec2 const& point3, glm::vec2 const& point4);
 };
 
 }

@@ -18,13 +18,13 @@ i32 BoundingBox::plane_normal_to_index(glm::vec3 const& normal)
 {
     i32 index = 0;
 
-    if (normal.z >= 0 )
+    if (normal.z >= 0)
         index |= 1;
 
-    if (normal.y >= 0 )
+    if (normal.y >= 0)
         index |= 2;
 
-    if (normal.x >= 0 )
+    if (normal.x >= 0)
         index |= 4;
 
     return index;
@@ -49,7 +49,7 @@ bool BoundingBox::is_on_or_forward_plane(Plane const& plane) const
 
 bool BoundingBox::is_in_frustum(Frustum const& frustum) const
 {
-    return is_on_or_forward_plane(frustum.left_plane) && is_on_or_forward_plane(frustum.right_plane) &&
-        is_on_or_forward_plane(frustum.top_plane) && is_on_or_forward_plane(frustum.bottom_plane) &&
-        is_on_or_forward_plane(frustum.near_plane) && is_on_or_forward_plane(frustum.far_plane);
+    return is_on_or_forward_plane(frustum.left_plane) && is_on_or_forward_plane(frustum.right_plane)
+        && is_on_or_forward_plane(frustum.top_plane) && is_on_or_forward_plane(frustum.bottom_plane)
+        && is_on_or_forward_plane(frustum.near_plane) && is_on_or_forward_plane(frustum.far_plane);
 }

@@ -2,8 +2,8 @@
 
 #include <d3d11.h>
 
-#include "Vertex.h"
 #include "AK/Types.h"
+#include "Vertex.h"
 
 class VertexBufferDX11
 {

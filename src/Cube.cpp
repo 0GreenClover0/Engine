@@ -56,7 +56,8 @@ Cube::Cube(AK::Badge<Cube>, std::string const& diffuse_texture_path, std::shared
     m_draw_type = DrawType::Triangles;
 }
 
-Cube::Cube(AK::Badge<Cube>, std::string const& diffuse_texture_path, std::string const& specular_texture_path, std::shared_ptr<Material> const& material)
+Cube::Cube(AK::Badge<Cube>, std::string const& diffuse_texture_path, std::string const& specular_texture_path,
+           std::shared_ptr<Material> const& material)
     : Model(material), diffuse_texture_path(diffuse_texture_path), specular_texture_path(specular_texture_path)
 {
     m_draw_type = DrawType::Triangles;

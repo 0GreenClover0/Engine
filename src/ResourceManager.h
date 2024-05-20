@@ -3,11 +3,11 @@
 #include <unordered_map>
 #include <vector>
 
+#include "AK/Types.h"
 #include "Mesh.h"
 #include "Model.h"
 #include "Shader.h"
 #include "Texture.h"
-#include "AK/Types.h"
 
 // How ResourceManager works:
 //
@@ -25,7 +25,8 @@ public:
     static ResourceManager& get_instance();
 
     std::shared_ptr<Texture> load_texture(std::string const& path, TextureType const type, TextureSettings const& settings = {});
-    std::shared_ptr<Texture> load_cubemap(std::vector<std::string> const& paths, TextureType const type, TextureSettings const& settings = {});
+    std::shared_ptr<Texture> load_cubemap(std::vector<std::string> const& paths, TextureType const type,
+                                          TextureSettings const& settings = {});
     std::shared_ptr<Texture> load_cubemap(std::string const& path, TextureType const type, TextureSettings const& settings = {});
 
     std::shared_ptr<Shader> load_shader(std::string const& compute_path);
@@ -44,7 +45,7 @@ public:
 private:
     ResourceManager() = default;
 
-    template <typename T>
+    template<typename T>
     std::shared_ptr<T> get_from_vector(std::string const& key)
     {
         i32 id = -1;

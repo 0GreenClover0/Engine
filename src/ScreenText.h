@@ -10,10 +10,12 @@ class ScreenText final : public Drawable
 {
 public:
     static std::shared_ptr<ScreenText> create();
-    static std::shared_ptr<ScreenText> create(std::wstring const& content, glm::vec2 const& position, float const font_size, u32 const color, u16 const flags);
+    static std::shared_ptr<ScreenText> create(std::wstring const& content, glm::vec2 const& position, float const font_size,
+                                              u32 const color, u16 const flags);
 
     ScreenText(AK::Badge<ScreenText>, std::shared_ptr<Material> const& material);
-    ScreenText(AK::Badge<ScreenText>, std::wstring const& content, glm::vec2 const& position, float const font_size, u32 const color, u16 const flags);
+    ScreenText(AK::Badge<ScreenText>, std::wstring const& content, glm::vec2 const& position, float const font_size, u32 const color,
+               u16 const flags);
     ~ScreenText() override;
 
     virtual void initialize() override;

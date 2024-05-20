@@ -23,6 +23,5 @@ public:
     glm::vec2 get_position() const;
 
 private:
-
     std::weak_ptr<Sphere> m_sphere = {};
 };

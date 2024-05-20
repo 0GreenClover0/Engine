@@ -1,11 +1,11 @@
 #pragma once
 
 #include <functional>
-#include <memory>
-#include <vector>
+#include <glm/detail/type_quat.hpp>
 #include <glm/fwd.hpp>
 #include <glm/glm.hpp>
-#include <glm/detail/type_quat.hpp>
+#include <memory>
+#include <vector>
 
 class Entity;
 
@@ -55,10 +55,10 @@ public:
     bool needs_bounding_box_adjusting = true;
 
 protected:
-    glm::vec3 m_local_position = { 0.0f, 0.0f, 0.0f };
-    glm::vec3 m_euler_angles = { 0.0f, 0.0f, 0.0f };
-    glm::quat m_local_rotation = { 1.0f, 0.0f, 0.0f, 0.0f };
-    glm::vec3 m_local_scale = { 1.0f, 1.0f, 1.0f };
+    glm::vec3 m_local_position = {0.0f, 0.0f, 0.0f};
+    glm::vec3 m_euler_angles = {0.0f, 0.0f, 0.0f};
+    glm::quat m_local_rotation = {1.0f, 0.0f, 0.0f, 0.0f};
+    glm::vec3 m_local_scale = {1.0f, 1.0f, 1.0f};
 
     glm::vec3 m_position = {};
     glm::quat m_rotation = {};

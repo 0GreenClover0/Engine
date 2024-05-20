@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glad/glad.h> // Initialize with gladLoadGL()
+
 #include <d3d11.h>
 #pragma comment(lib, "d3d11.lib")
 
@@ -10,8 +11,8 @@
 
 #include <memory>
 
-#include "Window.h"
 #include "AK/Types.h"
+#include "Window.h"
 
 namespace Editor
 {

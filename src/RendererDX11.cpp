@@ -3,17 +3,17 @@
 #include <array>
 #include <iostream>
 
-#include "TextureLoaderDX11.h"
+#include "Camera.h"
 #include "Drawable.h"
 #include "Entity.h"
-#include "Model.h"
-#include "Camera.h"
-#include "ShaderFactory.h"
-#include "Water.h"
 #include "FullscreenQuad.h"
 #include "GBuffer.h"
+#include "Model.h"
 #include "ResourceManager.h"
+#include "ShaderFactory.h"
 #include "Skybox.h"
+#include "TextureLoaderDX11.h"
+#include "Water.h"
 
 std::shared_ptr<RendererDX11> RendererDX11::create()
 {
@@ -26,7 +26,8 @@ std::shared_ptr<RendererDX11> RendererDX11::create()
 
     if (!renderer->create_device_d3d(Engine::window->get_win32_window()))
     {
-        std::cout << "DirectX11: Error occurred while creating a d3d device." << "\n";
+        std::cout << "DirectX11: Error occurred while creating a d3d device."
+                  << "\n";
     }
 
     TextureLoaderDX11::create();
@@ -94,13 +95,16 @@ std::shared_ptr<RendererDX11> RendererDX11::create()
 
     renderer->setup_shadow_mapping();
 
-    renderer->m_shadow_shader = ResourceManager::get_instance().load_shader("./res/shaders/shadow_mapping.hlsl", "./res/shaders/shadow_mapping.hlsl");
-    renderer->m_point_shadow_shader = ResourceManager::get_instance().load_shader("./res/shaders/point_shadow_mapping.hlsl", "./res/shaders/point_shadow_mapping.hlsl");
+    renderer->m_shadow_shader =
+        ResourceManager::get_instance().load_shader("./res/shaders/shadow_mapping.hlsl", "./res/shaders/shadow_mapping.hlsl");
+    renderer->m_point_shadow_shader =
+        ResourceManager::get_instance().load_shader("./res/shaders/point_shadow_mapping.hlsl", "./res/shaders/point_shadow_mapping.hlsl");
 
     renderer->m_gbuffer = GBuffer::create();
     renderer->m_ssao = SSAO::create();
     renderer->m_ssao_blur = BlurPassContainer::create();
-    renderer->m_lighting_pass_shader = ResourceManager::get_instance().load_shader("./res/shaders/deferred_lighting.hlsl", "./res/shaders/deferred_lighting.hlsl");
+    renderer->m_lighting_pass_shader =
+        ResourceManager::get_instance().load_shader("./res/shaders/deferred_lighting.hlsl", "./res/shaders/deferred_lighting.hlsl");
 
     // FIXME: Maybe move this somewhere else
     D3D11_SAMPLER_DESC repeat_sampler_desc = {};
@@ -171,8 +175,9 @@ void RendererDX11::begin_frame() const
 
     Renderer::begin_frame();
 
-    float const clear_color_with_alpha[4] = { clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w };
-    
+    float const clear_color_with_alpha[4] = {clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w,
+                                             clear_color.w};
+
     g_pd3dDeviceContext->ClearRenderTargetView(g_mainRenderTargetView, clear_color_with_alpha);
     g_pd3dDeviceContext->ClearRenderTargetView(g_textureRenderTargetView, clear_color_with_alpha);
     g_pd3dDeviceContext->ClearDepthStencilView(m_depth_stencil_view, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
@@ -196,7 +201,7 @@ void RendererDX11::present() const
 
 void RendererDX11::render_geometry_pass(glm::mat4 const& projection_view) const
 {
-    std::array constexpr blend_factor = { 0.0f, 0.0f, 0.0f, 0.0f };
+    std::array constexpr blend_factor = {0.0f, 0.0f, 0.0f, 0.0f};
     get_device_context()->OMSetBlendState(m_deferred_blend_state, blend_factor.data(), 0xffffffff);
 
     m_gbuffer->bind_render_targets();
@@ -263,7 +268,7 @@ void RendererDX11::render_ssao() const
     g_pd3dDeviceContext->PSSetSamplers(1, 1, &m_repeat_sampler_state);
 
     FullscreenQuad::get_instance()->draw();
-    
+
     m_ssao_blur->use_shader();
     m_ssao_blur->bind_render_targets();
 
@@ -379,7 +384,7 @@ void RendererDX11::render_lighting_pass() const
     update_shader(nullptr, glm::mat4(1.0f), glm::mat4(1.0f));
 
     g_pd3dDeviceContext->PSSetSamplers(0, 1, &m_default_sampler_state);
-    
+
     if (m_render_to_texture)
     {
         g_pd3dDeviceContext->OMSetRenderTargets(1, &g_textureRenderTargetView, nullptr);
@@ -388,7 +393,7 @@ void RendererDX11::render_lighting_pass() const
     {
         g_pd3dDeviceContext->OMSetRenderTargets(1, &g_mainRenderTargetView, nullptr);
     }
-    
+
     m_gbuffer->bind_shader_resources();
     m_ssao_blur->bind_shader_resources();
     m_lighting_pass_shader->use();
@@ -406,7 +411,7 @@ void RendererDX11::bind_for_render_frame() const
     {
         g_pd3dDeviceContext->RSSetState(g_rasterizer_state);
     }
-    
+
     if (m_render_to_texture)
     {
         g_pd3dDeviceContext->OMSetRenderTargets(1, &g_textureRenderTargetView, m_depth_stencil_view);
@@ -416,7 +421,7 @@ void RendererDX11::bind_for_render_frame() const
         g_pd3dDeviceContext->OMSetRenderTargets(1, &g_mainRenderTargetView, m_depth_stencil_view);
     }
 
-    std::array constexpr blend_factor = { 0.0f, 0.0f, 0.0f, 0.0f };
+    std::array constexpr blend_factor = {0.0f, 0.0f, 0.0f, 0.0f};
     get_device_context()->OMSetBlendState(m_forward_blend_state, blend_factor.data(), 0xffffffff);
 }
 
@@ -518,7 +523,7 @@ void RendererDX11::update_object(std::shared_ptr<Drawable> const& drawable, std:
     set_camera_position_buffer(drawable);
 }
 
-void RendererDX11::unbind_material(std::shared_ptr<Material> const &material) const
+void RendererDX11::unbind_material(std::shared_ptr<Material> const& material) const
 {
     if (Skybox::get_instance() != nullptr && material->needs_skybox)
         Skybox::get_instance()->unbind();
@@ -556,14 +561,7 @@ void RendererDX11::perform_frustum_culling(std::shared_ptr<Material> const& mate
 
 D3D11_VIEWPORT RendererDX11::create_viewport(i32 const width, i32 const height)
 {
-    return {
-        0.0f,
-        0.0f,
-        static_cast<float>(width),
-        static_cast<float>(height),
-        0.0f,
-        1.0f
-    };
+    return {0.0f, 0.0f, static_cast<float>(width), static_cast<float>(height), 0.0f, 1.0f};
 }
 
 void RendererDX11::set_light_buffer() const
@@ -633,7 +631,8 @@ void RendererDX11::set_camera_position_buffer(std::shared_ptr<Drawable> const& d
     camera_pos_data.camera_pos = Camera::get_main_camera()->entity->transform->get_position();
 
     D3D11_MAPPED_SUBRESOURCE camera_pos_buffer_resource = {};
-    HRESULT const hr = get_device_context()->Map(m_constant_buffer_camera_position, 0, D3D11_MAP_WRITE_DISCARD, 0, &camera_pos_buffer_resource);
+    HRESULT const hr =
+        get_device_context()->Map(m_constant_buffer_camera_position, 0, D3D11_MAP_WRITE_DISCARD, 0, &camera_pos_buffer_resource);
     assert(SUCCEEDED(hr));
 
     CopyMemory(camera_pos_buffer_resource.pData, &camera_pos_data, sizeof(ConstantBufferCameraPosition));
@@ -660,26 +659,11 @@ bool RendererDX11::create_device_d3d(HWND const hwnd)
 
     u32 create_device_flags = 0;
     D3D_FEATURE_LEVEL feature_level;
-    D3D_FEATURE_LEVEL constexpr feature_level_array[2] =
-    {
-        D3D_FEATURE_LEVEL_11_0,
-        D3D_FEATURE_LEVEL_10_0
-    };
+    D3D_FEATURE_LEVEL constexpr feature_level_array[2] = {D3D_FEATURE_LEVEL_11_0, D3D_FEATURE_LEVEL_10_0};
 
-    HRESULT const hr = D3D11CreateDeviceAndSwapChain(
-        nullptr,
-        D3D_DRIVER_TYPE_HARDWARE,
-        nullptr,
-        create_device_flags,
-        feature_level_array,
-        2,
-        D3D11_SDK_VERSION,
-        &sd,
-        &g_pSwapChain,
-        &g_pd3dDevice,
-        &feature_level,
-        &g_pd3dDeviceContext
-    );
+    HRESULT const hr =
+        D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, create_device_flags, feature_level_array, 2,
+                                      D3D11_SDK_VERSION, &sd, &g_pSwapChain, &g_pd3dDevice, &feature_level, &g_pd3dDeviceContext);
 
     if (FAILED(hr))
     {

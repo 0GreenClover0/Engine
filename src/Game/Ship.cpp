@@ -1,20 +1,20 @@
 #include <GLFW/glfw3.h>
-#include <imgui.h>
+#include <glm/gtc/random.hpp>
 #include <glm/gtx/vector_angle.hpp>
 #include <glm/vec2.hpp>
-#include <glm/gtc/random.hpp>
+#include <imgui.h>
 
 #include "Collider2D.h"
 #include "Entity.h"
 #include "Input.h"
 #include "Ship.h"
 
-#include "imgui_extensions.h"
+#include "AK/AK.h"
 #include "Globals.h"
 #include "LighthouseKeeper.h"
-#include "AK/AK.h"
 #include "Player.h"
 #include "ShipSpawner.h"
+#include "imgui_extensions.h"
 
 std::shared_ptr<Ship> Ship::create()
 {
@@ -71,10 +71,9 @@ void Ship::update()
         if (m_destroyed_counter > 0.0f)
         {
             m_destroyed_counter -= delta_time;
-            entity->transform->set_local_position({
-                entity->transform->get_local_position().x,
-                ((m_destroyed_counter / m_destroy_time) - 1) * m_how_deep_sink_factor,
-                entity->transform->get_local_position().z });
+            entity->transform->set_local_position({entity->transform->get_local_position().x,
+                                                   ((m_destroyed_counter / m_destroy_time) - 1) * m_how_deep_sink_factor,
+                                                   entity->transform->get_local_position().z});
         }
         else
         {
@@ -100,7 +99,9 @@ void Ship::update()
             if (distance_to_light < Player::get_instance()->range)
             {
                 follow_point(ship_position, target_position);
-                m_speed = minimum_speed + ((maximum_speed + Player::get_instance()->additional_ship_speed - minimum_speed) * (distance_to_light / Player::get_instance()->range));
+                m_speed = minimum_speed
+                        + ((maximum_speed + Player::get_instance()->additional_ship_speed - minimum_speed)
+                           * (distance_to_light / Player::get_instance()->range));
 
                 if (type == ShipType::Pirates)
                 {
@@ -119,7 +120,8 @@ void Ship::update()
 
                     if (type == ShipType::Pirates)
                     {
-                        auto const nearest_non_pirate_ship_position = spawner.lock()->find_nearest_non_pirate_ship(std::static_pointer_cast<Ship>(shared_from_this()));
+                        auto const nearest_non_pirate_ship_position =
+                            spawner.lock()->find_nearest_non_pirate_ship(std::static_pointer_cast<Ship>(shared_from_this()));
                         if (nearest_non_pirate_ship_position.has_value())
                         {
                             glm::vec2 const target_position = nearest_non_pirate_ship_position.value();
@@ -220,7 +222,8 @@ bool Ship::is_out_of_room() const
         return true;
     }
 
-    if (x < -(LevelController::get_instance()->playfield_width + LevelController::get_instance()->playfield_additional_width) || x > (LevelController::get_instance()->playfield_width + LevelController::get_instance()->playfield_additional_width))
+    if (x < -(LevelController::get_instance()->playfield_width + LevelController::get_instance()->playfield_additional_width)
+        || x > (LevelController::get_instance()->playfield_width + LevelController::get_instance()->playfield_additional_width))
     {
         return true;
     }

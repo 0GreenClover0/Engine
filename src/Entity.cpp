@@ -1,8 +1,8 @@
 #include "Entity.h"
 
+#include "AK/AK.h"
 #include "Engine.h"
 #include "MainScene.h"
-#include "AK/AK.h"
 
 Entity::Entity(AK::Badge<Entity>, std::string const& name) : name(std::move(name))
 {
@@ -31,7 +31,7 @@ std::shared_ptr<Entity> Entity::create(std::string const& guid, std::string cons
 }
 
 // Entity that is not tied to any scene
-std::shared_ptr<Entity> Entity::create_internal(std::string const &name)
+std::shared_ptr<Entity> Entity::create_internal(std::string const& name)
 {
     auto entity = std::make_shared<Entity>(AK::Badge<Entity> {}, name);
     entity->guid = AK::generate_guid();

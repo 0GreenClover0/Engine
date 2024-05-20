@@ -8,8 +8,9 @@
 #include <TextureLoaderDX11.h>
 
 MeshDX11::MeshDX11(AK::Badge<MeshFactory>, std::vector<Vertex> const& vertices, std::vector<u32> const& indices,
-                   std::vector<std::shared_ptr<Texture>> const& textures, DrawType const draw_type, std::shared_ptr<Material> const& material,
-                   DrawFunctionType const draw_function) : Mesh(vertices, indices, textures, draw_type, material, draw_function)
+                   std::vector<std::shared_ptr<Texture>> const& textures, DrawType const draw_type,
+                   std::shared_ptr<Material> const& material, DrawFunctionType const draw_function)
+    : Mesh(vertices, indices, textures, draw_type, material, draw_function)
 {
     switch (draw_type)
     {
@@ -48,7 +49,8 @@ MeshDX11::MeshDX11(AK::Badge<MeshFactory>, std::vector<Vertex> const& vertices, 
     m_index_buffer = std::make_shared<IndexBufferDX11>(device, indices.data(), indices.size());
 }
 
-MeshDX11::MeshDX11(MeshDX11&& mesh) noexcept : Mesh(mesh.m_vertices, mesh.m_indices, mesh.m_textures, mesh.m_draw_type, mesh.material, mesh.m_draw_function)
+MeshDX11::MeshDX11(MeshDX11&& mesh) noexcept
+    : Mesh(mesh.m_vertices, mesh.m_indices, mesh.m_textures, mesh.m_draw_type, mesh.material, mesh.m_draw_function)
 {
     m_vertex_buffer = mesh.m_vertex_buffer;
     mesh.m_vertex_buffer = nullptr;

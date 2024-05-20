@@ -1,9 +1,9 @@
 #include "Transform.h"
 
-#include <iostream>
 #include <glm/ext/matrix_transform.hpp>
-#include <glm/gtx/rotate_vector.hpp>
 #include <glm/gtx/matrix_decompose.hpp>
+#include <glm/gtx/rotate_vector.hpp>
+#include <iostream>
 
 #include "AK/AK.h"
 #include "Entity.h"
@@ -58,7 +58,7 @@ glm::vec3 Transform::get_scale()
 
 void Transform::set_local_position(glm::vec3 const& position)
 {
-    auto const is_position_modified = glm::epsilonNotEqual(position, m_local_position, 0.0001f); 
+    auto const is_position_modified = glm::epsilonNotEqual(position, m_local_position, 0.0001f);
     if (!is_position_modified.x && !is_position_modified.y && !is_position_modified.z)
     {
         return;
@@ -76,7 +76,7 @@ glm::vec3 Transform::get_local_position() const
 
 void Transform::set_local_scale(glm::vec3 const& scale)
 {
-    auto const is_scale_modified = glm::epsilonNotEqual(scale, m_local_scale, 0.0001f); 
+    auto const is_scale_modified = glm::epsilonNotEqual(scale, m_local_scale, 0.0001f);
     if (!is_scale_modified.x && !is_scale_modified.y && !is_scale_modified.z)
     {
         return;
@@ -94,7 +94,7 @@ glm::vec3 Transform::get_local_scale() const
 
 void Transform::set_euler_angles(glm::vec3 const& euler_angles)
 {
-    auto const is_rotation_modified = glm::epsilonNotEqual(euler_angles, m_euler_angles, 0.0001f); 
+    auto const is_rotation_modified = glm::epsilonNotEqual(euler_angles, m_euler_angles, 0.0001f);
     if (!is_rotation_modified.x && !is_rotation_modified.y && !is_rotation_modified.z)
     {
         return;
@@ -113,7 +113,8 @@ glm::vec3 Transform::get_euler_angles() const
 
 glm::vec3 Transform::get_euler_angles_restricted() const
 {
-    return { glm::mod(glm::mod(m_euler_angles.x, 360.0f) + 360.0f, 360.0f), glm::mod(glm::mod(m_euler_angles.y, 360.0f) + 360.0f, 360.0f), glm::mod(glm::mod(m_euler_angles.z, 360.0f) + 360.0f, 360.0f) };
+    return {glm::mod(glm::mod(m_euler_angles.x, 360.0f) + 360.0f, 360.0f), glm::mod(glm::mod(m_euler_angles.y, 360.0f) + 360.0f, 360.0f),
+            glm::mod(glm::mod(m_euler_angles.z, 360.0f) + 360.0f, 360.0f)};
 }
 
 glm::vec3 Transform::get_forward()
@@ -183,7 +184,8 @@ void Transform::set_model_matrix(glm::mat4 const& matrix)
     }
     else
     {
-        glm::decompose(glm::inverse(parent.lock()->get_model_matrix()) * m_model_matrix, m_local_scale, m_local_rotation, m_local_position, m_skew, m_perpective);
+        glm::decompose(glm::inverse(parent.lock()->get_model_matrix()) * m_model_matrix, m_local_scale, m_local_rotation, m_local_position,
+                       m_skew, m_perpective);
         m_euler_angles = glm::degrees(glm::eulerAngles(m_local_rotation));
     }
 
@@ -235,7 +237,7 @@ void Transform::add_child(std::shared_ptr<Transform> const& transform)
     transform->parent = shared_from_this();
 }
 
-void Transform::remove_child(std::shared_ptr<Transform> const &transform)
+void Transform::remove_child(std::shared_ptr<Transform> const& transform)
 {
     assert(transform->parent.lock() == shared_from_this());
 

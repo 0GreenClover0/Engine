@@ -3,9 +3,9 @@
 #include <utility>
 
 #include <ImGuizmo.h>
+#include <imgui_impl_dx11.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
-#include <imgui_impl_dx11.h>
 
 #include <spdlog/spdlog.h>
 
@@ -15,6 +15,7 @@
 #include <miniaudio.h>
 
 #include "Editor.h"
+#include "Game/Game.h"
 #include "Globals.h"
 #include "Input.h"
 #include "MainScene.h"
@@ -23,7 +24,6 @@
 #include "RendererDX11.h"
 #include "RendererGL.h"
 #include "Window.h"
-#include "Game/Game.h"
 #include <implot.h>
 
 i32 Engine::initialize()
@@ -117,7 +117,6 @@ void Engine::run()
         m_editor->handle_input();
         m_editor->draw();
 
-
         Renderer::get_instance()->begin_frame();
 
         if (m_is_game_running)
@@ -129,7 +128,6 @@ void Engine::run()
         Renderer::get_instance()->render();
 
         Renderer::get_instance()->end_frame();
-
 
         ImGui::Render();
 
@@ -198,14 +196,8 @@ void Engine::set_game_running(bool const is_running)
 std::shared_ptr<Window> Engine::create_window()
 {
     // Create window with graphics context
-    auto new_window = std::make_shared<Window>(
-        Renderer::renderer_api,
-        Renderer::screen_width,
-        Renderer::screen_height,
-        4,
-        enable_vsync,
-        enable_mouse_capture
-    );
+    auto new_window = std::make_shared<Window>(Renderer::renderer_api, Renderer::screen_width, Renderer::screen_height, 4, enable_vsync,
+                                               enable_mouse_capture);
 
     return new_window;
 }
@@ -279,7 +271,8 @@ void Engine::setup_imgui(GLFWwindow* glfw_window)
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImPlot::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    ImGuiIO& io = ImGui::GetIO();
+    (void)io;
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
     // GL 4.3 + GLSL 430

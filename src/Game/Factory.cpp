@@ -1,10 +1,10 @@
 #include "Factory.h"
 
 #include "Entity.h"
-#include "Model.h"
-#include "ResourceManager.h"
 #include "Game/LevelController.h"
+#include "Model.h"
 #include "Player.h"
+#include "ResourceManager.h"
 
 std::shared_ptr<Factory> Factory::create()
 {
@@ -49,11 +49,11 @@ void Factory::set_type(FactoryType const type)
     if (type == FactoryType::Generator)
     {
         model = entity->add_component<Model>(Model::create("./res/models/hubert/floor.gltf", standard_material));
-        entity->transform->set_local_scale({ 0.05f, 0.1f, 0.05f });
+        entity->transform->set_local_scale({0.05f, 0.1f, 0.05f});
     }
     else if (type == FactoryType::Workshop)
     {
         model = entity->add_component<Model>(Model::create("./res/models/lighthouseOld/lighthouse.gltf", standard_material));
-        entity->transform->set_local_scale({ 1.0f, 1.0f, 1.0f });
+        entity->transform->set_local_scale({1.0f, 1.0f, 1.0f});
     }
 }

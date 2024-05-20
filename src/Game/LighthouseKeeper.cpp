@@ -4,13 +4,13 @@
 #include <imgui.h>
 
 #include "Entity.h"
-#include "LighthouseKeeper.h"
 #include "Globals.h"
+#include "LighthouseKeeper.h"
 
-#include "Lighthouse.h"
 #include "AK/AK.h"
 #include "Factory.h"
 #include "LevelController.h"
+#include "Lighthouse.h"
 #include "Port.h"
 
 #include <imgui_extensions.h>
@@ -112,18 +112,14 @@ void LighthouseKeeper::handle_input() const
     if (factories.size() > 0 && Input::input->get_key_down(GLFW_KEY_SPACE))
     {
         std::shared_ptr<Factory> closest_factory = factories[0].lock();
-        float closest_distance = distance(
-            AK::convert_3d_to_2d(closest_factory->entity->transform->get_position()),
-            AK::convert_3d_to_2d(entity->transform->get_position())
-        );
+        float closest_distance = distance(AK::convert_3d_to_2d(closest_factory->entity->transform->get_position()),
+                                          AK::convert_3d_to_2d(entity->transform->get_position()));
 
         for (u32 i = 1; i < factories.size(); ++i)
         {
             auto const factory_locked = factories[i].lock();
-            float const distance = glm::distance(
-                AK::convert_3d_to_2d(factory_locked->entity->transform->get_position()),
-                AK::convert_3d_to_2d(entity->transform->get_position())
-            );
+            float const distance = glm::distance(AK::convert_3d_to_2d(factory_locked->entity->transform->get_position()),
+                                                 AK::convert_3d_to_2d(entity->transform->get_position()));
 
             if (distance < closest_distance)
             {

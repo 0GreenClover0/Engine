@@ -1,14 +1,14 @@
 #include "Water.h"
-#include "Texture.h"
-#include "MeshFactory.h"
-#include "TextureLoader.h"
 #include "ConstantBufferTypes.h"
+#include "MeshFactory.h"
 #include "RendererDX11.h"
 #include "ResourceManager.h"
+#include "Texture.h"
+#include "TextureLoader.h"
 
+#include <GLFW/glfw3.h>
 #include <imgui.h>
 #include <imgui_stdlib.h>
-#include <GLFW/glfw3.h>
 
 std::shared_ptr<Water> Water::create()
 {
@@ -64,7 +64,7 @@ void Water::prepare()
 
     std::vector<u32> indices = {};
     indices.resize(num_triangles * 3);
-    
+
     float constexpr size = 50.0f;
     float const step = size / (1 << tesselation_level);
     float const texture_step = 1.0f / (1 << tesselation_level);
@@ -74,7 +74,7 @@ void Water::prepare()
     {
         for (i32 j = 0; j <= (1 << tesselation_level); ++j)
         {
-            vertices[index].position = { j * step - size / 2.0f, 0.0f, i * step - size / 2.0f };
+            vertices[index].position = {j * step - size / 2.0f, 0.0f, i * step - size / 2.0f};
             vertices[index].normal = glm::vec3(0.0f, 1.0f, 0.0f);
             vertices[index].texture_coordinates = glm::vec2(j * texture_step - 0.5f, i * texture_step - 0.5f);
             index++;
@@ -108,10 +108,11 @@ void Water::prepare()
 
     if (!texture_path.empty())
     {
-        diffuse_maps = { ResourceManager::get_instance().load_texture(texture_path, TextureType::Diffuse) };
+        diffuse_maps = {ResourceManager::get_instance().load_texture(texture_path, TextureType::Diffuse)};
     }
 
-    m_meshes.push_back(ResourceManager::get_instance().load_mesh(m_meshes.size(), "WATER", vertices, indices, diffuse_maps, m_draw_type, material));
+    m_meshes.push_back(
+        ResourceManager::get_instance().load_mesh(m_meshes.size(), "WATER", vertices, indices, diffuse_maps, m_draw_type, material));
 }
 
 void Water::reprepare()

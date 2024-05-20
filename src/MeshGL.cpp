@@ -1,15 +1,15 @@
 #include "MeshGL.h"
 
-#include <iostream>
 #include <glad/glad.h>
+#include <iostream>
 
 #include "Globals.h"
 #include "Texture.h"
 
 MeshGL::MeshGL(AK::Badge<MeshFactory>, std::vector<Vertex> const& vertices, std::vector<u32> const& indices,
                std::vector<std::shared_ptr<Texture>> const& textures, DrawType const draw_type, std::shared_ptr<Material> const& material,
-               DrawFunctionType const draw_function):
-    Mesh(vertices, indices, textures, draw_type, material, draw_function)
+               DrawFunctionType const draw_function)
+    : Mesh(vertices, indices, textures, draw_type, material, draw_function)
 {
     switch (draw_type)
     {
@@ -77,7 +77,8 @@ MeshGL::MeshGL(AK::Badge<MeshFactory>, std::vector<Vertex> const& vertices, std:
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-MeshGL::MeshGL(MeshGL&& mesh) noexcept : Mesh(mesh.m_vertices, mesh.m_indices, mesh.m_textures, mesh.m_draw_type, mesh.material, mesh.m_draw_function)
+MeshGL::MeshGL(MeshGL&& mesh) noexcept
+    : Mesh(mesh.m_vertices, mesh.m_indices, mesh.m_textures, mesh.m_draw_type, mesh.material, mesh.m_draw_function)
 {
     m_VAO = mesh.m_VAO;
     m_VBO = mesh.m_VBO;
@@ -137,7 +138,8 @@ void MeshGL::draw(u32 const size, void const* offset) const
     }
     else
     {
-        std::cout << "Non indexed drawing with offset is not currently supported." << "\n";
+        std::cout << "Non indexed drawing with offset is not currently supported."
+                  << "\n";
     }
 
     glBindVertexArray(0);
@@ -150,9 +152,7 @@ void MeshGL::draw_instanced(i32 const size) const
     bind_textures();
 
     glBindVertexArray(m_VAO);
-    glDrawElementsInstanced(
-        GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, (void*)0, size
-    );
+    glDrawElementsInstanced(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, (void*)0, size);
 
     unbind_textures();
 }

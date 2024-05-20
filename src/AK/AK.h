@@ -1,8 +1,8 @@
 #pragma once
 
 #include <memory>
-#include <sstream>
 #include <random>
+#include <sstream>
 #include <string>
 
 #include <glm/glm.hpp>
@@ -39,19 +39,19 @@ inline std::string generate_hex(u32 const length)
 
 inline glm::vec3 convert_2d_to_3d(glm::vec2 const& v, float desired_y = 0.0f)
 {
-    return { v.x, desired_y, v.y };
+    return {v.x, desired_y, v.y};
 }
 
 inline glm::vec2 convert_3d_to_2d(glm::vec3 const& v)
 {
-    return { v.x, v.z };
+    return {v.x, v.z};
 }
 
 inline std::string generate_guid()
 {
     std::string result;
 
-    u32 constexpr guid_lengths[] = { 8, 4, 4, 4, 12 };
+    u32 constexpr guid_lengths[] = {8, 4, 4, 4, 12};
 
     for (u32 i = 0; i < 5; ++i)
     {

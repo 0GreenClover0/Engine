@@ -1,7 +1,7 @@
 #include "Mesh.h"
 
-#include <iostream>
 #include <glm/gtc/epsilon.hpp>
+#include <iostream>
 
 #include "Globals.h"
 #include "Shader.h"
@@ -10,7 +10,8 @@
 
 Mesh::Mesh(std::vector<Vertex> const& vertices, std::vector<u32> const& indices, std::vector<std::shared_ptr<Texture>> const& textures,
            DrawType const draw_type, std::shared_ptr<Material> const& material, DrawFunctionType const draw_function)
-    : material(material), m_vertices(vertices), m_indices(indices), m_textures(textures), m_draw_type(draw_type), m_draw_function(draw_function)
+    : material(material), m_vertices(vertices), m_indices(indices), m_textures(textures), m_draw_type(draw_type),
+      m_draw_function(draw_function)
 {
 }
 
@@ -43,11 +44,7 @@ void Mesh::calculate_bounding_box()
             highest_z = vertex.position.z;
     }
 
-    this->bounds =
-    {
-        glm::vec3(lowest_x, lowest_y, lowest_z),
-        glm::vec3(highest_x, highest_y, highest_z)
-    };
+    this->bounds = {glm::vec3(lowest_x, lowest_y, lowest_z), glm::vec3(highest_x, highest_y, highest_z)};
 }
 
 void Mesh::adjust_bounding_box(glm::mat4 const& model_matrix)
@@ -89,21 +86,18 @@ BoundingBox Mesh::calculate_adjusted_bounding_box(glm::mat4 const& model_matrix)
             }
         }
 
-        return { glm::vec3(min[0], min[1], min[2]), glm::vec3(max[0], max[1], max[2]) };
+        return {glm::vec3(min[0], min[1], min[2]), glm::vec3(max[0], max[1], max[2])};
     }
 
     // Create AABB vertices from bounds
-    std::vector<glm::vec3> aabb_vertices =
-    {
-        bounds.min,
-        glm::vec3(bounds.min.x, bounds.min.y, bounds.max.z),
-        glm::vec3(bounds.min.x, bounds.max.y, bounds.min.z),
-        glm::vec3(bounds.min.x, bounds.max.y, bounds.max.z),
-        glm::vec3(bounds.max.x, bounds.min.y, bounds.min.z),
-        glm::vec3(bounds.max.x, bounds.min.y, bounds.max.z),
-        glm::vec3(bounds.max.x, bounds.max.y, bounds.min.z),
-        bounds.max
-    };
+    std::vector<glm::vec3> aabb_vertices = {bounds.min,
+                                            glm::vec3(bounds.min.x, bounds.min.y, bounds.max.z),
+                                            glm::vec3(bounds.min.x, bounds.max.y, bounds.min.z),
+                                            glm::vec3(bounds.min.x, bounds.max.y, bounds.max.z),
+                                            glm::vec3(bounds.max.x, bounds.min.y, bounds.min.z),
+                                            glm::vec3(bounds.max.x, bounds.min.y, bounds.max.z),
+                                            glm::vec3(bounds.max.x, bounds.max.y, bounds.min.z),
+                                            bounds.max};
 
     // Transform AABB vertices by model matrix
     for (auto& vertex : aabb_vertices)
@@ -136,5 +130,5 @@ BoundingBox Mesh::calculate_adjusted_bounding_box(glm::mat4 const& model_matrix)
             highest_z = vertex.z;
     }
 
-    return { glm::vec3(lowest_x, lowest_y, lowest_z), glm::vec3(highest_x, highest_y, highest_z) };
+    return {glm::vec3(lowest_x, lowest_y, lowest_z), glm::vec3(highest_x, highest_y, highest_z)};
 }

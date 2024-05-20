@@ -13,20 +13,20 @@ std::shared_ptr<ScreenText> ScreenText::create()
     return text;
 }
 
-std::shared_ptr<ScreenText> ScreenText::create(std::wstring const &content, glm::vec2 const &position,
-    float const font_size, u32 const color, u16 const flags)
+std::shared_ptr<ScreenText> ScreenText::create(std::wstring const& content, glm::vec2 const& position, float const font_size,
+                                               u32 const color, u16 const flags)
 {
     auto text = std::make_shared<ScreenText>(AK::Badge<ScreenText> {}, content, position, font_size, color, flags);
 
     return text;
 }
 
-ScreenText::ScreenText(AK::Badge<ScreenText>, std::shared_ptr<Material> const& material) : Drawable(material),
-    flags(FW1_RESTORESTATE)
+ScreenText::ScreenText(AK::Badge<ScreenText>, std::shared_ptr<Material> const& material) : Drawable(material), flags(FW1_RESTORESTATE)
 {
 }
 
-ScreenText::ScreenText(AK::Badge<ScreenText>, std::wstring const& content, glm::vec2 const& position, float const font_size, u32 const color, u16 const flags)
+ScreenText::ScreenText(AK::Badge<ScreenText>, std::wstring const& content, glm::vec2 const& position, float const font_size,
+                       u32 const color, u16 const flags)
     : Drawable(nullptr), text(content), position(position), font_size(font_size), color(color),
       flags(flags | FW1_RESTORESTATE) // Restore DX11 state by default
 {
@@ -42,7 +42,7 @@ ScreenText::~ScreenText()
 
     if (m_d_write_factory)
         m_d_write_factory->Release();
-    
+
     if (m_d_write_text_format)
         m_d_write_text_format->Release();
 
@@ -62,16 +62,12 @@ void ScreenText::initialize()
     hr = DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), reinterpret_cast<IUnknown**>(&m_d_write_factory));
     assert(SUCCEEDED(hr));
 
-    hr = m_d_write_factory->CreateTextFormat(
-        L"Arial",                        // Font family name
-        nullptr,                         // Font collection (NULL for the system font collection)
-        DWRITE_FONT_WEIGHT_NORMAL,
-        DWRITE_FONT_STYLE_NORMAL,
-        DWRITE_FONT_STRETCH_NORMAL,
-        font_size,                     // Font size
-        L"en-US",                        // Locale
-        &m_d_write_text_format
-    );
+    hr = m_d_write_factory->CreateTextFormat(L"Arial", // Font family name
+                                             nullptr, // Font collection (NULL for the system font collection)
+                                             DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL,
+                                             font_size, // Font size
+                                             L"en-US", // Locale
+                                             &m_d_write_text_format);
     assert(SUCCEEDED(hr));
 
     hr = m_d_write_factory->CreateTextLayout(text.data(), text.size(), m_d_write_text_format, 2048, 2048, &m_d_write_text_layout);
@@ -82,13 +78,12 @@ void ScreenText::initialize()
     hr = m_d_write_text_layout->GetMetrics(&text_metrics);
     assert(SUCCEEDED(hr));
 
-    hr = m_d_write_factory->CreateTextLayout(
-        text.data(),         // Text to be laid out
-        text.size(),         // Length of the text
-        m_d_write_text_format, // Text format
-        text_metrics.width,    // Use measured text width
-        text_metrics.height,   // Use measured text height
-        &m_d_write_text_layout // Output text layout object
+    hr = m_d_write_factory->CreateTextLayout(text.data(), // Text to be laid out
+                                             text.size(), // Length of the text
+                                             m_d_write_text_format, // Text format
+                                             text_metrics.width, // Use measured text width
+                                             text_metrics.height, // Use measured text height
+                                             &m_d_write_text_layout // Output text layout object
     );
     assert(SUCCEEDED(hr));
 
@@ -113,14 +108,8 @@ void ScreenText::initialize()
 
 void ScreenText::draw() const
 {
-    m_font_wrapper->DrawTextLayout(
-        RendererDX11::get_instance_dx11()->get_device_context(),
-        m_d_write_text_layout,
-        position.x,
-        position.y,
-        color,
-        flags
-    );
+    m_font_wrapper->DrawTextLayout(RendererDX11::get_instance_dx11()->get_device_context(), m_d_write_text_layout, position.x, position.y,
+                                   color, flags);
 }
 
 void ScreenText::draw_editor()
@@ -141,7 +130,8 @@ void ScreenText::set_text(std::wstring const& new_content)
     }
 
     // Create a new text layout with the updated content
-    HRESULT hr = m_d_write_factory->CreateTextLayout(new_content.data(), new_content.size(), m_d_write_text_format, 2048, 2048, &m_d_write_text_layout);
+    HRESULT hr = m_d_write_factory->CreateTextLayout(new_content.data(), new_content.size(), m_d_write_text_format, 2048, 2048,
+                                                     &m_d_write_text_layout);
     assert(SUCCEEDED(hr));
 
     DWRITE_TEXT_METRICS text_metrics = {};
@@ -153,14 +143,8 @@ void ScreenText::set_text(std::wstring const& new_content)
     m_d_write_text_layout->Release();
     m_d_write_text_layout = nullptr;
 
-    hr = m_d_write_factory->CreateTextLayout(
-        text.data(),
-        text.size(),
-        m_d_write_text_format,
-        text_metrics.width,
-        text_metrics.height,
-        &m_d_write_text_layout
-    );
+    hr = m_d_write_factory->CreateTextLayout(text.data(), text.size(), m_d_write_text_format, text_metrics.width, text_metrics.height,
+                                             &m_d_write_text_layout);
     assert(SUCCEEDED(hr));
 }
 

@@ -1,9 +1,9 @@
 #pragma once
 
-#include <d3d11.h>
 #include "IndexBufferDX11.h"
 #include "Mesh.h"
 #include "VertexBufferDX11.h"
+#include <d3d11.h>
 
 class MeshFactory;
 
@@ -25,7 +25,6 @@ public:
     void virtual unbind_textures() const override;
 
 private:
-
     std::shared_ptr<VertexBufferDX11> m_vertex_buffer;
     std::shared_ptr<IndexBufferDX11> m_index_buffer;
 

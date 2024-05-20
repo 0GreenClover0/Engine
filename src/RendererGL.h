@@ -2,8 +2,8 @@
 
 #include <glad/glad.h>
 
-#include "Renderer.h"
 #include "AK/Badge.h"
+#include "Renderer.h"
 
 class RendererGL final : public Renderer
 {
@@ -20,11 +20,13 @@ public:
     virtual void restore_default_rasterizer_draw_type() override;
 
 protected:
-    virtual void update_shader(std::shared_ptr<Shader> const& shader, glm::mat4 const& projection_view, glm::mat4 const& projection_view_no_translation) const override;
+    virtual void update_shader(std::shared_ptr<Shader> const& shader, glm::mat4 const& projection_view,
+                               glm::mat4 const& projection_view_no_translation) const override;
     virtual void update_material(std::shared_ptr<Material> const& material) const override;
-    virtual void update_object(std::shared_ptr<Drawable> const& drawable, std::shared_ptr<Material> const& material, glm::mat4 const& projection_view) const override;
+    virtual void update_object(std::shared_ptr<Drawable> const& drawable, std::shared_ptr<Material> const& material,
+                               glm::mat4 const& projection_view) const override;
 
-    virtual void unbind_material(std::shared_ptr<Material> const &material) const override;
+    virtual void unbind_material(std::shared_ptr<Material> const& material) const override;
 
 private:
     virtual void initialize_global_renderer_settings() override;

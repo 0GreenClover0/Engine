@@ -30,7 +30,8 @@ void GBuffer::clear_render_targets() const
 void GBuffer::bind_render_targets() const
 {
     auto const renderer = RendererDX11::get_instance_dx11();
-    renderer->get_device_context()->OMSetRenderTargets(m_gbuffer_rendertargets.size(), m_gbuffer_rendertargets.data(), renderer->get_depth_stencil_view());
+    renderer->get_device_context()->OMSetRenderTargets(m_gbuffer_rendertargets.size(), m_gbuffer_rendertargets.data(),
+                                                       renderer->get_depth_stencil_view());
 }
 
 void GBuffer::bind_shader_resources() const
