@@ -520,7 +520,7 @@ code = [
     '    }',
     '    // # Put new deserialization here'
 ]
-add_lines_at_target('auto_deserialize_component', code, 3)
+add_lines_at_target('auto_deserialize_component', code, 4)
 
 remove_lines_between('// # Auto component list start', '// # Auto component list end', False, '/src/ComponentList.h')
 add_lines_at_target('// # Put new component here', ['    // # Auto component list start'], 0, '/src/ComponentList.h')

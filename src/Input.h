@@ -28,6 +28,7 @@ public:
 
     Event<void(i32 const)> on_focused_event;
     Event<void(double const, double const)> on_set_cursor_pos_event;
+
 private:
     [[nodiscard]] bool is_key_pressed(i32 const key) const;
 

@@ -69,9 +69,9 @@ TextureData TextureLoaderGL::texture_from_file(std::string const& path, TextureS
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, convert_filtering_mode(settings.filtering_max, settings.filtering_mipmap));
 
     glBindTexture(GL_TEXTURE_2D, 0);
-    
+
     stbi_image_free(data);
-    return { texture_id, static_cast<u32>(width), static_cast<u32>(height), static_cast<u32>(number_of_components) };
+    return {texture_id, static_cast<u32>(width), static_cast<u32>(height), static_cast<u32>(number_of_components)};
 }
 
 TextureData TextureLoaderGL::cubemap_from_files(std::vector<std::string> const& paths, TextureSettings const settings)
@@ -93,17 +93,7 @@ TextureData TextureLoaderGL::cubemap_from_files(std::vector<std::string> const& 
 
         if (data != nullptr)
         {
-            glTexImage2D(
-                GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
-                0,
-                GL_RGB,
-                width,
-                height,
-                0,
-                GL_RGB,
-                GL_UNSIGNED_BYTE,
-                data
-            );
+            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
         }
         else
         {
@@ -121,7 +111,7 @@ TextureData TextureLoaderGL::cubemap_from_files(std::vector<std::string> const& 
 
     glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
-    return { texture_id, static_cast<u32>(width), static_cast<u32>(height), static_cast<u32>(channel_count) };
+    return {texture_id, static_cast<u32>(width), static_cast<u32>(height), static_cast<u32>(channel_count)};
 }
 
 TextureData TextureLoaderGL::cubemap_from_file(std::string const& path, TextureSettings const settings)
@@ -181,7 +171,7 @@ GLint TextureLoaderGL::convert_filtering_mode(TextureFiltering const texture_fil
 
         if (mipmap_filtering == TextureFiltering::Linear)
         {
-            return  GL_NEAREST_MIPMAP_LINEAR;
+            return GL_NEAREST_MIPMAP_LINEAR;
         }
 
         std::unreachable();

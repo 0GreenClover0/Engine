@@ -2,8 +2,8 @@
 
 #include <d3d11.h>
 
-#include "Shader.h"
 #include "AK/Badge.h"
+#include "Shader.h"
 
 class ShaderFactory;
 
@@ -12,9 +12,10 @@ class ShaderDX11 final : public Shader
 public:
     explicit ShaderDX11(AK::Badge<ShaderFactory>, std::string const& compute_path);
     explicit ShaderDX11(AK::Badge<ShaderFactory>, std::string const& vertex_path, std::string const& fragment_path);
-    explicit ShaderDX11(AK::Badge<ShaderFactory>, std::string const& vertex_path, std::string const& fragment_path, std::string const& geometry_path);
-    explicit ShaderDX11(AK::Badge<ShaderFactory>, std::string const& vertex_path, std::string const& tessellation_control_path, std::string const& tessellation_evaluation_path,
-                        std::string const& fragment_path);
+    explicit ShaderDX11(AK::Badge<ShaderFactory>, std::string const& vertex_path, std::string const& fragment_path,
+                        std::string const& geometry_path);
+    explicit ShaderDX11(AK::Badge<ShaderFactory>, std::string const& vertex_path, std::string const& tessellation_control_path,
+                        std::string const& tessellation_evaluation_path, std::string const& fragment_path);
 
     void virtual use() const override;
     void virtual set_bool(std::string const& name, bool const value) const override;

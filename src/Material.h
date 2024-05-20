@@ -3,22 +3,24 @@
 #include <memory>
 #include <vector>
 
-#include <glm/vec4.hpp>
 #include <glm/mat4x4.hpp>
+#include <glm/vec4.hpp>
 
-#include "Bounds.h"
-#include "Shader.h"
 #include "AK/Badge.h"
 #include "AK/Types.h"
+#include "Bounds.h"
+#include "Shader.h"
 
 class Drawable;
 
 class Material
 {
 public:
-    static std::shared_ptr<Material> create(std::shared_ptr<Shader> const& shader, i32 const render_order = 0, bool const is_gpu_instanced = false, bool const is_billboard = false);
+    static std::shared_ptr<Material> create(std::shared_ptr<Shader> const& shader, i32 const render_order = 0,
+                                            bool const is_gpu_instanced = false, bool const is_billboard = false);
 
-    explicit Material(AK::Badge<Material>, std::shared_ptr<Shader> const& shader, i32 const render_order, bool const is_gpu_instanced, bool const is_billboard);
+    explicit Material(AK::Badge<Material>, std::shared_ptr<Shader> const& shader, i32 const render_order, bool const is_gpu_instanced,
+                      bool const is_billboard);
 
     [[nodiscard]] bool has_custom_render_order() const
     {

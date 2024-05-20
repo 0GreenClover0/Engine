@@ -2,8 +2,8 @@
 
 #include <glm/vec3.hpp>
 
-#include "Frustum.h"
 #include "AK/Types.h"
+#include "Frustum.h"
 
 struct BoundingBox
 {
@@ -20,14 +20,8 @@ struct BoundingBox
     BoundingBox(glm::vec3 const center, float const x, float const y, float const z);
 
     inline static constexpr glm::vec3 corner_offsets[] = {
-        glm::vec3(-1.0f, -1.0f, -1.0f),
-        glm::vec3(-1.0f, -1.0f,  1.0f),
-        glm::vec3(-1.0f,  1.0f, -1.0f),
-        glm::vec3(-1.0f,  1.0f,  1.0f),
-        glm::vec3( 1.0f, -1.0f, -1.0f),
-        glm::vec3( 1.0f, -1.0f,  1.0f),
-        glm::vec3( 1.0f,  1.0f, -1.0f),
-        glm::vec3( 1.0f,  1.0f,  1.0f)
+        glm::vec3(-1.0f, -1.0f, -1.0f), glm::vec3(-1.0f, -1.0f, 1.0f), glm::vec3(-1.0f, 1.0f, -1.0f), glm::vec3(-1.0f, 1.0f, 1.0f),
+        glm::vec3(1.0f, -1.0f, -1.0f),  glm::vec3(1.0f, -1.0f, 1.0f),  glm::vec3(1.0f, 1.0f, -1.0f),  glm::vec3(1.0f, 1.0f, 1.0f),
     };
 
     [[nodiscard]] static i32 plane_normal_to_index(glm::vec3 const& normal);

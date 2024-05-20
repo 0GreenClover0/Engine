@@ -7,7 +7,7 @@
 
 std::shared_ptr<BlurPassContainer> BlurPassContainer::create()
 {
-    return std::make_shared<BlurPassContainer>(AK::Badge<BlurPassContainer>{});
+    return std::make_shared<BlurPassContainer>(AK::Badge<BlurPassContainer> {});
 }
 
 BlurPassContainer::BlurPassContainer(AK::Badge<BlurPassContainer>)

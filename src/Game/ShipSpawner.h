@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Component.h"
-#include "Ship.h"
 #include "Path.h"
+#include "Ship.h"
 
 class ShipSpawner final : public Component
 {
@@ -28,7 +28,6 @@ public:
     float const minimum_spawn_distance = 1.25f;
 
 private:
-
     enum class SpawnType
     {
         Sequence,

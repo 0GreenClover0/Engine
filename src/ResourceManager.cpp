@@ -28,8 +28,8 @@ std::shared_ptr<Texture> ResourceManager::load_texture(std::string const& path, 
     return resource_ptr;
 }
 
-std::shared_ptr<Texture> ResourceManager::load_cubemap(std::vector<std::string> const &paths, TextureType const type,
-                                                       TextureSettings const &settings)
+std::shared_ptr<Texture> ResourceManager::load_cubemap(std::vector<std::string> const& paths, TextureType const type,
+                                                       TextureSettings const& settings)
 {
     assert(paths.size() >= 6);
 
@@ -48,8 +48,7 @@ std::shared_ptr<Texture> ResourceManager::load_cubemap(std::vector<std::string> 
     return resource_ptr;
 }
 
-std::shared_ptr<Texture> ResourceManager::load_cubemap(std::string const& path, TextureType const type,
-                                                       TextureSettings const& settings)
+std::shared_ptr<Texture> ResourceManager::load_cubemap(std::string const& path, TextureType const type, TextureSettings const& settings)
 {
     std::stringstream stream;
     stream << path;
@@ -120,10 +119,8 @@ std::shared_ptr<Shader> ResourceManager::load_shader(std::string const& vertex_p
     return resource_ptr;
 }
 
-std::shared_ptr<Shader> ResourceManager::load_shader(std::string const& vertex_path,
-                                                     std::string const& tessellation_control_path,
-                                                     std::string const& tessellation_evaluation_path,
-                                                     std::string const& fragment_path)
+std::shared_ptr<Shader> ResourceManager::load_shader(std::string const& vertex_path, std::string const& tessellation_control_path,
+                                                     std::string const& tessellation_evaluation_path, std::string const& fragment_path)
 {
     std::stringstream stream;
     stream << vertex_path << tessellation_control_path << tessellation_evaluation_path << fragment_path;

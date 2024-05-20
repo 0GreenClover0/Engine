@@ -1,9 +1,9 @@
 #pragma once
 
+#include "AK/Badge.h"
+#include "AK/Types.h"
 #include "Scene.h"
 #include "Transform.h"
-#include "AK/Types.h"
-#include "AK/Badge.h"
 
 #include <array>
 
@@ -199,8 +199,8 @@ private:
     double m_sensitivity = 0.1;
     float m_camera_speed = 12.5f;
 
-    glm::vec3 const m_camera_default_position = { 0.0f, 11.3f, 11.3f };
-    glm::vec3 const m_camera_default_rotation = { -45.0f, 0.0f, 0.0f };
+    glm::vec3 const m_camera_default_position = {0.0f, 11.3f, 11.3f};
+    glm::vec3 const m_camera_default_rotation = {-45.0f, 0.0f, 0.0f};
     float const m_camera_default_fov = 17.51f;
 
     std::shared_ptr<Entity> m_camera_entity;
@@ -233,12 +233,12 @@ private:
 
     GuizmoOperationType m_operation_type = GuizmoOperationType::Translate;
 
-    glm::vec3 const m_scale_snap = { 0.1f, 0.1f, 0.1f };
-    glm::vec3 const m_rotation_snap = { 1.0f, 1.0f, 1.0f };
-    glm::vec3 const m_position_snap = { 0.1f, 0.1f, 0.1f };
+    glm::vec3 const m_scale_snap = {0.1f, 0.1f, 0.1f};
+    glm::vec3 const m_rotation_snap = {1.0f, 1.0f, 1.0f};
+    glm::vec3 const m_position_snap = {0.1f, 0.1f, 0.1f};
 
     std::string content_path = "./res/";
-    std::array<std::string, 3> m_known_model_formats = { ".gltf", ".obj", ".fbx" };
+    std::array<std::string, 3> m_known_model_formats = {".gltf", ".obj", ".fbx"};
 
     std::string m_search_filter = {};
 };

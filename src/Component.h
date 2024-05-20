@@ -3,8 +3,8 @@
 #include <memory>
 #include <string>
 
-#include "Serialization.h"
 #include "Debug.h"
+#include "Serialization.h"
 
 class Collider2D;
 class Entity;

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Shader.h"
 #include "AK/Badge.h"
+#include "Shader.h"
 
 class ShaderFactory;
 
@@ -10,9 +10,10 @@ class ShaderGL final : public Shader
 public:
     explicit ShaderGL(AK::Badge<ShaderFactory>, std::string const& compute_path);
     explicit ShaderGL(AK::Badge<ShaderFactory>, std::string const& vertex_path, std::string const& fragment_path);
-    explicit ShaderGL(AK::Badge<ShaderFactory>, std::string const& vertex_path, std::string const& fragment_path, std::string const& geometry_path);
-    explicit ShaderGL(AK::Badge<ShaderFactory>, std::string const& vertex_path, std::string const& tessellation_control_path, std::string const& tessellation_evaluation_path,
-                      std::string const& fragment_path);
+    explicit ShaderGL(AK::Badge<ShaderFactory>, std::string const& vertex_path, std::string const& fragment_path,
+                      std::string const& geometry_path);
+    explicit ShaderGL(AK::Badge<ShaderFactory>, std::string const& vertex_path, std::string const& tessellation_control_path,
+                      std::string const& tessellation_evaluation_path, std::string const& fragment_path);
 
     void virtual use() const override;
     void virtual set_bool(std::string const& name, bool const value) const override;

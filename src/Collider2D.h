@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Component.h"
 #include "AK/AK.h"
-#include "AK/Types.h"
 #include "AK/Badge.h"
+#include "AK/Types.h"
+#include "Component.h"
 #include "glm/glm.hpp"
 
 #include <array>
@@ -67,7 +67,8 @@ public:
     std::weak_ptr<Collider2D> get_inside_trigger(std::string const& guid) const;
     std::vector<std::weak_ptr<Collider2D>> get_inside_trigger_vector() const;
     void add_inside_trigger(std::string const& guid, std::shared_ptr<Collider2D> const& collider);
-    void set_inside_trigger(std::unordered_map<std::string, std::weak_ptr<Collider2D>> const& map, std::vector<std::weak_ptr<Collider2D>> const& vector);
+    void set_inside_trigger(std::unordered_map<std::string, std::weak_ptr<Collider2D>> const& map,
+                            std::vector<std::weak_ptr<Collider2D>> const& vector);
 
     std::vector<std::weak_ptr<Collider2D>> get_all_overlapping_this_frame() const;
     void add_overlapped_this_frame(std::shared_ptr<Collider2D> const& collider);
@@ -82,9 +83,9 @@ private:
     ColliderType2D m_collider_type = ColliderType2D::Circle;
 
     std::array<glm::vec2, 4> m_corners = {}; // For rectangle, calculated each frame
-    std::array<glm::vec2, 2> m_axes = {};    // For rectangle, calculated each frame
+    std::array<glm::vec2, 2> m_axes = {}; // For rectangle, calculated each frame
 
-    float m_width = 1.0f;  // For rectangle
+    float m_width = 1.0f; // For rectangle
     float m_height = 1.0f; // For rectangle
 
     float m_radius = 0.0f; // For circle

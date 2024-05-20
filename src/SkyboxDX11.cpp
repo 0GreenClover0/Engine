@@ -1,14 +1,15 @@
 #include "SkyboxDX11.h"
-#include "RendererDX11.h"
-#include "VertexBufferDX11.h"
-#include "IndexBufferDX11.h"
-#include "TextureLoaderDX11.h"
-#include "Entity.h"
 #include "Camera.h"
+#include "Entity.h"
+#include "IndexBufferDX11.h"
+#include "RendererDX11.h"
 #include "ResourceManager.h"
 #include "SkyboxFactory.h"
+#include "TextureLoaderDX11.h"
+#include "VertexBufferDX11.h"
 
-SkyboxDX11::SkyboxDX11(AK::Badge<SkyboxFactory>, std::shared_ptr<Material> const& material, std::string const& path) : Skybox(material, path)
+SkyboxDX11::SkyboxDX11(AK::Badge<SkyboxFactory>, std::shared_ptr<Material> const& material, std::string const& path)
+    : Skybox(material, path)
 {
     create_cube();
 
@@ -90,23 +91,16 @@ void SkyboxDX11::create_cube()
         5, 4, 7, 7, 6, 5, // Back face
         4, 0, 3, 3, 7, 4, // Left face
         3, 2, 6, 6, 7, 3, // Top face
-        4, 5, 1, 1, 0, 4  // Bottom face
+        4, 5, 1, 1, 0, 4 // Bottom face
     };
 
     std::vector<Vertex> vertices = {};
     vertices.reserve(8);
 
     float constexpr size = 1.0f;
-    std::array constexpr corners = {
-        glm::vec3(-size, -size, -size),
-        glm::vec3(size, -size, -size),
-        glm::vec3(size, size, -size),
-        glm::vec3(-size, size, -size),
-        glm::vec3(-size, -size, size),
-        glm::vec3(size, -size, size),
-        glm::vec3(size, size, size),
-        glm::vec3(-size, size, size)
-    };
+    std::array constexpr corners = {glm::vec3(-size, -size, -size), glm::vec3(size, -size, -size), glm::vec3(size, size, -size),
+                                    glm::vec3(-size, size, -size),  glm::vec3(-size, -size, size), glm::vec3(size, -size, size),
+                                    glm::vec3(size, size, size),    glm::vec3(-size, size, size)};
 
     for (auto const corner : corners)
     {

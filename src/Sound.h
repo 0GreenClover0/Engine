@@ -1,11 +1,11 @@
 #pragma once
 
-#include <miniaudio.h>
 #include <glm/vec3.hpp>
+#include <miniaudio.h>
 
-#include "Component.h"
 #include "AK/Badge.h"
 #include "AK/Types.h"
+#include "Component.h"
 
 class Sound final : public Component
 {
@@ -19,7 +19,9 @@ public:
                                                          float rolloff = 0.5f,
                                                          ma_attenuation_model attenuation = ma_attenuation_model_inverse);
 
-    explicit Sound(AK::Badge<Sound>) {}
+    explicit Sound(AK::Badge<Sound>)
+    {
+    }
 
     void play();
     void stop();

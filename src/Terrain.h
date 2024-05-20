@@ -8,9 +8,11 @@ NON_SERIALIZED
 class Terrain final : public Model
 {
 public:
-    static std::shared_ptr<Terrain> create(std::shared_ptr<Material> const& material, bool const use_gpu, std::string const& height_map_path = "");
+    static std::shared_ptr<Terrain> create(std::shared_ptr<Material> const& material, bool const use_gpu,
+                                           std::string const& height_map_path = "");
 
-    explicit Terrain(AK::Badge<Terrain>, std::shared_ptr<Material> const& material, bool const use_gpu, std::string const& height_map_path = "");
+    explicit Terrain(AK::Badge<Terrain>, std::shared_ptr<Material> const& material, bool const use_gpu,
+                     std::string const& height_map_path = "");
 
     virtual void draw() const override;
 

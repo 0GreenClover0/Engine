@@ -1,9 +1,9 @@
 #pragma once
 
+#include <glm/fwd.hpp>
 #include <memory>
 #include <string>
 #include <vector>
-#include <glm/fwd.hpp>
 
 #include "AK/Types.h"
 
@@ -38,8 +38,8 @@ protected:
     explicit Shader(std::string const& compute_path);
     explicit Shader(std::string const& vertex_path, std::string const& fragment_path);
     explicit Shader(std::string const& vertex_path, std::string const& fragment_path, std::string const& geometry_path);
-    explicit Shader(std::string const& vertex_path, std::string const& tessellation_control_path, std::string const& tessellation_evaluation_path,
-                    std::string const& fragment_path);
+    explicit Shader(std::string const& vertex_path, std::string const& tessellation_control_path,
+                    std::string const& tessellation_evaluation_path, std::string const& fragment_path);
 
     i32 virtual attach(char const* path, i32 type) const = 0;
 

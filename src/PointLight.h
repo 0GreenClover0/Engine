@@ -1,19 +1,21 @@
 #pragma once
 
+#include <array>
 #include <d3d11.h>
 #include <glm/glm.hpp>
-#include <array>
 #include <vector>
 
-#include "Light.h"
 #include "AK/Badge.h"
 #include "AK/Types.h"
+#include "Light.h"
 
 class PointLight final : public Light
 {
 public:
     static std::shared_ptr<PointLight> create();
-    explicit PointLight(AK::Badge<PointLight>) : Light() { }
+    explicit PointLight(AK::Badge<PointLight>) : Light()
+    {
+    }
 
     virtual void draw_editor() override;
 

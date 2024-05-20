@@ -1,24 +1,24 @@
 #include "Model.h"
 
-#include <iostream>
 #include <filesystem>
+#include <iostream>
 
 #include <assimp/Importer.hpp>
-#include <assimp/scene.h>
 #include <assimp/postprocess.h>
+#include <assimp/scene.h>
 
 #include <imgui.h>
 #include <imgui_stdlib.h>
 
+#include "AK/Types.h"
 #include "Entity.h"
 #include "Globals.h"
 #include "Mesh.h"
 #include "MeshFactory.h"
+#include "Renderer.h"
 #include "ResourceManager.h"
 #include "Texture.h"
 #include "Vertex.h"
-#include "AK/Types.h"
-#include "Renderer.h"
 
 std::shared_ptr<Model> Model::create()
 {
@@ -72,7 +72,7 @@ void Model::draw_editor()
     }
 
     // Choose rasterizer draw mode for individual model
-    std::array const draw_type_items = { "Default", "Wireframe", "Solid"};
+    std::array const draw_type_items = {"Default", "Wireframe", "Solid"};
 
     i32 current_item_index = static_cast<i32>(m_rasterizer_draw_type);
     if (ImGui::Combo("Rasterizer Draw Type", &current_item_index, draw_type_items.data(), draw_type_items.size()))
@@ -226,16 +226,19 @@ std::shared_ptr<Mesh> Model::proccess_mesh(aiMesh const* mesh, aiScene const* sc
 
     aiMaterial const* assimp_material = scene->mMaterials[mesh->mMaterialIndex];
 
-    std::vector<std::shared_ptr<Texture>> diffuse_maps = load_material_textures(assimp_material, aiTextureType_DIFFUSE, TextureType::Diffuse);
+    std::vector<std::shared_ptr<Texture>> diffuse_maps =
+        load_material_textures(assimp_material, aiTextureType_DIFFUSE, TextureType::Diffuse);
     textures.insert(textures.end(), diffuse_maps.begin(), diffuse_maps.end());
 
-    std::vector<std::shared_ptr<Texture>> specular_maps = load_material_textures(assimp_material, aiTextureType_SPECULAR, TextureType::Specular);
+    std::vector<std::shared_ptr<Texture>> specular_maps =
+        load_material_textures(assimp_material, aiTextureType_SPECULAR, TextureType::Specular);
     textures.insert(textures.end(), specular_maps.begin(), specular_maps.end());
 
     return ResourceManager::get_instance().load_mesh(m_meshes.size(), model_path, vertices, indices, textures, m_draw_type, material);
 }
 
-std::vector<std::shared_ptr<Texture>> Model::load_material_textures(aiMaterial const* material, aiTextureType const type, TextureType const type_name)
+std::vector<std::shared_ptr<Texture>> Model::load_material_textures(aiMaterial const* material, aiTextureType const type,
+                                                                    TextureType const type_name)
 {
     std::vector<std::shared_ptr<Texture>> textures;
 

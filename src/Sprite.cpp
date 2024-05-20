@@ -56,19 +56,14 @@ void Sprite::prepare()
 std::shared_ptr<Mesh> Sprite::create_sprite() const
 {
 
-    std::vector<Vertex> const vertices =
-    {
-        { glm::vec3(-1.0f, -1.0f, 0.0f), {}, { 0.0f, 0.0f } }, // bottom left
-        { glm::vec3(1.0f, -1.0f, 0.0f), {}, { 1.0f, 0.0f } },  // bottom right
-        { glm::vec3(1.0f, 1.0f, 0.0f), {}, { 1.0f, 1.0f } },   // top right
-        { glm::vec3(-1.0f, 1.0f, 0.0f), {}, { 0.0f, 1.0f } },  // top left
+    std::vector<Vertex> const vertices = {
+        {glm::vec3(-1.0f, -1.0f, 0.0f), {}, {0.0f, 0.0f}}, // bottom left
+        {glm::vec3(1.0f, -1.0f, 0.0f), {}, {1.0f, 0.0f}}, // bottom right
+        {glm::vec3(1.0f, 1.0f, 0.0f), {}, {1.0f, 1.0f}}, // top right
+        {glm::vec3(-1.0f, 1.0f, 0.0f), {}, {0.0f, 1.0f}}, // top left
     };
 
-    std::vector<u32> const indices =
-    {
-        0, 1, 2,
-        0, 2, 3
-    };
+    std::vector<u32> const indices = {0, 1, 2, 0, 2, 3};
 
     std::vector<std::shared_ptr<Texture>> textures;
 
@@ -78,9 +73,11 @@ std::shared_ptr<Mesh> Sprite::create_sprite() const
     texture_settings.wrap_mode_y = TextureWrapMode::ClampToEdge;
 
     if (!diffuse_texture_path.empty())
-        diffuse_maps.emplace_back(ResourceManager::get_instance().load_texture(diffuse_texture_path, TextureType::Diffuse, texture_settings));
+        diffuse_maps.emplace_back(
+            ResourceManager::get_instance().load_texture(diffuse_texture_path, TextureType::Diffuse, texture_settings));
 
     textures.insert(textures.end(), diffuse_maps.begin(), diffuse_maps.end());
 
-    return ResourceManager::get_instance().load_mesh(m_meshes.size(), diffuse_texture_path, vertices, indices, textures, m_draw_type, material);
+    return ResourceManager::get_instance().load_mesh(m_meshes.size(), diffuse_texture_path, vertices, indices, textures, m_draw_type,
+                                                     material);
 }

@@ -2,8 +2,8 @@
 
 #include <glm/glm.hpp>
 
-#include "Light.h"
 #include "AK/Badge.h"
+#include "Light.h"
 
 class DirectionalLight final : public Light
 {
@@ -12,7 +12,9 @@ public:
 
     virtual void draw_editor() override;
 
-    explicit DirectionalLight(AK::Badge<DirectionalLight> badge) : Light() { }
+    explicit DirectionalLight(AK::Badge<DirectionalLight> badge) : Light()
+    {
+    }
 
     glm::mat4 get_projection_view_matrix();
 

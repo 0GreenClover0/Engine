@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Model.h"
 #include "AK/Badge.h"
+#include "Model.h"
 
 NON_SERIALIZED
 class Grass final : public Model
@@ -21,4 +21,3 @@ private:
 
     [[nodiscard]] std::shared_ptr<Mesh> create_blade() const;
 };
-

@@ -63,7 +63,8 @@ void RendererGL::restore_default_rasterizer_draw_type()
     std::unreachable();
 }
 
-void RendererGL::update_shader(std::shared_ptr<Shader> const& shader, glm::mat4 const& projection_view, glm::mat4 const& projection_view_no_translation) const
+void RendererGL::update_shader(std::shared_ptr<Shader> const& shader, glm::mat4 const& projection_view,
+                               glm::mat4 const& projection_view_no_translation) const
 {
     // TODO: Ultimately we would probably want to cache the uniform location instead of retrieving them by name
 
@@ -145,7 +146,8 @@ void RendererGL::update_material(std::shared_ptr<Material> const& material) cons
     material->shader->set_int("stack_count", material->stack_count);
 }
 
-void RendererGL::update_object(std::shared_ptr<Drawable> const& drawable, std::shared_ptr<Material> const& material, glm::mat4 const& projection_view) const
+void RendererGL::update_object(std::shared_ptr<Drawable> const& drawable, std::shared_ptr<Material> const& material,
+                               glm::mat4 const& projection_view) const
 {
     if (material->needs_view_model)
         material->shader->set_mat4("VM", Camera::get_main_camera()->get_view_matrix() * drawable->entity->transform->get_model_matrix());
@@ -157,7 +159,7 @@ void RendererGL::update_object(std::shared_ptr<Drawable> const& drawable, std::s
     material->shader->set_mat4("model", drawable->entity->transform->get_model_matrix());
 }
 
-void RendererGL::unbind_material(std::shared_ptr<Material> const &material) const
+void RendererGL::unbind_material(std::shared_ptr<Material> const& material) const
 {
     if (Skybox::get_instance() != nullptr && material->needs_skybox)
         Skybox::get_instance()->unbind();
@@ -209,7 +211,8 @@ void RendererGL::perform_frustum_culling(std::shared_ptr<Material> const& materi
     // Send bounding boxes
     // TODO: Batch them with all other existing objects and send only once
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_bounding_boxes_ssbo);
-    glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, material->bounding_boxes.size() * sizeof(BoundingBoxShader), material->bounding_boxes.data());
+    glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, material->bounding_boxes.size() * sizeof(BoundingBoxShader),
+                    material->bounding_boxes.data());
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
     // Run frustum culling

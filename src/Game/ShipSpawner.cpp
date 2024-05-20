@@ -1,15 +1,15 @@
 #include "ShipSpawner.h"
 
 #include <GLFW/glfw3.h>
+#include <glm/gtc/random.hpp>
 #include <imgui.h>
 #include <random>
-#include <glm/gtc/random.hpp>
 
+#include "AK/AK.h"
+#include "Collider2D.h"
 #include "Entity.h"
 #include "Globals.h"
 #include "ResourceManager.h"
-#include "AK/AK.h"
-#include "Collider2D.h"
 
 std::shared_ptr<ShipSpawner> ShipSpawner::create()
 {
@@ -77,10 +77,10 @@ void ShipSpawner::awake()
     std::ranges::shuffle(m_main_spawn, std::default_random_engine(seed));
 
     auto const path1 = entity->add_component<Path>(Path::create());
-    path1->add_points({ { -5.0f, -2.5f }, { -5.0f, 1.7f } });
+    path1->add_points({{-5.0f, -2.5f}, {-5.0f, 1.7f}});
 
     auto const path2 = entity->add_component<Path>(Path::create());
-    path2->add_points({ { 5.0f, -2.5f }, { 5.0f, 1.7f } });
+    path2->add_points({{5.0f, -2.5f}, {5.0f, 1.7f}});
 
     for (auto const& path : entity->get_components<Path>())
     {
@@ -169,7 +169,8 @@ void ShipSpawner::draw_editor()
             ImGui::PushStyleColor(ImGuiCol_FrameBgActive, bg_color);
 
             ImGui::SetNextItemWidth(half_width);
-            if (ImGui::BeginCombo(("Add Ship##" + std::to_string(i)).c_str(), ship_type_to_string(m_main_event_spawn[i].spawn_list[0]).c_str()))
+            if (ImGui::BeginCombo(("Add Ship##" + std::to_string(i)).c_str(),
+                                  ship_type_to_string(m_main_event_spawn[i].spawn_list[0]).c_str()))
             {
                 for (u32 k = static_cast<u32>(ShipType::FoodSmall); k <= static_cast<u32>(ShipType::Tool); k++)
                 {
@@ -305,7 +306,8 @@ void ShipSpawner::draw_editor()
                 ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, bg_color);
                 ImGui::PushStyleColor(ImGuiCol_FrameBgActive, bg_color);
 
-                if (ImGui::BeginCombo(("##ShipType" + std::to_string(i) + std::to_string(j)).c_str(), ship_type_to_string(m_backup_spawn[i].spawn_list[j]).c_str()))
+                if (ImGui::BeginCombo(("##ShipType" + std::to_string(i) + std::to_string(j)).c_str(),
+                                      ship_type_to_string(m_backup_spawn[i].spawn_list[j]).c_str()))
                 {
                     for (u32 k = static_cast<u32>(ShipType::FoodSmall); k <= static_cast<u32>(ShipType::Tool); k++)
                     {
@@ -315,7 +317,8 @@ void ShipSpawner::draw_editor()
 
                         ImGui::PushStyleColor(ImGuiCol_Text, text_color);
                         ImGui::PushStyleColor(ImGuiCol_Header, bg_color);
-                        ImGui::PushStyleColor(ImGuiCol_HeaderHovered, ImVec4(bg_color.x + 0.2f, bg_color.y + 0.2f, bg_color.z + 0.2f, 1.0f));
+                        ImGui::PushStyleColor(ImGuiCol_HeaderHovered,
+                                              ImVec4(bg_color.x + 0.2f, bg_color.y + 0.2f, bg_color.z + 0.2f, 1.0f));
                         ImGui::PushStyleColor(ImGuiCol_HeaderActive, bg_color);
 
                         if (ImGui::Selectable(ship_type_to_string(static_cast<ShipType>(k)).c_str(), true))
@@ -365,8 +368,8 @@ void ShipSpawner::add_warning()
     warning_light_component->linear = 0.0f;
     warning_light_component->quadratic = 0.0f;
 
-    warning->transform->set_local_position({ m_spawn_position[0].x - glm::sign(m_spawn_position[0].x), 0.2f, m_spawn_position[0].y });
-    warning->transform->set_euler_angles({ -90.0f, 0.0f, 0.0f });
+    warning->transform->set_local_position({m_spawn_position[0].x - glm::sign(m_spawn_position[0].x), 0.2f, m_spawn_position[0].y});
+    warning->transform->set_euler_angles({-90.0f, 0.0f, 0.0f});
 
     if (m_spawn_type == SpawnType::Rapid)
     {
@@ -429,7 +432,7 @@ void ShipSpawner::prepare_for_spawn()
             if (m_ships.size() != 0)
             {
                 auto const nearest_ship_position = find_nearest_ship(m_spawn_position.back());
-                assert(nearest_ship_position .has_value());
+                assert(nearest_ship_position.has_value());
 
                 if (glm::distance(nearest_ship_position.value(), m_spawn_position.back()) < minimum_spawn_distance)
                 {
@@ -555,7 +558,8 @@ void ShipSpawner::prepare_for_spawn()
                     potential_spawn_point = path.lock()->get_point_at(glm::linearRand(0.0f, 1.0f));
 
                     auto nearest_ship_position = find_nearest_ship(potential_spawn_point);
-                    if (!nearest_ship_position.has_value() || glm::distance(nearest_ship_position.value(), potential_spawn_point) >= minimum_spawn_distance)
+                    if (!nearest_ship_position.has_value()
+                        || glm::distance(nearest_ship_position.value(), potential_spawn_point) >= minimum_spawn_distance)
                     {
                         break;
                     }
@@ -638,10 +642,10 @@ void ShipSpawner::spawn_ship(SpawnEvent const* being_spawn)
     auto const standard_material = Material::create(standard_shader);
 
     auto const ship = Entity::create("Ship");
-    ship->transform->set_local_position({ m_spawn_position.back().x, 0.0f, m_spawn_position.back().y });
+    ship->transform->set_local_position({m_spawn_position.back().x, 0.0f, m_spawn_position.back().y});
 
     auto const ship_comp = ship->add_component(Ship::create(light.lock(), std::static_pointer_cast<ShipSpawner>(shared_from_this())));
-    auto const collider = ship->add_component<Collider2D>(Collider2D::create({ 0.1f, 0.1f }));
+    auto const collider = ship->add_component<Collider2D>(Collider2D::create({0.1f, 0.1f}));
     collider->set_is_trigger(true);
     ship_comp->on_ship_destroyed.attach(&ShipSpawner::remove_ship, shared_from_this());
     ship_comp->maximum_speed = LevelController::get_instance()->ships_speed;
@@ -758,7 +762,7 @@ std::optional<glm::vec2> ShipSpawner::find_nearest_non_pirate_ship(std::shared_p
 
 std::optional<glm::vec2> ShipSpawner::find_nearest_ship(glm::vec2 center_position) const
 {
-    if (m_ships.empty()) 
+    if (m_ships.empty())
     {
         return std::nullopt;
     }

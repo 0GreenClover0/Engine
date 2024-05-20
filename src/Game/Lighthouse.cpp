@@ -1,10 +1,10 @@
 #include "Lighthouse.h"
 
 #include "Entity.h"
-#include "Model.h"
-#include "ResourceManager.h"
 #include "Game/LighthouseKeeper.h"
 #include "Game/LighthouseLight.h"
+#include "Model.h"
+#include "ResourceManager.h"
 
 #include <imgui_extensions.h>
 

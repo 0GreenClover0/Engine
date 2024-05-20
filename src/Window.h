@@ -9,7 +9,8 @@
 class Window
 {
 public:
-    Window(Renderer::RendererApi const renderer_api, i32 const screen_width, i32 const screen_height, i32 const subsamples = 0, bool const enable_vsync = false, bool const enable_mouse_capture = true);
+    Window(Renderer::RendererApi const renderer_api, i32 const screen_width, i32 const screen_height, i32 const subsamples = 0,
+           bool const enable_vsync = false, bool const enable_mouse_capture = true);
     Window() = delete;
 
     [[nodiscard]] GLFWwindow* get_glfw_window() const;

@@ -1,5 +1,7 @@
 #include "Port.h"
 
+#include "AK/AK.h"
+#include "AK/Badge.h"
 #include "Collider2D.h"
 #include "Cube.h"
 #include "Entity.h"
@@ -7,8 +9,6 @@
 #include "Player.h"
 #include "ResourceManager.h"
 #include "Ship.h"
-#include "AK/AK.h"
-#include "AK/Badge.h"
 
 std::shared_ptr<Port> Port::create()
 {
@@ -53,7 +53,9 @@ bool Port::interact()
     {
         if (ship.expired())
         {
-            Debug::log("Trying to interact with an expired ship inside the port. Something went wrong with removing the ship from the vector?", DebugType::Error);
+            Debug::log(
+                "Trying to interact with an expired ship inside the port. Something went wrong with removing the ship from the vector?",
+                DebugType::Error);
             continue;
         }
 

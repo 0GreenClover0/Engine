@@ -1,12 +1,12 @@
 #pragma once
-#include <memory>
 #include <glm/fwd.hpp>
-#include <glm/vec3.hpp>
 #include <glm/mat4x4.hpp>
+#include <glm/vec3.hpp>
+#include <memory>
 
+#include "AK/Badge.h"
 #include "Component.h"
 #include "Frustum.h"
-#include "AK/Badge.h"
 
 class Camera final : public Component
 {

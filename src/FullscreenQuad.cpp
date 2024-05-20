@@ -2,34 +2,31 @@
 
 #include <array>
 
-#include "Vertex.h"
 #include "RendererDX11.h"
 #include "ResourceManager.h"
+#include "Vertex.h"
 
 FullscreenQuad::FullscreenQuad(AK::Badge<FullscreenQuad>)
 {
-    std::array quad_vertices =
-    {
-        // positions        // normals     // texture Coords
-        Vertex(glm::vec3(-1.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.0f, 0.0f)),
-        Vertex(glm::vec3(-1.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.0f, 1.0f)),
-        Vertex(glm::vec3(1.0f,  1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(1.0f, 0.0f)),
-        Vertex(glm::vec3(1.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(1.0f, 1.0f))
+    std::array quad_vertices = {// positions        // normals     // texture Coords
+                                Vertex(glm::vec3(-1.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.0f, 0.0f)),
+                                Vertex(glm::vec3(-1.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.0f, 1.0f)),
+                                Vertex(glm::vec3(1.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(1.0f, 0.0f)),
+                                Vertex(glm::vec3(1.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(1.0f, 1.0f))};
+
+    std::array<u32, 6> quad_indices = {
+        0, 1, 2, 2, 1, 3,
     };
 
-    std::array<u32, 6> quad_indices =
-    {
-        0, 1, 2,
-        2, 1, 3,
-    };
-
-    m_vertex_buffer = std::make_shared<VertexBufferDX11>(RendererDX11::get_instance_dx11()->get_device(), quad_vertices.data(), quad_vertices.size());
-    m_index_buffer = std::make_shared<IndexBufferDX11>(RendererDX11::get_instance_dx11()->get_device(), quad_indices.data(), quad_indices.size());
+    m_vertex_buffer =
+        std::make_shared<VertexBufferDX11>(RendererDX11::get_instance_dx11()->get_device(), quad_vertices.data(), quad_vertices.size());
+    m_index_buffer =
+        std::make_shared<IndexBufferDX11>(RendererDX11::get_instance_dx11()->get_device(), quad_indices.data(), quad_indices.size());
 }
 
 std::shared_ptr<FullscreenQuad> FullscreenQuad::create()
 {
-    auto fullscreen_quad =  std::make_shared<FullscreenQuad>(AK::Badge<FullscreenQuad>{});
+    auto fullscreen_quad = std::make_shared<FullscreenQuad>(AK::Badge<FullscreenQuad> {});
 
     set_instance(fullscreen_quad);
 

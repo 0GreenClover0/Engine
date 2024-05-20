@@ -1,12 +1,12 @@
 #include "DebugDrawing.h"
 
+#include "AK/AK.h"
 #include "Cube.h"
 #include "Engine.h"
 #include "Entity.h"
 #include "Globals.h"
 #include "ResourceManager.h"
 #include "Sphere.h"
-#include "AK/AK.h"
 
 DebugDrawing::DebugDrawing(AK::Badge<DebugDrawing>)
 {
@@ -17,8 +17,8 @@ std::shared_ptr<DebugDrawing> DebugDrawing::create()
     return std::make_shared<DebugDrawing>(AK::Badge<DebugDrawing> {});
 }
 
-DebugDrawing::DebugDrawing(AK::Badge<DebugDrawing>, glm::vec3 const position, float const radius, double const time) :
-    m_lifetime(time), m_radius(radius), m_position(position)
+DebugDrawing::DebugDrawing(AK::Badge<DebugDrawing>, glm::vec3 const position, float const radius, double const time)
+    : m_lifetime(time), m_radius(radius), m_position(position)
 {
 }
 
@@ -28,13 +28,12 @@ std::shared_ptr<DebugDrawing> DebugDrawing::create(glm::vec3 position, float rad
 }
 
 DebugDrawing::DebugDrawing(AK::Badge<DebugDrawing>, glm::vec3 const position, glm::vec3 const euler_angles, glm::vec3 const extents,
-    double const time) : m_type(DrawingType::Box), m_lifetime(time), m_position(position),
-    m_euler_angles(euler_angles), m_extents(extents)
+                           double const time)
+    : m_type(DrawingType::Box), m_lifetime(time), m_position(position), m_euler_angles(euler_angles), m_extents(extents)
 {
 }
 
-std::shared_ptr<DebugDrawing> DebugDrawing::create(glm::vec3 position, glm::vec3 euler_angles, glm::vec3 extents,
-    double time)
+std::shared_ptr<DebugDrawing> DebugDrawing::create(glm::vec3 position, glm::vec3 euler_angles, glm::vec3 extents, double time)
 {
     return std::make_shared<DebugDrawing>(AK::Badge<DebugDrawing> {}, position, euler_angles, extents, time);
 }
@@ -44,7 +43,8 @@ void DebugDrawing::initialize()
     Component::initialize();
 
     set_can_tick(true);
-    m_light_source_shader = ResourceManager::get_instance().load_shader("./res/shaders/light_source.hlsl", "./res/shaders/light_source.hlsl");
+    m_light_source_shader =
+        ResourceManager::get_instance().load_shader("./res/shaders/light_source.hlsl", "./res/shaders/light_source.hlsl");
     m_plain_material = Material::create(m_light_source_shader);
 
     switch (m_type)
@@ -116,7 +116,7 @@ void DebugDrawing::draw_editor()
     {
         std::array extents = {m_extents.x, m_extents.y, m_extents.z};
         ImGui::InputFloat3("Extents", extents.data());
-        set_extents({ extents[0], extents[1], extents[2] });
+        set_extents({extents[0], extents[1], extents[2]});
     }
 }
 
@@ -197,7 +197,8 @@ void DebugDrawing::create_box(bool const is_reload)
 
 void DebugDrawing::create_sphere(bool const is_reload)
 {
-    m_sphere_component = entity->add_component<Sphere>(Sphere::create(m_radius * 10.0f, 10, 10, "./res/textures/white.jpg", m_plain_material));
+    m_sphere_component =
+        entity->add_component<Sphere>(Sphere::create(m_radius * 10.0f, 10, 10, "./res/textures/white.jpg", m_plain_material));
 
     if (!is_reload)
     {

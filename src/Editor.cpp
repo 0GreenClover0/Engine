@@ -1,52 +1,52 @@
 #include "Editor.h"
 
+#include "imgui_extensions.h"
+#include "imgui_stdlib.h"
+#include <ImGuizmo.h>
 #include <filesystem>
 #include <glm/gtc/type_ptr.inl>
 #include <glm/gtx/string_cast.hpp>
 #include <imgui.h>
-#include <ImGuizmo.h>
-#include "imgui_extensions.h"
-#include "imgui_stdlib.h"
 
 #include "Camera.h"
+#include "Collider2D.h"
 #include "ComponentList.h"
 #include "Cube.h"
+#include "Curve.h"
 #include "Debug.h"
+#include "DebugDrawing.h"
+#include "DirectionalLight.h"
+#include "Ellipse.h"
 #include "Engine.h"
 #include "Entity.h"
+#include "ExampleDynamicText.h"
+#include "ExampleUIBar.h"
+#include "Game/Factory.h"
+#include "Game/LevelController.h"
+#include "Game/Lighthouse.h"
+#include "Game/LighthouseKeeper.h"
+#include "Game/LighthouseLight.h"
+#include "Game/Path.h"
+#include "Game/Player.h"
+#include "Game/Player/PlayerInput.h"
+#include "Game/Port.h"
+#include "Game/Ship.h"
+#include "Game/ShipSpawner.h"
 #include "Globals.h"
 #include "Grass.h"
 #include "Input.h"
+#include "Light.h"
+#include "Model.h"
+#include "PointLight.h"
 #include "RendererDX11.h"
 #include "SceneSerializer.h"
 #include "ScreenText.h"
 #include "Sound.h"
 #include "SoundListener.h"
 #include "Sphere.h"
-#include "Sprite.h"
-#include "Collider2D.h"
-#include "ExampleDynamicText.h"
-#include "ExampleUIBar.h"
-#include "Light.h"
-#include "Game/Player/PlayerInput.h"
-#include "Model.h"
-#include "Ellipse.h"
-#include "DirectionalLight.h"
-#include "PointLight.h"
 #include "SpotLight.h"
-#include "Game/LighthouseKeeper.h"
-#include "Game/LighthouseLight.h"
-#include "Game/Ship.h"
-#include "Game/Lighthouse.h"
-#include "Game/ShipSpawner.h"
-#include "Game/Path.h"
-#include "Game/Factory.h"
-#include "Game/Port.h"
-#include "Curve.h"
-#include "Game/Player.h"
-#include "Game/LevelController.h"
+#include "Sprite.h"
 #include "Water.h"
-#include "DebugDrawing.h"
 // # Put new header here
 
 namespace Editor
@@ -339,10 +339,10 @@ void Editor::draw_game(std::shared_ptr<EditorWindow> const& window)
     }
 
     auto vec2 = ImGui::GetContentRegionAvail();
-    m_game_size = { vec2.x, vec2.y };
+    m_game_size = {vec2.x, vec2.y};
 
     vec2 = ImGui::GetWindowPos();
-    m_game_position = { vec2.x, vec2.y };
+    m_game_position = {vec2.x, vec2.y};
 
     if (Renderer::renderer_api == Renderer::RendererApi::DirectX11)
     {
@@ -367,13 +367,19 @@ void Editor::draw_game(std::shared_ptr<EditorWindow> const& window)
     switch (m_operation_type)
     {
     case GuizmoOperationType::Translate:
-        was_transform_changed = ImGuizmo::Manipulate(glm::value_ptr(camera->get_view_matrix()), glm::value_ptr(camera->get_projection()), ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::MODE::WORLD, glm::value_ptr(global_model), nullptr, m_gizmo_snapping ? glm::value_ptr(m_position_snap) : nullptr);
+        was_transform_changed = ImGuizmo::Manipulate(glm::value_ptr(camera->get_view_matrix()), glm::value_ptr(camera->get_projection()),
+                                                     ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::MODE::WORLD, glm::value_ptr(global_model),
+                                                     nullptr, m_gizmo_snapping ? glm::value_ptr(m_position_snap) : nullptr);
         break;
     case GuizmoOperationType::Scale:
-        was_transform_changed = ImGuizmo::Manipulate(glm::value_ptr(camera->get_view_matrix()), glm::value_ptr(camera->get_projection()), ImGuizmo::OPERATION::SCALE, ImGuizmo::MODE::WORLD, glm::value_ptr(global_model), nullptr, m_gizmo_snapping ? glm::value_ptr(m_scale_snap) : nullptr);
+        was_transform_changed = ImGuizmo::Manipulate(glm::value_ptr(camera->get_view_matrix()), glm::value_ptr(camera->get_projection()),
+                                                     ImGuizmo::OPERATION::SCALE, ImGuizmo::MODE::WORLD, glm::value_ptr(global_model),
+                                                     nullptr, m_gizmo_snapping ? glm::value_ptr(m_scale_snap) : nullptr);
         break;
     case GuizmoOperationType::Rotate:
-        was_transform_changed = ImGuizmo::Manipulate(glm::value_ptr(camera->get_view_matrix()), glm::value_ptr(camera->get_projection()), ImGuizmo::OPERATION::ROTATE, ImGuizmo::MODE::WORLD, glm::value_ptr(global_model), nullptr, m_gizmo_snapping ? glm::value_ptr(m_rotation_snap) : nullptr);
+        was_transform_changed = ImGuizmo::Manipulate(glm::value_ptr(camera->get_view_matrix()), glm::value_ptr(camera->get_projection()),
+                                                     ImGuizmo::OPERATION::ROTATE, ImGuizmo::MODE::WORLD, glm::value_ptr(global_model),
+                                                     nullptr, m_gizmo_snapping ? glm::value_ptr(m_rotation_snap) : nullptr);
         break;
     case GuizmoOperationType::None:
     default:
@@ -429,7 +435,7 @@ void Editor::draw_scene_hierarchy(std::shared_ptr<EditorWindow> const& window)
     }
 
     if (ImGui::IsMouseReleased(ImGuiMouseButton_Right) && ImGui::IsWindowHovered(ImGuiHoveredFlags_AllowWhenBlockedByPopup)
-     && !ImGui::IsAnyItemHovered())
+        && !ImGui::IsAnyItemHovered())
     {
         ImGui::OpenPopup("HierarchyPopup");
     }
@@ -464,8 +470,10 @@ void Editor::draw_scene_hierarchy(std::shared_ptr<EditorWindow> const& window)
 void Editor::draw_entity_recursively(std::shared_ptr<Transform> const& transform)
 {
     auto const entity = transform->entity.lock();
-    ImGuiTreeNodeFlags const node_flags = (!m_selected_entity.expired() && m_selected_entity.lock()->hashed_guid == entity->hashed_guid ? ImGuiTreeNodeFlags_Selected : 0) | (
-        transform->children.empty() ? ImGuiTreeNodeFlags_Leaf : 0) | ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_OpenOnArrow;
+    ImGuiTreeNodeFlags const node_flags =
+        (!m_selected_entity.expired() && m_selected_entity.lock()->hashed_guid == entity->hashed_guid ? ImGuiTreeNodeFlags_Selected : 0)
+        | (transform->children.empty() ? ImGuiTreeNodeFlags_Leaf : 0) | ImGuiTreeNodeFlags_OpenOnDoubleClick
+        | ImGuiTreeNodeFlags_OpenOnArrow;
 
     if (!ImGui::TreeNodeEx(reinterpret_cast<void*>(static_cast<intptr_t>(entity->hashed_guid)), node_flags, "%s", entity->name.c_str()))
     {
@@ -583,7 +591,7 @@ void Editor::draw_window_menu_bar(std::shared_ptr<EditorWindow> const& window)
             {
                 if (ImGui::Button("Lock"))
                 {
-                    window->set_is_locked(!window->is_locked(), LockData { m_selected_entity });
+                    window->set_is_locked(!window->is_locked(), LockData {m_selected_entity});
                 }
             }
 
@@ -659,7 +667,7 @@ void Editor::draw_inspector(std::shared_ptr<EditorWindow> const& window)
     glm::vec3 position = entity->transform->get_local_position();
     ImGuiEx::InputFloat3("Position", glm::value_ptr(position));
 
-    float const input_width = ImGui::CalcItemWidth() / 3.0f  - ImGui::GetStyle().ItemSpacing.x * 0.66f;
+    float const input_width = ImGui::CalcItemWidth() / 3.0f - ImGui::GetStyle().ItemSpacing.x * 0.66f;
 
     ImGui::SameLine();
     ImGui::Text(" | ");
@@ -800,19 +808,17 @@ void Editor::draw_inspector(std::shared_ptr<EditorWindow> const& window)
 
         std::ranges::transform(m_search_filter, m_search_filter.begin(), [](u8 const c) { return std::tolower(c); });
 
-        if constexpr (false)
-            ;
 #define CONCAT_CLASS(name) class name
-#define ENUMERATE_COMPONENT(name, ui_name)                                                            \
-        {                                                                                             \
-            std::string ui_name_lower(ui_name);                                                       \
-            std::ranges::transform(ui_name_lower, ui_name_lower.begin(),                              \
-                           [](u8 const c) { return std::tolower(c); });                               \
-            if (m_search_filter.empty() || ui_name_lower.find(m_search_filter) != std::string::npos) {\
-                if (ImGui::Button(ui_name, ImVec2(-FLT_MIN, 20)))                                     \
-                    entity->add_component<CONCAT_CLASS(name)>(##name::create());                      \
-            }                                                                                         \
-        }
+#define ENUMERATE_COMPONENT(name, ui_name)                                                                        \
+    {                                                                                                             \
+        std::string ui_name_lower(ui_name);                                                                       \
+        std::ranges::transform(ui_name_lower, ui_name_lower.begin(), [](u8 const c) { return std::tolower(c); }); \
+        if (m_search_filter.empty() || ui_name_lower.find(m_search_filter) != std::string::npos)                  \
+        {                                                                                                         \
+            if (ImGui::Button(ui_name, ImVec2(-FLT_MIN, 20)))                                                     \
+                entity->add_component<CONCAT_CLASS(name)>(##name::create());                                      \
+        }                                                                                                         \
+    }
         ENUMERATE_COMPONENTS
 #undef ENUMERATE_COMPONENT
 
@@ -962,22 +968,30 @@ void Editor::camera_input() const
     float const current_speed = m_camera_speed * delta_time;
 
     if (Input::input->get_key(GLFW_KEY_W))
-        m_camera_entity->transform->set_local_position(m_camera_entity->transform->get_local_position() += current_speed * m_editor_camera->get_front());
+        m_camera_entity->transform->set_local_position(m_camera_entity->transform->get_local_position() +=
+                                                       current_speed * m_editor_camera->get_front());
 
     if (Input::input->get_key(GLFW_KEY_S))
-        m_camera_entity->transform->set_local_position(m_camera_entity->transform->get_local_position() -= current_speed * m_editor_camera->get_front());
+        m_camera_entity->transform->set_local_position(m_camera_entity->transform->get_local_position() -=
+                                                       current_speed * m_editor_camera->get_front());
 
     if (Input::input->get_key(GLFW_KEY_A))
-        m_camera_entity->transform->set_local_position(m_camera_entity->transform->get_local_position() -= glm::normalize(glm::cross(m_editor_camera->get_front(), m_editor_camera->get_up())) * current_speed);
+        m_camera_entity->transform->set_local_position(m_camera_entity->transform->get_local_position() -=
+                                                       glm::normalize(glm::cross(m_editor_camera->get_front(), m_editor_camera->get_up()))
+                                                       * current_speed);
 
     if (Input::input->get_key(GLFW_KEY_D))
-        m_camera_entity->transform->set_local_position(m_camera_entity->transform->get_local_position() += glm::normalize(glm::cross(m_editor_camera->get_front(), m_editor_camera->get_up())) * current_speed);
+        m_camera_entity->transform->set_local_position(m_camera_entity->transform->get_local_position() +=
+                                                       glm::normalize(glm::cross(m_editor_camera->get_front(), m_editor_camera->get_up()))
+                                                       * current_speed);
 
     if (Input::input->get_key(GLFW_KEY_E))
-        m_camera_entity->transform->set_local_position(m_camera_entity->transform->get_local_position() += current_speed * glm::vec3(0.0f, 1.0f, 0.0f));
+        m_camera_entity->transform->set_local_position(m_camera_entity->transform->get_local_position() +=
+                                                       current_speed * glm::vec3(0.0f, 1.0f, 0.0f));
 
     if (Input::input->get_key(GLFW_KEY_Q))
-        m_camera_entity->transform->set_local_position(m_camera_entity->transform->get_local_position() -= current_speed * glm::vec3(0.0f, 1.0f, 0.0f));
+        m_camera_entity->transform->set_local_position(m_camera_entity->transform->get_local_position() -=
+                                                       current_speed * glm::vec3(0.0f, 1.0f, 0.0f));
 }
 
 void Editor::non_camera_input()

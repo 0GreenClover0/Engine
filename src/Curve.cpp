@@ -1,14 +1,14 @@
 #include <imgui.h>
 
-#include "Entity.h"
 #include "Curve.h"
+#include "Entity.h"
 
 #include "imgui_extensions.h"
 
-#include <glm/gtc/type_ptr.inl>
-#include <iostream>
-#include <implot.h>
 #include "Game/LevelController.h"
+#include <glm/gtc/type_ptr.inl>
+#include <implot.h>
+#include <iostream>
 
 std::shared_ptr<Curve> Curve::create()
 {
@@ -23,20 +23,20 @@ Curve::Curve() = default;
 
 void Curve::draw_editor()
 {
-    if (ImPlot::BeginPlot("Path visualised")) 
+    if (ImPlot::BeginPlot("Path visualised"))
     {
         ImPlot::PushStyleVar(ImPlotStyleVar_LineWeight, 2.0f);
         ImPlot::SetupLegend(ImPlotFlags_NoLegend);
 
         std::vector<float> xs, ys;
-        for (const auto& p : points) 
+        for (auto const& p : points)
         {
             xs.push_back(p.x);
             ys.push_back(p.y);
         }
 
         ImPlot::PlotLine("##Line", xs.data(), ys.data(), points.size());
-        
+
         for (u32 i = 0; i < points.size(); i++)
         {
             double px = xs[i];
@@ -71,11 +71,11 @@ void Curve::draw_editor()
     {
         if (points.size() == 0)
         {
-            points.push_back({ 0.1f, 0.5f });
+            points.push_back({0.1f, 0.5f});
         }
         else
         {
-            points.push_back({ points.back().x + 0.1f, points.back().y });
+            points.push_back({points.back().x + 0.1f, points.back().y});
 
             points.back().x = glm::clamp(points.back().x, 0.0f, 1.0f);
         }
@@ -105,7 +105,7 @@ float Curve::length() const
 
 glm::vec2 Curve::get_point_at(float x) const
 {
-    if (points.empty()) 
+    if (points.empty())
     {
         return glm::vec2(0.0f, 0.0f);
     }
@@ -116,7 +116,7 @@ glm::vec2 Curve::get_point_at(float x) const
     }
 
     x = glm::clamp(x, 0.0f, 1.0f);
-    
+
     float const path_length = length();
     float const desire_length = path_length * x;
     float distance = 0.0f;
@@ -134,22 +134,21 @@ glm::vec2 Curve::get_point_at(float x) const
         }
     }
 
-
     return glm::vec2(0.0f, 0.0f);
 }
 
 float Curve::get_y_at(float x) const
 {
-    if (points.empty()) 
+    if (points.empty())
     {
         return 0.0f;
     }
 
     x = glm::clamp(x, 0.0f, 1.0f);
 
-    for (u32 i = 0; i < points.size() - 1; i++) 
+    for (u32 i = 0; i < points.size() - 1; i++)
     {
-        if (x >= points[i].x && x <= points[i + 1].x) 
+        if (x >= points[i].x && x <= points[i + 1].x)
         {
             float x0 = points[i].x;
             float y0 = points[i].y;

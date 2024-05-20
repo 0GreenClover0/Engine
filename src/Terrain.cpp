@@ -45,7 +45,8 @@ void Terrain::prepare()
 {
     if (m_height_map_path.empty())
     {
-        std::cout << "Terrain currently only supports loading from a height map." << "\n";
+        std::cout << "Terrain currently only supports loading from a height map."
+                  << "\n";
     }
     else
     {
@@ -58,8 +59,7 @@ void Terrain::prepare()
 
 std::shared_ptr<Mesh> Terrain::create_terrain_from_height_map_gpu() const
 {
-    TextureSettings constexpr texture_settings =
-    {
+    TextureSettings constexpr texture_settings = {
         TextureWrapMode::Repeat,
         TextureWrapMode::Repeat,
         TextureWrapMode::Repeat,
@@ -70,7 +70,8 @@ std::shared_ptr<Mesh> Terrain::create_terrain_from_height_map_gpu() const
         false,
     };
 
-    std::shared_ptr<Texture> const heightmap = ResourceManager::get_instance().load_texture(m_height_map_path, TextureType::Heightmap, texture_settings);
+    std::shared_ptr<Texture> const heightmap =
+        ResourceManager::get_instance().load_texture(m_height_map_path, TextureType::Heightmap, texture_settings);
 
     if (heightmap->id == 0)
     {
@@ -93,60 +94,48 @@ std::shared_ptr<Mesh> Terrain::create_terrain_from_height_map_gpu() const
         for (u32 k = 0; k <= resolution - 1; ++k)
         {
             vertices.emplace_back(
-                glm::vec3(
-                    -static_cast<float>(width) / 2.0f + static_cast<float>(width) * static_cast<float>(i) / static_cast<float>(resolution),
-                    0.0f,
-                    -static_cast<float>(height) / 2.0f + static_cast<float>(height) * static_cast<float>(k) / static_cast<float>(resolution)
-                ),
+                glm::vec3(-static_cast<float>(width) / 2.0f
+                              + static_cast<float>(width) * static_cast<float>(i) / static_cast<float>(resolution),
+                          0.0f,
+                          -static_cast<float>(height) / 2.0f
+                              + static_cast<float>(height) * static_cast<float>(k) / static_cast<float>(resolution)),
                 glm::vec3(),
-                glm::vec2(
-                    static_cast<float>(i) / static_cast<float>(resolution),
-                    static_cast<float>(k) / static_cast<float>(resolution)
-                )
-            );
+                glm::vec2(static_cast<float>(i) / static_cast<float>(resolution), static_cast<float>(k) / static_cast<float>(resolution)));
 
             vertices.emplace_back(
-                glm::vec3(
-                    -static_cast<float>(width) / 2.0f + static_cast<float>(width) * (static_cast<float>(i) + 1.0f) / static_cast<float>(resolution),
-                    0.0f,
-                    -static_cast<float>(height) / 2.0f + static_cast<float>(height) * static_cast<float>(k) / static_cast<float>(resolution)
-                ),
+                glm::vec3(-static_cast<float>(width) / 2.0f
+                              + static_cast<float>(width) * (static_cast<float>(i) + 1.0f) / static_cast<float>(resolution),
+                          0.0f,
+                          -static_cast<float>(height) / 2.0f
+                              + static_cast<float>(height) * static_cast<float>(k) / static_cast<float>(resolution)),
                 glm::vec3(),
-                glm::vec2(
-                    (static_cast<float>(i) + 1.0f) / static_cast<float>(resolution),
-                    static_cast<float>(k) / static_cast<float>(resolution)
-                )
-            );
+                glm::vec2((static_cast<float>(i) + 1.0f) / static_cast<float>(resolution),
+                          static_cast<float>(k) / static_cast<float>(resolution)));
 
             vertices.emplace_back(
-                glm::vec3(
-                    -static_cast<float>(width) / 2.0f + static_cast<float>(width) * static_cast<float>(i) / static_cast<float>(resolution),
-                    0.0f,
-                    -static_cast<float>(height) / 2.0f + static_cast<float>(height) * (static_cast<float>(k) + 1.0f) / static_cast<float>(resolution)
-                ),
+                glm::vec3(-static_cast<float>(width) / 2.0f
+                              + static_cast<float>(width) * static_cast<float>(i) / static_cast<float>(resolution),
+                          0.0f,
+                          -static_cast<float>(height) / 2.0f
+                              + static_cast<float>(height) * (static_cast<float>(k) + 1.0f) / static_cast<float>(resolution)),
                 glm::vec3(),
-                glm::vec2(
-                    static_cast<float>(i) / static_cast<float>(resolution),
-                    (static_cast<float>(k) + 1.0f) / static_cast<float>(resolution)
-                )
-            );
+                glm::vec2(static_cast<float>(i) / static_cast<float>(resolution),
+                          (static_cast<float>(k) + 1.0f) / static_cast<float>(resolution)));
 
             vertices.emplace_back(
-                glm::vec3(
-                    -static_cast<float>(width) / 2.0f + static_cast<float>(width) * (static_cast<float>(i) + 1.0f) / static_cast<float>(resolution),
-                    0.0f,
-                    -static_cast<float>(height) / 2.0f + static_cast<float>(height) * (static_cast<float>(k) + 1.0f) / static_cast<float>(resolution)
-                ),
+                glm::vec3(-static_cast<float>(width) / 2.0f
+                              + static_cast<float>(width) * (static_cast<float>(i) + 1.0f) / static_cast<float>(resolution),
+                          0.0f,
+                          -static_cast<float>(height) / 2.0f
+                              + static_cast<float>(height) * (static_cast<float>(k) + 1.0f) / static_cast<float>(resolution)),
                 glm::vec3(),
-                glm::vec2(
-                    (static_cast<float>(i) + 1.0f) / static_cast<float>(resolution),
-                    (static_cast<float>(k) + 1.0f) / static_cast<float>(resolution)
-                )
-            );
+                glm::vec2((static_cast<float>(i) + 1.0f) / static_cast<float>(resolution),
+                          (static_cast<float>(k) + 1.0f) / static_cast<float>(resolution)));
         }
     }
 
-    return ResourceManager::get_instance().load_mesh(m_meshes.size(), m_height_map_path, vertices, {}, textures, m_draw_type, material, DrawFunctionType::NotIndexed);
+    return ResourceManager::get_instance().load_mesh(m_meshes.size(), m_height_map_path, vertices, {}, textures, m_draw_type, material,
+                                                     DrawFunctionType::NotIndexed);
 }
 
 std::shared_ptr<Mesh> Terrain::create_terrain_from_height_map()
@@ -173,7 +162,7 @@ std::shared_ptr<Mesh> Terrain::create_terrain_from_height_map()
     {
         for (u32 k = 0; k < width; ++k)
         {
-            unsigned const char* texel = data + (k + width * i) * number_of_components;
+            unsigned char const* texel = data + (k + width * i) * number_of_components;
 
             unsigned char const y = texel[0];
 

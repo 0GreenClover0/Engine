@@ -48,7 +48,8 @@ void DirectionalLight::set_up_shadow_mapping()
     shadow_shader_resource_view_desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
     shadow_shader_resource_view_desc.Texture2D.MostDetailedMip = 0;
     shadow_shader_resource_view_desc.Texture2D.MipLevels = shadow_texture_desc.MipLevels;
-    hr = renderer->get_device()->CreateShaderResourceView(m_shadow_texture, &shadow_shader_resource_view_desc, &m_shadow_shader_resource_view);
+    hr = renderer->get_device()->CreateShaderResourceView(m_shadow_texture, &shadow_shader_resource_view_desc,
+                                                          &m_shadow_shader_resource_view);
     assert(SUCCEEDED(hr));
 }
 
@@ -57,8 +58,11 @@ glm::mat4 DirectionalLight::get_projection_view_matrix()
     if (m_last_model_matrix != entity->transform->get_model_matrix() && entity != nullptr)
     {
         m_last_model_matrix = entity->transform->get_model_matrix();
-        glm::mat4 const projection_matrix = glm::ortho(-15.0f, 15.0f, -15.0f, 15.0f, -entity->transform->get_position().y, entity->transform->get_position().y);
-        glm::mat4 const view_matrix = glm::lookAt(entity->transform->get_position(), entity->transform->get_position() + entity->transform->get_forward(), entity->transform->get_up());
+        glm::mat4 const projection_matrix =
+            glm::ortho(-15.0f, 15.0f, -15.0f, 15.0f, -entity->transform->get_position().y, entity->transform->get_position().y);
+        glm::mat4 const view_matrix =
+            glm::lookAt(entity->transform->get_position(), entity->transform->get_position() + entity->transform->get_forward(),
+                        entity->transform->get_up());
         m_projection_view_matrix = projection_matrix * view_matrix;
     }
 

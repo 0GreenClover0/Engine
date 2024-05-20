@@ -11,15 +11,16 @@
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include <GLFW/glfw3native.h>
 
-Window::Window(Renderer::RendererApi const renderer_api, i32 const screen_width, i32 const screen_height, i32 const subsamples, bool const enable_vsync, bool const enable_mouse_capture)
+Window::Window(Renderer::RendererApi const renderer_api, i32 const screen_width, i32 const screen_height, i32 const subsamples,
+               bool const enable_vsync, bool const enable_mouse_capture)
 {
     switch (renderer_api)
     {
     case Renderer::RendererApi::OpenGL:
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);  // 3.2+ only
-        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);            // 3.0+ only
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // 3.2+ only
+        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // 3.0+ only
         break;
     case Renderer::RendererApi::DirectX11:
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
@@ -51,7 +52,8 @@ Window::Window(Renderer::RendererApi const renderer_api, i32 const screen_width,
     case Renderer::RendererApi::DirectX11:
         if (enable_mouse_capture)
         {
-            std::cout << "TODO: Enable mouse capture is currently not supported in DirectX11 backend." << "\n";
+            std::cout << "TODO: Enable mouse capture is currently not supported in DirectX11 backend."
+                      << "\n";
         }
 
         break;

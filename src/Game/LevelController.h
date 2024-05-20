@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Component.h"
-#include "Engine.h"
 #include "Curve.h"
+#include "Engine.h"
 
 class ScreenText;
 class Factory;

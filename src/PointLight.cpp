@@ -1,8 +1,8 @@
 #include "PointLight.h"
 
+#include "Entity.h"
 #include "Renderer.h"
 #include "RendererDX11.h"
-#include "Entity.h"
 
 #include <d3d11.h>
 #include <glm/glm.hpp>
@@ -47,7 +47,8 @@ void PointLight::set_up_shadow_mapping()
     shadow_shader_resource_view_desc.Texture2D.MostDetailedMip = 0;
     shadow_shader_resource_view_desc.Texture2D.MipLevels = shadow_texture_desc.MipLevels;
 
-    hr = renderer->get_device()->CreateShaderResourceView(m_shadow_texture, &shadow_shader_resource_view_desc, &m_shadow_shader_resource_view);
+    hr = renderer->get_device()->CreateShaderResourceView(m_shadow_texture, &shadow_shader_resource_view_desc,
+                                                          &m_shadow_shader_resource_view);
     assert(SUCCEEDED(hr));
 
     for (u32 i = 0; i < 6; i++)
@@ -70,7 +71,7 @@ void PointLight::set_up_shadow_mapping()
 }
 
 void PointLight::set_render_target_for_shadow_mapping(u32 const face_index) const
-{   
+{
     auto const renderer = RendererDX11::get_instance_dx11();
     renderer->get_device_context()->OMSetRenderTargets(1, &renderer->g_emptyRenderTargetView, m_shadow_depth_stencil_views[face_index]);
     renderer->get_device_context()->ClearDepthStencilView(m_shadow_depth_stencil_views[face_index], D3D11_CLEAR_DEPTH, 1.0f, 0);
@@ -103,21 +104,15 @@ void PointLight::update_pv_matrices()
 
     glm::vec3 const light_pos = transform->get_position();
 
-    m_projection_view_matrices[0] = shadow_proj *
-                                    glm::lookAt(light_pos, light_pos + glm::vec3(1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0));
+    m_projection_view_matrices[0] = shadow_proj * glm::lookAt(light_pos, light_pos + glm::vec3(1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0));
 
-    m_projection_view_matrices[1] = shadow_proj *
-                                    glm::lookAt(light_pos, light_pos + glm::vec3(-1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0));
+    m_projection_view_matrices[1] = shadow_proj * glm::lookAt(light_pos, light_pos + glm::vec3(-1.0, 0.0, 0.0), glm::vec3(0.0, -1.0, 0.0));
 
-    m_projection_view_matrices[2] = shadow_proj *
-                                    glm::lookAt(light_pos, light_pos + glm::vec3(0.0, 1.0, 0.0), glm::vec3(0.0, 0.0, 1.0));
+    m_projection_view_matrices[2] = shadow_proj * glm::lookAt(light_pos, light_pos + glm::vec3(0.0, 1.0, 0.0), glm::vec3(0.0, 0.0, 1.0));
 
-    m_projection_view_matrices[3] = shadow_proj *
-                                    glm::lookAt(light_pos, light_pos + glm::vec3(0.0, -1.0, 0.0), glm::vec3(0.0, 0.0, -1.0));
+    m_projection_view_matrices[3] = shadow_proj * glm::lookAt(light_pos, light_pos + glm::vec3(0.0, -1.0, 0.0), glm::vec3(0.0, 0.0, -1.0));
 
-    m_projection_view_matrices[4] = shadow_proj *
-                                    glm::lookAt(light_pos, light_pos + glm::vec3(0.0, 0.0, 1.0), glm::vec3(0.0, -1.0, 0.0));
+    m_projection_view_matrices[4] = shadow_proj * glm::lookAt(light_pos, light_pos + glm::vec3(0.0, 0.0, 1.0), glm::vec3(0.0, -1.0, 0.0));
 
-    m_projection_view_matrices[5] = shadow_proj *
-                                    glm::lookAt(light_pos, light_pos + glm::vec3(0.0, 0.0, -1.0), glm::vec3(0.0, -1.0, 0.0));
+    m_projection_view_matrices[5] = shadow_proj * glm::lookAt(light_pos, light_pos + glm::vec3(0.0, 0.0, -1.0), glm::vec3(0.0, -1.0, 0.0));
 }

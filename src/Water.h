@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Model.h"
 #include "ConstantBufferTypes.h"
+#include "Model.h"
 
 #include <d3d11.h>
 
@@ -13,7 +13,7 @@ public:
 
     explicit Water(AK::Badge<Water>, std::shared_ptr<Material> const& material);
     Water(AK::Badge<Water>, u32 tesselation_level, std::string const& texture_path, std::shared_ptr<Material> const& material);
-    
+
     virtual void draw() const override;
     virtual void prepare() override;
     virtual void reprepare() override;

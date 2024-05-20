@@ -73,7 +73,8 @@ ShaderGL::ShaderGL(AK::Badge<ShaderFactory>, std::string const& vertex_path, std
     glDeleteShader(fragment_shader_id);
 }
 
-ShaderGL::ShaderGL(AK::Badge<ShaderFactory>, std::string const& vertex_path, std::string const& fragment_path, std::string const& geometry_path)
+ShaderGL::ShaderGL(AK::Badge<ShaderFactory>, std::string const& vertex_path, std::string const& fragment_path,
+                   std::string const& geometry_path)
     : Shader(vertex_path, fragment_path, geometry_path)
 {
     char const* vertex_path_c_str = m_vertex_path.c_str();
@@ -117,9 +118,8 @@ ShaderGL::ShaderGL(AK::Badge<ShaderFactory>, std::string const& vertex_path, std
 }
 
 ShaderGL::ShaderGL(AK::Badge<ShaderFactory>, std::string const& vertex_path, std::string const& tessellation_control_path,
-                   std::string const& tessellation_evaluation_path,
-                   std::string const& fragment_path) : Shader(vertex_path, tessellation_control_path, tessellation_evaluation_path,
-                                                              fragment_path)
+                   std::string const& tessellation_evaluation_path, std::string const& fragment_path)
+    : Shader(vertex_path, tessellation_control_path, tessellation_evaluation_path, fragment_path)
 {
     char const* vertex_path_c_str = m_vertex_path.c_str();
     char const* tessellation_control_path_c_str = m_tessellation_control_path.c_str();
@@ -189,7 +189,9 @@ i32 ShaderGL::attach(char const* path, i32 const type) const
     }
     catch (std::ifstream::failure& e)
     {
-        std:: cout << "Error. ShaderGL file not successfully read." << "\n" << e.what() << "\n";
+        std::cout << "Error. ShaderGL file not successfully read."
+                  << "\n"
+                  << e.what() << "\n";
     }
 
     char const* shader_code = code.c_str();
@@ -206,7 +208,9 @@ i32 ShaderGL::attach(char const* path, i32 const type) const
     if (!success)
     {
         glGetShaderInfoLog(shader_id, log_size, nullptr, info_log);
-        std::cout << "Error. ShaderGL of type " << type << ", linking failed." << "\n" << info_log << "\n";
+        std::cout << "Error. ShaderGL of type " << type << ", linking failed."
+                  << "\n"
+                  << info_log << "\n";
         return -1;
     }
 

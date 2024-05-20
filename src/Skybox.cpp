@@ -4,10 +4,11 @@
 #include <utility>
 
 #include "Globals.h"
-#include "ResourceManager.h"
 #include "Renderer.h"
+#include "ResourceManager.h"
 
-Skybox::Skybox(std::shared_ptr<Material> const& material, std::vector<std::string> const& face_paths) : Drawable(material), m_face_paths(face_paths)
+Skybox::Skybox(std::shared_ptr<Material> const& material, std::vector<std::string> const& face_paths)
+    : Drawable(material), m_face_paths(face_paths)
 {
     load_textures();
 }
@@ -19,17 +20,14 @@ Skybox::Skybox(std::shared_ptr<Material> const& material, std::string const& pat
 
 void Skybox::load_textures()
 {
-    TextureSettings constexpr texture_settings =
-    {
-        TextureWrapMode::ClampToEdge,
-        TextureWrapMode::ClampToEdge,
-        TextureWrapMode::ClampToEdge,
-        TextureFiltering::Linear,
-        TextureFiltering::Linear,
-        TextureFiltering::None,
-        false,
-        false
-    };
+    TextureSettings constexpr texture_settings = {TextureWrapMode::ClampToEdge,
+                                                  TextureWrapMode::ClampToEdge,
+                                                  TextureWrapMode::ClampToEdge,
+                                                  TextureFiltering::Linear,
+                                                  TextureFiltering::Linear,
+                                                  TextureFiltering::None,
+                                                  false,
+                                                  false};
 
     if (Renderer::renderer_api == Renderer::RendererApi::DirectX11)
     {

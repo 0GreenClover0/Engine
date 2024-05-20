@@ -139,53 +139,34 @@ void Camera::update_frustum()
 
     auto const right_normal = glm::vec3(world[0][3] - world[0][0], world[1][3] - world[1][0], world[2][3] - world[2][0]);
     float const right_length = glm::length(right_normal);
-    m_frustum.right_plane = Plane(
-        right_normal / right_length,
-        (world[3][3] - world[3][0]) / right_length
-    );
+    m_frustum.right_plane = Plane(right_normal / right_length, (world[3][3] - world[3][0]) / right_length);
 
     auto const left_normal = glm::vec3(world[0][3] + world[0][0], world[1][3] + world[1][0], world[2][3] + world[2][0]);
     float const left_length = glm::length(left_normal);
-    m_frustum.left_plane = Plane(
-        left_normal / left_length,
-        (world[3][3] + world[3][0]) / left_length
-    );
+    m_frustum.left_plane = Plane(left_normal / left_length, (world[3][3] + world[3][0]) / left_length);
 
     auto const bottom_normal = glm::vec3(world[0][3] + world[0][1], world[1][3] + world[1][1], world[2][3] + world[2][1]);
     auto const bottom_length = glm::length(bottom_normal);
-    m_frustum.bottom_plane = Plane(
-        bottom_normal / bottom_length,
-        (world[3][3] + world[3][1]) / bottom_length
-    );
+    m_frustum.bottom_plane = Plane(bottom_normal / bottom_length, (world[3][3] + world[3][1]) / bottom_length);
 
     auto const top_normal = glm::vec3(world[0][3] - world[0][1], world[1][3] - world[1][1], world[2][3] - world[2][1]);
     auto const top_length = glm::length(top_normal);
-    m_frustum.top_plane = Plane(
-        top_normal / top_length,
-        (world[3][3] - world[3][1]) / top_length
-    );
+    m_frustum.top_plane = Plane(top_normal / top_length, (world[3][3] - world[3][1]) / top_length);
 
     auto const far_normal = glm::vec3(world[0][3] - world[0][2], world[1][3] - world[1][2], world[2][3] - world[2][2]);
     auto const far_length = glm::length(far_normal);
-    m_frustum.far_plane = Plane(
-        far_normal / far_length,
-        (world[3][3] - world[3][2]) / far_length
-    );
+    m_frustum.far_plane = Plane(far_normal / far_length, (world[3][3] - world[3][2]) / far_length);
 
     auto const near_normal = glm::vec3(world[0][3] + world[0][2], world[1][3] + world[1][2], world[2][3] + world[2][2]);
     auto const near_length = glm::length(near_normal);
-    m_frustum.near_plane = Plane(
-        near_normal / near_length,
-        (world[3][3] + world[3][2]) / near_length
-    );
+    m_frustum.near_plane = Plane(near_normal / near_length, (world[3][3] + world[3][2]) / near_length);
 }
 
 std::array<glm::vec4, 6> Camera::get_frustum_planes()
 {
     update_internals();
 
-    return
-    {
+    return {
         glm::vec4(m_frustum.left_plane.normal, m_frustum.left_plane.distance),
         glm::vec4(m_frustum.right_plane.normal, m_frustum.right_plane.distance),
         glm::vec4(m_frustum.top_plane.normal, m_frustum.top_plane.distance),
@@ -217,7 +198,8 @@ void Camera::update_internals()
 
         update_frustum();
     }
-    else if (glm::epsilonEqual(m_last_frustum_position, get_position(), 0.0001f) != glm::bvec3(true, true, true)) // If we only moved we still need to update frustum
+    else if (glm::epsilonEqual(m_last_frustum_position, get_position(), 0.0001f)
+             != glm::bvec3(true, true, true)) // If we only moved we still need to update frustum
     {
         update_frustum();
     }

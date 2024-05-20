@@ -9,7 +9,6 @@ i32 constexpr MAX_SPOT_LIGHTS = 20;
 
 struct ConstantBuffer
 {
-
 };
 
 struct DXWave

@@ -38,8 +38,8 @@ protected:
 private:
     inline static std::shared_ptr<TextureLoader> m_instance;
 
-    [[nodiscard]] std::shared_ptr<Texture> load_texture(std::string const &path, TextureType const type,
-                                                        TextureSettings const &settings = {});
+    [[nodiscard]] std::shared_ptr<Texture> load_texture(std::string const& path, TextureType const type,
+                                                        TextureSettings const& settings = {});
     [[nodiscard]] std::shared_ptr<Texture> load_cubemap(std::vector<std::string> const& paths, TextureType const type,
                                                         TextureSettings const& settings = {});
     [[nodiscard]] std::shared_ptr<Texture> load_cubemap(std::string const& path, TextureType const type,

@@ -1,7 +1,7 @@
 #include "Component.h"
 
-#include "Entity.h"
 #include "AK/AK.h"
+#include "Entity.h"
 #include "MainScene.h"
 
 #include <imgui.h>
@@ -55,11 +55,11 @@ void Component::on_collision_exit(std::shared_ptr<Collider2D> const& other)
 {
 }
 
-void Component::on_trigger_enter(std::shared_ptr<Collider2D> const &other)
+void Component::on_trigger_enter(std::shared_ptr<Collider2D> const& other)
 {
 }
 
-void Component::on_trigger_exit(std::shared_ptr<Collider2D> const &other)
+void Component::on_trigger_exit(std::shared_ptr<Collider2D> const& other)
 {
 }
 

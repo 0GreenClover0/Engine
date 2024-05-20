@@ -5,10 +5,10 @@
 
 #include "imgui_extensions.h"
 
-#include <glm/gtc/type_ptr.inl>
-#include <iostream>
-#include <implot.h>
 #include "Game/LevelController.h"
+#include <glm/gtc/type_ptr.inl>
+#include <implot.h>
+#include <iostream>
 
 std::shared_ptr<Path> Path::create()
 {
@@ -21,15 +21,17 @@ Path::Path(AK::Badge<Path>)
 
 void Path::draw_editor()
 {
-    if (ImPlot::BeginPlot("Path visualised")) 
+    if (ImPlot::BeginPlot("Path visualised"))
     {
         ImPlot::PushStyleVar(ImPlotStyleVar_LineWeight, 2.0f);
         ImPlot::SetupLegend(ImPlotFlags_NoLegend);
-        ImPlot::SetupAxesLimits(-LevelController::get_instance()->playfield_width, LevelController::get_instance()->playfield_width, -LevelController::get_instance()->playfield_height, LevelController::get_instance()->playfield_height, ImGuiCond_Once);
+        ImPlot::SetupAxesLimits(-LevelController::get_instance()->playfield_width, LevelController::get_instance()->playfield_width,
+                                -LevelController::get_instance()->playfield_height, LevelController::get_instance()->playfield_height,
+                                ImGuiCond_Once);
         ImGui::Checkbox("Reverse y-axis", &m_reverse_y);
 
         std::vector<float> xs, ys;
-        for (const auto& p : points) 
+        for (auto const& p : points)
         {
             xs.push_back(p.x);
             m_reverse_y ? ys.push_back(-p.y) : ys.push_back(p.y);

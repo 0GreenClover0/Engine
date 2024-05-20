@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Component.h"
-#include "LighthouseLight.h"
 #include "LevelController.h"
+#include "LighthouseLight.h"
 
 enum class ShipType
 {
@@ -91,7 +91,7 @@ public:
     virtual void on_destroyed() override;
     virtual void draw_editor() override;
 
-    virtual void on_trigger_enter(std::shared_ptr<Collider2D> const &other) override;
+    virtual void on_trigger_enter(std::shared_ptr<Collider2D> const& other) override;
 
     void destroy();
     void stop();
@@ -120,7 +120,7 @@ private:
 
     float m_speed = 0.0f;
     float m_direction = 0.0f;
-    
+
     float const m_how_deep_sink_factor = 0.26f;
 
     bool m_is_in_port = false;

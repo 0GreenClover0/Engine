@@ -1,12 +1,12 @@
 #include "Collider2D.h"
 
+#include "AK/AK.h"
+#include "AK/Math.h"
 #include "DebugDrawing.h"
 #include "Engine.h"
 #include "Entity.h"
 #include "Globals.h"
 #include "PhysicsEngine.h"
-#include "AK/AK.h"
-#include "AK/Math.h"
 
 std::shared_ptr<Collider2D> Collider2D::create()
 {
@@ -57,8 +57,8 @@ Collider2D::Collider2D(AK::Badge<Collider2D>, glm::vec2 const bounds_dimensions,
 {
 }
 
-Collider2D::Collider2D(AK::Badge<Collider2D>, float const width, float const height, bool const is_static) : m_is_static(is_static),
-    m_collider_type(ColliderType2D::Rectangle), m_width(width), m_height(height)
+Collider2D::Collider2D(AK::Badge<Collider2D>, float const width, float const height, bool const is_static)
+    : m_is_static(is_static), m_collider_type(ColliderType2D::Rectangle), m_width(width), m_height(height)
 {
 }
 
@@ -149,7 +149,7 @@ glm::vec2 Collider2D::get_center_2d() const
 
 glm::vec2 Collider2D::get_bounds_dimensions_2d() const
 {
-    return { m_width, m_height };
+    return {m_width, m_height};
 }
 
 std::array<glm::vec2, 4> Collider2D::get_corners() const
@@ -190,7 +190,7 @@ void Collider2D::add_inside_trigger(std::string const& guid, std::shared_ptr<Col
 }
 
 auto Collider2D::set_inside_trigger(std::unordered_map<std::string, std::weak_ptr<Collider2D>> const& map,
-    std::vector<std::weak_ptr<Collider2D>> const& vector) -> void
+                                    std::vector<std::weak_ptr<Collider2D>> const& vector) -> void
 {
     m_inside_trigger = map;
     m_inside_trigger_vector = vector;

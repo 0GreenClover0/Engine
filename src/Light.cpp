@@ -12,15 +12,15 @@ void Light::draw_editor()
 {
     Component::draw_editor();
 
-    float diffuse_color[] = { diffuse.x, diffuse.y, diffuse.z };
+    float diffuse_color[] = {diffuse.x, diffuse.y, diffuse.z};
     ImGui::ColorEdit3("Diffuse color", diffuse_color);
     diffuse = glm::vec3(diffuse_color[0], diffuse_color[1], diffuse_color[2]);
 
-    float ambient_color[] = { ambient.x, ambient.y, ambient.z };
+    float ambient_color[] = {ambient.x, ambient.y, ambient.z};
     ImGui::ColorEdit3("Ambient color", ambient_color);
     ambient = glm::vec3(ambient_color[0], ambient_color[1], ambient_color[2]);
 
-    float specular_color[] = { specular.x, specular.y, specular.z };
+    float specular_color[] = {specular.x, specular.y, specular.z};
     ImGui::ColorEdit3("Specular color", specular_color);
     specular = glm::vec3(specular_color[0], specular_color[1], specular_color[2]);
 }

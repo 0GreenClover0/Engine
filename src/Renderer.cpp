@@ -2,10 +2,10 @@
 
 #include <array>
 #include <format>
-#include <iostream>
 #include <glad/glad.h>
 #include <glm/gtx/rotate_vector.hpp>
 #include <glm/gtx/string_cast.hpp>
+#include <iostream>
 
 #include "AK/AK.h"
 #include "Camera.h"
@@ -43,10 +43,10 @@ void Renderer::unregister_shader(std::shared_ptr<Shader> const& shader)
     AK::swap_and_erase(m_shaders, shader);
 }
 
-bool Renderer::is_drawable_registered(std::shared_ptr<Drawable> const &drawable) const
+bool Renderer::is_drawable_registered(std::shared_ptr<Drawable> const& drawable) const
 {
-    return std::ranges::find(drawable->material->drawables.begin(), drawable->material->drawables.end(), drawable) !=
-           drawable->material->drawables.end();
+    return std::ranges::find(drawable->material->drawables.begin(), drawable->material->drawables.end(), drawable)
+        != drawable->material->drawables.end();
 }
 
 void Renderer::register_drawable(std::shared_ptr<Drawable> const& drawable)
@@ -65,7 +65,7 @@ void Renderer::register_material(std::shared_ptr<Material> const& material)
         m_instanced_materials.emplace_back(material);
 
     if (material->has_custom_render_order())
-        m_custom_render_order_materials.insert( { material->get_render_order(), material });
+        m_custom_render_order_materials.insert({material->get_render_order(), material});
 }
 
 void Renderer::unregister_material(std::shared_ptr<Material> const& material)
@@ -75,10 +75,10 @@ void Renderer::unregister_material(std::shared_ptr<Material> const& material)
 
     // FIXME: Not sure if find works
     if (material->has_custom_render_order())
-        m_custom_render_order_materials.erase(m_custom_render_order_materials.find( { material->get_render_order(), material }));
+        m_custom_render_order_materials.erase(m_custom_render_order_materials.find({material->get_render_order(), material}));
 }
 
-bool Renderer::is_light_registered(std::shared_ptr<Light> const &light) const
+bool Renderer::is_light_registered(std::shared_ptr<Light> const& light) const
 {
     if (auto const potential_point_light = std::dynamic_pointer_cast<PointLight>(light))
     {
@@ -126,9 +126,9 @@ void Renderer::register_light(std::shared_ptr<Light> const& light)
     {
         if (m_directional_light != nullptr)
         {
-            Debug::log(
-                "You've just added a second directional light to the scene. You need to remove this one, remove the original, and then add this one back.",
-                DebugType::Error);
+            Debug::log("You've just added a second directional light to the scene. You need to remove this one, remove the original, and "
+                       "then add this one back.",
+                       DebugType::Error);
         }
 
         m_directional_light = potential_directional_light;
@@ -153,12 +153,12 @@ void Renderer::unregister_light(std::shared_ptr<Light> const& light)
     }
 }
 
-void Renderer::register_camera(std::shared_ptr<Camera> const &camera)
+void Renderer::register_camera(std::shared_ptr<Camera> const& camera)
 {
     m_cameras.emplace_back(camera);
 }
 
-void Renderer::unregister_camera(std::shared_ptr<Camera> const &camera)
+void Renderer::unregister_camera(std::shared_ptr<Camera> const& camera)
 {
     AK::swap_and_erase(m_cameras, camera);
 }
@@ -195,8 +195,9 @@ void Renderer::render() const
     render_shadow_maps();
     // Premultiply projection and view matrices
     glm::mat4 const projection_view = Camera::get_main_camera()->get_projection() * Camera::get_main_camera()->get_view_matrix();
-    glm::mat4 const projection_view_no_translation = Camera::get_main_camera()->get_projection() * glm::mat4(glm::mat3(Camera::get_main_camera()->get_view_matrix()));
-    
+    glm::mat4 const projection_view_no_translation =
+        Camera::get_main_camera()->get_projection() * glm::mat4(glm::mat3(Camera::get_main_camera()->get_view_matrix()));
+
     // Renders to G-Buffer
     render_geometry_pass(projection_view);
 
@@ -325,7 +326,8 @@ void Renderer::draw(std::shared_ptr<Material> const& material, glm::mat4 const& 
     unbind_material(material);
 }
 
-void Renderer::draw_instanced(std::shared_ptr<Material> const& material, glm::mat4 const& projection_view, glm::mat4 const& projection_view_no_translation) const
+void Renderer::draw_instanced(std::shared_ptr<Material> const& material, glm::mat4 const& projection_view,
+                              glm::mat4 const& projection_view_no_translation) const
 {
     if (material->drawables.empty())
         return;
@@ -340,7 +342,8 @@ void Renderer::draw_instanced(std::shared_ptr<Material> const& material, glm::ma
     {
         for (auto const& drawable : material->drawables)
         {
-            drawable->entity->transform->set_euler_angles(glm::vec3(0.0f, Camera::get_main_camera()->entity->transform->get_euler_angles().y, 0.0f));
+            drawable->entity->transform->set_euler_angles(
+                glm::vec3(0.0f, Camera::get_main_camera()->entity->transform->get_euler_angles().y, 0.0f));
         }
     }
 
@@ -349,7 +352,8 @@ void Renderer::draw_instanced(std::shared_ptr<Material> const& material, glm::ma
     {
         if (material->drawables[i]->entity->transform->needs_bounding_box_adjusting)
         {
-            material->drawables[i]->bounds = material->first_drawable->get_adjusted_bounding_box(material->drawables[i]->entity->transform->get_model_matrix());
+            material->drawables[i]->bounds =
+                material->first_drawable->get_adjusted_bounding_box(material->drawables[i]->entity->transform->get_model_matrix());
             material->bounding_boxes[i] = BoundingBoxShader(material->drawables[i]->bounds);
             material->drawables[i]->entity->transform->needs_bounding_box_adjusting = false;
         }
@@ -361,7 +365,8 @@ void Renderer::draw_instanced(std::shared_ptr<Material> const& material, glm::ma
 
     //set_shader_uniforms(shader, projection_view, projection_view_no_translation);
 
-    shader->set_vec3("material.color", glm::vec3(first_drawable->material->color.x, first_drawable->material->color.y, first_drawable->material->color.z));
+    shader->set_vec3("material.color",
+                     glm::vec3(first_drawable->material->color.x, first_drawable->material->color.y, first_drawable->material->color.z));
     shader->set_float("material.specular", first_drawable->material->specular);
     shader->set_float("material.shininess", first_drawable->material->shininess);
 

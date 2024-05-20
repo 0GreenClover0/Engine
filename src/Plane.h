@@ -1,9 +1,9 @@
 #pragma once
 
-#include <string>
-#include <glm/vec3.hpp>
 #include <glm/geometric.hpp>
 #include <glm/gtx/string_cast.hpp>
+#include <glm/vec3.hpp>
+#include <string>
 
 struct Plane
 {

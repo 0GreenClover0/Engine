@@ -9,7 +9,7 @@
 
 namespace YAML
 {
-    class Emitter;
+class Emitter;
 }
 
 enum class DeserializationMode

@@ -2,12 +2,12 @@
 
 #include <memory>
 
+#include "AK/Types.h"
 #include "DrawType.h"
 #include "Material.h"
 #include "Mesh.h"
 #include "Texture.h"
 #include "Vertex.h"
-#include "AK/Types.h"
 
 class ResourceManager;
 
@@ -22,4 +22,3 @@ private:
                                         std::shared_ptr<Material> const& material,
                                         DrawFunctionType const draw_function = DrawFunctionType::Indexed);
 };
-

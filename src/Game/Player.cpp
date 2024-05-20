@@ -2,10 +2,10 @@
 #include <imgui.h>
 
 #include "Entity.h"
-#include "Player.h"
-#include "Input.h"
 #include "Globals.h"
+#include "Input.h"
 #include "LevelController.h"
+#include "Player.h"
 #include "ScreenText.h"
 
 std::shared_ptr<Player> Player::create()
@@ -47,8 +47,8 @@ void Player::awake()
 {
     m_text = entity->add_component<ScreenText>(ScreenText::create());
     m_text.lock()->color = 0xffffffff;
-    std::wstring const content = L"Packages: " + std::to_wstring(packages) + L" Level: " + std::to_wstring(lighthouse_level) + L"\n" +
-        L"Flash: " + std::to_wstring(flash);
+    std::wstring const content = L"Packages: " + std::to_wstring(packages) + L" Level: " + std::to_wstring(lighthouse_level) + L"\n"
+                               + L"Flash: " + std::to_wstring(flash);
     m_text.lock()->set_text(content);
 
     set_can_tick(true);
@@ -58,8 +58,8 @@ void Player::update()
 {
     if (!m_text.expired())
     {
-        std::wstring const content = L"Packages: " + std::to_wstring(packages) + L" Level: " + std::to_wstring(lighthouse_level) + L"\n" +
-            L"Flash: " + std::to_wstring(flash);
+        std::wstring const content = L"Packages: " + std::to_wstring(packages) + L" Level: " + std::to_wstring(lighthouse_level) + L"\n"
+                                   + L"Flash: " + std::to_wstring(flash);
         m_text.lock()->set_text(content);
     }
 

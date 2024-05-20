@@ -81,22 +81,28 @@ void PlayerInput::process_input() const
         return;
 
     if (Input::input->get_key(GLFW_KEY_W))
-        camera_locked->transform->set_local_position(camera_locked->transform->get_local_position() += current_speed * m_camera->get_front());
+        camera_locked->transform->set_local_position(camera_locked->transform->get_local_position() +=
+                                                     current_speed * m_camera->get_front());
 
     if (Input::input->get_key(GLFW_KEY_S))
-        camera_locked->transform->set_local_position(camera_locked->transform->get_local_position() -= current_speed * m_camera->get_front());
+        camera_locked->transform->set_local_position(camera_locked->transform->get_local_position() -=
+                                                     current_speed * m_camera->get_front());
 
     if (Input::input->get_key(GLFW_KEY_A))
-        camera_locked->transform->set_local_position(camera_locked->transform->get_local_position() -= glm::normalize(glm::cross(m_camera->get_front(), m_camera->get_up())) * current_speed);
+        camera_locked->transform->set_local_position(camera_locked->transform->get_local_position() -=
+                                                     glm::normalize(glm::cross(m_camera->get_front(), m_camera->get_up())) * current_speed);
 
     if (Input::input->get_key(GLFW_KEY_D))
-        camera_locked->transform->set_local_position(camera_locked->transform->get_local_position() += glm::normalize(glm::cross(m_camera->get_front(), m_camera->get_up())) * current_speed);
+        camera_locked->transform->set_local_position(camera_locked->transform->get_local_position() +=
+                                                     glm::normalize(glm::cross(m_camera->get_front(), m_camera->get_up())) * current_speed);
 
     if (Input::input->get_key(GLFW_KEY_E))
-        camera_locked->transform->set_local_position(camera_locked->transform->get_local_position() += current_speed * glm::vec3(0.0f, 1.0f, 0.0f));
+        camera_locked->transform->set_local_position(camera_locked->transform->get_local_position() +=
+                                                     current_speed * glm::vec3(0.0f, 1.0f, 0.0f));
 
     if (Input::input->get_key(GLFW_KEY_Q))
-        camera_locked->transform->set_local_position(camera_locked->transform->get_local_position() -= current_speed * glm::vec3(0.0f, 1.0f, 0.0f));
+        camera_locked->transform->set_local_position(camera_locked->transform->get_local_position() -=
+                                                     current_speed * glm::vec3(0.0f, 1.0f, 0.0f));
 }
 
 void PlayerInput::process_terminator_input() const
@@ -111,23 +117,31 @@ void PlayerInput::process_terminator_input() const
 
     float const current_speed = player_speed * delta_time;
     if (Input::input->get_key(GLFW_KEY_W))
-        player_locked->transform->set_local_position(player_locked->transform->get_local_position() -= current_speed * player_model_locked->transform->get_forward());
+        player_locked->transform->set_local_position(player_locked->transform->get_local_position() -=
+                                                     current_speed * player_model_locked->transform->get_forward());
 
     if (Input::input->get_key(GLFW_KEY_S))
-        player_locked->transform->set_local_position(player_locked->transform->get_local_position() += current_speed * player_model_locked->transform->get_forward());
+        player_locked->transform->set_local_position(player_locked->transform->get_local_position() +=
+                                                     current_speed * player_model_locked->transform->get_forward());
 
     if (Input::input->get_key(GLFW_KEY_A))
     {
-        camera_parent_locked->transform->set_euler_angles(camera_parent_locked->transform->get_euler_angles() += glm::vec3(0.0f, 10.0f, 0.0f) * current_speed);
-        player_model_locked->transform->set_euler_angles(player_model_locked->transform->get_euler_angles() += glm::vec3(0.0f, 10.0f, 0.0f) * current_speed);
-        camera_locked->transform->set_euler_angles(camera_locked->transform->get_euler_angles() += glm::vec3(0.0f, 10.0f, 0.0f) * current_speed);
+        camera_parent_locked->transform->set_euler_angles(camera_parent_locked->transform->get_euler_angles() +=
+                                                          glm::vec3(0.0f, 10.0f, 0.0f) * current_speed);
+        player_model_locked->transform->set_euler_angles(player_model_locked->transform->get_euler_angles() +=
+                                                         glm::vec3(0.0f, 10.0f, 0.0f) * current_speed);
+        camera_locked->transform->set_euler_angles(camera_locked->transform->get_euler_angles() +=
+                                                   glm::vec3(0.0f, 10.0f, 0.0f) * current_speed);
     }
 
     if (Input::input->get_key(GLFW_KEY_D))
     {
-        camera_parent_locked->transform->set_euler_angles(camera_parent_locked->transform->get_euler_angles() -= glm::vec3(0.0f, 10.0f, 0.0f) * current_speed);
-        player_model_locked->transform->set_euler_angles(player_model_locked->transform->get_euler_angles() -= glm::vec3(0.0f, 10.0f, 0.0f) * current_speed);
-        camera_locked->transform->set_euler_angles(camera_locked->transform->get_euler_angles() -= glm::vec3(0.0f, 10.0f, 0.0f) * current_speed);
+        camera_parent_locked->transform->set_euler_angles(camera_parent_locked->transform->get_euler_angles() -=
+                                                          glm::vec3(0.0f, 10.0f, 0.0f) * current_speed);
+        player_model_locked->transform->set_euler_angles(player_model_locked->transform->get_euler_angles() -=
+                                                         glm::vec3(0.0f, 10.0f, 0.0f) * current_speed);
+        camera_locked->transform->set_euler_angles(camera_locked->transform->get_euler_angles() -=
+                                                   glm::vec3(0.0f, 10.0f, 0.0f) * current_speed);
     }
 }
 
