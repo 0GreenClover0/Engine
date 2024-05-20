@@ -120,6 +120,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::BeginMap;
         out << YAML::Key << "ComponentName" << YAML::Value << "Collider2DComponent";
         out << YAML::Key << "guid" << YAML::Value << collider2d->guid;
+        out << YAML::Key << "offset" << YAML::Value << collider2d->offset;
         out << YAML::EndMap;
     }
     else if (auto const curve = std::dynamic_pointer_cast<class Curve>(component); curve != nullptr)
@@ -478,6 +479,7 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component =
                 std::dynamic_pointer_cast<class Collider2D>(get_from_pool(component["guid"].as<std::string>()));
+            deserialized_component->offset = component["offset"].as<glm::vec2>();
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
         }

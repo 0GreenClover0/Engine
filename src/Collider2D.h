@@ -40,6 +40,8 @@ public:
     explicit Collider2D(AK::Badge<Collider2D>, glm::vec2 const bounds_dimensions, bool const is_static);
     explicit Collider2D(AK::Badge<Collider2D>, float const width, float const height, bool const is_static);
 
+    virtual void draw_editor() override;
+
     virtual void initialize() override;
     virtual void uninitialize() override;
 
@@ -74,7 +76,10 @@ public:
     void add_overlapped_this_frame(std::shared_ptr<Collider2D> const& collider);
     void clear_overlapped_this_frame();
 
+    glm::vec2 offset = {};
+
 private:
+    void update_center_and_corners();
     void compute_axes(glm::vec2 const& center, float const angle);
 
     bool m_is_trigger = false;
