@@ -98,9 +98,10 @@ void SkyboxDX11::create_cube()
     vertices.reserve(8);
 
     float constexpr size = 1.0f;
-    std::array constexpr corners = {glm::vec3(-size, -size, -size), glm::vec3(size, -size, -size), glm::vec3(size, size, -size),
-                                    glm::vec3(-size, size, -size),  glm::vec3(-size, -size, size), glm::vec3(size, -size, size),
-                                    glm::vec3(size, size, size),    glm::vec3(-size, size, size)};
+    std::array constexpr corners = {
+        glm::vec3(-size, -size, -size), glm::vec3(size, -size, -size), glm::vec3(size, size, -size), glm::vec3(-size, size, -size),
+        glm::vec3(-size, -size, size),  glm::vec3(size, -size, size),  glm::vec3(size, size, size),  glm::vec3(-size, size, size),
+    };
 
     for (auto const corner : corners)
     {

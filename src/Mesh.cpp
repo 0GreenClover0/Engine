@@ -90,14 +90,16 @@ BoundingBox Mesh::calculate_adjusted_bounding_box(glm::mat4 const& model_matrix)
     }
 
     // Create AABB vertices from bounds
-    std::vector<glm::vec3> aabb_vertices = {bounds.min,
-                                            glm::vec3(bounds.min.x, bounds.min.y, bounds.max.z),
-                                            glm::vec3(bounds.min.x, bounds.max.y, bounds.min.z),
-                                            glm::vec3(bounds.min.x, bounds.max.y, bounds.max.z),
-                                            glm::vec3(bounds.max.x, bounds.min.y, bounds.min.z),
-                                            glm::vec3(bounds.max.x, bounds.min.y, bounds.max.z),
-                                            glm::vec3(bounds.max.x, bounds.max.y, bounds.min.z),
-                                            bounds.max};
+    std::vector<glm::vec3> aabb_vertices = {
+        bounds.min,
+        glm::vec3(bounds.min.x, bounds.min.y, bounds.max.z),
+        glm::vec3(bounds.min.x, bounds.max.y, bounds.min.z),
+        glm::vec3(bounds.min.x, bounds.max.y, bounds.max.z),
+        glm::vec3(bounds.max.x, bounds.min.y, bounds.min.z),
+        glm::vec3(bounds.max.x, bounds.min.y, bounds.max.z),
+        glm::vec3(bounds.max.x, bounds.max.y, bounds.min.z),
+        bounds.max,
+    };
 
     // Transform AABB vertices by model matrix
     for (auto& vertex : aabb_vertices)
