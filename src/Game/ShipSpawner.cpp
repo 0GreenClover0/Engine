@@ -177,7 +177,7 @@ void ShipSpawner::draw_editor()
             ImGui::PushStyleColor(ImGuiCol_FrameBgActive, bg_color);
 
             ImGui::SetNextItemWidth(half_width);
-            if (ImGui::BeginCombo(("Add Ship##" + std::to_string(i)).c_str(),
+            if (ImGui::BeginCombo(("##Ship Type MainEvent" + std::to_string(i)).c_str(),
                                   ship_type_to_string(m_main_event_spawn[i].spawn_list[0]).c_str()))
             {
                 for (u32 k = static_cast<u32>(ShipType::FoodSmall); k <= static_cast<u32>(ShipType::Tool); k++)
