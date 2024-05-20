@@ -114,6 +114,8 @@ void ScreenText::draw() const
 
 void ScreenText::draw_editor()
 {
+    Component::draw_editor();
+
     ImGui::DragFloat2("Position", glm::value_ptr(position));
 }
 

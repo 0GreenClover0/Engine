@@ -98,6 +98,8 @@ void ShipSpawner::update()
 
 void ShipSpawner::draw_editor()
 {
+    Component::draw_editor();
+
     ImGui::InputFloat("Last Chance time threshold", &last_chance_time_threshold);
     ImGui::InputScalar("Last Chance food threshold", ImGuiDataType_U32, &last_chance_food_threshold);
 

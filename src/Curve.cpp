@@ -23,6 +23,8 @@ Curve::Curve() = default;
 
 void Curve::draw_editor()
 {
+    Component::draw_editor();
+
     if (ImPlot::BeginPlot("Path visualised"))
     {
         ImPlot::PushStyleVar(ImPlotStyleVar_LineWeight, 2.0f);
