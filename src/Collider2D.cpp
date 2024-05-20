@@ -271,6 +271,17 @@ glm::vec2 Collider2D::get_center_2d() const
     return entity_position + rotated_offset;
 }
 
+glm::vec2 Collider2D::get_bounds_dimensions_2d() const
+{
+    return {m_width, m_height};
+}
+
+void Collider2D::set_bounds_dimensions_2d(float const width, float const height)
+{
+    m_width = width;
+    m_height = height;
+}
+
 std::array<glm::vec2, 4> Collider2D::get_corners() const
 {
     return m_corners;

@@ -65,6 +65,10 @@ public:
     glm::vec2 get_extents() const;
 
     glm::vec2 get_center_2d() const;
+
+    glm::vec2 get_bounds_dimensions_2d() const;
+    void set_bounds_dimensions_2d(float const width, float const height);
+
     std::array<glm::vec2, 4> get_corners() const;
     std::array<glm::vec2, 2> get_axes() const;
 
