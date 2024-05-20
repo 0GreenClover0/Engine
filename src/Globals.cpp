@@ -100,14 +100,27 @@ void initialize()
         big_cube.vertices.emplace_back(vertex);
     }
 
-    u32 constexpr cube_indices[] = {// Front and back
-                                    0, 3, 2, 2, 1, 0, 4, 5, 6, 6, 7, 4,
+    // clang-format off
+    u32 constexpr cube_indices[] = {
+        // Front and back
+        0, 3, 2,
+        2, 1, 0,
+        4, 5, 6,
+        6, 7, 4,
 
-                                    // Left and right
-                                    11, 8, 9, 9, 10, 11, 12, 13, 14, 14, 15, 12,
+        // Left and right
+        11, 8, 9,
+        9, 10, 11,
+        12, 13, 14,
+        14, 15, 12,
 
-                                    // Bottom and top
-                                    16, 17, 18, 18, 19, 16, 20, 21, 22, 22, 23, 20};
+        // Bottom and top
+        16, 17, 18,
+        18, 19, 16,
+        20, 21, 22,
+        22, 23, 20,
+    };
+    // clang-format on
 
     cube.indices = std::vector<u32>();
     cube.indices.reserve(12);
