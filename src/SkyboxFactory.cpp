@@ -32,7 +32,6 @@ std::shared_ptr<Skybox> SkyboxFactory::create()
         auto const skybox_shader = ResourceManager::get_instance().load_shader("./res/shaders/skybox.hlsl", "./res/shaders/skybox.hlsl");
         auto const skybox_material = Material::create(skybox_shader);
         auto skybox = std::make_shared<SkyboxDX11>(AK::Badge<SkyboxFactory> {}, skybox_material, "./res/textures/skybox/skybox.dds");
-        Skybox::set_instance(skybox);
         return skybox;
     }
 

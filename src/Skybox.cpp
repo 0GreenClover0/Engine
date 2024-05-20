@@ -18,6 +18,21 @@ Skybox::Skybox(std::shared_ptr<Material> const& material, std::string const& pat
     load_textures();
 }
 
+void Skybox::initialize()
+{
+    Drawable::initialize();
+
+    set_instance(static_pointer_cast<Skybox>(shared_from_this()));
+}
+
+void Skybox::uninitialize()
+{
+    Drawable::uninitialize();
+
+    if (m_instance == static_pointer_cast<Skybox>(shared_from_this()))
+        m_instance = nullptr;
+}
+
 void Skybox::load_textures()
 {
     TextureSettings constexpr texture_settings = {TextureWrapMode::ClampToEdge,

@@ -22,7 +22,6 @@ std::shared_ptr<Entity> create_skybox(std::string const& skybox_texture_path, st
     auto const skybox_material = Material::create(skybox_shader, SKYBOX_RENDER_ORDER);
 
     auto const skybox_comp = skybox->add_component<Skybox>(SkyboxFactory::create(skybox_material, skybox_texture_path));
-    Skybox::set_instance(skybox_comp);
     skybox->transform->set_parent(parent);
 
     return skybox;
