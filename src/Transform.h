@@ -15,6 +15,7 @@ class Transform : public std::enable_shared_from_this<Transform>
 public:
     explicit Transform(std::shared_ptr<Entity> const& entity);
 
+    void set_position(glm::vec3 const& position);
     [[nodiscard]] glm::vec3 get_position();
 
     [[nodiscard]] glm::quat get_rotation();
