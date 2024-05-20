@@ -86,6 +86,8 @@ void LevelController::update()
 
 void LevelController::draw_editor()
 {
+    Component::draw_editor();
+
     static i32 minutes = 0;
     static i32 seconds = 0;
     bool is_time_changed = false;

@@ -115,6 +115,8 @@ void LighthouseKeeper::update()
 
 void LighthouseKeeper::draw_editor()
 {
+    Component::draw_editor();
+
     ImGuiEx::InputFloat("Acceleration", &acceleration);
     ImGuiEx::InputFloat("Deceleration", &deceleration);
     ImGuiEx::InputFloat("Maximum speed", &maximum_speed);

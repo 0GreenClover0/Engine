@@ -413,6 +413,8 @@ void Ship::on_destroyed()
 
 void Ship::draw_editor()
 {
+    Component::draw_editor();
+
     ImGui::DragFloat("Speed", &maximum_speed, 0.001f, 0.0f, 0.5f);
 
     ImGuiEx::draw_ptr("Light", light);

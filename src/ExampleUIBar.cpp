@@ -39,5 +39,7 @@ void ExampleUIBar::update()
 
 void ExampleUIBar::draw_editor()
 {
+    Component::draw_editor();
+
     ImGui::SliderFloat("Value", &value, 0.0f, 1.0f);
 }

@@ -21,6 +21,8 @@ Path::Path(AK::Badge<Path>)
 
 void Path::draw_editor()
 {
+    Component::draw_editor();
+
     if (ImPlot::BeginPlot("Path visualised"))
     {
         ImPlot::PushStyleVar(ImPlotStyleVar_LineWeight, 2.0f);
