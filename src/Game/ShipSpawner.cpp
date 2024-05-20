@@ -38,23 +38,26 @@ void ShipSpawner::awake()
         s1.spawn_type = SpawnType::Sequence;
 
         SpawnEvent s2 = {};
-        s2.spawn_list.emplace_back(ShipType::FoodSmall);
+        s2.spawn_list.emplace_back(ShipType::FoodMedium);
         s2.spawn_type = SpawnType::Sequence;
 
         SpawnEvent s3 = {};
-        s3.spawn_list.emplace_back(ShipType::FoodSmall);
+        s3.spawn_list.emplace_back(ShipType::FoodBig);
         s3.spawn_type = SpawnType::Sequence;
 
         SpawnEvent s4 = {};
         s4.spawn_list.emplace_back(ShipType::Pirates);
-        s4.spawn_list.emplace_back(ShipType::Pirates);
-        s4.spawn_list.emplace_back(ShipType::Pirates);
-        s4.spawn_type = SpawnType::Rapid;
+        s4.spawn_type = SpawnType::Sequence;
+
+        SpawnEvent s5 = {};
+        s5.spawn_list.emplace_back(ShipType::Tool);
+        s5.spawn_type = SpawnType::Sequence;
 
         m_backup_spawn.emplace_back(s1);
         m_backup_spawn.emplace_back(s2);
         m_backup_spawn.emplace_back(s3);
         m_backup_spawn.emplace_back(s4);
+        m_backup_spawn.emplace_back(s5);
     }
     else
     {
