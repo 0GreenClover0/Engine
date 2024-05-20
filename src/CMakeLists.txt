@@ -65,6 +65,12 @@ if(NOT DEFINED ENV{IS_CI})
         COMMAND py
             "${EHT_DIR}/EngineHeaderTool.py -d \"${PARENT_DIR}\""
         COMMENT "Running EngineHeaderTool"
+        COMMAND clang-format -i -style=file "${PARENT_DIR}/src/SceneSerializer.cpp"
+        COMMENT "Auto formatting SceneSerializer.cpp"
+        COMMAND clang-format -i -style=file "${PARENT_DIR}/src/ComponentList.h"
+        COMMENT "Auto formatting ComponentList.h"
+        COMMAND clang-format -i -style=file "${PARENT_DIR}/src/Editor.cpp"
+        COMMENT "Auto formatting Editor.cpp"
     )
 endif()
 
