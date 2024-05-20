@@ -84,6 +84,32 @@ void LighthouseKeeper::update()
 
     entity->transform->set_local_position(entity->transform->get_local_position() + speed_vector);
 
+    if (glm::length(m_speed) >= maximum_speed * 0.25f)
+    {
+        float rotation = atan2(speed_vector.x, speed_vector.z) * (180.0f / 3.14f) - 90.0f;
+        float actual_rotation = entity->transform->get_euler_angles().y;
+
+        while (rotation > 180.0f)
+            rotation -= 360.0f;
+        while (rotation < -180.0f)
+            rotation += 360.0f;
+
+        while (actual_rotation > 180.0f)
+            actual_rotation -= 360.0f;
+        while (actual_rotation < -180.0f)
+            actual_rotation += 360.0f;
+
+        float delta = rotation - actual_rotation;
+        while (delta > 180.0f)
+            delta -= 360.0f;
+        while (delta < -180.0f)
+            delta += 360.0f;
+
+        float new_rotation = actual_rotation + delta * 0.1f;
+
+        entity->transform->set_euler_angles({0.0f, new_rotation, 0.0f});
+    }
+
     handle_input();
 }
 
