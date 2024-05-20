@@ -7,6 +7,9 @@
 #include "Entity.h"
 #include "Globals.h"
 #include "PhysicsEngine.h"
+#include "imgui_extensions.h"
+
+#include <glm/gtc/type_ptr.inl>
 
 std::shared_ptr<Collider2D> Collider2D::create()
 {
@@ -62,6 +65,13 @@ Collider2D::Collider2D(AK::Badge<Collider2D>, float const width, float const hei
 {
 }
 
+void Collider2D::draw_editor()
+{
+    Component::draw_editor();
+
+    ImGuiEx::InputFloat2("Offset", glm::value_ptr(offset));
+}
+
 void Collider2D::initialize()
 {
     Component::initialize();
@@ -98,13 +108,7 @@ void Collider2D::awake()
 {
     set_can_tick(true);
 
-    // NOTE+FIXME: destroy_immediate might break assumption that entity is not null, it probably should not do that.
-    if (entity != nullptr)
-    {
-        glm::vec2 const position = AK::convert_3d_to_2d(entity->transform->get_position());
-        float const angle = glm::radians(entity->transform->get_euler_angles().y);
-        compute_axes(position, angle);
-    }
+    update_center_and_corners();
 }
 
 ColliderType2D Collider2D::get_collider_type() const
@@ -144,7 +148,8 @@ float Collider2D::get_radius_2d() const
 
 glm::vec2 Collider2D::get_center_2d() const
 {
-    return AK::convert_3d_to_2d(entity->transform->get_position());
+    // TODO: We should probably only calculate this when one of these changes
+    return AK::convert_3d_to_2d(entity->transform->get_position()) + offset;
 }
 
 glm::vec2 Collider2D::get_bounds_dimensions_2d() const
@@ -215,13 +220,15 @@ void Collider2D::clear_overlapped_this_frame()
 
 void Collider2D::update()
 {
-    // NOTE+FIXME: destroy_immediate might break assumption that entity is not null, it probably should not do that.
-    if (entity != nullptr)
-    {
-        glm::vec2 const position = AK::convert_3d_to_2d(entity->transform->get_position());
-        float const angle = glm::radians(entity->transform->get_euler_angles().y);
-        compute_axes(position, angle);
-    }
+    update_center_and_corners();
+}
+
+void Collider2D::update_center_and_corners()
+{
+    glm::vec2 const position = get_center_2d();
+    float const angle = glm::radians(entity->transform->get_euler_angles().y);
+    compute_axes(position, angle);
+    m_debug_drawing_entity->transform->set_local_position(AK::convert_2d_to_3d(offset));
 }
 
 // NOTE: Should be called everytime the position has changed.
