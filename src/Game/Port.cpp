@@ -80,7 +80,7 @@ bool Port::interact()
         break;
 
     case ShipType::FoodMedium:
-        Player::get_instance()->food += 2;
+        Player::get_instance()->food += 3;
         break;
 
     case ShipType::FoodBig:
