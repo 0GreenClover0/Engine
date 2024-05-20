@@ -9,6 +9,7 @@
 #include "Collider2D.h"
 #include "Entity.h"
 #include "Globals.h"
+#include "Player.h"
 #include "ResourceManager.h"
 
 std::shared_ptr<ShipSpawner> ShipSpawner::create()
@@ -97,6 +98,11 @@ void ShipSpawner::update()
 
 void ShipSpawner::draw_editor()
 {
+    ImGui::InputFloat("Last Chance time threshold", &last_chance_time_threshold);
+    ImGui::InputScalar("Last Chance food threshold", ImGuiDataType_U32, &last_chance_food_threshold);
+
+    ImGui::Separator();
+
     u32 index = 0;
     for (auto const& ship : m_ships)
     {
@@ -381,9 +387,66 @@ void ShipSpawner::add_warning()
     }
 }
 
+bool ShipSpawner::is_time_for_last_chance()
+{
+    if (LevelController::get_instance()->time > last_chance_time_threshold)
+    {
+        return false;
+    }
+
+    if (Player::get_instance()->food < LevelController::get_instance()->map_food - last_chance_food_threshold)
+    {
+        return false;
+    }
+
+    m_backup_spawn.clear();
+    m_main_spawn.clear();
+
+    SpawnEvent last_chance_event = {};
+
+    u32 food_shortage = LevelController::get_instance()->map_food - Player::get_instance()->food;
+
+    while (food_shortage > 0)
+    {
+        Debug::log(std::to_string(food_shortage));
+
+        if (food_shortage >= 5)
+        {
+            last_chance_event.spawn_list.emplace_back(ShipType::FoodBig);
+            food_shortage -= 5;
+            continue;
+        }
+
+        if (food_shortage >= 3)
+        {
+            last_chance_event.spawn_list.emplace_back(ShipType::FoodMedium);
+            food_shortage -= 3;
+            continue;
+        }
+
+        if (food_shortage >= 1)
+        {
+            last_chance_event.spawn_list.emplace_back(ShipType::FoodSmall);
+            food_shortage -= 1;
+            continue;
+        }
+
+        std::unreachable();
+    }
+
+    last_chance_event.spawn_type = SpawnType::Rapid;
+
+    m_main_spawn.emplace_back(last_chance_event);
+
+    m_is_last_chance_activated = true;
+    Debug::log("LAST CHANCE!");
+
+    return true;
+}
+
 void ShipSpawner::prepare_for_spawn()
 {
-    if (m_backup_spawn.empty())
+    if (!m_is_last_chance_activated && m_backup_spawn.empty())
     {
         Debug::log("Ship spawn list is empty!", DebugType::Error);
         return;
@@ -407,6 +470,11 @@ void ShipSpawner::prepare_for_spawn()
     if (paths.size() == 0)
     {
         Debug::log("No available paths to create ships on!", DebugType::Warning);
+        return;
+    }
+
+    if (!m_is_last_chance_activated && is_time_for_last_chance())
+    {
         return;
     }
 

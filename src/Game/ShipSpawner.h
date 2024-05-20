@@ -27,6 +27,9 @@ public:
     float const spawn_rapid_time = 2.5f;
     float const minimum_spawn_distance = 1.25f;
 
+    u32 last_chance_food_threshold = 5;
+    float last_chance_time_threshold = 30.0f;
+
 private:
     enum class SpawnType
     {
@@ -45,6 +48,7 @@ private:
     void prepare_for_spawn();
     void remove_ship(std::shared_ptr<Ship> const& ship_to_remove);
     bool is_spawn_possible() const;
+    bool is_time_for_last_chance();
     void add_warning();
 
     static std::string spawn_type_to_string(SpawnType const type);
@@ -62,6 +66,8 @@ private:
 
     bool m_is_test_spawn_enable = false;
     bool m_is_half_rapid_done = false;
+
+    bool m_is_last_chance_activated = false;
 
     SpawnType m_spawn_type = SpawnType::Sequence;
 };
