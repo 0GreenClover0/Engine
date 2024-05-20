@@ -15,6 +15,8 @@ inline i32 SKYBOX_RENDER_ORDER = 100;
 inline std::shared_ptr<Shader> default_shader;
 inline std::shared_ptr<Material> default_material;
 
+void initialize_default_material();
+
 struct MeshData
 {
     std::vector<Vertex> vertices;

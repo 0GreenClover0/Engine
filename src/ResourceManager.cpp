@@ -1,5 +1,7 @@
 #include "ResourceManager.h"
 
+#include "Globals.h"
+
 #include <iostream>
 #include <sstream>
 
@@ -173,6 +175,8 @@ void ResourceManager::reset_state() const
     {
         shader->materials.clear();
     }
+
+    initialize_default_material();
 }
 
 std::string ResourceManager::generate_key(std::stringstream const& stream) const
