@@ -119,7 +119,7 @@ void Engine::run()
 
         Renderer::get_instance()->begin_frame();
 
-        if (m_is_game_running)
+        if (m_is_game_running && !m_is_game_paused)
         {
             PhysicsEngine::get_instance()->update_physics();
             MainScene::get_instance()->run_frame();
@@ -188,9 +188,24 @@ void Engine::set_game_running(bool const is_running)
         MainScene::set_instance(nullptr);
 
         create_game();
+
+        set_game_paused(false);
     }
 
     m_is_game_running = is_running;
+}
+
+bool Engine::is_game_paused()
+{
+    return m_is_game_paused;
+}
+
+void Engine::set_game_paused(bool const is_paused)
+{
+    if (m_is_game_paused == is_paused)
+        return;
+
+    m_is_game_paused = is_paused;
 }
 
 std::shared_ptr<Window> Engine::create_window()
