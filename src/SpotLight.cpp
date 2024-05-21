@@ -55,6 +55,19 @@ glm::mat4 SpotLight::get_projection_view_matrix()
     return m_projection_view_matrix;
 }
 
+// This function's return value is used by volumetric lighting.
+glm::mat4 SpotLight::get_adjusted_model_matrix() const
+{
+    glm::mat4 const original_model_matrix = entity->transform->get_model_matrix();
+
+    // Rotate the model matrix by 90 degrees around the X-axis.
+    // It needs to be rotated, so that the cone is facing the same way as light's direction.
+    // It's a hack, but it works and doesn't affect anything else.
+    glm::mat4 const rotated_model_matrix = glm::rotate(original_model_matrix, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+    return glm::inverse(rotated_model_matrix);
+}
+
 void SpotLight::set_up_shadow_mapping()
 {
     auto renderer = RendererDX11::get_instance_dx11();

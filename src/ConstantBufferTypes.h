@@ -68,6 +68,7 @@ struct DXSpotLight
     float padding6;
 
     glm::mat4 light_projection_view;
+    glm::mat4 light_model;
 };
 
 struct DXDirectionalLight

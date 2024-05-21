@@ -18,6 +18,7 @@ public:
 
     void set_render_target_for_shadow_mapping() const;
     glm::mat4 get_projection_view_matrix();
+    glm::mat4 get_adjusted_model_matrix() const;
 
     // Default values for an around 50m distance of cover
     float constant = 1.0f; // Should not be changed

@@ -178,3 +178,100 @@ float3 calculate_spot_light(SpotLight light, float3 normal, float3 world_pos, fl
 
     return attenuation * intensity * (ambient + (1.0f - shadow) * (diffuse + specular));
 }
+
+float2 intersect_light_cone(SpotLight light, float3 ray_origin, float3 ray_direction)
+{
+    float4 local_origin = mul(light.model, float4(ray_origin, 1.0f));
+    float4 local_direction = mul(light.model, float4(ray_direction, 0.0f));
+
+    // We need to use acos because outer_cut_off is a cosine value of the outer cut off angle
+    float tan_theta = tan(acos(light.outer_cut_off));
+    tan_theta *= tan_theta;
+    float a = local_direction.x * local_direction.x + local_direction.z * local_direction.z - local_direction.y * local_direction.y * tan_theta;
+    float b = 2.0f * (local_origin.x * local_direction.x + local_origin.z * local_direction.z - local_origin.y * local_direction.y * tan_theta);
+    float c = local_origin.x * local_origin.x + local_origin.z * local_origin.z - local_origin.y * local_origin.y * tan_theta;
+
+    float min_t = 0.0f;
+    float max_t = 0.0f;
+    solve_quadratic(a, b, c, min_t, max_t);
+
+    float y1 = local_origin.y + local_direction.y * min_t;
+    float y2 = local_origin.y + local_direction.y * max_t;
+
+    if (y1 > 0.0f && y2 > 0.0f)
+    {
+        // Both intersections are in the reflected cone so return degenerate value
+        min_t = 0.0f;
+        max_t = -1.0f;
+    }
+    else if (y1 > 0.0f && y2 < 0.0f)
+    {
+        // Closest t on the wrong side, furthest on the right side => ray enters volume but doesn't leave it (so set max_t arbitrarily large)
+        min_t = max_t;
+        max_t = 10000.0f;
+    }
+    else if (y1 < 0.0f && y2 > 0.0f)
+    {
+        // closest t on the right side, largest on the wrong side => ray starts in volume and exits once
+        max_t = min_t;
+        min_t = 0.0f;
+    }
+
+    return float2(min_t, max_t);
+}
+
+float in_scatter(float3 start, float3 dir, float3 lightPos, float d)
+{
+    // Calculate quadratic coefficients a, b, c
+    float3 q = start - lightPos;
+
+    float b = dot(dir, q);
+    float c = dot(q, q);
+
+    // Evaluate integral
+    float denominator = c - b * b;
+
+    // Avoid division by zero or very small values
+    if (denominator < 1e-6)
+    {
+        // Return arbitarly large value, because when the denominator is very small
+        // it means the pixel is very close to the light source
+        return 100000.0f;
+    }
+
+    float s = 1.0f / sqrt(denominator);
+    float l = s * (atan((d + b) * s) - atan(b * s));
+
+    return l;
+}
+
+float3 calculate_scatter(SpotLight light, float4 world_position)
+{
+    float3 surface_to_camera_direction = world_position.xyz - camera_pos;
+    float ray_length = length(surface_to_camera_direction);
+    surface_to_camera_direction /= ray_length;
+
+    float aperture = light.outer_cut_off;
+    float min_t = 0.0f;
+    float max_t = 0.0f;
+
+    float2 res = intersect_light_cone(light, camera_pos, surface_to_camera_direction);
+    min_t = res.x;
+    max_t = res.y;
+    max_t = clamp(max_t, 0.0f, ray_length);
+    min_t = max(0.0f, min_t);
+
+    float t = max(0.0f, max_t - min_t);
+    // Technically should not be tweakable
+    // However multiplying it makes the cone brighter
+    t = t * 5;
+    // Tweakable
+    float scattering_coefficient = 1.0f;
+    // According to Rayliegh scattering blue light at the lower end of the spectrum is scattered considerably more than red light.
+    // It's simple to account for this wavelength dependence by making the scattering coefficient a constant vector
+    // weighted towards the blue component.  I found this helps add to the realism of the effect.
+    // src: https://blog.mmacklin.com/2010/05/29/in-scattering-demo/
+    float3 scattering_constants = float3(0.2f, 0.4f, 0.8f);
+    float3 scatter = light.diffuse * scattering_constants * in_scatter(camera_pos + surface_to_camera_direction * min_t, surface_to_camera_direction, light.position, t) * scattering_coefficient;
+    return scatter;
+}
