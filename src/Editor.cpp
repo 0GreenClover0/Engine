@@ -1165,6 +1165,11 @@ void Editor::add_child_entity() const
 
 void Editor::mouse_callback(double const x, double const y)
 {
+    if (Engine::is_game_running() && !Engine::is_game_paused())
+    {
+        return;
+    }
+
     if (m_mouse_just_entered)
     {
         m_last_mouse_position.x = x;
@@ -1261,7 +1266,10 @@ void Editor::handle_input()
     }
     else
     {
-        camera_input();
+        if (!Engine::is_game_running() || Engine::is_game_paused())
+        {
+            camera_input();
+        }
     }
 }
 

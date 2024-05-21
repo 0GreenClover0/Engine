@@ -1,5 +1,7 @@
 #include "PlayerInput.h"
 
+#include "Engine.h"
+
 #include <iostream>
 
 #include "Entity.h"
@@ -147,6 +149,11 @@ void PlayerInput::process_terminator_input() const
 
 void PlayerInput::mouse_callback(double const x, double const y)
 {
+    if (!Engine::is_game_running() || Engine::is_game_paused())
+    {
+        return;
+    }
+
     if (m_mouse_just_entered)
     {
         m_last_mouse_position.x = x;
