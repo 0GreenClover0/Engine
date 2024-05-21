@@ -1,4 +1,5 @@
 #include "structs.hlsl"
+#include "common_functions.hlsl"
 
 cbuffer light_buffer : register(b0)
 {

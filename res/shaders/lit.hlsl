@@ -1,5 +1,4 @@
 #include "lighting_calculations.hlsl"
-#include "gamma.hlsl"
 
 cbuffer object_buffer : register(b0)
 {

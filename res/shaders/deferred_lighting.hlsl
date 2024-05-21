@@ -1,4 +1,3 @@
-#include "gamma.hlsl"
 #include "lighting_calculations.hlsl"
 
 struct VS_Input
