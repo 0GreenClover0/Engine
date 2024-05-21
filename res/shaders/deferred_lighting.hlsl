@@ -48,6 +48,7 @@ float4 ps_main(VS_Output input) : SV_Target
     for (int point_light_index = 0; point_light_index < number_of_point_lights; point_light_index++)
     {
         result.xyz += calculate_point_light(point_lights[point_light_index],normal.xyz, pos.xyz, view_dir, diffuse.xyz, point_light_index, true);
+        result.xyz += calculate_scatter(point_lights[point_light_index], pos);
     }
 
     for (int spot_light_index = 0; spot_light_index < number_of_spot_lights; spot_light_index++)

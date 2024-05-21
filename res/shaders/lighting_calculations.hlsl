@@ -262,16 +262,33 @@ float3 calculate_scatter(SpotLight light, float4 world_position)
     min_t = max(0.0f, min_t);
 
     float t = max(0.0f, max_t - min_t);
-    // Technically should not be tweakable
-    // However multiplying it makes the cone brighter
+
+    // Technically should not be tweakable.
+    // However multiplying it makes the cone brighter.
     t = t * 5;
+
     // Tweakable
     float scattering_coefficient = 1.0f;
+
     // According to Rayliegh scattering blue light at the lower end of the spectrum is scattered considerably more than red light.
     // It's simple to account for this wavelength dependence by making the scattering coefficient a constant vector
     // weighted towards the blue component.  I found this helps add to the realism of the effect.
     // src: https://blog.mmacklin.com/2010/05/29/in-scattering-demo/
     float3 scattering_constants = float3(0.2f, 0.4f, 0.8f);
     float3 scatter = light.diffuse * scattering_constants * in_scatter(camera_pos + surface_to_camera_direction * min_t, surface_to_camera_direction, light.position, t) * scattering_coefficient;
+    return scatter;
+}
+
+float3 calculate_scatter(PointLight light, float4 world_position)
+{
+    float3 surface_to_camera_direction = world_position.xyz - camera_pos;
+    float ray_length = length(surface_to_camera_direction);
+    surface_to_camera_direction /= ray_length;
+
+    float light_to_pixel = length(light.position - world_position.xyz);
+    float3 scattering_constants = float3(0.2f, 0.4f, 0.8f);
+    // This is arbitrary, however connected with light's attenuation
+    float scattering_coefficient = 0.1f / (light.constant + light.linear_ * light_to_pixel + light.quadratic * light_to_pixel * light_to_pixel);
+    float3 scatter = light.diffuse * scattering_constants * in_scatter(camera_pos, surface_to_camera_direction, light.position, ray_length) * scattering_coefficient;
     return scatter;
 }

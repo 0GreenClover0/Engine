@@ -119,6 +119,7 @@ float4 ps_main(VS_Output input) : SV_TARGET
     for (int i = 0; i < number_of_point_lights; i++)
     {
         result += calculate_point_light(point_lights[i], norm, input.world_pos.rgb, view_dir, diffuse_texture, i, false);
+        result += calculate_scatter(point_lights[i], float4(input.world_pos, 1.0f));
     }
 
     for (int j = 0; j < number_of_spot_lights; j++)
