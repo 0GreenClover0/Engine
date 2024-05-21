@@ -170,7 +170,7 @@ std::array<glm::vec2, 2> Collider2D::get_axes() const
 void Collider2D::apply_mtv(glm::vec2 const mtv) const
 {
     glm::vec2 const new_position = AK::convert_3d_to_2d(entity->transform->get_position()) + mtv * 0.5f;
-    entity->transform->set_local_position(AK::convert_2d_to_3d(new_position, entity->transform->get_position().y));
+    entity->transform->set_position(AK::convert_2d_to_3d(new_position, entity->transform->get_position().y));
 }
 
 bool Collider2D::is_inside_trigger(std::string const& guid) const
