@@ -147,6 +147,12 @@ std::shared_ptr<Mesh> ResourceManager::load_mesh(u32 const array_id, std::string
 {
     std::stringstream stream;
     stream << name << array_id;
+
+    for (auto const& texture : textures)
+    {
+        stream << texture->path;
+    }
+
     std::string const& key = generate_key(stream);
 
     // HACK: We currently don't unload any resources including meshes, even in the editor.
