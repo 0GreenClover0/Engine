@@ -30,6 +30,9 @@ public:
     static bool is_game_running();
     static void set_game_running(bool const is_running);
 
+    static bool is_game_paused();
+    static void set_game_paused(bool const is_paused);
+
     inline static bool enable_vsync = false;
     inline static bool enable_mouse_capture = true;
 
@@ -52,5 +55,6 @@ private:
     static i32 setup_miniaudio();
 
     inline static bool m_is_game_running = false;
+    inline static bool m_is_game_paused = false;
     inline static std::shared_ptr<Editor::Editor> m_editor;
 };

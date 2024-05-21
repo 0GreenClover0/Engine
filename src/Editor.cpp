@@ -335,6 +335,25 @@ void Editor::draw_game(std::shared_ptr<EditorWindow> const& window)
 
         ImGui::PopStyleColor();
 
+        if (Engine::is_game_paused())
+        {
+            ImGui::PushStyleColor(ImGuiCol_Button, IM_COL32(120, 120, 0, 150));
+        }
+        else
+        {
+            ImGui::PushStyleColor(ImGuiCol_Button, IM_COL32(0, 0, 0, 50));
+        }
+
+        if (is_game_running)
+        {
+            if (ImGui::Button("Pause", ImVec2(50.0f, 20.0f)))
+            {
+                Engine::set_game_paused(!Engine::is_game_paused());
+            }
+        }
+
+        ImGui::PopStyleColor();
+
         ImGui::EndMenuBar();
     }
 
