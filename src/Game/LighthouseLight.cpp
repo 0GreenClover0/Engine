@@ -44,10 +44,23 @@ void LighthouseLight::update()
     glm::vec2 const position = get_position();
 
     entity->transform->set_local_position(glm::vec3(position.x, 0.0f, position.y));
+
+    if (m_light.expired())
+        return;
+
+    auto const light_locked = m_light.lock();
+
+    float const light_beam_length = glm::length(entity->transform->get_position() - light_locked->entity->transform->get_position());
+    float const aperture = glm::atan(m_light_beam_width / light_beam_length);
+    light_locked->cut_off = cos(aperture);
+    light_locked->outer_cut_off = cos(aperture);
+    light_locked->entity->transform->orient_towards(glm::vec3(position.x, 0.0f, position.y));
 }
 
 void LighthouseLight::draw_editor()
 {
+    ImGuiEx::draw_ptr("Spotlight", m_light);
+    ImGui::InputFloat("Beam width", &m_light_beam_width);
 }
 
 glm::vec2 LighthouseLight::get_position() const

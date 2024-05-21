@@ -325,6 +325,8 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::BeginMap;
         out << YAML::Key << "ComponentName" << YAML::Value << "LighthouseLightComponent";
         out << YAML::Key << "guid" << YAML::Value << lighthouselight->guid;
+        out << YAML::Key << "m_light" << YAML::Value << lighthouselight->m_light;
+        out << YAML::Key << "m_light_beam_width" << YAML::Value << lighthouselight->m_light_beam_width;
         out << YAML::EndMap;
     }
     else if (auto const player = std::dynamic_pointer_cast<class Player>(component); player != nullptr)
@@ -866,6 +868,8 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component =
                 std::dynamic_pointer_cast<class LighthouseLight>(get_from_pool(component["guid"].as<std::string>()));
+            deserialized_component->m_light = component["m_light"].as<std::weak_ptr<SpotLight>>();
+            deserialized_component->m_light_beam_width = component["m_light_beam_width"].as<float>();
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
         }

@@ -34,6 +34,8 @@ public:
 
     [[nodiscard]] glm::vec3 get_euler_angles_restricted() const;
 
+    void orient_towards(glm::vec3 const& target, glm::vec3 const& up = {0.0f, 1.0f, 0.0f});
+
     [[nodiscard]] glm::vec3 get_forward();
     [[nodiscard]] glm::vec3 get_right();
     [[nodiscard]] glm::vec3 get_up();
