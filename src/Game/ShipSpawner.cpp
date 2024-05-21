@@ -11,6 +11,7 @@
 #include "Globals.h"
 #include "Player.h"
 #include "ResourceManager.h"
+#include "ShipEyes.h"
 
 std::shared_ptr<ShipSpawner> ShipSpawner::create()
 {
@@ -717,14 +718,16 @@ void ShipSpawner::spawn_ship(SpawnEvent const* being_spawn)
     auto const ship = Entity::create("Ship");
     ship->transform->set_local_position({m_spawn_position.back().x, 0.0f, m_spawn_position.back().y});
 
-    auto const ship_comp = ship->add_component(Ship::create(light.lock(), std::static_pointer_cast<ShipSpawner>(shared_from_this())));
-    auto const collider = ship->add_component<Collider2D>(Collider2D::create(1.0f, 1.0f));
-
     auto const eyes = Entity::create("Eyes");
     eyes->transform->set_parent(ship->transform);
+    auto const eyes_comp = eyes->add_component<ShipEyes>(ShipEyes::create());
 
     auto const collider_in_front = eyes->add_component<Collider2D>(Collider2D::create(0.1f, 0.1f));
     collider_in_front->offset = {1.0f, 0.0f};
+
+    auto const ship_comp =
+        ship->add_component(Ship::create(light.lock(), std::static_pointer_cast<ShipSpawner>(shared_from_this()), eyes_comp));
+    auto const collider = ship->add_component<Collider2D>(Collider2D::create(1.0f, 1.0f));
 
     ship_comp->on_ship_destroyed.attach(&ShipSpawner::remove_ship, shared_from_this());
     ship_comp->maximum_speed = LevelController::get_instance()->ships_speed;
