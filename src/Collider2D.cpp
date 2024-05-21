@@ -148,8 +148,23 @@ float Collider2D::get_radius_2d() const
 
 glm::vec2 Collider2D::get_center_2d() const
 {
-    // TODO: We should probably only calculate this when one of these changes
-    return AK::convert_3d_to_2d(entity->transform->get_position()) + offset;
+    // Get the entity's world position in 2D
+    glm::vec2 const entity_position = AK::convert_3d_to_2d(entity->transform->get_position());
+
+    // Get the entity's rotation quaternion
+    glm::quat const entity_rotation = entity->transform->get_rotation();
+
+    // Convert the offset to 3D for quaternion rotation
+    glm::vec3 const offset_3d = AK::convert_2d_to_3d(offset);
+
+    // Rotate the offset using the entity's rotation quaternion
+    glm::vec3 const rotated_offset_3d = entity_rotation * offset_3d;
+
+    // Convert the rotated offset back to 2D
+    glm::vec2 const rotated_offset = AK::convert_3d_to_2d(rotated_offset_3d);
+
+    // Calculate the collider's center position
+    return entity_position + rotated_offset;
 }
 
 glm::vec2 Collider2D::get_bounds_dimensions_2d() const
