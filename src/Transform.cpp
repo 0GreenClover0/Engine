@@ -141,6 +141,17 @@ glm::vec3 Transform::get_euler_angles_restricted() const
             glm::mod(glm::mod(m_euler_angles.z, 360.0f) + 360.0f, 360.0f)};
 }
 
+void Transform::orient_towards(glm::vec3 const& target, glm::vec3 const& up)
+{
+    glm::mat4 transformation = glm::lookAt(get_position(), target, glm::vec3(0.0f, 1.0f, 0.0f));
+    transformation = glm::inverse(transformation);
+
+    m_local_rotation = glm::quat_cast(transformation);
+    m_euler_angles = glm::degrees(glm::eulerAngles(m_local_rotation));
+
+    set_dirty();
+}
+
 glm::vec3 Transform::get_forward()
 {
     recompute_forward_right_up_if_needed();

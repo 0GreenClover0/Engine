@@ -265,9 +265,9 @@ float3 calculate_scatter(SpotLight light, float4 world_position)
 
     // Technically should not be tweakable.
     // However multiplying it makes the cone brighter.
-    t = t * 5;
+    t = t * 10;
 
-    // Tweakable
+    // Tweakable.
     float scattering_coefficient = 1.0f;
 
     // According to Rayliegh scattering blue light at the lower end of the spectrum is scattered considerably more than red light.
