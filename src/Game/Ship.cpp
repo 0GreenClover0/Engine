@@ -109,10 +109,9 @@ bool Ship::control_state_change()
     return false;
 }
 
-// TODO: Add avoid state change
 bool Ship::avoid_state_change()
 {
-    if (false)
+    if (eyes.lock()->see_obstacle)
     {
         m_behavioral_state = BehavioralState::Avoid;
         return true;
@@ -176,10 +175,9 @@ bool Ship::control_state_ended()
     return result;
 }
 
-// TODO: Add avoid state ended
 bool Ship::avoid_state_ended()
 {
-    if (true)
+    if (!eyes.lock()->see_obstacle)
     {
         return true;
     }
