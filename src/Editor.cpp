@@ -349,6 +349,15 @@ void Editor::draw_game(std::shared_ptr<EditorWindow> const& window)
             if (ImGui::Button("Pause", ImVec2(50.0f, 20.0f)))
             {
                 Engine::set_game_paused(!Engine::is_game_paused());
+
+                if (Engine::is_game_paused())
+                {
+                    Camera::set_main_camera(m_editor_camera);
+                }
+                else
+                {
+                    Renderer::get_instance()->choose_main_camera(m_editor_camera);
+                }
             }
         }
 
