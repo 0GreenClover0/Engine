@@ -3,6 +3,7 @@
 #include "Component.h"
 #include "LevelController.h"
 #include "LighthouseLight.h"
+#include "ShipEyes.h"
 
 enum class ShipType
 {
@@ -82,7 +83,8 @@ class Ship final : public Component
 {
 public:
     static std::shared_ptr<Ship> create();
-    static std::shared_ptr<Ship> create(std::shared_ptr<LighthouseLight> const& light, std::shared_ptr<ShipSpawner> const& spawner);
+    static std::shared_ptr<Ship> create(std::shared_ptr<LighthouseLight> const& light, std::shared_ptr<ShipSpawner> const& spawner,
+                                        std::shared_ptr<ShipEyes> const& eyes);
 
     explicit Ship(AK::Badge<Ship>);
 
@@ -107,6 +109,7 @@ public:
 
     std::weak_ptr<LighthouseLight> light = {};
     std::weak_ptr<ShipSpawner> spawner = {};
+    std::weak_ptr<ShipEyes> eyes = {};
 
     NON_SERIALIZED
     bool is_destroyed = false;

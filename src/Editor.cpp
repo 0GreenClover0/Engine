@@ -31,6 +31,7 @@
 #include "Game/Player/PlayerInput.h"
 #include "Game/Port.h"
 #include "Game/Ship.h"
+#include "Game/ShipEyes.h"
 #include "Game/ShipSpawner.h"
 #include "Globals.h"
 #include "Grass.h"

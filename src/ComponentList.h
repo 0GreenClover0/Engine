@@ -19,6 +19,7 @@
     ENUMERATE_COMPONENT(Player, "Player")                           \
     ENUMERATE_COMPONENT(Port, "Port")                               \
     ENUMERATE_COMPONENT(Ship, "Ship")                               \
+    ENUMERATE_COMPONENT(ShipEyes, "Ship Eyes")                      \
     ENUMERATE_COMPONENT(ShipSpawner, "Ship Spawner")                \
     ENUMERATE_COMPONENT(PlayerInput, "Player Input")                \
     ENUMERATE_COMPONENT(Path, "Path")                               \

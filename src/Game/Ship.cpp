@@ -21,11 +21,13 @@ std::shared_ptr<Ship> Ship::create()
     return std::make_shared<Ship>(AK::Badge<Ship> {});
 }
 
-std::shared_ptr<Ship> Ship::create(std::shared_ptr<LighthouseLight> const& light, std::shared_ptr<ShipSpawner> const& spawner)
+std::shared_ptr<Ship> Ship::create(std::shared_ptr<LighthouseLight> const& light, std::shared_ptr<ShipSpawner> const& spawner,
+                                   std::shared_ptr<ShipEyes> const& eyes)
 {
     auto ship = std::make_shared<Ship>(AK::Badge<Ship> {});
     ship->light = light;
     ship->spawner = spawner;
+    ship->eyes = eyes;
 
     return ship;
 }
