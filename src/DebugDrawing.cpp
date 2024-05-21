@@ -165,7 +165,7 @@ void DebugDrawing::set_radius(float const radius)
     m_radius = radius;
 
     if (m_type == DrawingType::Sphere && entity != nullptr)
-        entity->transform->set_scale(glm::vec3(m_radius * 10.0f));
+        entity->transform->set_scale(glm::vec3(m_radius));
 }
 
 glm::vec3 DebugDrawing::get_extents() const
@@ -197,8 +197,7 @@ void DebugDrawing::create_box(bool const is_reload)
 
 void DebugDrawing::create_sphere(bool const is_reload)
 {
-    m_sphere_component =
-        entity->add_component<Sphere>(Sphere::create(m_radius * 10.0f, 10, 10, "./res/textures/white.jpg", m_plain_material));
+    m_sphere_component = entity->add_component<Sphere>(Sphere::create(1.0f, 10, 10, "./res/textures/white.jpg", m_plain_material));
 
     if (!is_reload)
     {
