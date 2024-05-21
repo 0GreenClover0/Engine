@@ -53,9 +53,8 @@ float4 ps_main(VS_Output input) : SV_Target
     for (int spot_light_index = 0; spot_light_index < number_of_spot_lights; spot_light_index++)
     {
         result.xyz += calculate_spot_light(spot_lights[spot_light_index], normal.xyz, pos.xyz, view_dir, diffuse.xyz, spot_light_index, true);
+        result.xyz += calculate_scatter(spot_lights[spot_light_index], pos);
     }
-
-    result.a = 1.0f;
 
     return gamma_correction(result.xyz);
 }

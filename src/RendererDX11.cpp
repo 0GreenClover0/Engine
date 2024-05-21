@@ -622,6 +622,7 @@ void RendererDX11::set_light_buffer() const
         light_data.spot_lights[i].far_plane = m_spot_lights[i]->m_far_plane;
 
         light_data.spot_lights[i].light_projection_view = m_spot_lights[i]->get_projection_view_matrix();
+        light_data.spot_lights[i].light_model = m_spot_lights[i]->get_adjusted_model_matrix();
     }
 
     light_data.camera_pos = Camera::get_main_camera()->entity->transform->get_position();

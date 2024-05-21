@@ -6,3 +6,31 @@ float4 gamma_correction(float3 color)
     float3 sRGB_color = float3(pow(color.x, gamma_factor), pow(color.y, gamma_factor), pow(color.z, gamma_factor));
     return float4(sRGB_color.xyz, 1.0f);
 }
+
+void solve_quadratic(float a, float b, float c, out float min_t, out float max_t)
+{
+    float discriminant = b * b - 4.0f * a * c;
+    if (discriminant < 0.0f)
+    {
+        // No real solutions so return a degenerate result
+        min_t = 0.0f;
+        max_t = 0.0f;
+        return;
+    }
+
+    // solving ax^2 + bx + c = 0
+    float t = -0.5f * (b + sign(b) * sqrt(discriminant));
+    float closestT = t / a;
+    float furthestT = c / t;
+
+    if (closestT > furthestT)
+    {
+        min_t = furthestT;
+        max_t = closestT;
+    }
+    else
+    {
+        min_t = closestT;
+        max_t = furthestT;
+    }
+}
