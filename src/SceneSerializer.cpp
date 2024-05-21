@@ -28,6 +28,7 @@
 #include "Game/Player/PlayerInput.h"
 #include "Game/Port.h"
 #include "Game/Ship.h"
+#include "Game/ShipEyes.h"
 #include "Game/ShipSpawner.h"
 #include "Light.h"
 #include "Model.h"
@@ -350,6 +351,14 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "guid" << YAML::Value << ship->guid;
         out << YAML::Key << "light" << YAML::Value << ship->light;
         out << YAML::Key << "spawner" << YAML::Value << ship->spawner;
+        out << YAML::Key << "eyes" << YAML::Value << ship->eyes;
+        out << YAML::EndMap;
+    }
+    else if (auto const shipeyes = std::dynamic_pointer_cast<class ShipEyes>(component); shipeyes != nullptr)
+    {
+        out << YAML::BeginMap;
+        out << YAML::Key << "ComponentName" << YAML::Value << "ShipEyesComponent";
+        out << YAML::Key << "guid" << YAML::Value << shipeyes->guid;
         out << YAML::EndMap;
     }
     else if (auto const shipspawner = std::dynamic_pointer_cast<class ShipSpawner>(component); shipspawner != nullptr)
@@ -919,6 +928,23 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             auto const deserialized_component = std::dynamic_pointer_cast<class Ship>(get_from_pool(component["guid"].as<std::string>()));
             deserialized_component->light = component["light"].as<std::weak_ptr<LighthouseLight>>();
             deserialized_component->spawner = component["spawner"].as<std::weak_ptr<ShipSpawner>>();
+            deserialized_component->eyes = component["eyes"].as<std::weak_ptr<ShipEyes>>();
+            deserialized_entity->add_component(deserialized_component);
+            deserialized_component->reprepare();
+        }
+    }
+    else if (component_name == "ShipEyesComponent")
+    {
+        if (first_pass)
+        {
+            auto const deserialized_component = ShipEyes::create();
+            deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_pool.emplace_back(deserialized_component);
+        }
+        else
+        {
+            auto const deserialized_component =
+                std::dynamic_pointer_cast<class ShipEyes>(get_from_pool(component["guid"].as<std::string>()));
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
         }
