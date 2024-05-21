@@ -183,7 +183,7 @@ void DebugDrawing::set_extents(glm::vec3 const& extents)
 
 void DebugDrawing::create_box(bool const is_reload)
 {
-    m_box_component = entity->add_component<Cube>(Cube::create(m_plain_material));
+    m_box_component = entity->add_component<Cube>(Cube::create("./res/textures/white.jpg", m_plain_material));
 
     if (!is_reload)
     {
