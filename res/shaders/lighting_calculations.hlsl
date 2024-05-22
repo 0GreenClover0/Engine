@@ -28,32 +28,41 @@ float point_shadow_calculation(PointLight light, float3 world_pos, int index)
     return shadow;
 }
 
-float spot_shadow_calculation(SpotLight light, float3 world_pos, int index, float3 normal)
+float spot_shadow_calculation(SpotLight light, float3 world_pos, int index, float3 normal, bool smooth)
 {
     float4 light_space_pos = mul(light.projection_view, float4(world_pos, 1.0f));
     light_space_pos.xyz /= light_space_pos.w;
     light_space_pos.x = light_space_pos.x / 2.0f + 0.5f;
     light_space_pos.y = -light_space_pos.y / 2.0f + 0.5f;
     float shadow = 0.0f;
-    float bias = max(0.005f * (1.0f - dot(normal, light.direction)), 0.005f);
     float depth = light_space_pos.z;
 
-    // Reference for PCF implementation:
-    // https://learnopengl.com/Advanced-Lighting/Shadows/Shadow-Mapping
-    float2 map_size;
-    spot_light_shadow_maps[index].GetDimensions(map_size.x, map_size.y);
-    float2 texel_size = 1.0 / map_size;
-    for (int x = -1; x <= 1; x++)
+    if (smooth)
     {
-        for (int y = -1; y <= 1; y++)
+        // Reference for PCF implementation:
+        // https://learnopengl.com/Advanced-Lighting/Shadows/Shadow-Mapping
+        float2 map_size;
+        spot_light_shadow_maps[index].GetDimensions(map_size.x, map_size.y);
+        float2 texel_size = 1.0 / map_size;
+        float bias = max(0.005f * (1.0f - dot(normal, light.direction)), 0.005f);
+        for (int x = -1; x <= 1; x++)
         {
-            float pcf_depth = spot_light_shadow_maps[index].SampleLevel(shadow_map_sampler, light_space_pos.xy + float2(x, y) * texel_size, 0).r;
-            shadow += depth - bias > pcf_depth ? 1.0f : 0.0f;
+            for (int y = -1; y <= 1; y++)
+            {
+                float pcf_depth = spot_light_shadow_maps[index].SampleLevel(shadow_map_sampler, light_space_pos.xy + float2(x, y) * texel_size, 0).r;
+                shadow += depth - bias > pcf_depth ? 1.0f : 0.0f;
+            }
+        }
+        shadow /= 9.0f;
+    }
+    else
+    {
+        float shadow_map_depth = spot_light_shadow_maps[index].SampleLevel(shadow_map_sampler, light_space_pos.xy, 0).r;
+        if (shadow_map_depth < depth)
+        {
+            shadow = 1.0f;
         }
     }
-
-    shadow /= 9.0f;
-
     return shadow;
 }
 
@@ -173,7 +182,7 @@ float3 calculate_spot_light(SpotLight light, float3 normal, float3 world_pos, fl
     float shadow = 0.0f;
     if (calculate_shadows)
     {
-        shadow = spot_shadow_calculation(light, world_pos, index, normal);
+        shadow = spot_shadow_calculation(light, world_pos, index, normal, true);
     }
 
     return attenuation * intensity * (ambient + (1.0f - shadow) * (diffuse + specular));
