@@ -185,6 +185,7 @@ private:
     void delete_selected_entity() const;
     void copy_selected_entity() const;
     void paste_entity() const;
+    void add_child_entity() const;
 
     void mouse_callback(double const x, double const y);
 
