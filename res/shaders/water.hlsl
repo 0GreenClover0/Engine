@@ -124,8 +124,8 @@ float4 ps_main(VS_Output input) : SV_TARGET
 
     for (int j = 0; j < number_of_spot_lights; j++)
     {
-        result += calculate_spot_light(spot_lights[j], norm, input.world_pos, view_dir, diffuse_texture, j, false);
-        result += calculate_scatter(spot_lights[j], float4(input.world_pos, 1.0f));
+        result += calculate_spot_light(spot_lights[j], norm, input.world_pos, view_dir, diffuse_texture, j, true);
+        result += calculate_scatter(spot_lights[j], float4(input.world_pos, 1.0f), j);
     }
 
     result += reflection * 0.5f;
