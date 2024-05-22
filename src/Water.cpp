@@ -16,10 +16,9 @@ std::shared_ptr<Water> Water::create()
     auto material = Material::create(shader);
     material->casts_shadows = false;
     material->needs_skybox = true;
-
+    material->needs_forward_rendering = true;
     auto water = std::make_shared<Water>(AK::Badge<Water> {}, material);
     water->tesselation_level = 5;
-    water->add_wave();
 
     return water;
 }
