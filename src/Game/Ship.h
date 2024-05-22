@@ -142,7 +142,7 @@ private:
     bool in_port_state_change();
 
     bool control_state_ended();
-    bool avoid_state_ended();
+    bool avoid_state_ended() const;
 
     void normal_behavior();
     void pirate_behavior();
@@ -168,4 +168,6 @@ private:
     float const m_deceleration_speed = 0.17f;
 
     float m_pirates_in_control_counter = 0.0f;
+
+    i32 m_avoid_direction = 0;
 };

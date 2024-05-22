@@ -12,6 +12,7 @@
 
 #include "AK/AK.h"
 #include "Globals.h"
+#include "IceBound.h"
 
 std::shared_ptr<ShipEyes> ShipEyes::create()
 {
@@ -33,10 +34,16 @@ void ShipEyes::update()
 
 void ShipEyes::on_trigger_enter(std::shared_ptr<Collider2D> const& other)
 {
-    see_obstacle = true;
+    if (other->entity->get_component<IceBound>() != nullptr)
+    {
+        see_obstacle = true;
+    }
 }
 
 void ShipEyes::on_trigger_exit(std::shared_ptr<Collider2D> const& other)
 {
-    see_obstacle = false;
+    if (other->entity->get_component<IceBound>() != nullptr)
+    {
+        see_obstacle = false;
+    }
 }
