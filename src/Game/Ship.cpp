@@ -11,6 +11,7 @@
 
 #include "AK/AK.h"
 #include "Globals.h"
+#include "IceBound.h"
 #include "LighthouseKeeper.h"
 #include "Player.h"
 #include "ShipSpawner.h"
@@ -113,6 +114,7 @@ bool Ship::avoid_state_change()
 {
     if (eyes.lock()->see_obstacle)
     {
+        m_avoid_direction = ((std::rand() % 2) * 2) - 1;
         m_behavioral_state = BehavioralState::Avoid;
         return true;
     }
@@ -175,7 +177,7 @@ bool Ship::control_state_ended()
     return result;
 }
 
-bool Ship::avoid_state_ended()
+bool Ship::avoid_state_ended() const
 {
     if (!eyes.lock()->see_obstacle)
     {
@@ -230,10 +232,15 @@ void Ship::control_behavior()
                * (distance_to_light / Player::get_instance()->range));
 }
 
-// TODO: Add avoid behaviour
 void Ship::avoid_behavior()
 {
-    m_speed = maximum_speed;
+    m_speed -= m_deceleration_speed * delta_time;
+    m_direction += Player::get_instance()->turn_speed * m_avoid_direction * delta_time;
+
+    if (m_speed < minimum_speed)
+    {
+        m_speed = minimum_speed;
+    }
 }
 
 void Ship::destroyed_behavior()
@@ -426,6 +433,10 @@ void Ship::on_trigger_enter(std::shared_ptr<Collider2D> const& other)
         return;
 
     if (other->entity->get_component<Ship>() != nullptr)
+    {
+        destroy();
+    }
+    else if (other->entity->get_component<IceBound>() != nullptr)
     {
         destroy();
     }
