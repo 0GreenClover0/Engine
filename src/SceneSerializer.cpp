@@ -19,6 +19,7 @@
 #include "ExampleDynamicText.h"
 #include "ExampleUIBar.h"
 #include "Game/Factory.h"
+#include "Game/IceBound.h"
 #include "Game/LevelController.h"
 #include "Game/Lighthouse.h"
 #include "Game/LighthouseKeeper.h"
@@ -276,6 +277,13 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::BeginMap;
         out << YAML::Key << "ComponentName" << YAML::Value << "FactoryComponent";
         out << YAML::Key << "guid" << YAML::Value << factory->guid;
+        out << YAML::EndMap;
+    }
+    else if (auto const icebound = std::dynamic_pointer_cast<class IceBound>(component); icebound != nullptr)
+    {
+        out << YAML::BeginMap;
+        out << YAML::Key << "ComponentName" << YAML::Value << "IceBoundComponent";
+        out << YAML::Key << "guid" << YAML::Value << icebound->guid;
         out << YAML::EndMap;
     }
     else if (auto const levelcontroller = std::dynamic_pointer_cast<class LevelController>(component); levelcontroller != nullptr)
@@ -793,6 +801,22 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component =
                 std::dynamic_pointer_cast<class Factory>(get_from_pool(component["guid"].as<std::string>()));
+            deserialized_entity->add_component(deserialized_component);
+            deserialized_component->reprepare();
+        }
+    }
+    else if (component_name == "IceBoundComponent")
+    {
+        if (first_pass)
+        {
+            auto const deserialized_component = IceBound::create();
+            deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_pool.emplace_back(deserialized_component);
+        }
+        else
+        {
+            auto const deserialized_component =
+                std::dynamic_pointer_cast<class IceBound>(get_from_pool(component["guid"].as<std::string>()));
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
         }
