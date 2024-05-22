@@ -151,21 +151,26 @@ struct convert<std::shared_ptr<Material>>
         node.push_back(rhs->shader);
         node.push_back(rhs->color);
         node.push_back(rhs->get_render_order());
+        node.push_back(rhs->needs_forward_rendering);
+        node.push_back(rhs->casts_shadows);
         return node;
     }
 
     static bool decode(Node const& node, std::shared_ptr<Material>& rhs)
     {
-        if (node.size() != 3)
+        if (node.size() != 5)
             return false;
 
         auto const shader = node["Shader"].as<std::shared_ptr<Shader>>();
         auto const color = node["Color"].as<glm::vec4>();
         auto const render_order = node["RenderOrder"].as<i32>();
+        auto const forward_rendered = node["NeedsForward"].as<bool>();
+        auto const casts_shadows = node["CastsShadows"].as<bool>();
 
         rhs = Material::create(shader, render_order);
         rhs->color = color;
-
+        rhs->needs_forward_rendering = forward_rendered;
+        rhs->casts_shadows = casts_shadows;
         return true;
     }
 };
@@ -422,6 +427,8 @@ inline Emitter& operator<<(YAML::Emitter& out, std::shared_ptr<Material> const& 
     out << YAML::Key << "Shader" << YAML::Value << material->shader;
     out << YAML::Key << "Color" << YAML::Value << material->color;
     out << YAML::Key << "RenderOrder" << YAML::Value << material->get_render_order();
+    out << YAML::Key << "NeedsForward" << YAML::Value << material->needs_forward_rendering;
+    out << YAML::Key << "CastsShadows" << YAML::Value << material->casts_shadows;
 
     out << YAML::EndMap; // Material
 

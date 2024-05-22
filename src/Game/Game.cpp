@@ -137,8 +137,7 @@ void Game::initialize()
 
     auto const water = Entity::create("Water");
     auto const water_comp = water->add_component(Water::create());
-    water_comp->material->casts_shadows = false;
-    water_comp->material->needs_forward_rendering = true;
+    water_comp->add_wave();
     water_comp->add_wave();
     water_comp->waves[0].direction = glm::vec2(1.0f, 0.5f);
     water_comp->waves[0].speed = 116.0f;
