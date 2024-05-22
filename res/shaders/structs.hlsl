@@ -40,6 +40,7 @@ struct SpotLight
     float3 specular;
 
     float4x4 projection_view;
+    float4x4 inv_model;
     float4x4 model;
 };
 

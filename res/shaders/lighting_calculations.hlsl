@@ -188,10 +188,10 @@ float3 calculate_spot_light(SpotLight light, float3 normal, float3 world_pos, fl
     return attenuation * intensity * (ambient + (1.0f - shadow) * (diffuse + specular));
 }
 
-float2 intersect_light_cone(SpotLight light, float3 ray_origin, float3 ray_direction)
+float2 intersect_light_cone(SpotLight light, float3 ray_origin, float3 ray_direction, out float shadow, float light_index)
 {
-    float4 local_origin = mul(light.model, float4(ray_origin, 1.0f));
-    float4 local_direction = mul(light.model, float4(ray_direction, 0.0f));
+    float4 local_origin = mul(light.inv_model, float4(ray_origin, 1.0f));
+    float4 local_direction = mul(light.inv_model, float4(ray_direction, 0.0f));
 
     // We need to use acos because outer_cut_off is a cosine value of the outer cut off angle
     float tan_theta = tan(acos(light.outer_cut_off));
@@ -206,6 +206,18 @@ float2 intersect_light_cone(SpotLight light, float3 ray_origin, float3 ray_direc
 
     float y1 = local_origin.y + local_direction.y * min_t;
     float y2 = local_origin.y + local_direction.y * max_t;
+
+    float bias = 0.01f;
+    float3 local_point_min = local_origin.xyz + (min_t + bias) * local_direction.xyz;
+    float3 local_point_max = local_origin.xyz + (max_t - bias) * local_direction.xyz;
+
+    float4 world_point_min_h = mul(light.model, float4(local_point_min, 1.0f));
+    world_point_min_h.xyz /= world_point_min_h.w;
+    float4 world_point_max_h = mul(light.model, float4(local_point_max, 1.0f));
+    world_point_max_h.xyz /= world_point_max_h.w;
+
+    // Shadow is present, when the closest intersection point is in the shadow
+    shadow = spot_shadow_calculation(light, world_point_min_h.xyz, light_index, float3(1.0f, 1.0f, 1.0f), false);
 
     if (y1 > 0.0f && y2 > 0.0f)
     {
@@ -254,7 +266,7 @@ float in_scatter(float3 start, float3 dir, float3 lightPos, float d)
     return l;
 }
 
-float3 calculate_scatter(SpotLight light, float4 world_position)
+float3 calculate_scatter(SpotLight light, float4 world_position, int light_index)
 {
     float3 surface_to_camera_direction = world_position.xyz - camera_pos;
     float ray_length = length(surface_to_camera_direction);
@@ -264,7 +276,14 @@ float3 calculate_scatter(SpotLight light, float4 world_position)
     float min_t = 0.0f;
     float max_t = 0.0f;
 
-    float2 res = intersect_light_cone(light, camera_pos, surface_to_camera_direction);
+    float shadow = 0.0f;
+    float2 res = intersect_light_cone(light, camera_pos, surface_to_camera_direction, shadow, light_index);
+
+    if (shadow > 0.0f)
+    {
+        return 0.0f;
+    }
+
     min_t = res.x;
     max_t = res.y;
     max_t = clamp(max_t, 0.0f, ray_length);
