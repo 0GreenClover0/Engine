@@ -549,6 +549,14 @@ bool Editor::draw_entity_popup(std::shared_ptr<Entity> const& entity)
             return true;
         }
 
+        if (ImGui::Button("Add child"))
+        {
+            add_child_entity();
+            ImGui::CloseCurrentPopup();
+            ImGui::EndPopup();
+            return true;
+        }
+
         ImGui::EndPopup();
     }
 
@@ -1079,6 +1087,16 @@ void Editor::paste_entity() const
     auto const scene_serializer = std::make_shared<SceneSerializer>(m_open_scene);
     scene_serializer->set_instance(scene_serializer);
     scene_serializer->deserialize_this_entity("./.editor/copied_entity.txt");
+}
+
+void Editor::add_child_entity() const
+{
+    if (m_selected_entity.expired())
+        return;
+
+    auto const entity = m_selected_entity.lock();
+    auto const child_entity = Entity::create("Child");
+    child_entity->transform->set_parent(entity->transform);
 }
 
 void Editor::mouse_callback(double const x, double const y)
