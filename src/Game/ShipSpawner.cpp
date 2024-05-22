@@ -722,8 +722,7 @@ void ShipSpawner::spawn_ship(SpawnEvent const* being_spawn)
     eyes->transform->set_parent(ship->transform);
     auto const eyes_comp = eyes->add_component<ShipEyes>(ShipEyes::create());
 
-    auto const collider_in_front = eyes->add_component<Collider2D>(Collider2D::create(0.1f, 0.1f));
-    collider_in_front->offset = {1.0f, 0.0f};
+    auto const collider_in_front = eyes->add_component<Collider2D>(Collider2D::create(0.1f, 0.2f));
 
     auto const ship_comp =
         ship->add_component(Ship::create(light.lock(), std::static_pointer_cast<ShipSpawner>(shared_from_this()), eyes_comp));
@@ -741,29 +740,36 @@ void ShipSpawner::spawn_ship(SpawnEvent const* being_spawn)
         ship->add_component(Model::create("./res/models/shipSmall/shipSmall.gltf", standard_material));
         collider->set_bounds_dimensions_2d(0.25f / 2.0f, 0.65f / 2.0f);
         collider->offset = {0.0f, 0.035f};
+        collider_in_front->offset = {0.0f, -0.5f};
     }
     else if (ship_comp->type == ShipType::FoodMedium)
     {
         ship->add_component(Model::create("./res/models/shipMedium/shipMedium.gltf", standard_material));
         collider->set_bounds_dimensions_2d(0.5f / 2.0f, 1.1f / 2.0f);
+        collider_in_front->set_bounds_dimensions_2d(0.2f / 2.0f, 0.5f / 2.0f);
+        collider_in_front->offset = {0.0f, -0.8f};
     }
     else if (ship_comp->type == ShipType::FoodBig)
     {
         ship->add_component(Model::create("./res/models/shipBig/shipBig.gltf", standard_material));
         collider->set_bounds_dimensions_2d(0.5f / 2.0f, 1.6f / 2.0f);
+        collider_in_front->set_bounds_dimensions_2d(0.2f / 2.0f, 0.7f / 2.0f);
         collider->offset = {0.0f, 0.005f};
+        collider_in_front->offset = {0.0f, -1.15f};
     }
     else if (ship_comp->type == ShipType::Pirates)
     {
         ship->add_component(Model::create("./res/models/shipPirates/shipPirates.gltf", standard_material));
         collider->set_bounds_dimensions_2d(0.25f / 2.0f, 0.65f / 2.0f);
         collider->offset = {0.0f, 0.035f};
+        collider_in_front->offset = {0.0f, -0.5f};
     }
     else if (ship_comp->type == ShipType::Tool)
     {
         ship->add_component(Model::create("./res/models/shipTool/shipTool.gltf", standard_material));
         collider->set_bounds_dimensions_2d(0.25f / 2.0f, 0.65f / 2.0f);
         collider->offset = {0.0f, 0.035f};
+        collider_in_front->offset = {0.0f, -0.5f};
     }
 
     collider->set_is_trigger(true);
