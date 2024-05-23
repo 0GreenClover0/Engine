@@ -241,7 +241,7 @@ void Collider2D::update()
 void Collider2D::update_center_and_corners()
 {
     glm::vec2 const position = get_center_2d();
-    float const angle = glm::radians(entity->transform->get_euler_angles().y);
+    float const angle = glm::eulerAngles(entity->transform->get_rotation()).y;
     compute_axes(position, angle);
     m_debug_drawing_entity->transform->set_position(AK::convert_2d_to_3d(position));
 }
