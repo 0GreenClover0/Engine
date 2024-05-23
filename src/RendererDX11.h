@@ -100,7 +100,7 @@ private:
     ID3D11RasterizerState* g_rasterizer_state_solid = nullptr;
     ID3D11RasterizerState* g_rasterizer_state_wireframe = nullptr;
     ID3D11RasterizerState* g_rasterizer_state = nullptr;
-    ID3D11RasterizerState* g_wireframe_rasterizer_state = nullptr;
+
     ID3D11Buffer* m_constant_buffer_light = nullptr;
     ID3D11Buffer* m_constant_buffer_camera_position = nullptr;
     ID3D11Buffer* m_constant_buffer_per_object = nullptr;
