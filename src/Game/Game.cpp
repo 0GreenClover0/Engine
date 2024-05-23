@@ -94,9 +94,6 @@ void Game::initialize()
     auto const scene = Entity::create("Scene");
     scene->add_component(Model::create("./res/models/scene/scene.gltf", standard_material));
 
-    auto const light = Entity::create("Light");
-    auto const light_comp = light->add_component(LighthouseLight::create());
-
     auto const port = Entity::create("Port");
     auto const port_comp = port->add_component<Port>(Port::create());
     port->transform->set_local_position({-0.113047f, -0.25f, 2.162429f});
@@ -105,17 +102,6 @@ void Game::initialize()
     auto const collider = port->add_component<Collider2D>(
         Collider2D::create({port->transform->get_local_scale().x / 2.0f, port->transform->get_local_scale().z / 2.0f}, true));
     collider->set_is_trigger(true);
-
-    auto const lighthouse = Entity::create("Lighthouse");
-    lighthouse->add_component<Model>(Model::create("./res/models/lighthouseNew/lighthouse.gltf", standard_material));
-    lighthouse->transform->set_local_position(glm::vec3(2.294563f, 0.223798f, 2.378702f));
-    auto const lighthouse_comp = lighthouse->add_component<Lighthouse>(Lighthouse::create());
-    lighthouse_comp->light = light_comp;
-    lighthouse_comp->port = port_comp;
-    auto const spawn = Entity::create("Spawn");
-    spawn->transform->set_parent(lighthouse->transform);
-    spawn->transform->set_local_position(glm::vec3(0.0f, 0.0f, 0.4f));
-    lighthouse_comp->spawn_position = spawn;
 
     auto const generator = Entity::create("Generator");
     auto const generator_comp = generator->add_component<Factory>(Factory::create());
@@ -127,10 +113,36 @@ void Game::initialize()
     workshop_comp->set_type(FactoryType::Workshop);
     workshop->transform->set_local_position({-3.0f, 0.0f, 3.0f});
 
+#pragma region Lighthouse
+    auto const lighthouse = Entity::create("Lighthouse");
+    lighthouse->add_component<Model>(Model::create("./res/models/lighthouseNew/lighthouse.gltf", standard_material));
+    lighthouse->transform->set_local_position(glm::vec3(2.294563f, 0.223798f, 2.378702f));
+    auto const lighthouse_comp = lighthouse->add_component<Lighthouse>(Lighthouse::create());
+
+    auto const lighthouse_light = Entity::create("Lighthouse Light");
+    auto const lighthouse_light_comp = lighthouse_light->add_component(LighthouseLight::create());
+
+    auto const spotlight = Entity::create("Lighthouse Spotlight");
+    auto const spotlight_comp = spotlight->add_component<SpotLight>(SpotLight::create());
+
+    spotlight->transform->set_parent(lighthouse->transform);
+    spotlight->transform->set_local_position(glm::vec3(0.0f, 0.876f, 0.0f));
+
+    lighthouse_light_comp->set_spot_light(spotlight_comp);
+
+    lighthouse_comp->light = lighthouse_light_comp;
+    lighthouse_comp->port = port_comp;
+
+    auto const spawn = Entity::create("Spawn");
+    spawn->transform->set_parent(lighthouse->transform);
+    spawn->transform->set_local_position(glm::vec3(0.0f, 0.0f, 0.4f));
+    lighthouse_comp->spawn_position = spawn;
+#pragma endregion
+
     auto const level_controller = Entity::create("Level Controller");
     auto const level_controller_comp = level_controller->add_component(LevelController::create());
     level_controller->add_component(Player::create());
-    level_controller->add_component(ShipSpawner::create(light->get_component<LighthouseLight>()));
+    level_controller->add_component(ShipSpawner::create(lighthouse_light_comp));
 
     level_controller_comp->factories.emplace_back(generator_comp);
     level_controller_comp->factories.emplace_back(workshop_comp);

@@ -63,6 +63,11 @@ void LighthouseLight::draw_editor()
     ImGui::InputFloat("Beam width", &m_light_beam_width);
 }
 
+void LighthouseLight::set_spot_light(std::shared_ptr<SpotLight> const& light)
+{
+    m_light = light;
+}
+
 glm::vec2 LighthouseLight::get_position() const
 {
     float const y = Input::input->get_mouse_position().y * LevelController::get_instance()->playfield_height;

@@ -21,6 +21,7 @@ public:
     virtual void update() override;
     virtual void draw_editor() override;
 
+    void set_spot_light(std::shared_ptr<SpotLight> const& light);
     glm::vec2 get_position() const;
 
     std::weak_ptr<SpotLight> m_light = {};
