@@ -208,7 +208,7 @@ void RendererDX11::render_geometry_pass(glm::mat4 const& projection_view) const
 
     if (wireframe_mode_active)
     {
-        g_pd3dDeviceContext->RSSetState(g_wireframe_rasterizer_state);
+        g_pd3dDeviceContext->RSSetState(g_rasterizer_state_wireframe);
     }
     else
     {
@@ -267,14 +267,22 @@ void RendererDX11::render_ssao() const
     g_pd3dDeviceContext->PSSetSamplers(0, 1, &m_default_sampler_state);
     g_pd3dDeviceContext->PSSetSamplers(1, 1, &m_repeat_sampler_state);
 
+    g_pd3dDeviceContext->RSSetState(g_rasterizer_state_solid);
+
     FullscreenQuad::get_instance()->draw();
+
+    g_pd3dDeviceContext->RSSetState(g_rasterizer_state);
 
     m_ssao_blur->use_shader();
     m_ssao_blur->bind_render_targets();
 
     m_ssao->bind_shader_resources();
 
+    g_pd3dDeviceContext->RSSetState(g_rasterizer_state_solid);
+
     FullscreenQuad::get_instance()->draw();
+
+    g_pd3dDeviceContext->RSSetState(g_rasterizer_state);
 }
 
 ID3D11Device* RendererDX11::get_device() const
@@ -398,14 +406,18 @@ void RendererDX11::render_lighting_pass() const
     m_ssao_blur->bind_shader_resources();
     m_lighting_pass_shader->use();
 
+    g_pd3dDeviceContext->RSSetState(g_rasterizer_state_solid);
+
     FullscreenQuad::get_instance()->draw();
+
+    g_pd3dDeviceContext->RSSetState(g_rasterizer_state);
 }
 
 void RendererDX11::bind_for_render_frame() const
 {
     if (wireframe_mode_active)
     {
-        g_pd3dDeviceContext->RSSetState(g_wireframe_rasterizer_state);
+        g_pd3dDeviceContext->RSSetState(g_rasterizer_state_wireframe);
     }
     else
     {
