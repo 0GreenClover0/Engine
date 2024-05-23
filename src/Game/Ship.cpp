@@ -280,7 +280,6 @@ void Ship::update()
         destroy();
     }
 
-    //TODO: Check whether it is better if there is no behavior on the tick or there is old behavior. Look for a better way
     switch (m_behavioral_state)
     {
     case BehavioralState::Normal:
@@ -306,10 +305,6 @@ void Ship::update()
         {
             break;
         }
-
-        normal_behavior();
-        update_position();
-        update_rotation();
         break;
 
     case BehavioralState::Pirate:
@@ -327,10 +322,6 @@ void Ship::update()
         {
             break;
         }
-
-        pirate_behavior();
-        update_position();
-        update_rotation();
         break;
 
     case BehavioralState::Control:
@@ -351,10 +342,6 @@ void Ship::update()
                 break;
             }
         }
-
-        control_behavior();
-        update_position();
-        update_rotation();
         break;
 
     case BehavioralState::Avoid:
@@ -379,7 +366,40 @@ void Ship::update()
                 break;
             }
         }
+        break;
 
+    case BehavioralState::Destroyed:
+        break;
+    case BehavioralState::InPort:
+
+        if (destroyed_state_change())
+        {
+            break;
+        }
+        break;
+    }
+
+    switch (m_behavioral_state)
+    {
+    case BehavioralState::Normal:
+        normal_behavior();
+        update_position();
+        update_rotation();
+        break;
+
+    case BehavioralState::Pirate:
+        pirate_behavior();
+        update_position();
+        update_rotation();
+        break;
+
+    case BehavioralState::Control:
+        control_behavior();
+        update_position();
+        update_rotation();
+        break;
+
+    case BehavioralState::Avoid:
         avoid_behavior();
         update_position();
         update_rotation();
@@ -391,12 +411,6 @@ void Ship::update()
         break;
 
     case BehavioralState::InPort:
-
-        if (destroyed_state_change())
-        {
-            break;
-        }
-
         in_port_behavior();
         update_position();
         update_rotation();
