@@ -166,6 +166,7 @@ private:
     void draw_scene_save() const;
 
     void draw_entity_recursively(std::shared_ptr<Transform> const& transform);
+    static void entity_drag(std::shared_ptr<Entity> const& entity);
     bool draw_entity_popup(std::shared_ptr<Entity> const& entity);
 
     void draw_window_menu_bar(std::shared_ptr<EditorWindow> const& window);

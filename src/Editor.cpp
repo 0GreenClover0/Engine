@@ -487,8 +487,12 @@ void Editor::draw_entity_recursively(std::shared_ptr<Transform> const& transform
             return;
         }
 
+        entity_drag(entity);
+
         return;
     }
+
+    entity_drag(entity);
 
     if (ImGui::IsItemClicked() || ImGui::IsItemClicked(ImGuiMouseButton_Right))
     {
@@ -507,6 +511,38 @@ void Editor::draw_entity_recursively(std::shared_ptr<Transform> const& transform
     }
 
     ImGui::TreePop();
+}
+
+// Should be called just after an Entity item
+void Editor::entity_drag(std::shared_ptr<Entity> const& entity)
+{
+    ImGuiDragDropFlags src_flags = 0;
+    src_flags |= ImGuiDragDropFlags_SourceNoDisableHover;
+
+    if (ImGui::BeginDragDropSource(src_flags))
+    {
+        ImGui::Text((entity->name).c_str());
+        ImGui::SetDragDropPayload("guid", entity->guid.data(), sizeof(i64) * 8);
+        ImGui::EndDragDropSource();
+    }
+
+    if (ImGui::BeginDragDropTarget())
+    {
+        std::string guid;
+
+        if (ImGuiPayload const* payload = ImGui::AcceptDragDropPayload("guid"))
+        {
+            guid.resize(sizeof(i64) * 8);
+            memcpy(guid.data(), payload->Data, sizeof(i64) * 8);
+
+            if (auto const reparent_entity = MainScene::get_instance()->get_entity_by_guid(guid))
+            {
+                reparent_entity->transform->set_parent(entity->transform);
+            }
+        }
+
+        ImGui::EndDragDropTarget();
+    }
 }
 
 bool Editor::draw_entity_popup(std::shared_ptr<Entity> const& entity)
