@@ -243,6 +243,7 @@ private:
     std::array<std::string, 3> m_known_model_formats = {".gltf", ".obj", ".fbx"};
 
     std::string m_search_filter = {};
+    bool m_is_camera_options_locked = false;
 };
 
 }
