@@ -140,8 +140,7 @@ float4 ps_main(VS_Output input) : SV_TARGET
     }
 
     result += reflection * 0.5f;
-
-    float4 return_value = gamma_correction(result);
+    float4 return_value = gamma_correction(exposure_tonemapping(result.xyz, 1.1f));
     return_value.a = 0.8f;
     return return_value;
 }

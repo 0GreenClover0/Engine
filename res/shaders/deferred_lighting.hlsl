@@ -65,5 +65,6 @@ float4 ps_main(VS_Output input) : SV_Target
         result.xyz += calculate_scatter(spot_lights[spot_light_index], pos, spot_light_index) * fog_value;
     }
 
+    result.xyz = exposure_tonemapping(result.xyz, 1.1f);
     return gamma_correction(result.xyz);
 }
