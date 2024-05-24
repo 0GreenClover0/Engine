@@ -344,6 +344,11 @@ void Renderer::draw(std::shared_ptr<Material> const& material, glm::mat4 const& 
     {
         update_object(drawable, material, projection_view);
 
+        if (material->is_billboard)
+        {
+            drawable->entity->transform->set_euler_angles(Camera::get_main_camera()->entity->transform->get_euler_angles());
+        }
+
         drawable->draw();
     }
 
@@ -366,8 +371,7 @@ void Renderer::draw_instanced(std::shared_ptr<Material> const& material, glm::ma
     {
         for (auto const& drawable : material->drawables)
         {
-            drawable->entity->transform->set_euler_angles(
-                glm::vec3(0.0f, Camera::get_main_camera()->entity->transform->get_euler_angles().y, 0.0f));
+            drawable->entity->transform->set_euler_angles(Camera::get_main_camera()->entity->transform->get_euler_angles());
         }
     }
 
