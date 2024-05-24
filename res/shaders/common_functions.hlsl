@@ -7,6 +7,16 @@ float4 gamma_correction(float3 color)
     return float4(sRGB_color.xyz, 1.0f);
 }
 
+float3 reinhard_tonemapping(float3 color)
+{
+    return color / (color + float3(1.0f, 1.0f, 1.0f));
+}
+
+float3 exposure_tonemapping(float3 color, float exposure)
+{
+    return float3(1.0f, 1.0f, 1.0f) - exp(-color * exposure);
+}
+
 void solve_quadratic(float a, float b, float c, out float min_t, out float max_t)
 {
     float discriminant = b * b - 4.0f * a * c;
