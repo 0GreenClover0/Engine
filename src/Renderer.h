@@ -104,6 +104,7 @@ protected:
     virtual void render_geometry_pass(glm::mat4 const& projection_view) const;
     virtual void render_forward_pass(glm::mat4 const& projection_view, glm::mat4 const& projection_view_no_translation) const;
     virtual void render_ssao() const;
+    virtual void bind_universal_resources() const;
     virtual void bind_for_render_frame() const;
 
     inline static std::shared_ptr<Renderer> m_instance;

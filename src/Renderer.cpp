@@ -203,6 +203,9 @@ void Renderer::render() const
 
     render_ssao();
 
+    // We bind resources that are used in both deferred and forward rendering
+    bind_universal_resources();
+
     // Renders opaque objects
     render_lighting_pass();
 
@@ -215,6 +218,10 @@ void Renderer::render_geometry_pass(glm::mat4 const& projection_view) const
 }
 
 void Renderer::render_ssao() const
+{
+}
+
+void Renderer::bind_universal_resources() const
 {
 }
 

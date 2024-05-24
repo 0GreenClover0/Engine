@@ -17,8 +17,10 @@ Texture2D pos_tex : register(t10);
 Texture2D normal_tex : register(t11);
 Texture2D diffuse_tex : register(t12);
 Texture2D ambient_occlusion_tex : register(t14);
+Texture2D fog_tex : register(t16);
 
 SamplerState obj_sampler_state : register(s0);
+SamplerState repeat_sampler : register(s2);
 
 VS_Output vs_main(VS_Input input)
 {
@@ -44,17 +46,23 @@ float4 ps_main(VS_Output input) : SV_Target
     float3 view_dir = normalize(camera_pos.xyz - pos.xyz);
 
     result.xyz += calculate_directional_light(directional_light, normal.xyz, view_dir, diffuse.xyz, pos.xyz, true, ambient_occlusion);
+    float fog_value = 1.0f; 
+    if (is_fog_rendered)
+    {
+        fog_value = fog_tex.Sample(repeat_sampler, input.UV + time_ps / 50.0f).r;
+        result += 0.1f * fog_value;
+    }
 
     for (int point_light_index = 0; point_light_index < number_of_point_lights; point_light_index++)
     {
         result.xyz += calculate_point_light(point_lights[point_light_index],normal.xyz, pos.xyz, view_dir, diffuse.xyz, point_light_index, true);
-        result.xyz += calculate_scatter(point_lights[point_light_index], pos);
+        result.xyz += calculate_scatter(point_lights[point_light_index], pos) * fog_value;
     }
 
     for (int spot_light_index = 0; spot_light_index < number_of_spot_lights; spot_light_index++)
     {
         result.xyz += calculate_spot_light(spot_lights[spot_light_index], normal.xyz, pos.xyz, view_dir, diffuse.xyz, spot_light_index, true);
-        result.xyz += calculate_scatter(spot_lights[spot_light_index], pos, spot_light_index);
+        result.xyz += calculate_scatter(spot_lights[spot_light_index], pos, spot_light_index) * fog_value;
     }
 
     return gamma_correction(result.xyz);

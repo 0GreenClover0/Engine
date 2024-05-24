@@ -30,6 +30,7 @@ struct VS_Output
     float3 normal : NORMAL;
     float3 world_pos : POSITION;
     float2 UV : TEXCOORD;
+    float3 ndc : TEXCOORD1;
 };
 
 struct PositionAndNormal
@@ -40,6 +41,7 @@ struct PositionAndNormal
 
 Texture2D obj_texture : register(t0);
 TextureCube skybox : register(t15);
+Texture2D fog_tex : register(t16);
 
 SamplerState obj_sampler_state : register(s0);
 
@@ -98,11 +100,13 @@ VS_Output vs_main(VS_Input input)
     output.world_pos = pos_and_normal.position;
     output.UV = input.UV;
     output.pixel_pos = mul(projection_view, float4(output.world_pos, 1.0f));
+    output.ndc = output.pixel_pos.xyz / output.pixel_pos.w * 0.5f + 0.5f;
     return output;
 }
 
 float4 ps_main(VS_Output input) : SV_TARGET
 {
+    float2 screen_UV = float2(input.ndc.x, - input.ndc.y);
     float ratio = 1.0f / 1.25f;
     float3 norm = normalize(input.normal);
     float3 I = normalize(input.world_pos - camera_pos);
@@ -116,16 +120,23 @@ float4 ps_main(VS_Output input) : SV_TARGET
 
     float3 result = calculate_directional_light(directional_light, norm, view_dir, diffuse_texture, input.world_pos, false);
 
+    float fog_value = 1.0f; 
+    if (is_fog_rendered)
+    {
+        fog_value = fog_tex.Sample(obj_sampler_state, screen_UV + time_ps / 100.0f).r;
+        result += 0.2f * fog_value;
+    }
+
     for (int i = 0; i < number_of_point_lights; i++)
     {
         result += calculate_point_light(point_lights[i], norm, input.world_pos.rgb, view_dir, diffuse_texture, i, false);
-        result += calculate_scatter(point_lights[i], float4(input.world_pos, 1.0f));
+        result += calculate_scatter(point_lights[i], float4(input.world_pos, 1.0f)) * fog_value;
     }
 
     for (int j = 0; j < number_of_spot_lights; j++)
     {
         result += calculate_spot_light(spot_lights[j], norm, input.world_pos, view_dir, diffuse_texture, j, true);
-        result += calculate_scatter(spot_lights[j], float4(input.world_pos, 1.0f), j);
+        result += calculate_scatter(spot_lights[j], float4(input.world_pos, 1.0f), j) * fog_value;
     }
 
     result += reflection * 0.5f;

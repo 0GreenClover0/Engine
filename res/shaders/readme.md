@@ -7,6 +7,7 @@
 ## Sampler registers:
 - `s0` is for the main texture sampler
 - `s1` is for the shadow map sampler
+- `s2` is for the fog sampler
 - If we ever need to use different samplers, just bind them to the next slots.
 
 ## Texture Registers:
@@ -16,6 +17,7 @@
 - `t10`, `t11`, `t12` are for deferred shading textures
 - `t14` is for ambient occlusion
 - `t15` is for the SkyBox resource
+- `t16` is for the Fog texture
 - `t20` to `t39` are for spotlight shadow maps
 - `t40` to `t59` are for point shadow maps
 - `t20` to `t39` are for spotlight shadow maps
