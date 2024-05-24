@@ -43,6 +43,7 @@ float4 ps_main(VS_Output input) : SV_Target
     float3 world_pos = pos_tex.Sample(gbuffer_sampler, input.UV);
     float3 view_pos = mul(view, float4(world_pos,1.0f));
     float3 normal = normalize(normal_tex.Sample(gbuffer_sampler, input.UV).xyz);
+    normal = mul(view, float4(normal, 1.0f));
     float3 random_vec = normalize(noise_tex.Sample(noise_sampler, input.UV * noise_scale).xyz);
 
     float3 tangent = normalize(random_vec - normal * dot(random_vec, normal));
@@ -50,8 +51,8 @@ float4 ps_main(VS_Output input) : SV_Target
     float3x3 TBN = float3x3(tangent, bitangent, normal);
 
     float occlusion = 0.0f;
-    float radius = 300.0f; // Tweakable
-    float bias = 0.25f; // Tweakable
+    float radius = 7.5f;
+    float bias = 1.25f;
     for (int i = 0; i < 64; ++i)
     {
         float3 sample_pos = mul(TBN, kernel_samples[i]);
