@@ -25,7 +25,7 @@ public:
     glm::vec2 get_position() const;
 
     std::weak_ptr<SpotLight> m_light = {};
-    float m_light_beam_width = 1.0f;
+    float m_light_beam_width = 0.15f;
 
 private:
     std::weak_ptr<Sphere> m_sphere = {};
