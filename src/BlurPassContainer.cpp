@@ -39,6 +39,11 @@ void BlurPassContainer::update()
 {
     auto renderer = RendererDX11::get_instance_dx11();
 
+    if (m_blurred_texture != nullptr)
+    {
+        m_blurred_texture->Release();
+    }
+
     D3D11_TEXTURE2D_DESC blur_tex_desc = {};
     blur_tex_desc.Width = renderer->get_main_view_port().Width;
     blur_tex_desc.Height = renderer->get_main_view_port().Height;
@@ -55,6 +60,11 @@ void BlurPassContainer::update()
     HRESULT hr = renderer->get_device()->CreateTexture2D(&blur_tex_desc, nullptr, &m_blurred_texture);
     assert(SUCCEEDED(hr));
 
+    if (m_blur_srv != nullptr)
+    {
+        m_blur_srv->Release();
+    }
+
     D3D11_SHADER_RESOURCE_VIEW_DESC blur_srv_desc = {};
     blur_srv_desc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
     blur_srv_desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
@@ -63,6 +73,11 @@ void BlurPassContainer::update()
 
     hr = renderer->get_device()->CreateShaderResourceView(m_blurred_texture, &blur_srv_desc, &m_blur_srv);
     assert(SUCCEEDED(hr));
+
+    if (m_blur_render_target != nullptr)
+    {
+        m_blur_render_target->Release();
+    }
 
     D3D11_RENDER_TARGET_VIEW_DESC blur_rtv_desc = {};
     blur_rtv_desc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
