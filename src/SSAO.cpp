@@ -65,6 +65,11 @@ void SSAO::update()
         ssao_noise[i] = {random_floats(generator) * 2.0f - 1.0f, random_floats(generator) * 2.0f - 1.0f, 0.0f};
     }
 
+    if (m_ssao_kernel_rotations_buffer != nullptr)
+    {
+        m_ssao_kernel_rotations_buffer->Release();
+    }
+
     D3D11_TEXTURE2D_DESC rotations_tex_desc = {};
     rotations_tex_desc.Width = 4;
     rotations_tex_desc.Height = 4;
@@ -80,6 +85,11 @@ void SSAO::update()
     auto renderer = RendererDX11::get_instance_dx11();
     HRESULT hr = renderer->get_device()->CreateTexture2D(&rotations_tex_desc, nullptr, &m_ssao_kernel_rotations_buffer);
     assert(SUCCEEDED(hr));
+
+    if (m_ssao_texture != nullptr)
+    {
+        m_ssao_texture->Release();
+    }
 
     D3D11_TEXTURE2D_DESC ssao_tex_desc = {};
     ssao_tex_desc.Width = static_cast<u32>(renderer->get_main_view_port().Width);
@@ -97,6 +107,11 @@ void SSAO::update()
     hr = renderer->get_device()->CreateTexture2D(&ssao_tex_desc, nullptr, &m_ssao_texture);
     assert(SUCCEEDED(hr));
 
+    if (m_ssao_srv != nullptr)
+    {
+        m_ssao_srv->Release();
+    }
+
     D3D11_SHADER_RESOURCE_VIEW_DESC srv_desc = {};
     srv_desc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
     srv_desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
@@ -105,6 +120,11 @@ void SSAO::update()
 
     hr = renderer->get_device()->CreateShaderResourceView(m_ssao_texture, &srv_desc, &m_ssao_srv);
     assert(SUCCEEDED(hr));
+
+    if (m_ssao_kernel_rotations_srv != nullptr)
+    {
+        m_ssao_kernel_rotations_srv->Release();
+    }
 
     D3D11_SHADER_RESOURCE_VIEW_DESC rotations_srv_desc = {};
     rotations_srv_desc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
@@ -115,6 +135,11 @@ void SSAO::update()
     hr =
         renderer->get_device()->CreateShaderResourceView(m_ssao_kernel_rotations_buffer, &rotations_srv_desc, &m_ssao_kernel_rotations_srv);
     assert(SUCCEEDED(hr));
+
+    if (m_ssao_render_target != nullptr)
+    {
+        m_ssao_render_target->Release();
+    }
 
     D3D11_RENDER_TARGET_VIEW_DESC rtv_desc = {};
     rtv_desc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;

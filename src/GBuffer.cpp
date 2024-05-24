@@ -47,6 +47,11 @@ void GBuffer::update()
     auto renderer = RendererDX11::get_instance_dx11();
     auto viewport = renderer->get_main_view_port();
 
+    if (m_diffuse_texture != nullptr)
+    {
+        m_diffuse_texture->Release();
+    }
+
     // Create the render target view
     D3D11_TEXTURE2D_DESC diffuse_tex_desc = {};
     diffuse_tex_desc.Width = static_cast<u32>(viewport.Width);
@@ -64,11 +69,21 @@ void GBuffer::update()
     HRESULT hr = renderer->get_device()->CreateTexture2D(&diffuse_tex_desc, nullptr, &m_diffuse_texture);
     assert(SUCCEEDED(hr));
 
+    if (m_normal_texture != nullptr)
+    {
+        m_normal_texture->Release();
+    }
+
     D3D11_TEXTURE2D_DESC normal_tex_desc = diffuse_tex_desc;
     normal_tex_desc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
 
     hr = renderer->get_device()->CreateTexture2D(&normal_tex_desc, nullptr, &m_normal_texture);
     assert(SUCCEEDED(hr));
+
+    if (m_position_texture != nullptr)
+    {
+        m_position_texture->Release();
+    }
 
     D3D11_TEXTURE2D_DESC position_tex_desc = normal_tex_desc;
 
@@ -81,8 +96,18 @@ void GBuffer::update()
     srv_desc.Texture2D.MipLevels = 1;
     srv_desc.Texture2D.MostDetailedMip = 0;
 
+    if (m_position_texture_view != nullptr)
+    {
+        m_position_texture_view->Release();
+    }
+
     hr = renderer->get_device()->CreateShaderResourceView(m_position_texture, &srv_desc, &m_position_texture_view);
     assert(SUCCEEDED(hr));
+
+    if (m_normal_texture_view != nullptr)
+    {
+        m_normal_texture_view->Release();
+    }
 
     srv_desc.Format = normal_tex_desc.Format;
 
@@ -91,6 +116,11 @@ void GBuffer::update()
 
     srv_desc.Format = diffuse_tex_desc.Format;
 
+    if (m_diffuse_texture_view != nullptr)
+    {
+        m_diffuse_texture_view->Release();
+    }
+
     hr = renderer->get_device()->CreateShaderResourceView(m_diffuse_texture, &srv_desc, &m_diffuse_texture_view);
     assert(SUCCEEDED(hr));
 
@@ -98,6 +128,14 @@ void GBuffer::update()
     rtv_desc.Format = position_tex_desc.Format;
     rtv_desc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
     rtv_desc.Texture2D.MipSlice = 0;
+
+    for (auto const& render_target : m_gbuffer_rendertargets)
+    {
+        if (render_target != nullptr)
+        {
+            render_target->Release();
+        }
+    }
 
     hr = renderer->get_device()->CreateRenderTargetView(m_position_texture, &rtv_desc, &m_gbuffer_rendertargets[0]);
     assert(SUCCEEDED(hr));
