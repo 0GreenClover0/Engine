@@ -46,7 +46,7 @@ PS_Output ps_main(VS_Output input)
     PS_Output output;
     output.diffuse = obj_texture.Sample(obj_sampler_state, input.UV);
     output.position.xyz = input.world_pos;
-    output.normal.xyz = input.normal;
+    output.normal.xyz = normalize(input.normal);
     output.normal.a = 1.0f;
     output.position.a = 1.0f;
     
