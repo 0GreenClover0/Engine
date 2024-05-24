@@ -122,6 +122,12 @@ struct ConstantBufferDepth : public ConstantBuffer
     float far_plane;
 };
 
+struct ConstantBufferTime : public ConstantBuffer
+{
+    float time;
+    bool is_fog_rendered;
+};
+
 struct ConstantBufferSSAO
 {
     glm::mat4 projection;

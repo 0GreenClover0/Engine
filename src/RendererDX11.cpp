@@ -85,6 +85,16 @@ std::shared_ptr<RendererDX11> RendererDX11::create()
     hr = renderer->get_device()->CreateBuffer(&ssao_buffer_desc, nullptr, &renderer->m_constant_buffer_ssao);
     assert(SUCCEEDED(hr));
 
+    D3D11_BUFFER_DESC time_buffer_desc = {};
+    time_buffer_desc.Usage = D3D11_USAGE_DYNAMIC;
+    time_buffer_desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    time_buffer_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    time_buffer_desc.MiscFlags = 0;
+    time_buffer_desc.ByteWidth = static_cast<UINT>(sizeof(ConstantBufferTime) + (16 - (sizeof(ConstantBufferTime) % 16)));
+
+    hr = renderer->get_device()->CreateBuffer(&time_buffer_desc, nullptr, &renderer->m_constant_buffer_time);
+    assert(SUCCEEDED(hr));
+
     renderer->create_depth_stencil();
     renderer->create_rasterizer_state();
 
@@ -130,6 +140,8 @@ std::shared_ptr<RendererDX11> RendererDX11::create()
 
     hr = renderer->get_device()->CreateSamplerState(&default_sampler_desc, &renderer->m_default_sampler_state);
     assert(SUCCEEDED(hr));
+
+    renderer->m_shadow_texture = ResourceManager::get_instance().load_texture("./res/textures/noise.jpg", TextureType::Diffuse);
 
     return renderer;
 }
@@ -524,7 +536,7 @@ void RendererDX11::update_object(std::shared_ptr<Drawable> const& drawable, std:
     data.projection_view = projection_view;
 
     D3D11_MAPPED_SUBRESOURCE mapped_resource;
-    HRESULT const hr = get_device_context()->Map(m_constant_buffer_per_object, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped_resource);
+    HRESULT hr = get_device_context()->Map(m_constant_buffer_per_object, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped_resource);
     assert(SUCCEEDED(hr));
 
     CopyMemory(mapped_resource.pData, &data, sizeof(ConstantBufferPerObject));
@@ -540,6 +552,24 @@ void RendererDX11::unbind_material(std::shared_ptr<Material> const& material) co
 {
     if (Skybox::get_instance() != nullptr && material->needs_skybox)
         Skybox::get_instance()->unbind();
+}
+
+void RendererDX11::bind_universal_resources() const
+{
+    g_pd3dDeviceContext->PSSetShaderResources(16, 1, &m_shadow_texture->shader_resource_view);
+
+    ConstantBufferTime time_data = {};
+    time_data.time = static_cast<float>(glfwGetTime());
+    time_data.is_fog_rendered = Engine::is_game_running();
+    D3D11_MAPPED_SUBRESOURCE time_resource;
+    HRESULT hr = get_device_context()->Map(m_constant_buffer_time, 0, D3D11_MAP_WRITE_DISCARD, 0, &time_resource);
+    assert(SUCCEEDED(hr));
+    g_pd3dDeviceContext->PSSetSamplers(2, 1, &m_repeat_sampler_state);
+
+    CopyMemory(time_resource.pData, &time_data, sizeof(ConstantBufferTime));
+
+    get_device_context()->Unmap(m_constant_buffer_time, 0);
+    get_device_context()->PSSetConstantBuffers(3, 1, &m_constant_buffer_time);
 }
 
 void RendererDX11::initialize_global_renderer_settings()

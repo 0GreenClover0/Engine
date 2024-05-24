@@ -11,6 +11,12 @@ cbuffer light_buffer : register(b0)
     int number_of_spot_lights;
 };
 
+cbuffer ps_time_buffer : register(b3)
+{
+    float time_ps;
+    bool is_fog_rendered;
+}
+
 SamplerState shadow_map_sampler : register(s1);
 
 Texture2D directional_shadow_map : register(t1);
