@@ -244,6 +244,7 @@ void RendererDX11::render_ssao() const
 
     ConstantBufferSSAO ssao_data = {};
     ssao_data.projection = Camera::get_main_camera()->get_projection();
+    ssao_data.view = Camera::get_main_camera()->get_view_matrix();
 
     auto const& ssao_kernel = m_ssao->get_ssao_kernel();
     for (u32 i = 0; i < ssao_kernel.size(); ++i)
