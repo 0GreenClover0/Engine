@@ -14,6 +14,7 @@ struct VS_Output
 cbuffer ssao_buffer : register(b1)
 {
     float4x4 projection;
+    float4x4 view;
     float3 kernel_samples[64];
 }
 
@@ -38,6 +39,7 @@ VS_Output vs_main(VS_Input input)
 float4 ps_main(VS_Output input) : SV_Target
 {
     float3 world_pos = pos_tex.Sample(gbuffer_sampler, input.UV);
+    float3 view_pos = mul(view, float4(world_pos,1.0f));
     float3 normal = normal_tex.Sample(gbuffer_sampler, input.UV);
     float3 random_vec = noise_tex.Sample(noise_sampler, input.UV * noise_scale);
 
@@ -51,7 +53,7 @@ float4 ps_main(VS_Output input) : SV_Target
     for (int i = 0; i < 64; ++i)
     {
         float3 sample_pos = mul(TBN, kernel_samples[i]);
-        sample_pos = world_pos + sample_pos * radius;
+        sample_pos = view_pos + sample_pos * radius;
 
         float4 offset = float4(sample_pos, 1.0f);
         offset = mul(projection, offset); // From view to clip-space
@@ -59,11 +61,11 @@ float4 ps_main(VS_Output input) : SV_Target
         offset.xyz  = offset.xyz * 0.5f + 0.5f; // Transform to range 0.0 - 1.0  
 
         float sample_depth = pos_tex.Sample(gbuffer_sampler, offset.xy).z;
-        float rangeCheck = smoothstep(0.0f, 1.0f, radius / abs(world_pos.z - sample_depth));
+        float rangeCheck = smoothstep(0.0f, 1.0f, radius / abs(view_pos.z - sample_depth));
         occlusion += (sample_depth >= sample_pos.z + bias ? 1.0f : 0.0f) * rangeCheck;
     }
 
     occlusion = 1.0f - (occlusion / 64.0f);
-    occlusion = pow(occlusion, 1.5f);
+    occlusion = pow(occlusion, 1.25f);
     return float4(occlusion, occlusion, occlusion, occlusion);
 }
