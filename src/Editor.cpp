@@ -280,16 +280,32 @@ void Editor::draw_game(std::shared_ptr<EditorWindow> const& window)
         {
             ImGui::PushStyleColor(ImGuiCol_Button, IM_COL32(0, 0, 0, 50));
 
+            if (m_is_camera_options_locked)
+            {
+                ImGui::OpenPopup("Camera");
+            }
+
             if (ImGui::BeginMenu("Camera"))
             {
                 float fov_angle = glm::degrees(Camera::get_main_camera()->fov);
                 ImGui::SliderFloat("Camera FoV", &fov_angle, 1.0f, 90.0f);
                 Camera::get_main_camera()->fov = glm::radians(fov_angle);
 
+                glm::vec3 position = Camera::get_main_camera()->entity->transform->get_local_position();
+                ImGuiEx::InputFloat3("Position", glm::value_ptr(position));
+                Camera::get_main_camera()->entity->transform->set_local_position(position);
+
+                glm::vec3 rotation = Camera::get_main_camera()->entity->transform->get_euler_angles();
+                ImGuiEx::InputFloat3("Rotation", glm::value_ptr(rotation));
+                Camera::get_main_camera()->entity->transform->set_euler_angles(rotation);
+
                 if (ImGui::Button("Reset camera"))
                 {
                     reset_camera();
                 }
+
+                ImGui::SameLine();
+                ImGui::Checkbox("Lock", &m_is_camera_options_locked);
 
                 ImGui::EndMenu();
             }
