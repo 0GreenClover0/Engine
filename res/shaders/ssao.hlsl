@@ -36,12 +36,14 @@ VS_Output vs_main(VS_Input input)
     return output;
 }
 
+// Based on https://learnopengl.com/Advanced-Lighting/SSAO
+//          https://learnopengl.com/code_viewer_gh.php?code=src/5.advanced_lighting/9.ssao/9.ssao.fs
 float4 ps_main(VS_Output input) : SV_Target
 {
     float3 world_pos = pos_tex.Sample(gbuffer_sampler, input.UV);
     float3 view_pos = mul(view, float4(world_pos,1.0f));
-    float3 normal = normal_tex.Sample(gbuffer_sampler, input.UV);
-    float3 random_vec = noise_tex.Sample(noise_sampler, input.UV * noise_scale);
+    float3 normal = normalize(normal_tex.Sample(gbuffer_sampler, input.UV).xyz);
+    float3 random_vec = normalize(noise_tex.Sample(noise_sampler, input.UV * noise_scale).xyz);
 
     float3 tangent = normalize(random_vec - normal * dot(random_vec, normal));
     float3 bitangent = cross(normal, tangent);
@@ -61,8 +63,8 @@ float4 ps_main(VS_Output input) : SV_Target
         offset.xyz  = offset.xyz * 0.5f + 0.5f; // Transform to range 0.0 - 1.0  
 
         float sample_depth = pos_tex.Sample(gbuffer_sampler, offset.xy).z;
-        float rangeCheck = smoothstep(0.0f, 1.0f, radius / abs(view_pos.z - sample_depth));
-        occlusion += (sample_depth >= sample_pos.z + bias ? 1.0f : 0.0f) * rangeCheck;
+        float range_check = smoothstep(0.0f, 1.0f, radius / abs(view_pos.z - sample_depth));
+        occlusion += (sample_depth >= sample_pos.z + bias ? 1.0f : 0.0f) * range_check;
     }
 
     occlusion = 1.0f - (occlusion / 64.0f);
