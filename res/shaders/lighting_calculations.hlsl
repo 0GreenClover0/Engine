@@ -296,13 +296,7 @@ float3 calculate_scatter(SpotLight light, float4 world_position, int light_index
     min_t = max(0.0f, min_t);
 
     float t = max(0.0f, max_t - min_t);
-
-    // Technically should not be tweakable.
-    // However multiplying it makes the cone brighter.
-    t = t * 10;
-
-    // Tweakable.
-    float scattering_coefficient = 1.0f;
+    float scattering_coefficient = 100.0f;
 
     // According to Rayliegh scattering blue light at the lower end of the spectrum is scattered considerably more than red light.
     // It's simple to account for this wavelength dependence by making the scattering coefficient a constant vector
