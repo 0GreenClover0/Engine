@@ -27,7 +27,12 @@ VS_Output vs_main(VS_Input input)
 }
 
 // This function is discarded anyway, but it safer to at least write a dummy one
-float ps_main(VS_Output input) : SV_Target
+float ps_main(VS_Output input) : SV_Depth
 {
-    return 1.0f;
+    if (input.pixel_pos.z / input.pixel_pos.w < -1.0f || input.pixel_pos.z / input.pixel_pos.w > 1.0f)
+    {
+        discard;
+    }
+
+    return input.pixel_pos.z;
 }
