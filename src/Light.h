@@ -27,7 +27,7 @@ public:
     glm::vec3 diffuse = glm::vec3(1.0f, 1.0f, 1.0f);
     glm::vec3 specular = glm::vec3(1.0f, 1.0f, 1.0f);
 
-    float m_near_plane = 1.0f;
+    float m_near_plane = 0.5f;
     float m_far_plane = 25.0f;
 
 protected:
