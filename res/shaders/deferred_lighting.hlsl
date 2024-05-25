@@ -49,8 +49,8 @@ float4 ps_main(VS_Output input) : SV_Target
     float fog_value = 1.0f; 
     if (is_fog_rendered)
     {
-        fog_value = fog_tex.Sample(repeat_sampler, input.UV + time_ps / 50.0f).r;
-        result += 0.1f * fog_value;
+        fog_value = fog_tex.Sample(repeat_sampler, input.UV + time_ps / 100.0f).r;
+        result += 0.2f * fog_value;
     }
 
     for (int point_light_index = 0; point_light_index < number_of_point_lights; point_light_index++)

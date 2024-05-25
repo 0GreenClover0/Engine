@@ -365,8 +365,8 @@ void ShipSpawner::add_warning()
     warning_light_component->diffuse = glm::vec3(1.0f);
     warning_light_component->specular = glm::vec3(1.0f);
 
-    warning_light_component->linear = 0.0f;
-    warning_light_component->quadratic = 0.0f;
+    warning_light_component->linear = 10.0f;
+    warning_light_component->quadratic = 10.0f;
 
     warning->transform->set_local_position({m_spawn_position[0].x - glm::sign(m_spawn_position[0].x), 0.2f, m_spawn_position[0].y});
     warning->transform->set_euler_angles({-90.0f, 0.0f, 0.0f});

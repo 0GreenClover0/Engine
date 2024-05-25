@@ -68,6 +68,6 @@ float4 ps_main(VS_Output input) : SV_Target
     }
 
     occlusion = 1.0f - (occlusion / 64.0f);
-    occlusion = pow(occlusion, 1.25f);
+    occlusion = pow(occlusion, 2.0f);
     return float4(occlusion, occlusion, occlusion, occlusion);
 }
