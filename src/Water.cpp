@@ -190,6 +190,42 @@ void Water::remove_wave(u32 const index)
     waves.erase(waves.begin() + index);
 }
 
+/*
+* This function calculates the height of the water at a given position
+* It's not precise, but approximated
+* position is in 2D space, meaning x and z coordinates of 3D space
+* use AK::convert_3d_to_2d when passing position (recommended)
+*/
+float Water::get_wave_height(glm::vec2 const& position) const
+{
+    float const gravity = 9.8f;
+    float constexpr PI = 3.14159265359f;
+    // Tweaking this will make the calculations more or less accurate
+    // But will obviously affect performance
+    u32 constexpr iterations = 5;
+    float height = 0.0f;
+    float time = glfwGetTime();
+    for (auto const& wave : waves)
+    {
+        float frequency = sqrt(gravity * 2.0f * PI / wave.wave_length);
+        float steepness = wave.steepness / (frequency * wave.amplitude * waves.size());
+        float phi = wave.speed * 2.0f / wave.wave_length;
+        glm::vec2 new_position = position;
+        float per_wave_height = 0.0f;
+        for (i32 i = 0; i < iterations; i++)
+        {
+            glm::vec2 offset = {};
+            offset.x = steepness * wave.amplitude * wave.direction.x * cos(glm::dot((frequency * wave.direction), glm::vec2(new_position.x, new_position.y)) + phi * time);
+            offset.y = steepness * wave.amplitude * wave.direction.x * cos(glm::dot((frequency * wave.direction), glm::vec2(new_position.x, new_position.y)) + phi * time);
+            per_wave_height = wave.amplitude * sin(glm::dot((frequency * wave.direction), glm::vec2(new_position.x, new_position.y)) + phi * time);
+            new_position = position - offset;
+        }
+        height += per_wave_height;
+    }
+
+    return height;
+}
+
 void Water::create_constant_buffer_wave()
 {
     auto const renderer = RendererDX11::get_instance_dx11();
