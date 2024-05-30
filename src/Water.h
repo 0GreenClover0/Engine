@@ -22,7 +22,7 @@ public:
 
     void add_wave();
     void remove_wave(u32 const index);
-
+    float get_wave_height(glm::vec2 const& position) const;
     std::string texture_path = "";
     std::vector<DXWave> waves = {};
 
