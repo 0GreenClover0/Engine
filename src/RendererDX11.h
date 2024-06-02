@@ -82,6 +82,7 @@ private:
     virtual void render_lighting_pass() const override;
     virtual void render_geometry_pass(glm::mat4 const& projection_view) const override;
     virtual void render_ssao() const override;
+    virtual void render_aa() const override;
 
     inline static std::shared_ptr<RendererDX11> m_instance_dx11;
 
@@ -95,6 +96,8 @@ private:
     ID3D11Device* g_pd3dDevice = nullptr;
     ID3D11DeviceContext* g_pd3dDeviceContext = nullptr;
     IDXGISwapChain* g_pSwapChain = nullptr;
+
+    ID3D11RenderTargetView* g_multi_pass_render_target_view = nullptr;
     ID3D11RenderTargetView* g_mainRenderTargetView = nullptr;
     ID3D11RenderTargetView* g_textureRenderTargetView = nullptr;
 
@@ -113,6 +116,8 @@ private:
     ID3D11DepthStencilState* m_depth_stencil_state = nullptr;
     ID3D11Texture2D* m_render_target_texture = nullptr;
     ID3D11ShaderResourceView* m_render_target_texture_view = nullptr;
+    ID3D11Texture2D* m_multipass_render_texture = nullptr;
+    ID3D11ShaderResourceView* m_multi_pass_render_srv = nullptr;
 
     // Shadow mapping variables
     ID3D11RasterizerState* g_shadow_rasterizer_state = nullptr;

@@ -115,6 +115,7 @@ std::shared_ptr<RendererDX11> RendererDX11::create()
     renderer->m_ssao_blur = BlurPassContainer::create();
     renderer->m_lighting_pass_shader =
         ResourceManager::get_instance().load_shader("./res/shaders/deferred_lighting.hlsl", "./res/shaders/deferred_lighting.hlsl");
+    renderer->m_fxaa_shader = ResourceManager::get_instance().load_shader("./res/shaders/fxaa.hlsl", "./res/shaders/fxaa.hlsl");
 
     // FIXME: Maybe move this somewhere else
     D3D11_SAMPLER_DESC repeat_sampler_desc = {};
@@ -192,6 +193,7 @@ void RendererDX11::begin_frame() const
 
     g_pd3dDeviceContext->ClearRenderTargetView(g_mainRenderTargetView, clear_color_with_alpha);
     g_pd3dDeviceContext->ClearRenderTargetView(g_textureRenderTargetView, clear_color_with_alpha);
+    g_pd3dDeviceContext->ClearRenderTargetView(g_multi_pass_render_target_view, clear_color_with_alpha);
     g_pd3dDeviceContext->ClearDepthStencilView(m_depth_stencil_view, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
     m_gbuffer->clear_render_targets();
@@ -200,8 +202,7 @@ void RendererDX11::begin_frame() const
 void RendererDX11::end_frame() const
 {
     Renderer::end_frame();
-
-    g_pd3dDeviceContext->OMSetRenderTargets(1, &g_mainRenderTargetView, m_depth_stencil_view);
+    g_pd3dDeviceContext->OMSetRenderTargets(1, &g_mainRenderTargetView, nullptr);
 }
 
 void RendererDX11::present() const
@@ -396,6 +397,25 @@ void RendererDX11::render_shadow_maps() const
     }
 }
 
+// This is technically a rendering pass but I didn't make a RenderPassResourceContainer for it
+// because it does not need any resources to be be bound to the pipeline.
+void RendererDX11::render_aa() const
+{
+    m_fxaa_shader->use();
+
+    if (m_render_to_texture)
+    {
+        g_pd3dDeviceContext->OMSetRenderTargets(1, &g_textureRenderTargetView, nullptr);
+    }
+    else
+    {
+        g_pd3dDeviceContext->OMSetRenderTargets(1, &g_mainRenderTargetView, nullptr);
+    }
+
+    g_pd3dDeviceContext->PSSetShaderResources(0, 1, &m_multi_pass_render_srv);
+    FullscreenQuad::get_instance()->draw();
+}
+
 void RendererDX11::render_lighting_pass() const
 {
     set_light_buffer();
@@ -406,14 +426,7 @@ void RendererDX11::render_lighting_pass() const
 
     g_pd3dDeviceContext->PSSetSamplers(0, 1, &m_default_sampler_state);
 
-    if (m_render_to_texture)
-    {
-        g_pd3dDeviceContext->OMSetRenderTargets(1, &g_textureRenderTargetView, nullptr);
-    }
-    else
-    {
-        g_pd3dDeviceContext->OMSetRenderTargets(1, &g_mainRenderTargetView, nullptr);
-    }
+    g_pd3dDeviceContext->OMSetRenderTargets(1, &g_multi_pass_render_target_view, nullptr);
 
     m_gbuffer->bind_shader_resources();
     m_ssao_blur->bind_shader_resources();
@@ -437,14 +450,7 @@ void RendererDX11::bind_for_render_frame() const
         g_pd3dDeviceContext->RSSetState(g_rasterizer_state);
     }
 
-    if (m_render_to_texture)
-    {
-        g_pd3dDeviceContext->OMSetRenderTargets(1, &g_textureRenderTargetView, m_depth_stencil_view);
-    }
-    else
-    {
-        g_pd3dDeviceContext->OMSetRenderTargets(1, &g_mainRenderTargetView, m_depth_stencil_view);
-    }
+    g_pd3dDeviceContext->OMSetRenderTargets(1, &g_multi_pass_render_target_view, m_depth_stencil_view);
 
     std::array constexpr blend_factor = {0.0f, 0.0f, 0.0f, 0.0f};
     get_device_context()->OMSetBlendState(m_forward_blend_state, blend_factor.data(), 0xffffffff);
@@ -821,7 +827,7 @@ void RendererDX11::create_depth_stencil()
 
     assert(SUCCEEDED(hr));
 
-    g_pd3dDeviceContext->OMSetRenderTargets(1, &g_mainRenderTargetView, m_depth_stencil_view);
+    g_pd3dDeviceContext->OMSetRenderTargets(1, &g_multi_pass_render_target_view, m_depth_stencil_view);
 
     D3D11_DEPTH_STENCIL_DESC dssDesc = {};
     dssDesc.DepthEnable = true;
@@ -895,6 +901,23 @@ void RendererDX11::create_render_texture()
     hr = g_pd3dDevice->CreateRenderTargetView(m_render_target_texture, &render_target_view_desc, &g_textureRenderTargetView);
 
     assert(SUCCEEDED(hr));
+
+    if (m_multipass_render_texture)
+    {
+        m_multipass_render_texture->Release();
+    }
+
+    hr = get_device()->CreateTexture2D(&render_texture_desc, nullptr, &m_multipass_render_texture);
+
+    assert(SUCCEEDED(hr));
+
+    hr = get_device()->CreateShaderResourceView(m_multipass_render_texture, &shader_resource_view_desc, &m_multi_pass_render_srv);
+
+    assert(SUCCEEDED(hr));
+
+    hr = g_pd3dDevice->CreateRenderTargetView(m_multipass_render_texture, &render_target_view_desc, &g_multi_pass_render_target_view);
+
+    assert(SUCCEEDED(hr));
 }
 
 void RendererDX11::cleanup_render_texture()
@@ -909,5 +932,11 @@ void RendererDX11::cleanup_render_texture()
     {
         g_textureRenderTargetView->Release();
         g_textureRenderTargetView = nullptr;
+    }
+
+    if (g_multi_pass_render_target_view)
+    {
+        g_multi_pass_render_target_view->Release();
+        g_multi_pass_render_target_view = nullptr;
     }
 }

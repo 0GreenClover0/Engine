@@ -211,6 +211,8 @@ void Renderer::render() const
 
     // Renders transparent objects and UI
     render_forward_pass(projection_view, projection_view_no_translation);
+    // Render AA (FXAA)
+    render_aa();
 }
 
 void Renderer::render_geometry_pass(glm::mat4 const& projection_view) const
@@ -218,6 +220,10 @@ void Renderer::render_geometry_pass(glm::mat4 const& projection_view) const
 }
 
 void Renderer::render_ssao() const
+{
+}
+
+void Renderer::render_aa() const
 {
 }
 
