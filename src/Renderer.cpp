@@ -211,8 +211,12 @@ void Renderer::render() const
 
     // Renders transparent objects and UI
     render_forward_pass(projection_view, projection_view_no_translation);
+
     // Render AA (FXAA)
     render_aa();
+
+    // Render custom render order materials, so in our case UI, as it should not be affected by AA
+    render_custom_render_order(projection_view, projection_view_no_translation);
 }
 
 void Renderer::render_geometry_pass(glm::mat4 const& projection_view) const
@@ -225,6 +229,21 @@ void Renderer::render_ssao() const
 
 void Renderer::render_aa() const
 {
+}
+
+void Renderer::render_custom_render_order(glm::mat4 const& projection_view, glm::mat4 const& projection_view_no_translation) const
+{
+    for (auto const& [render_order, material] : m_custom_render_order_materials)
+    {
+        material->shader->use();
+
+        update_shader(material->shader, projection_view, projection_view_no_translation);
+
+        if (material->is_gpu_instanced)
+            draw_instanced(material, projection_view, projection_view_no_translation);
+        else
+            draw(material, projection_view);
+    }
 }
 
 void Renderer::bind_universal_resources() const
@@ -254,18 +273,6 @@ void Renderer::render_forward_pass(glm::mat4 const& projection_view, glm::mat4 c
             else
                 draw(material, projection_view);
         }
-    }
-
-    for (auto const& [render_order, material] : m_custom_render_order_materials)
-    {
-        material->shader->use();
-
-        update_shader(material->shader, projection_view, projection_view_no_translation);
-
-        if (material->is_gpu_instanced)
-            draw_instanced(material, projection_view, projection_view_no_translation);
-        else
-            draw(material, projection_view);
     }
 }
 
