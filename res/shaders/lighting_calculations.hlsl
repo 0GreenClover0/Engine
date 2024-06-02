@@ -25,6 +25,115 @@ Texture2D directional_shadow_map : register(t1);
 Texture2D spot_light_shadow_maps[20] : register(t20);
 TextureCube point_light_shadow_maps[20]: register(t40);
 
+#define BLOCKER_SEARCH_NUM_SAMPLES 16
+#define PCF_NUM_SAMPLES 16
+#define NEAR_PLANE 7.5f
+// Good explanation of what light world size is, is at:
+// https://http.download.nvidia.com/developer/presentations/2005/SIGGRAPH/Percentage_Closer_Soft_Shadows.pdf (slide 11)
+#define LIGHT_WORLD_SIZE 0.5f
+#define LIGHT_FRUSTUM_WIDTH 30.0f
+// Assuming that LIGHT_FRUSTUM_WIDTH == LIGHT_FRUSTUM_HEIGHT
+#define LIGHT_SIZE_UV (LIGHT_WORLD_SIZE / LIGHT_FRUSTUM_WIDTH)
+
+SamplerState point_sampler
+{
+    Filter = MIN_MAG_MIP_POINT;
+    AddressU = Border;
+    AddressV = Border;
+    BorderColor = float4(0.0f, 0.0f, 0.0f, 0.0f);
+};
+
+SamplerState pcf_sampler
+{
+    Filter = MIN_MAG_MIP_LINEAR;
+    AddressU = Border;
+    AddressV = Border;
+    BorderColor = float4(1.0f, 1.0f, 1.0f, 1.0f);
+};
+
+cbuffer POISSON_DISKS
+{
+    float2 poisson_disk[16] = {
+        float2(-0.94201624f, -0.39906216f),
+        float2(0.94558609f, -0.76890725f),
+        float2(-0.094184101f, -0.92938870f),
+        float2(0.34495938f, 0.29387760f),
+        float2(-0.91588581f, 0.45771432f),
+        float2(-0.81544232f, -0.87912464f),
+        float2(-0.38277543f, 0.27676845f),
+        float2(0.97484398f, 0.75648379f),
+        float2(0.44323325f, -0.97511554f),
+        float2(0.53742981f, -0.47373420f),
+        float2(-0.26496911f, -0.41893023f),
+        float2(0.79197514f, 0.19090188f),
+        float2(-0.24188840f, 0.99706507f),
+        float2(-0.81409955f, 0.91437590f),
+        float2(0.19984126f, 0.78641367f),
+        float2(0.14383161f, -0.14100790f)
+    };
+};
+
+float PenumbraSize(float z_receiver, float z_blocker) // Parallel plane estimation
+{
+    return (z_receiver - z_blocker) / z_blocker;
+}
+
+void FindBlocker(out float avg_blocker_depth, out float num_blocker, float2 uv, float z_receiver, Texture2D t_depth_map, float bias)
+{
+    // This uses similar triangles to compute what area of the shadow map we should search.
+    float search_width = LIGHT_SIZE_UV * (z_receiver - NEAR_PLANE) / z_receiver;
+    float blocker_sum = 0.0f;
+    num_blocker = 0.0f;
+
+    for (int i = 0; i < BLOCKER_SEARCH_NUM_SAMPLES; ++i)
+    {
+        float shadow_map_depth = t_depth_map.Sample(point_sampler, uv + poisson_disk[i] * search_width);
+        if (shadow_map_depth - bias < z_receiver)
+        {
+            blocker_sum += shadow_map_depth;
+            num_blocker++;
+        }
+    }
+
+    avg_blocker_depth = (num_blocker > 0) ? (blocker_sum / num_blocker) : 0.0f;
+}
+
+float PCF_Filter(float2 uv, float z_receiver, float filter_radius_uv, Texture2D t_depth_map, float bias)
+{
+    float sum = 0.0f;
+    for (int i = 0; i < PCF_NUM_SAMPLES; ++i)
+    {
+        float2 offset = poisson_disk[i] * filter_radius_uv;
+        float value = t_depth_map.Sample(pcf_sampler, uv + offset).r;
+        sum += z_receiver - bias > value ? 1.0f : 0.0f;
+    }
+
+    return sum / PCF_NUM_SAMPLES;
+}
+
+float PCSS(Texture2D shadow_map_tex, float4 coords, float bias)
+{
+    float2 uv = coords.xy;
+    float z_receiver = coords.z;
+
+    // STEP 1: Blocker search
+    float avg_blocker_depth = 0.0f;
+    float num_blocker = 0.0f;
+    FindBlocker(avg_blocker_depth, num_blocker, uv, z_receiver, shadow_map_tex, bias);
+    if (num_blocker < 1)
+    {
+        // There are no occluders so early out (this saves filtering).
+        return 1.0f;
+    }
+
+    // STEP 2: Penumbra size
+    float penumbra_ratio = PenumbraSize(z_receiver, avg_blocker_depth);
+    float filter_radius_uv = penumbra_ratio * LIGHT_SIZE_UV * NEAR_PLANE / z_receiver;
+
+    // STEP 3: Filtering
+    return PCF_Filter(uv, z_receiver, filter_radius_uv, shadow_map_tex, bias);
+}
+
 float point_shadow_calculation(PointLight light, float3 world_pos, int index)
 {
     float3 pixel_to_light = world_pos - light.position;
@@ -88,26 +197,10 @@ float directional_shadow_calculation(DirectionalLight light, float3 world_pos, f
 
     light_space_pos.x = light_space_pos.x / 2.0f + 0.5f;
     light_space_pos.y = -light_space_pos.y / 2.0f + 0.5f;
-    float shadow = 0.0f;
     float bias = max(0.005f * (1.0f - dot(normal, light.direction)), 0.005f);
+    float4 coords = float4(light_space_pos.xyz, 1.0f);
 
-    // Reference for PCF implementation:
-    // https://learnopengl.com/Advanced-Lighting/Shadows/Shadow-Mapping
-    float2 map_size;
-    directional_shadow_map.GetDimensions(map_size.x, map_size.y);
-    float2 texel_size = 1.0 / map_size;
-    for (int x = -1; x <= 1; x++)
-    {
-        for (int y = -1; y <= 1; y++)
-        {
-            float pcf_depth = directional_shadow_map.SampleLevel(shadow_map_sampler, light_space_pos.xy + float2(x, y) * texel_size, 0).r;
-            shadow += depth - bias > pcf_depth ? 1.0f : 0.0f;
-        }
-    }
-
-    shadow /= 9.0f;
-
-    return shadow;
+    return PCSS(directional_shadow_map, coords, bias);
 }
 
 float3 calculate_directional_light(DirectionalLight light, float3 normal, float3 view_dir, float3 diffuse_texture, float3 world_pos, bool calculate_shadows, float ambient_occlusion = 1.0f)

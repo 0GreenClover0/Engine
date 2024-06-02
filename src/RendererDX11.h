@@ -34,7 +34,7 @@ public:
     [[nodiscard]] D3D11_VIEWPORT get_main_view_port() const;
 
     ID3D11RenderTargetView* g_emptyRenderTargetView = nullptr;
-    inline static float constexpr SHADOW_MAP_SIZE = 1024.0f;
+    inline static float constexpr SHADOW_MAP_SIZE = 4096.0f;
 
     virtual void set_rasterizer_draw_type(RasterizerDrawType const rasterizer_draw_type) override;
     virtual void restore_default_rasterizer_draw_type() override;
