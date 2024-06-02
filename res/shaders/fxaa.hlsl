@@ -6,8 +6,11 @@ SamplerState quad_sampler
     AddressV = Wrap;
 };
 
+// These values are taken from:
+// https://developer.download.nvidia.com/assets/gamedev/files/sdk/11/FXAA_WhitePaper.pdf
 #define EDGE_THRESHOLD_MIN 0.0312f
 #define EDGE_THRESHOLD_MAX 0.125f
+
 // It basically returns values from this list 1.5, 2.0, 2.0, 2.0, 2.0, 4.0, 8.0.
 // if q > 5
 // e.g. QUALITY(6) = 1.5, QUALITY(7) = 2.0 etc.
@@ -17,7 +20,12 @@ SamplerState quad_sampler
 
 float rgb_2_luma(float3 rgb)
 {
-    return sqrt(dot(rgb, float3(0.299f, 0.587f, 0.114f)));
+    // Typical formula would be: sqrt(dot(rgb, float3(0.299f, 0.587f, 0.114f)));
+    // However NVIDIA suggests calculating luma without the blue channel
+    // as pure blue aliasing rarely appears in game content.
+    // Our game is mostly blue-ish, yet using this formula
+    // doesn't negatively impact anti-aliasing in our case either.
+    return rgb.y * (0.587f / 0.299f) + rgb.x;
 }
 
 // This is pretty much this https://blog.simonrodriguez.fr/articles/2016/07/implementing_fxaa.html
