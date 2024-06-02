@@ -104,6 +104,8 @@ protected:
     virtual void render_geometry_pass(glm::mat4 const& projection_view) const;
     virtual void render_forward_pass(glm::mat4 const& projection_view, glm::mat4 const& projection_view_no_translation) const;
     virtual void render_ssao() const;
+    virtual void render_aa() const;
+
     virtual void bind_universal_resources() const;
     virtual void bind_for_render_frame() const;
 
@@ -132,6 +134,7 @@ protected:
     std::shared_ptr<Shader> m_point_shadow_shader = nullptr;
     std::shared_ptr<Shader> m_blur_shader = nullptr;
     std::shared_ptr<Shader> m_lighting_pass_shader = nullptr;
+    std::shared_ptr<Shader> m_fxaa_shader = nullptr;
 
 private:
     struct MaterialWithOrder
