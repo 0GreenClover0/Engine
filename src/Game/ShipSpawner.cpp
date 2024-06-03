@@ -12,6 +12,7 @@
 #include "Player.h"
 #include "ResourceManager.h"
 #include "ShipEyes.h"
+#include <imgui_extensions.h>
 
 std::shared_ptr<ShipSpawner> ShipSpawner::create()
 {
@@ -97,6 +98,9 @@ void ShipSpawner::update()
 void ShipSpawner::draw_editor()
 {
     Component::draw_editor();
+
+    ImGuiEx::draw_ptr("Light", light);
+    ImGui::Separator();
 
     ImGui::InputFloat("Last Chance time threshold", &last_chance_time_threshold);
     ImGui::InputScalar("Last Chance food threshold", ImGuiDataType_U32, &last_chance_food_threshold);
