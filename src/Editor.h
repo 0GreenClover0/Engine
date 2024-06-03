@@ -147,6 +147,7 @@ public:
     void set_scene(std::shared_ptr<Scene> const& scene);
     void handle_input();
     void set_docking_space() const;
+    bool load_scene() const;
 
 private:
     void switch_rendering_to_editor();
@@ -173,7 +174,6 @@ private:
 
     void load_assets();
     void save_scene() const;
-    bool load_scene() const;
     void set_style() const;
 
     void camera_input() const;

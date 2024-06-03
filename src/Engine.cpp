@@ -77,7 +77,16 @@ void Engine::create_game()
 
     // Custom initialization code
     auto const game = std::make_shared<Game>(window);
-    game->initialize();
+
+    //game->initialize();
+
+    bool const loaded = m_editor->load_scene();
+
+    if (!loaded)
+    {
+        std::cout << "Scene could not be loaded.\n";
+        return;
+    }
 }
 
 void Engine::run()
