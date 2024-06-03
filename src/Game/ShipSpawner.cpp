@@ -831,6 +831,7 @@ std::optional<glm::vec2> ShipSpawner::find_nearest_non_pirate_ship(std::shared_p
 
         found_non_pirate_ship = true;
         nearest = ship;
+        break;
     }
 
     if (!found_non_pirate_ship)
@@ -851,7 +852,7 @@ std::optional<glm::vec2> ShipSpawner::find_nearest_non_pirate_ship(std::shared_p
         glm::vec2 position = AK::convert_3d_to_2d(ship_locked->entity->transform->get_local_position());
         float const distance = glm::distance(ship_position, position);
 
-        if (nearest_distance < distance)
+        if (nearest_distance > distance)
         {
             nearest_distance = distance;
             nearest_position = position;
