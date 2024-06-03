@@ -201,9 +201,9 @@ private:
     double m_sensitivity = 0.1;
     float m_camera_speed = 12.5f;
 
-    glm::vec3 const m_camera_default_position = {0.0f, 11.3f, 11.3f};
-    glm::vec3 const m_camera_default_rotation = {-45.0f, 0.0f, 0.0f};
-    float const m_camera_default_fov = 17.51f;
+    glm::vec3 const m_camera_default_position = {0.0f, 17.0f, 13.0f};
+    glm::vec3 const m_camera_default_rotation = {-50.0f, 0.0f, 0.0f};
+    float const m_camera_default_fov = 20.0f;
 
     std::shared_ptr<Entity> m_camera_entity;
     std::shared_ptr<Camera> m_editor_camera;

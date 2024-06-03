@@ -59,13 +59,13 @@ void Game::initialize()
     ui_material->casts_shadows = false;
 
     m_camera = Entity::create("Camera");
-    m_camera->transform->set_local_position(glm::vec3(0.0f, 11.3f, 11.3f));
-    m_camera->transform->set_euler_angles(glm::vec3(-45.0f, 0.0f, 0.0f));
+    m_camera->transform->set_local_position(glm::vec3(0.0f, 17.0f, 13.0f));
+    m_camera->transform->set_euler_angles(glm::vec3(-50.0f, 0.0f, 0.0f));
     m_camera->add_component<SoundListener>(SoundListener::create());
 
     m_camera_comp = m_camera->add_component(Camera::create());
     m_camera_comp->set_can_tick(true);
-    m_camera_comp->set_fov(glm::radians(17.51f));
+    m_camera_comp->set_fov(glm::radians(20.0f));
     m_camera_comp->update();
 
     auto const player = Entity::create("Player");
