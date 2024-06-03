@@ -298,7 +298,10 @@ def create_deserialization_code(Component, serializable_vars):
             continue
 
         deserialization_code += [
-            '            deserialized_component->' + var_name + ' = component["' + var_name + '"].as<' + var_type + '>();',
+            '            if (component["'+ var_name + '"].IsDefined())',
+            '            {',
+            '                deserialized_component->' + var_name + ' = component["' + var_name + '"].as<' + var_type + '>();',
+            '            }',
         ]
 
     deserialization_code += [

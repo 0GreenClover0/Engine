@@ -317,6 +317,9 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "map_food" << YAML::Value << levelcontroller->map_food;
         out << YAML::Key << "maximum_lighthouse_level" << YAML::Value << levelcontroller->maximum_lighthouse_level;
         out << YAML::Key << "factories" << YAML::Value << levelcontroller->factories;
+        out << YAML::Key << "playfield_width" << YAML::Value << levelcontroller->playfield_width;
+        out << YAML::Key << "playfield_additional_width" << YAML::Value << levelcontroller->playfield_additional_width;
+        out << YAML::Key << "playfield_height" << YAML::Value << levelcontroller->playfield_height;
         out << YAML::Key << "ships_limit_curve" << YAML::Value << levelcontroller->ships_limit_curve;
         out << YAML::Key << "ships_limit" << YAML::Value << levelcontroller->ships_limit;
         out << YAML::Key << "ships_speed_curve" << YAML::Value << levelcontroller->ships_speed_curve;
@@ -511,11 +514,26 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         else
         {
             auto const deserialized_component = std::dynamic_pointer_cast<class Camera>(get_from_pool(component["guid"].as<std::string>()));
-            deserialized_component->width = component["width"].as<float>();
-            deserialized_component->height = component["height"].as<float>();
-            deserialized_component->fov = component["fov"].as<float>();
-            deserialized_component->near_plane = component["near_plane"].as<float>();
-            deserialized_component->far_plane = component["far_plane"].as<float>();
+            if (component["width"].IsDefined())
+            {
+                deserialized_component->width = component["width"].as<float>();
+            }
+            if (component["height"].IsDefined())
+            {
+                deserialized_component->height = component["height"].as<float>();
+            }
+            if (component["fov"].IsDefined())
+            {
+                deserialized_component->fov = component["fov"].as<float>();
+            }
+            if (component["near_plane"].IsDefined())
+            {
+                deserialized_component->near_plane = component["near_plane"].as<float>();
+            }
+            if (component["far_plane"].IsDefined())
+            {
+                deserialized_component->far_plane = component["far_plane"].as<float>();
+            }
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
         }
@@ -533,7 +551,10 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component =
                 std::dynamic_pointer_cast<class Collider2D>(get_from_pool(component["guid"].as<std::string>()));
-            deserialized_component->offset = component["offset"].as<glm::vec2>();
+            if (component["offset"].IsDefined())
+            {
+                deserialized_component->offset = component["offset"].as<glm::vec2>();
+            }
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
         }
@@ -550,7 +571,10 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         else
         {
             auto const deserialized_component = std::dynamic_pointer_cast<class Curve>(get_from_pool(component["guid"].as<std::string>()));
-            deserialized_component->points = component["points"].as<std::vector<glm::vec2>>();
+            if (component["points"].IsDefined())
+            {
+                deserialized_component->points = component["points"].as<std::vector<glm::vec2>>();
+            }
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
         }
@@ -567,7 +591,10 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         else
         {
             auto const deserialized_component = std::dynamic_pointer_cast<class Path>(get_from_pool(component["guid"].as<std::string>()));
-            deserialized_component->points = component["points"].as<std::vector<glm::vec2>>();
+            if (component["points"].IsDefined())
+            {
+                deserialized_component->points = component["points"].as<std::vector<glm::vec2>>();
+            }
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
         }
@@ -584,8 +611,14 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         else
         {
             auto const deserialized_component = std::dynamic_pointer_cast<class Model>(get_from_pool(component["guid"].as<std::string>()));
-            deserialized_component->model_path = component["model_path"].as<std::string>();
-            deserialized_component->material = component["material"].as<std::shared_ptr<Material>>();
+            if (component["model_path"].IsDefined())
+            {
+                deserialized_component->model_path = component["model_path"].as<std::string>();
+            }
+            if (component["material"].IsDefined())
+            {
+                deserialized_component->material = component["material"].as<std::shared_ptr<Material>>();
+            }
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
         }
@@ -602,10 +635,22 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         else
         {
             auto const deserialized_component = std::dynamic_pointer_cast<class Cube>(get_from_pool(component["guid"].as<std::string>()));
-            deserialized_component->diffuse_texture_path = component["diffuse_texture_path"].as<std::string>();
-            deserialized_component->specular_texture_path = component["specular_texture_path"].as<std::string>();
-            deserialized_component->model_path = component["model_path"].as<std::string>();
-            deserialized_component->material = component["material"].as<std::shared_ptr<Material>>();
+            if (component["diffuse_texture_path"].IsDefined())
+            {
+                deserialized_component->diffuse_texture_path = component["diffuse_texture_path"].as<std::string>();
+            }
+            if (component["specular_texture_path"].IsDefined())
+            {
+                deserialized_component->specular_texture_path = component["specular_texture_path"].as<std::string>();
+            }
+            if (component["model_path"].IsDefined())
+            {
+                deserialized_component->model_path = component["model_path"].as<std::string>();
+            }
+            if (component["material"].IsDefined())
+            {
+                deserialized_component->material = component["material"].as<std::shared_ptr<Material>>();
+            }
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
         }
@@ -622,12 +667,30 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         else
         {
             auto const deserialized_component = std::dynamic_pointer_cast<class Sphere>(get_from_pool(component["guid"].as<std::string>()));
-            deserialized_component->sector_count = component["sector_count"].as<u32>();
-            deserialized_component->stack_count = component["stack_count"].as<u32>();
-            deserialized_component->texture_path = component["texture_path"].as<std::string>();
-            deserialized_component->radius = component["radius"].as<float>();
-            deserialized_component->model_path = component["model_path"].as<std::string>();
-            deserialized_component->material = component["material"].as<std::shared_ptr<Material>>();
+            if (component["sector_count"].IsDefined())
+            {
+                deserialized_component->sector_count = component["sector_count"].as<u32>();
+            }
+            if (component["stack_count"].IsDefined())
+            {
+                deserialized_component->stack_count = component["stack_count"].as<u32>();
+            }
+            if (component["texture_path"].IsDefined())
+            {
+                deserialized_component->texture_path = component["texture_path"].as<std::string>();
+            }
+            if (component["radius"].IsDefined())
+            {
+                deserialized_component->radius = component["radius"].as<float>();
+            }
+            if (component["model_path"].IsDefined())
+            {
+                deserialized_component->model_path = component["model_path"].as<std::string>();
+            }
+            if (component["material"].IsDefined())
+            {
+                deserialized_component->material = component["material"].as<std::shared_ptr<Material>>();
+            }
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
         }
@@ -644,9 +707,18 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         else
         {
             auto const deserialized_component = std::dynamic_pointer_cast<class Sprite>(get_from_pool(component["guid"].as<std::string>()));
-            deserialized_component->diffuse_texture_path = component["diffuse_texture_path"].as<std::string>();
-            deserialized_component->model_path = component["model_path"].as<std::string>();
-            deserialized_component->material = component["material"].as<std::shared_ptr<Material>>();
+            if (component["diffuse_texture_path"].IsDefined())
+            {
+                deserialized_component->diffuse_texture_path = component["diffuse_texture_path"].as<std::string>();
+            }
+            if (component["model_path"].IsDefined())
+            {
+                deserialized_component->model_path = component["model_path"].as<std::string>();
+            }
+            if (component["material"].IsDefined())
+            {
+                deserialized_component->material = component["material"].as<std::shared_ptr<Material>>();
+            }
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
         }
@@ -663,11 +735,26 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         else
         {
             auto const deserialized_component = std::dynamic_pointer_cast<class Water>(get_from_pool(component["guid"].as<std::string>()));
-            deserialized_component->texture_path = component["texture_path"].as<std::string>();
-            deserialized_component->waves = component["waves"].as<std::vector<DXWave>>();
-            deserialized_component->tesselation_level = component["tesselation_level"].as<u32>();
-            deserialized_component->model_path = component["model_path"].as<std::string>();
-            deserialized_component->material = component["material"].as<std::shared_ptr<Material>>();
+            if (component["texture_path"].IsDefined())
+            {
+                deserialized_component->texture_path = component["texture_path"].as<std::string>();
+            }
+            if (component["waves"].IsDefined())
+            {
+                deserialized_component->waves = component["waves"].as<std::vector<DXWave>>();
+            }
+            if (component["tesselation_level"].IsDefined())
+            {
+                deserialized_component->tesselation_level = component["tesselation_level"].as<u32>();
+            }
+            if (component["model_path"].IsDefined())
+            {
+                deserialized_component->model_path = component["model_path"].as<std::string>();
+            }
+            if (component["material"].IsDefined())
+            {
+                deserialized_component->material = component["material"].as<std::shared_ptr<Material>>();
+            }
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
         }
@@ -685,12 +772,30 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component =
                 std::dynamic_pointer_cast<class ScreenText>(get_from_pool(component["guid"].as<std::string>()));
-            deserialized_component->text = component["text"].as<std::wstring>();
-            deserialized_component->position = component["position"].as<glm::vec2>();
-            deserialized_component->font_size = component["font_size"].as<float>();
-            deserialized_component->color = component["color"].as<u32>();
-            deserialized_component->flags = component["flags"].as<u16>();
-            deserialized_component->material = component["material"].as<std::shared_ptr<Material>>();
+            if (component["text"].IsDefined())
+            {
+                deserialized_component->text = component["text"].as<std::wstring>();
+            }
+            if (component["position"].IsDefined())
+            {
+                deserialized_component->position = component["position"].as<glm::vec2>();
+            }
+            if (component["font_size"].IsDefined())
+            {
+                deserialized_component->font_size = component["font_size"].as<float>();
+            }
+            if (component["color"].IsDefined())
+            {
+                deserialized_component->color = component["color"].as<u32>();
+            }
+            if (component["flags"].IsDefined())
+            {
+                deserialized_component->flags = component["flags"].as<u16>();
+            }
+            if (component["material"].IsDefined())
+            {
+                deserialized_component->material = component["material"].as<std::shared_ptr<Material>>();
+            }
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
         }
@@ -725,7 +830,10 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component =
                 std::dynamic_pointer_cast<class ExampleUIBar>(get_from_pool(component["guid"].as<std::string>()));
-            deserialized_component->value = component["value"].as<float>();
+            if (component["value"].IsDefined())
+            {
+                deserialized_component->value = component["value"].as<float>();
+            }
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
         }
@@ -743,11 +851,26 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component =
                 std::dynamic_pointer_cast<class DirectionalLight>(get_from_pool(component["guid"].as<std::string>()));
-            deserialized_component->ambient = component["ambient"].as<glm::vec3>();
-            deserialized_component->diffuse = component["diffuse"].as<glm::vec3>();
-            deserialized_component->specular = component["specular"].as<glm::vec3>();
-            deserialized_component->m_near_plane = component["m_near_plane"].as<float>();
-            deserialized_component->m_far_plane = component["m_far_plane"].as<float>();
+            if (component["ambient"].IsDefined())
+            {
+                deserialized_component->ambient = component["ambient"].as<glm::vec3>();
+            }
+            if (component["diffuse"].IsDefined())
+            {
+                deserialized_component->diffuse = component["diffuse"].as<glm::vec3>();
+            }
+            if (component["specular"].IsDefined())
+            {
+                deserialized_component->specular = component["specular"].as<glm::vec3>();
+            }
+            if (component["m_near_plane"].IsDefined())
+            {
+                deserialized_component->m_near_plane = component["m_near_plane"].as<float>();
+            }
+            if (component["m_far_plane"].IsDefined())
+            {
+                deserialized_component->m_far_plane = component["m_far_plane"].as<float>();
+            }
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
         }
@@ -765,14 +888,38 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component =
                 std::dynamic_pointer_cast<class PointLight>(get_from_pool(component["guid"].as<std::string>()));
-            deserialized_component->constant = component["constant"].as<float>();
-            deserialized_component->linear = component["linear"].as<float>();
-            deserialized_component->quadratic = component["quadratic"].as<float>();
-            deserialized_component->ambient = component["ambient"].as<glm::vec3>();
-            deserialized_component->diffuse = component["diffuse"].as<glm::vec3>();
-            deserialized_component->specular = component["specular"].as<glm::vec3>();
-            deserialized_component->m_near_plane = component["m_near_plane"].as<float>();
-            deserialized_component->m_far_plane = component["m_far_plane"].as<float>();
+            if (component["constant"].IsDefined())
+            {
+                deserialized_component->constant = component["constant"].as<float>();
+            }
+            if (component["linear"].IsDefined())
+            {
+                deserialized_component->linear = component["linear"].as<float>();
+            }
+            if (component["quadratic"].IsDefined())
+            {
+                deserialized_component->quadratic = component["quadratic"].as<float>();
+            }
+            if (component["ambient"].IsDefined())
+            {
+                deserialized_component->ambient = component["ambient"].as<glm::vec3>();
+            }
+            if (component["diffuse"].IsDefined())
+            {
+                deserialized_component->diffuse = component["diffuse"].as<glm::vec3>();
+            }
+            if (component["specular"].IsDefined())
+            {
+                deserialized_component->specular = component["specular"].as<glm::vec3>();
+            }
+            if (component["m_near_plane"].IsDefined())
+            {
+                deserialized_component->m_near_plane = component["m_near_plane"].as<float>();
+            }
+            if (component["m_far_plane"].IsDefined())
+            {
+                deserialized_component->m_far_plane = component["m_far_plane"].as<float>();
+            }
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
         }
@@ -790,16 +937,46 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component =
                 std::dynamic_pointer_cast<class SpotLight>(get_from_pool(component["guid"].as<std::string>()));
-            deserialized_component->constant = component["constant"].as<float>();
-            deserialized_component->linear = component["linear"].as<float>();
-            deserialized_component->quadratic = component["quadratic"].as<float>();
-            deserialized_component->cut_off = component["cut_off"].as<float>();
-            deserialized_component->outer_cut_off = component["outer_cut_off"].as<float>();
-            deserialized_component->ambient = component["ambient"].as<glm::vec3>();
-            deserialized_component->diffuse = component["diffuse"].as<glm::vec3>();
-            deserialized_component->specular = component["specular"].as<glm::vec3>();
-            deserialized_component->m_near_plane = component["m_near_plane"].as<float>();
-            deserialized_component->m_far_plane = component["m_far_plane"].as<float>();
+            if (component["constant"].IsDefined())
+            {
+                deserialized_component->constant = component["constant"].as<float>();
+            }
+            if (component["linear"].IsDefined())
+            {
+                deserialized_component->linear = component["linear"].as<float>();
+            }
+            if (component["quadratic"].IsDefined())
+            {
+                deserialized_component->quadratic = component["quadratic"].as<float>();
+            }
+            if (component["cut_off"].IsDefined())
+            {
+                deserialized_component->cut_off = component["cut_off"].as<float>();
+            }
+            if (component["outer_cut_off"].IsDefined())
+            {
+                deserialized_component->outer_cut_off = component["outer_cut_off"].as<float>();
+            }
+            if (component["ambient"].IsDefined())
+            {
+                deserialized_component->ambient = component["ambient"].as<glm::vec3>();
+            }
+            if (component["diffuse"].IsDefined())
+            {
+                deserialized_component->diffuse = component["diffuse"].as<glm::vec3>();
+            }
+            if (component["specular"].IsDefined())
+            {
+                deserialized_component->specular = component["specular"].as<glm::vec3>();
+            }
+            if (component["m_near_plane"].IsDefined())
+            {
+                deserialized_component->m_near_plane = component["m_near_plane"].as<float>();
+            }
+            if (component["m_far_plane"].IsDefined())
+            {
+                deserialized_component->m_far_plane = component["m_far_plane"].as<float>();
+            }
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
         }
@@ -884,18 +1061,66 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component =
                 std::dynamic_pointer_cast<class LevelController>(get_from_pool(component["guid"].as<std::string>()));
-            deserialized_component->map_time = component["map_time"].as<float>();
-            deserialized_component->map_food = component["map_food"].as<u32>();
-            deserialized_component->maximum_lighthouse_level = component["maximum_lighthouse_level"].as<i32>();
-            deserialized_component->factories = component["factories"].as<std::vector<std::weak_ptr<Factory>>>();
-            deserialized_component->ships_limit_curve = component["ships_limit_curve"].as<std::weak_ptr<Curve>>();
-            deserialized_component->ships_limit = component["ships_limit"].as<u32>();
-            deserialized_component->ships_speed_curve = component["ships_speed_curve"].as<std::weak_ptr<Curve>>();
-            deserialized_component->ships_speed = component["ships_speed"].as<float>();
-            deserialized_component->ships_range_curve = component["ships_range_curve"].as<std::weak_ptr<Curve>>();
-            deserialized_component->ships_turn_curve = component["ships_turn_curve"].as<std::weak_ptr<Curve>>();
-            deserialized_component->ships_additional_speed_curve = component["ships_additional_speed_curve"].as<std::weak_ptr<Curve>>();
-            deserialized_component->pirates_in_control_curve = component["pirates_in_control_curve"].as<std::weak_ptr<Curve>>();
+            if (component["map_time"].IsDefined())
+            {
+                deserialized_component->map_time = component["map_time"].as<float>();
+            }
+            if (component["map_food"].IsDefined())
+            {
+                deserialized_component->map_food = component["map_food"].as<u32>();
+            }
+            if (component["maximum_lighthouse_level"].IsDefined())
+            {
+                deserialized_component->maximum_lighthouse_level = component["maximum_lighthouse_level"].as<i32>();
+            }
+            if (component["factories"].IsDefined())
+            {
+                deserialized_component->factories = component["factories"].as<std::vector<std::weak_ptr<Factory>>>();
+            }
+            if (component["playfield_width"].IsDefined())
+            {
+                deserialized_component->playfield_width = component["playfield_width"].as<float>();
+            }
+            if (component["playfield_additional_width"].IsDefined())
+            {
+                deserialized_component->playfield_additional_width = component["playfield_additional_width"].as<float>();
+            }
+            if (component["playfield_height"].IsDefined())
+            {
+                deserialized_component->playfield_height = component["playfield_height"].as<float>();
+            }
+            if (component["ships_limit_curve"].IsDefined())
+            {
+                deserialized_component->ships_limit_curve = component["ships_limit_curve"].as<std::weak_ptr<Curve>>();
+            }
+            if (component["ships_limit"].IsDefined())
+            {
+                deserialized_component->ships_limit = component["ships_limit"].as<u32>();
+            }
+            if (component["ships_speed_curve"].IsDefined())
+            {
+                deserialized_component->ships_speed_curve = component["ships_speed_curve"].as<std::weak_ptr<Curve>>();
+            }
+            if (component["ships_speed"].IsDefined())
+            {
+                deserialized_component->ships_speed = component["ships_speed"].as<float>();
+            }
+            if (component["ships_range_curve"].IsDefined())
+            {
+                deserialized_component->ships_range_curve = component["ships_range_curve"].as<std::weak_ptr<Curve>>();
+            }
+            if (component["ships_turn_curve"].IsDefined())
+            {
+                deserialized_component->ships_turn_curve = component["ships_turn_curve"].as<std::weak_ptr<Curve>>();
+            }
+            if (component["ships_additional_speed_curve"].IsDefined())
+            {
+                deserialized_component->ships_additional_speed_curve = component["ships_additional_speed_curve"].as<std::weak_ptr<Curve>>();
+            }
+            if (component["pirates_in_control_curve"].IsDefined())
+            {
+                deserialized_component->pirates_in_control_curve = component["pirates_in_control_curve"].as<std::weak_ptr<Curve>>();
+            }
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
         }
@@ -913,10 +1138,22 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component =
                 std::dynamic_pointer_cast<class Lighthouse>(get_from_pool(component["guid"].as<std::string>()));
-            deserialized_component->enterable_distance = component["enterable_distance"].as<float>();
-            deserialized_component->light = component["light"].as<std::weak_ptr<LighthouseLight>>();
-            deserialized_component->port = component["port"].as<std::weak_ptr<Port>>();
-            deserialized_component->spawn_position = component["spawn_position"].as<std::weak_ptr<Entity>>();
+            if (component["enterable_distance"].IsDefined())
+            {
+                deserialized_component->enterable_distance = component["enterable_distance"].as<float>();
+            }
+            if (component["light"].IsDefined())
+            {
+                deserialized_component->light = component["light"].as<std::weak_ptr<LighthouseLight>>();
+            }
+            if (component["port"].IsDefined())
+            {
+                deserialized_component->port = component["port"].as<std::weak_ptr<Port>>();
+            }
+            if (component["spawn_position"].IsDefined())
+            {
+                deserialized_component->spawn_position = component["spawn_position"].as<std::weak_ptr<Entity>>();
+            }
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
         }
@@ -934,12 +1171,30 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component =
                 std::dynamic_pointer_cast<class LighthouseKeeper>(get_from_pool(component["guid"].as<std::string>()));
-            deserialized_component->maximum_speed = component["maximum_speed"].as<float>();
-            deserialized_component->acceleration = component["acceleration"].as<float>();
-            deserialized_component->deceleration = component["deceleration"].as<float>();
-            deserialized_component->interact_with_factory_distance = component["interact_with_factory_distance"].as<float>();
-            deserialized_component->lighthouse = component["lighthouse"].as<std::weak_ptr<Lighthouse>>();
-            deserialized_component->port = component["port"].as<std::weak_ptr<Port>>();
+            if (component["maximum_speed"].IsDefined())
+            {
+                deserialized_component->maximum_speed = component["maximum_speed"].as<float>();
+            }
+            if (component["acceleration"].IsDefined())
+            {
+                deserialized_component->acceleration = component["acceleration"].as<float>();
+            }
+            if (component["deceleration"].IsDefined())
+            {
+                deserialized_component->deceleration = component["deceleration"].as<float>();
+            }
+            if (component["interact_with_factory_distance"].IsDefined())
+            {
+                deserialized_component->interact_with_factory_distance = component["interact_with_factory_distance"].as<float>();
+            }
+            if (component["lighthouse"].IsDefined())
+            {
+                deserialized_component->lighthouse = component["lighthouse"].as<std::weak_ptr<Lighthouse>>();
+            }
+            if (component["port"].IsDefined())
+            {
+                deserialized_component->port = component["port"].as<std::weak_ptr<Port>>();
+            }
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
         }
@@ -957,8 +1212,14 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component =
                 std::dynamic_pointer_cast<class LighthouseLight>(get_from_pool(component["guid"].as<std::string>()));
-            deserialized_component->m_light = component["m_light"].as<std::weak_ptr<SpotLight>>();
-            deserialized_component->m_light_beam_width = component["m_light_beam_width"].as<float>();
+            if (component["m_light"].IsDefined())
+            {
+                deserialized_component->m_light = component["m_light"].as<std::weak_ptr<SpotLight>>();
+            }
+            if (component["m_light_beam_width"].IsDefined())
+            {
+                deserialized_component->m_light_beam_width = component["m_light_beam_width"].as<float>();
+            }
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
         }
@@ -1007,9 +1268,18 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         else
         {
             auto const deserialized_component = std::dynamic_pointer_cast<class Ship>(get_from_pool(component["guid"].as<std::string>()));
-            deserialized_component->light = component["light"].as<std::weak_ptr<LighthouseLight>>();
-            deserialized_component->spawner = component["spawner"].as<std::weak_ptr<ShipSpawner>>();
-            deserialized_component->eyes = component["eyes"].as<std::weak_ptr<ShipEyes>>();
+            if (component["light"].IsDefined())
+            {
+                deserialized_component->light = component["light"].as<std::weak_ptr<LighthouseLight>>();
+            }
+            if (component["spawner"].IsDefined())
+            {
+                deserialized_component->spawner = component["spawner"].as<std::weak_ptr<ShipSpawner>>();
+            }
+            if (component["eyes"].IsDefined())
+            {
+                deserialized_component->eyes = component["eyes"].as<std::weak_ptr<ShipEyes>>();
+            }
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
         }
@@ -1044,10 +1314,22 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component =
                 std::dynamic_pointer_cast<class ShipSpawner>(get_from_pool(component["guid"].as<std::string>()));
-            deserialized_component->paths = component["paths"].as<std::vector<std::weak_ptr<Path>>>();
-            deserialized_component->light = component["light"].as<std::weak_ptr<LighthouseLight>>();
-            deserialized_component->last_chance_food_threshold = component["last_chance_food_threshold"].as<u32>();
-            deserialized_component->last_chance_time_threshold = component["last_chance_time_threshold"].as<float>();
+            if (component["paths"].IsDefined())
+            {
+                deserialized_component->paths = component["paths"].as<std::vector<std::weak_ptr<Path>>>();
+            }
+            if (component["light"].IsDefined())
+            {
+                deserialized_component->light = component["light"].as<std::weak_ptr<LighthouseLight>>();
+            }
+            if (component["last_chance_food_threshold"].IsDefined())
+            {
+                deserialized_component->last_chance_food_threshold = component["last_chance_food_threshold"].as<u32>();
+            }
+            if (component["last_chance_time_threshold"].IsDefined())
+            {
+                deserialized_component->last_chance_time_threshold = component["last_chance_time_threshold"].as<float>();
+            }
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
         }
@@ -1065,8 +1347,14 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component =
                 std::dynamic_pointer_cast<class PlayerInput>(get_from_pool(component["guid"].as<std::string>()));
-            deserialized_component->player_speed = component["player_speed"].as<float>();
-            deserialized_component->camera_speed = component["camera_speed"].as<float>();
+            if (component["player_speed"].IsDefined())
+            {
+                deserialized_component->player_speed = component["player_speed"].as<float>();
+            }
+            if (component["camera_speed"].IsDefined())
+            {
+                deserialized_component->camera_speed = component["camera_speed"].as<float>();
+            }
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
         }
