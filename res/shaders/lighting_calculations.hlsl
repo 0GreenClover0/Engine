@@ -152,36 +152,55 @@ float spot_shadow_calculation(SpotLight light, float3 world_pos, int index, floa
     light_space_pos.x = light_space_pos.x / 2.0f + 0.5f;
     light_space_pos.y = -light_space_pos.y / 2.0f + 0.5f;
     float shadow = 0.0f;
-    float depth = light_space_pos.z;
+    float bias = max(0.005f * (1.0f - dot(normal, light.direction)), 0.005f);
 
-    if (smooth)
+    // DISCLAIMER: Leaving this because I want to have a boolean value that chooses type of shadow method
+    // 
+    // Reference for PCF implementation:
+    // https://learnopengl.com/Advanced-Lighting/Shadows/Shadow-Mapping
+    // if (smooth)
+    // {
+    //     float depth = light_space_pos.z;
+    //     float2 map_size;
+    //     spot_light_shadow_maps[index].GetDimensions(map_size.x, map_size.y);
+    //     float2 texel_size = 1.0 / map_size;
+    //     for (int x = -1; x <= 1; x++)
+    //     {
+    //         for (int y = -1; y <= 1; y++)
+    //         {
+    //             float pcf_depth = spot_light_shadow_maps[index].SampleLevel(shadow_map_sampler, light_space_pos.xy + float2(x, y) * texel_size, 0).r;
+    //             shadow += depth - bias > pcf_depth ? 1.0f : 0.0f;
+    //         }
+    //     }
+
+    //     shadow /= 9.0f;
+    // }
+    // else
+    // {
+        // float shadow_map_depth = spot_light_shadow_maps[index].SampleLevel(shadow_map_sampler, light_space_pos.xy, 0).r;
+        // float bias = 0.0f;
+        // if (shadow_map_depth < depth + bias)
+        // {
+        //     shadow = 1.0f;
+        // }
+    // }
+
+    if (!smooth)
     {
-        // Reference for PCF implementation:
-        // https://learnopengl.com/Advanced-Lighting/Shadows/Shadow-Mapping
-        float2 map_size;
-        spot_light_shadow_maps[index].GetDimensions(map_size.x, map_size.y);
-        float2 texel_size = 1.0 / map_size;
-        float bias = max(0.005f * (1.0f - dot(normal, light.direction)), 0.005f);
-        for (int x = -1; x <= 1; x++)
-        {
-            for (int y = -1; y <= 1; y++)
-            {
-                float pcf_depth = spot_light_shadow_maps[index].SampleLevel(shadow_map_sampler, light_space_pos.xy + float2(x, y) * texel_size, 0).r;
-                shadow += depth - bias > pcf_depth ? 1.0f : 0.0f;
-            }
-        }
-        shadow /= 9.0f;
-    }
-    else
-    {
+        float depth = light_space_pos.z;
         float shadow_map_depth = spot_light_shadow_maps[index].SampleLevel(shadow_map_sampler, light_space_pos.xy, 0).r;
         float bias = 0.0f;
+
         if (shadow_map_depth < depth + bias)
         {
             shadow = 1.0f;
         }
+
+        return shadow;
     }
-    return shadow;
+
+    float4 coords = float4(light_space_pos.xyz, 1.0f);
+    return PCSS(spot_light_shadow_maps[index], coords, bias);
 }
 
 float directional_shadow_calculation(DirectionalLight light, float3 world_pos, float3 normal)
