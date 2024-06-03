@@ -81,12 +81,6 @@ void ShipSpawner::awake()
     auto const seed = std::chrono::system_clock::now().time_since_epoch().count();
     std::ranges::shuffle(m_main_spawn, std::default_random_engine(seed));
 
-    auto const path1 = entity->add_component<Path>(Path::create());
-    path1->add_points({{-5.0f, -2.5f}, {-5.0f, 1.7f}});
-
-    auto const path2 = entity->add_component<Path>(Path::create());
-    path2->add_points({{5.0f, -2.5f}, {5.0f, 1.7f}});
-
     for (auto const& path : entity->get_components<Path>())
     {
         paths.emplace_back(path);
