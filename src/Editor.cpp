@@ -918,7 +918,7 @@ void Editor::draw_inspector(std::shared_ptr<EditorWindow> const& window)
     ImGui::End();
 }
 
-void Editor::draw_scene_save() const
+void Editor::draw_scene_save()
 {
     if (ImGui::BeginMenuBar())
     {
@@ -933,6 +933,18 @@ void Editor::draw_scene_save() const
                 else
                 {
                     save_scene();
+                }
+            }
+
+            if (ImGui::MenuItem("Save scene as"))
+            {
+                if (Engine::is_game_running())
+                {
+                    Debug::log("Game is currently running. Scene has not been saved.", DebugType::Error);
+                }
+                else
+                {
+                    m_is_save_scene_popup_open = true;
                 }
             }
 
@@ -953,13 +965,50 @@ void Editor::draw_scene_save() const
 
         ImGui::EndMenuBar();
     }
+
+    if (m_is_save_scene_popup_open)
+    {
+        ImGui::OpenPopup("SceneNamePopup");
+    }
+
+    if (ImGui::BeginPopup("SceneNamePopup"))
+    {
+        std::string scene_name = "scene";
+
+        ImGui::Text("Save scene as ...");
+
+        if (ImGui::InputText("##empty", &scene_name, ImGuiInputTextFlags_EnterReturnsTrue))
+        {
+            save_scene_as(scene_name);
+
+            ImGui::CloseCurrentPopup();
+
+            m_is_save_scene_popup_open = false;
+        }
+
+        ImGui::SameLine();
+
+        if (ImGui::Button("Cancel"))
+        {
+            ImGui::CloseCurrentPopup();
+
+            m_is_save_scene_popup_open = false;
+        }
+
+        ImGui::EndPopup();
+    }
 }
 
 void Editor::save_scene() const
 {
+    save_scene_as("scene");
+}
+
+void Editor::save_scene_as(std::string const& name) const
+{
     auto const scene_serializer = std::make_shared<SceneSerializer>(m_open_scene);
     scene_serializer->set_instance(scene_serializer);
-    scene_serializer->serialize("./res/scenes/scene.txt");
+    scene_serializer->serialize("./res/scenes/" + name + ".txt");
 }
 
 bool Editor::load_scene() const
