@@ -89,6 +89,12 @@ void LevelController::draw_editor()
 
     ImGui::Text(("Ships Limit: " + std::to_string(ships_limit)).c_str());
     ImGui::Text(("Ships Speed: " + std::to_string(ships_speed)).c_str());
+
+    ImGui::Separator();
+
+    ImGui::InputFloat("Playfield width: ", &playfield_width);
+    ImGui::InputFloat("Playfield additional width: ", &playfield_additional_width);
+    ImGui::InputFloat("Playfield height: ", &playfield_height);
 }
 
 void LevelController::on_lighthouse_upgraded() const
