@@ -231,12 +231,14 @@ def create_serialization_code(file, Component, serializable_vars, indentation = 
         '        // # Put new ' + Component  + ' kid here',
         '        {',
         '            out << YAML::Key << "ComponentName" << YAML::Value << "' + Component + 'Component";',
-        '            out << YAML::Key << "guid" << YAML::Value << ' + component + '->guid;'
+        '            out << YAML::Key << "guid" << YAML::Value << ' + component + '->guid;',
+        '            out << YAML::Key << "custom_name" << YAML::Value << ' + component + '->custom_name;'
         ]
     else:
         serialization_code += [
         '        out << YAML::Key << "ComponentName" << YAML::Value << "' + Component + 'Component";',
-        '        out << YAML::Key << "guid" << YAML::Value << ' + component + '->guid;'
+        '        out << YAML::Key << "guid" << YAML::Value << ' + component + '->guid;',
+        '        out << YAML::Key << "custom_name" << YAML::Value << ' + component + '->custom_name;'
         ]
 
     if is_parent == True:
@@ -282,6 +284,7 @@ def create_deserialization_code(Component, serializable_vars):
         '        {',
         '            auto const deserialized_component = ' + Component + '::create();',
         '            deserialized_component->guid = component["guid"].as<std::string>();',
+        '            deserialized_component->custom_name = component["custom_name"].as<std::string>();',
         '            deserialized_pool.emplace_back(deserialized_component);',
         '        }',
         '        else',

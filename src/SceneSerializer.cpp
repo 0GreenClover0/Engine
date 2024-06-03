@@ -110,6 +110,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::BeginMap;
         out << YAML::Key << "ComponentName" << YAML::Value << "CameraComponent";
         out << YAML::Key << "guid" << YAML::Value << camera->guid;
+        out << YAML::Key << "custom_name" << YAML::Value << camera->custom_name;
         out << YAML::Key << "width" << YAML::Value << camera->width;
         out << YAML::Key << "height" << YAML::Value << camera->height;
         out << YAML::Key << "fov" << YAML::Value << camera->fov;
@@ -122,6 +123,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::BeginMap;
         out << YAML::Key << "ComponentName" << YAML::Value << "Collider2DComponent";
         out << YAML::Key << "guid" << YAML::Value << collider2d->guid;
+        out << YAML::Key << "custom_name" << YAML::Value << collider2d->custom_name;
         out << YAML::Key << "offset" << YAML::Value << collider2d->offset;
         out << YAML::EndMap;
     }
@@ -133,11 +135,13 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         {
             out << YAML::Key << "ComponentName" << YAML::Value << "PathComponent";
             out << YAML::Key << "guid" << YAML::Value << path->guid;
+            out << YAML::Key << "custom_name" << YAML::Value << path->custom_name;
         }
         else
         {
             out << YAML::Key << "ComponentName" << YAML::Value << "CurveComponent";
             out << YAML::Key << "guid" << YAML::Value << curve->guid;
+            out << YAML::Key << "custom_name" << YAML::Value << curve->custom_name;
         }
         out << YAML::Key << "points" << YAML::Value << curve->points;
         out << YAML::EndMap;
@@ -150,6 +154,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         {
             out << YAML::Key << "ComponentName" << YAML::Value << "ScreenTextComponent";
             out << YAML::Key << "guid" << YAML::Value << screentext->guid;
+            out << YAML::Key << "custom_name" << YAML::Value << screentext->custom_name;
             out << YAML::Key << "text" << YAML::Value << screentext->text;
             out << YAML::Key << "position" << YAML::Value << screentext->position;
             out << YAML::Key << "font_size" << YAML::Value << screentext->font_size;
@@ -163,6 +168,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
             {
                 out << YAML::Key << "ComponentName" << YAML::Value << "WaterComponent";
                 out << YAML::Key << "guid" << YAML::Value << water->guid;
+                out << YAML::Key << "custom_name" << YAML::Value << water->custom_name;
                 out << YAML::Key << "texture_path" << YAML::Value << water->texture_path;
                 out << YAML::Key << "waves" << YAML::Value << water->waves;
                 out << YAML::Key << "tesselation_level" << YAML::Value << water->tesselation_level;
@@ -171,12 +177,14 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
             {
                 out << YAML::Key << "ComponentName" << YAML::Value << "SpriteComponent";
                 out << YAML::Key << "guid" << YAML::Value << sprite->guid;
+                out << YAML::Key << "custom_name" << YAML::Value << sprite->custom_name;
                 out << YAML::Key << "diffuse_texture_path" << YAML::Value << sprite->diffuse_texture_path;
             }
             else if (auto const sphere = std::dynamic_pointer_cast<class Sphere>(component); sphere != nullptr)
             {
                 out << YAML::Key << "ComponentName" << YAML::Value << "SphereComponent";
                 out << YAML::Key << "guid" << YAML::Value << sphere->guid;
+                out << YAML::Key << "custom_name" << YAML::Value << sphere->custom_name;
                 out << YAML::Key << "sector_count" << YAML::Value << sphere->sector_count;
                 out << YAML::Key << "stack_count" << YAML::Value << sphere->stack_count;
                 out << YAML::Key << "texture_path" << YAML::Value << sphere->texture_path;
@@ -186,6 +194,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
             {
                 out << YAML::Key << "ComponentName" << YAML::Value << "CubeComponent";
                 out << YAML::Key << "guid" << YAML::Value << cube->guid;
+                out << YAML::Key << "custom_name" << YAML::Value << cube->custom_name;
                 out << YAML::Key << "diffuse_texture_path" << YAML::Value << cube->diffuse_texture_path;
                 out << YAML::Key << "specular_texture_path" << YAML::Value << cube->specular_texture_path;
             }
@@ -193,6 +202,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
             {
                 out << YAML::Key << "ComponentName" << YAML::Value << "ModelComponent";
                 out << YAML::Key << "guid" << YAML::Value << model->guid;
+                out << YAML::Key << "custom_name" << YAML::Value << model->custom_name;
             }
             out << YAML::Key << "model_path" << YAML::Value << model->model_path;
         }
@@ -200,6 +210,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         {
             out << YAML::Key << "ComponentName" << YAML::Value << "DrawableComponent";
             out << YAML::Key << "guid" << YAML::Value << drawable->guid;
+            out << YAML::Key << "custom_name" << YAML::Value << drawable->custom_name;
         }
         out << YAML::Key << "material" << YAML::Value << drawable->material;
         out << YAML::EndMap;
@@ -209,6 +220,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::BeginMap;
         out << YAML::Key << "ComponentName" << YAML::Value << "ExampleDynamicTextComponent";
         out << YAML::Key << "guid" << YAML::Value << exampledynamictext->guid;
+        out << YAML::Key << "custom_name" << YAML::Value << exampledynamictext->custom_name;
         out << YAML::EndMap;
     }
     else if (auto const exampleuibar = std::dynamic_pointer_cast<class ExampleUIBar>(component); exampleuibar != nullptr)
@@ -216,6 +228,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::BeginMap;
         out << YAML::Key << "ComponentName" << YAML::Value << "ExampleUIBarComponent";
         out << YAML::Key << "guid" << YAML::Value << exampleuibar->guid;
+        out << YAML::Key << "custom_name" << YAML::Value << exampleuibar->custom_name;
         out << YAML::Key << "value" << YAML::Value << exampleuibar->value;
         out << YAML::EndMap;
     }
@@ -227,6 +240,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         {
             out << YAML::Key << "ComponentName" << YAML::Value << "SpotLightComponent";
             out << YAML::Key << "guid" << YAML::Value << spotlight->guid;
+            out << YAML::Key << "custom_name" << YAML::Value << spotlight->custom_name;
             out << YAML::Key << "constant" << YAML::Value << spotlight->constant;
             out << YAML::Key << "linear" << YAML::Value << spotlight->linear;
             out << YAML::Key << "quadratic" << YAML::Value << spotlight->quadratic;
@@ -237,6 +251,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         {
             out << YAML::Key << "ComponentName" << YAML::Value << "PointLightComponent";
             out << YAML::Key << "guid" << YAML::Value << pointlight->guid;
+            out << YAML::Key << "custom_name" << YAML::Value << pointlight->custom_name;
             out << YAML::Key << "constant" << YAML::Value << pointlight->constant;
             out << YAML::Key << "linear" << YAML::Value << pointlight->linear;
             out << YAML::Key << "quadratic" << YAML::Value << pointlight->quadratic;
@@ -245,11 +260,13 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         {
             out << YAML::Key << "ComponentName" << YAML::Value << "DirectionalLightComponent";
             out << YAML::Key << "guid" << YAML::Value << directionallight->guid;
+            out << YAML::Key << "custom_name" << YAML::Value << directionallight->custom_name;
         }
         else
         {
             out << YAML::Key << "ComponentName" << YAML::Value << "LightComponent";
             out << YAML::Key << "guid" << YAML::Value << light->guid;
+            out << YAML::Key << "custom_name" << YAML::Value << light->custom_name;
         }
         out << YAML::Key << "ambient" << YAML::Value << light->ambient;
         out << YAML::Key << "diffuse" << YAML::Value << light->diffuse;
@@ -263,6 +280,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::BeginMap;
         out << YAML::Key << "ComponentName" << YAML::Value << "SoundComponent";
         out << YAML::Key << "guid" << YAML::Value << sound->guid;
+        out << YAML::Key << "custom_name" << YAML::Value << sound->custom_name;
         out << YAML::EndMap;
     }
     else if (auto const soundlistener = std::dynamic_pointer_cast<class SoundListener>(component); soundlistener != nullptr)
@@ -270,6 +288,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::BeginMap;
         out << YAML::Key << "ComponentName" << YAML::Value << "SoundListenerComponent";
         out << YAML::Key << "guid" << YAML::Value << soundlistener->guid;
+        out << YAML::Key << "custom_name" << YAML::Value << soundlistener->custom_name;
         out << YAML::EndMap;
     }
     else if (auto const factory = std::dynamic_pointer_cast<class Factory>(component); factory != nullptr)
@@ -277,6 +296,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::BeginMap;
         out << YAML::Key << "ComponentName" << YAML::Value << "FactoryComponent";
         out << YAML::Key << "guid" << YAML::Value << factory->guid;
+        out << YAML::Key << "custom_name" << YAML::Value << factory->custom_name;
         out << YAML::EndMap;
     }
     else if (auto const icebound = std::dynamic_pointer_cast<class IceBound>(component); icebound != nullptr)
@@ -284,6 +304,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::BeginMap;
         out << YAML::Key << "ComponentName" << YAML::Value << "IceBoundComponent";
         out << YAML::Key << "guid" << YAML::Value << icebound->guid;
+        out << YAML::Key << "custom_name" << YAML::Value << icebound->custom_name;
         out << YAML::EndMap;
     }
     else if (auto const levelcontroller = std::dynamic_pointer_cast<class LevelController>(component); levelcontroller != nullptr)
@@ -291,6 +312,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::BeginMap;
         out << YAML::Key << "ComponentName" << YAML::Value << "LevelControllerComponent";
         out << YAML::Key << "guid" << YAML::Value << levelcontroller->guid;
+        out << YAML::Key << "custom_name" << YAML::Value << levelcontroller->custom_name;
         out << YAML::Key << "map_time" << YAML::Value << levelcontroller->map_time;
         out << YAML::Key << "map_food" << YAML::Value << levelcontroller->map_food;
         out << YAML::Key << "maximum_lighthouse_level" << YAML::Value << levelcontroller->maximum_lighthouse_level;
@@ -310,6 +332,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::BeginMap;
         out << YAML::Key << "ComponentName" << YAML::Value << "LighthouseComponent";
         out << YAML::Key << "guid" << YAML::Value << lighthouse->guid;
+        out << YAML::Key << "custom_name" << YAML::Value << lighthouse->custom_name;
         out << YAML::Key << "enterable_distance" << YAML::Value << lighthouse->enterable_distance;
         out << YAML::Key << "light" << YAML::Value << lighthouse->light;
         out << YAML::Key << "port" << YAML::Value << lighthouse->port;
@@ -321,6 +344,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::BeginMap;
         out << YAML::Key << "ComponentName" << YAML::Value << "LighthouseKeeperComponent";
         out << YAML::Key << "guid" << YAML::Value << lighthousekeeper->guid;
+        out << YAML::Key << "custom_name" << YAML::Value << lighthousekeeper->custom_name;
         out << YAML::Key << "maximum_speed" << YAML::Value << lighthousekeeper->maximum_speed;
         out << YAML::Key << "acceleration" << YAML::Value << lighthousekeeper->acceleration;
         out << YAML::Key << "deceleration" << YAML::Value << lighthousekeeper->deceleration;
@@ -334,6 +358,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::BeginMap;
         out << YAML::Key << "ComponentName" << YAML::Value << "LighthouseLightComponent";
         out << YAML::Key << "guid" << YAML::Value << lighthouselight->guid;
+        out << YAML::Key << "custom_name" << YAML::Value << lighthouselight->custom_name;
         out << YAML::Key << "m_light" << YAML::Value << lighthouselight->m_light;
         out << YAML::Key << "m_light_beam_width" << YAML::Value << lighthouselight->m_light_beam_width;
         out << YAML::EndMap;
@@ -343,6 +368,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::BeginMap;
         out << YAML::Key << "ComponentName" << YAML::Value << "PlayerComponent";
         out << YAML::Key << "guid" << YAML::Value << player->guid;
+        out << YAML::Key << "custom_name" << YAML::Value << player->custom_name;
         out << YAML::EndMap;
     }
     else if (auto const port = std::dynamic_pointer_cast<class Port>(component); port != nullptr)
@@ -350,6 +376,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::BeginMap;
         out << YAML::Key << "ComponentName" << YAML::Value << "PortComponent";
         out << YAML::Key << "guid" << YAML::Value << port->guid;
+        out << YAML::Key << "custom_name" << YAML::Value << port->custom_name;
         out << YAML::EndMap;
     }
     else if (auto const ship = std::dynamic_pointer_cast<class Ship>(component); ship != nullptr)
@@ -357,6 +384,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::BeginMap;
         out << YAML::Key << "ComponentName" << YAML::Value << "ShipComponent";
         out << YAML::Key << "guid" << YAML::Value << ship->guid;
+        out << YAML::Key << "custom_name" << YAML::Value << ship->custom_name;
         out << YAML::Key << "light" << YAML::Value << ship->light;
         out << YAML::Key << "spawner" << YAML::Value << ship->spawner;
         out << YAML::Key << "eyes" << YAML::Value << ship->eyes;
@@ -367,6 +395,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::BeginMap;
         out << YAML::Key << "ComponentName" << YAML::Value << "ShipEyesComponent";
         out << YAML::Key << "guid" << YAML::Value << shipeyes->guid;
+        out << YAML::Key << "custom_name" << YAML::Value << shipeyes->custom_name;
         out << YAML::EndMap;
     }
     else if (auto const shipspawner = std::dynamic_pointer_cast<class ShipSpawner>(component); shipspawner != nullptr)
@@ -374,6 +403,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::BeginMap;
         out << YAML::Key << "ComponentName" << YAML::Value << "ShipSpawnerComponent";
         out << YAML::Key << "guid" << YAML::Value << shipspawner->guid;
+        out << YAML::Key << "custom_name" << YAML::Value << shipspawner->custom_name;
         out << YAML::Key << "paths" << YAML::Value << shipspawner->paths;
         out << YAML::Key << "light" << YAML::Value << shipspawner->light;
         out << YAML::Key << "last_chance_food_threshold" << YAML::Value << shipspawner->last_chance_food_threshold;
@@ -385,6 +415,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::BeginMap;
         out << YAML::Key << "ComponentName" << YAML::Value << "PlayerInputComponent";
         out << YAML::Key << "guid" << YAML::Value << playerinput->guid;
+        out << YAML::Key << "custom_name" << YAML::Value << playerinput->custom_name;
         out << YAML::Key << "player_speed" << YAML::Value << playerinput->player_speed;
         out << YAML::Key << "camera_speed" << YAML::Value << playerinput->camera_speed;
         out << YAML::EndMap;
@@ -474,6 +505,7 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component = Camera::create();
             deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_component->custom_name = component["custom_name"].as<std::string>();
             deserialized_pool.emplace_back(deserialized_component);
         }
         else
@@ -494,6 +526,7 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component = Collider2D::create();
             deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_component->custom_name = component["custom_name"].as<std::string>();
             deserialized_pool.emplace_back(deserialized_component);
         }
         else
@@ -511,6 +544,7 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component = Curve::create();
             deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_component->custom_name = component["custom_name"].as<std::string>();
             deserialized_pool.emplace_back(deserialized_component);
         }
         else
@@ -527,6 +561,7 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component = Path::create();
             deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_component->custom_name = component["custom_name"].as<std::string>();
             deserialized_pool.emplace_back(deserialized_component);
         }
         else
@@ -543,6 +578,7 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component = Model::create();
             deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_component->custom_name = component["custom_name"].as<std::string>();
             deserialized_pool.emplace_back(deserialized_component);
         }
         else
@@ -560,6 +596,7 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component = Cube::create();
             deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_component->custom_name = component["custom_name"].as<std::string>();
             deserialized_pool.emplace_back(deserialized_component);
         }
         else
@@ -579,6 +616,7 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component = Sphere::create();
             deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_component->custom_name = component["custom_name"].as<std::string>();
             deserialized_pool.emplace_back(deserialized_component);
         }
         else
@@ -600,6 +638,7 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component = Sprite::create();
             deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_component->custom_name = component["custom_name"].as<std::string>();
             deserialized_pool.emplace_back(deserialized_component);
         }
         else
@@ -618,6 +657,7 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component = Water::create();
             deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_component->custom_name = component["custom_name"].as<std::string>();
             deserialized_pool.emplace_back(deserialized_component);
         }
         else
@@ -638,6 +678,7 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component = ScreenText::create();
             deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_component->custom_name = component["custom_name"].as<std::string>();
             deserialized_pool.emplace_back(deserialized_component);
         }
         else
@@ -660,6 +701,7 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component = ExampleDynamicText::create();
             deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_component->custom_name = component["custom_name"].as<std::string>();
             deserialized_pool.emplace_back(deserialized_component);
         }
         else
@@ -676,6 +718,7 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component = ExampleUIBar::create();
             deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_component->custom_name = component["custom_name"].as<std::string>();
             deserialized_pool.emplace_back(deserialized_component);
         }
         else
@@ -693,6 +736,7 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component = DirectionalLight::create();
             deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_component->custom_name = component["custom_name"].as<std::string>();
             deserialized_pool.emplace_back(deserialized_component);
         }
         else
@@ -714,6 +758,7 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component = PointLight::create();
             deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_component->custom_name = component["custom_name"].as<std::string>();
             deserialized_pool.emplace_back(deserialized_component);
         }
         else
@@ -738,6 +783,7 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component = SpotLight::create();
             deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_component->custom_name = component["custom_name"].as<std::string>();
             deserialized_pool.emplace_back(deserialized_component);
         }
         else
@@ -764,6 +810,7 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component = Sound::create();
             deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_component->custom_name = component["custom_name"].as<std::string>();
             deserialized_pool.emplace_back(deserialized_component);
         }
         else
@@ -779,6 +826,7 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component = SoundListener::create();
             deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_component->custom_name = component["custom_name"].as<std::string>();
             deserialized_pool.emplace_back(deserialized_component);
         }
         else
@@ -795,6 +843,7 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component = Factory::create();
             deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_component->custom_name = component["custom_name"].as<std::string>();
             deserialized_pool.emplace_back(deserialized_component);
         }
         else
@@ -811,6 +860,7 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component = IceBound::create();
             deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_component->custom_name = component["custom_name"].as<std::string>();
             deserialized_pool.emplace_back(deserialized_component);
         }
         else
@@ -827,6 +877,7 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component = LevelController::create();
             deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_component->custom_name = component["custom_name"].as<std::string>();
             deserialized_pool.emplace_back(deserialized_component);
         }
         else
@@ -855,6 +906,7 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component = Lighthouse::create();
             deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_component->custom_name = component["custom_name"].as<std::string>();
             deserialized_pool.emplace_back(deserialized_component);
         }
         else
@@ -875,6 +927,7 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component = LighthouseKeeper::create();
             deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_component->custom_name = component["custom_name"].as<std::string>();
             deserialized_pool.emplace_back(deserialized_component);
         }
         else
@@ -897,6 +950,7 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component = LighthouseLight::create();
             deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_component->custom_name = component["custom_name"].as<std::string>();
             deserialized_pool.emplace_back(deserialized_component);
         }
         else
@@ -915,6 +969,7 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component = Player::create();
             deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_component->custom_name = component["custom_name"].as<std::string>();
             deserialized_pool.emplace_back(deserialized_component);
         }
         else
@@ -930,6 +985,7 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component = Port::create();
             deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_component->custom_name = component["custom_name"].as<std::string>();
             deserialized_pool.emplace_back(deserialized_component);
         }
         else
@@ -945,6 +1001,7 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component = Ship::create();
             deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_component->custom_name = component["custom_name"].as<std::string>();
             deserialized_pool.emplace_back(deserialized_component);
         }
         else
@@ -963,6 +1020,7 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component = ShipEyes::create();
             deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_component->custom_name = component["custom_name"].as<std::string>();
             deserialized_pool.emplace_back(deserialized_component);
         }
         else
@@ -979,6 +1037,7 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component = ShipSpawner::create();
             deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_component->custom_name = component["custom_name"].as<std::string>();
             deserialized_pool.emplace_back(deserialized_component);
         }
         else
@@ -999,6 +1058,7 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component = PlayerInput::create();
             deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_component->custom_name = component["custom_name"].as<std::string>();
             deserialized_pool.emplace_back(deserialized_component);
         }
         else

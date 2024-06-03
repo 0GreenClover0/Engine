@@ -49,7 +49,6 @@ public:
 
     std::string guid = "";
 
-    NON_SERIALIZED
     std::string custom_name = "";
 
 private:
