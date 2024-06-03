@@ -30,9 +30,10 @@ public:
 
     std::vector<std::weak_ptr<Factory>> factories = {};
 
-    float playfield_width = 5.4f;
-    float playfield_additional_width = 1.4f;
-    float playfield_height = 3.6f;
+    float playfield_width = 6.5f;
+    float playfield_additional_width = 2.0f;
+    float playfield_height = 4.8f;
+    float playfield_y_shift = -2.1f;
 
     std::weak_ptr<Curve> ships_limit_curve = {};
     u32 ships_limit = 0;
