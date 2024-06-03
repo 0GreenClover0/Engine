@@ -74,7 +74,7 @@ void Ship::update_rotation() const
 
 bool Ship::normal_state_change()
 {
-    m_behavioral_state = BehavioralState::Normal;
+    behavioral_state = BehavioralState::Normal;
     return true;
 }
 
@@ -82,7 +82,7 @@ bool Ship::pirate_state_change()
 {
     if (type == ShipType::Pirates && m_pirates_in_control_counter <= 0.0f)
     {
-        m_behavioral_state = BehavioralState::Pirate;
+        behavioral_state = BehavioralState::Pirate;
         return true;
     }
 
@@ -102,7 +102,7 @@ bool Ship::control_state_change()
 
         if (distance_to_light < Player::get_instance()->range)
         {
-            m_behavioral_state = BehavioralState::Control;
+            behavioral_state = BehavioralState::Control;
             return true;
         }
     }
@@ -115,7 +115,7 @@ bool Ship::avoid_state_change()
     if (eyes.lock()->see_obstacle)
     {
         m_avoid_direction = ((std::rand() % 2) * 2) - 1;
-        m_behavioral_state = BehavioralState::Avoid;
+        behavioral_state = BehavioralState::Avoid;
         return true;
     }
 
@@ -126,7 +126,7 @@ bool Ship::destroyed_state_change()
 {
     if (is_destroyed)
     {
-        m_behavioral_state = BehavioralState::Destroyed;
+        behavioral_state = BehavioralState::Destroyed;
         return true;
     }
 
@@ -137,7 +137,7 @@ bool Ship::in_port_state_change()
 {
     if (m_is_in_port)
     {
-        m_behavioral_state = BehavioralState::InPort;
+        behavioral_state = BehavioralState::InPort;
         return true;
     }
 
@@ -280,7 +280,7 @@ void Ship::update()
         destroy();
     }
 
-    switch (m_behavioral_state)
+    switch (behavioral_state)
     {
     case BehavioralState::Normal:
 
@@ -379,7 +379,7 @@ void Ship::update()
         break;
     }
 
-    switch (m_behavioral_state)
+    switch (behavioral_state)
     {
     case BehavioralState::Normal:
         normal_behavior();
