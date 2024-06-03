@@ -95,6 +95,7 @@ void LevelController::draw_editor()
     ImGui::InputFloat("Playfield width: ", &playfield_width);
     ImGui::InputFloat("Playfield additional width: ", &playfield_additional_width);
     ImGui::InputFloat("Playfield height: ", &playfield_height);
+    ImGui::InputFloat("Playfield Y shift: ", &playfield_y_shift);
 }
 
 void LevelController::on_lighthouse_upgraded() const

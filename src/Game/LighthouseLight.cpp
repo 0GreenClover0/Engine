@@ -70,11 +70,12 @@ void LighthouseLight::set_spot_light(std::shared_ptr<SpotLight> const& light)
 
 glm::vec2 LighthouseLight::get_position() const
 {
-    float const y = Input::input->get_mouse_position().y * LevelController::get_instance()->playfield_height;
-    float const x =
-        Input::input->get_mouse_position().x
-        * (LevelController::get_instance()->playfield_width
-           - (LevelController::get_instance()->playfield_additional_width * (Input::input->get_mouse_position().y + 1.0f) / 2.0f));
+    float const y = Input::input->get_mouse_position().y * LevelController::get_instance()->playfield_height
+                  + LevelController::get_instance()->playfield_y_shift;
+    float const x = Input::input->get_mouse_position().x
+                  * (LevelController::get_instance()->playfield_width
+                     - (LevelController::get_instance()->playfield_additional_width
+                        * ((Input::input->get_mouse_position().y + LevelController::get_instance()->playfield_y_shift) + 1.0f) / 2.0f));
 
     return glm::vec2(x, y);
 }
