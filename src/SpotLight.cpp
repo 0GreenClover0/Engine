@@ -93,7 +93,7 @@ void SpotLight::set_up_shadow_mapping()
     shadow_texture_desc.Height = static_cast<u32>(renderer->SHADOW_MAP_SIZE);
     shadow_texture_desc.MipLevels = 1;
     shadow_texture_desc.ArraySize = 1;
-    shadow_texture_desc.Format = DXGI_FORMAT_R24G8_TYPELESS;
+    shadow_texture_desc.Format = DXGI_FORMAT_R32_TYPELESS;
     shadow_texture_desc.SampleDesc.Count = 1;
     shadow_texture_desc.SampleDesc.Quality = 0;
     shadow_texture_desc.Usage = D3D11_USAGE_DEFAULT;
@@ -105,7 +105,7 @@ void SpotLight::set_up_shadow_mapping()
     assert(SUCCEEDED(hr));
 
     D3D11_DEPTH_STENCIL_VIEW_DESC shadow_depth_stencil_view_desc = {};
-    shadow_depth_stencil_view_desc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+    shadow_depth_stencil_view_desc.Format = DXGI_FORMAT_D32_FLOAT;
     shadow_depth_stencil_view_desc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
     shadow_depth_stencil_view_desc.Texture2D.MipSlice = 0;
     shadow_depth_stencil_view_desc.Flags = 0;
@@ -114,7 +114,7 @@ void SpotLight::set_up_shadow_mapping()
     assert(SUCCEEDED(hr));
 
     D3D11_SHADER_RESOURCE_VIEW_DESC shadow_shader_resource_view_desc = {};
-    shadow_shader_resource_view_desc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
+    shadow_shader_resource_view_desc.Format = DXGI_FORMAT_R32_FLOAT;
     shadow_shader_resource_view_desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
     shadow_shader_resource_view_desc.Texture2D.MostDetailedMip = 0;
     shadow_shader_resource_view_desc.Texture2D.MipLevels = shadow_texture_desc.MipLevels;
