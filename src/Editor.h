@@ -122,6 +122,7 @@ enum class AssetType
 {
     Unknown,
     Model,
+    Scene,
 };
 
 class Asset
@@ -148,6 +149,9 @@ public:
     void handle_input();
     void set_docking_space() const;
     bool load_scene() const;
+    void save_scene() const;
+    bool load_scene_name(std::string const& name) const;
+    void save_scene_as(std::string const& name) const;
 
 private:
     void switch_rendering_to_editor();
@@ -164,7 +168,7 @@ private:
     void draw_game(std::shared_ptr<EditorWindow> const& window);
     void draw_inspector(std::shared_ptr<EditorWindow> const& window);
     void draw_scene_hierarchy(std::shared_ptr<EditorWindow> const& window);
-    void draw_scene_save();
+    void draw_scene_save() const;
 
     void draw_entity_recursively(std::shared_ptr<Transform> const& transform);
     static void entity_drag(std::shared_ptr<Entity> const& entity);
@@ -173,8 +177,6 @@ private:
     void draw_window_menu_bar(std::shared_ptr<EditorWindow> const& window);
 
     void load_assets();
-    void save_scene() const;
-    void save_scene_as(std::string const& name) const;
     void set_style() const;
 
     void camera_input() const;
@@ -240,13 +242,15 @@ private:
     glm::vec3 const m_rotation_snap = {1.0f, 1.0f, 1.0f};
     glm::vec3 const m_position_snap = {0.1f, 0.1f, 0.1f};
 
-    std::string content_path = "./res/";
+    std::string m_content_path = "./res/";
+    std::string m_scene_path = "./res/scenes/";
     std::array<std::string, 3> m_known_model_formats = {".gltf", ".obj", ".fbx"};
+    std::array<std::string, 1> m_known_scene_formats = {".txt"};
 
     std::string m_search_filter = {};
     bool m_is_camera_options_locked = false;
 
-    bool m_is_save_scene_popup_open = false;
+    bool m_append_scene = false;
 };
 
 }

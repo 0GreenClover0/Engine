@@ -230,9 +230,62 @@ void Editor::draw_content_browser(std::shared_ptr<EditorWindow> const& window)
 
     for (auto const& asset : m_assets)
     {
-        if (ImGui::Selectable(asset.path.c_str()))
+        if (asset.type != AssetType::Scene && ImGui::Selectable(asset.path.c_str()))
         {
             ImGui::SetClipboardText(asset.path.c_str());
+        }
+    }
+
+    bool const ctrl_pressed = ImGui::GetIO().KeyCtrl;
+
+    ImGui::Separator();
+
+    ImGui::Text("Scenes");
+
+    ImGui::SameLine();
+
+    ImVec4 constexpr active_button = {0.2f, 0.5f, 0.4f, 1.0f};
+    ImVec4 constexpr inactive_button = {0.05f, 0.05f, 0.05f, 0.54f};
+
+    if (m_append_scene || ctrl_pressed)
+    {
+        ImGui::PushStyleColor(ImGuiCol_Button, active_button);
+    }
+    else
+    {
+        ImGui::PushStyleColor(ImGuiCol_Button, inactive_button);
+    }
+
+    if (ImGui::Button("Append scene"))
+    {
+        m_append_scene = !m_append_scene;
+    }
+
+    if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
+    {
+        ImGui::SetTooltip("Shortcut: Ctrl");
+    }
+
+    ImGui::PopStyleColor();
+
+    for (auto const& asset : m_assets)
+    {
+        if (asset.type == AssetType::Scene && ImGui::Selectable(asset.path.c_str()))
+        {
+            std::filesystem::path file_path(asset.path);
+            std::string const filename = file_path.stem().string();
+
+            if (!m_append_scene && !ctrl_pressed)
+            {
+                MainScene::get_instance()->unload();
+            }
+
+            bool const loaded = load_scene_name(filename);
+
+            if (!loaded)
+            {
+                Debug::log("Could not load a scene.", DebugType::Error);
+            }
         }
     }
 
@@ -699,14 +752,22 @@ void Editor::draw_window_menu_bar(std::shared_ptr<EditorWindow> const& window)
 
 void Editor::load_assets()
 {
-    for (auto const& entry : std::filesystem::recursive_directory_iterator(content_path))
+    m_assets.clear();
+
+    for (auto const& entry : std::filesystem::recursive_directory_iterator(m_content_path))
     {
         if (std::ranges::find(m_known_model_formats, entry.path().extension().string()) != m_known_model_formats.end())
         {
             m_assets.emplace_back(entry.path().string(), AssetType::Model);
         }
+    }
 
-        // TODO: Load other assets...
+    for (auto const& entry : std::filesystem::recursive_directory_iterator(m_scene_path))
+    {
+        if (std::ranges::find(m_known_scene_formats, entry.path().extension().string()) != m_known_scene_formats.end())
+        {
+            m_assets.emplace_back(entry.path().string(), AssetType::Scene);
+        }
     }
 }
 
@@ -918,8 +979,10 @@ void Editor::draw_inspector(std::shared_ptr<EditorWindow> const& window)
     ImGui::End();
 }
 
-void Editor::draw_scene_save()
+void Editor::draw_scene_save() const
 {
+    bool open_save_scene_popup = false;
+
     if (ImGui::BeginMenuBar())
     {
         if (ImGui::BeginMenu("File"))
@@ -944,7 +1007,7 @@ void Editor::draw_scene_save()
                 }
                 else
                 {
-                    m_is_save_scene_popup_open = true;
+                    open_save_scene_popup = true;
                 }
             }
 
@@ -966,7 +1029,7 @@ void Editor::draw_scene_save()
         ImGui::EndMenuBar();
     }
 
-    if (m_is_save_scene_popup_open)
+    if (open_save_scene_popup)
     {
         ImGui::OpenPopup("SceneNamePopup");
     }
@@ -982,8 +1045,6 @@ void Editor::draw_scene_save()
             save_scene_as(scene_name);
 
             ImGui::CloseCurrentPopup();
-
-            m_is_save_scene_popup_open = false;
         }
 
         ImGui::SameLine();
@@ -991,8 +1052,6 @@ void Editor::draw_scene_save()
         if (ImGui::Button("Cancel"))
         {
             ImGui::CloseCurrentPopup();
-
-            m_is_save_scene_popup_open = false;
         }
 
         ImGui::EndPopup();
@@ -1013,9 +1072,14 @@ void Editor::save_scene_as(std::string const& name) const
 
 bool Editor::load_scene() const
 {
+    return load_scene_name("scene");
+}
+
+bool Editor::load_scene_name(std::string const& name) const
+{
     auto const scene_serializer = std::make_shared<SceneSerializer>(m_open_scene);
     scene_serializer->set_instance(scene_serializer);
-    return scene_serializer->deserialize("./res/scenes/scene.txt");
+    return scene_serializer->deserialize("./res/scenes/" + name + ".txt");
 }
 
 void Editor::set_style() const
