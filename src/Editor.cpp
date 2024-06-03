@@ -228,6 +228,8 @@ void Editor::draw_content_browser(std::shared_ptr<EditorWindow> const& window)
 
     draw_window_menu_bar(window);
 
+    draw_scene_save();
+
     for (auto const& asset : m_assets)
     {
         if (asset.type != AssetType::Scene && ImGui::Selectable(asset.path.c_str()))
@@ -979,7 +981,7 @@ void Editor::draw_inspector(std::shared_ptr<EditorWindow> const& window)
     ImGui::End();
 }
 
-void Editor::draw_scene_save() const
+void Editor::draw_scene_save()
 {
     bool open_save_scene_popup = false;
 
@@ -1036,7 +1038,7 @@ void Editor::draw_scene_save() const
 
     if (ImGui::BeginPopup("SceneNamePopup"))
     {
-        std::string scene_name = "scene";
+        static std::string scene_name = "scene";
 
         ImGui::Text("Save scene as ...");
 
@@ -1045,6 +1047,21 @@ void Editor::draw_scene_save() const
             save_scene_as(scene_name);
 
             ImGui::CloseCurrentPopup();
+
+            Editor::load_assets();
+
+            scene_name = "scene";
+        }
+
+        if (ImGui::Button("Save"))
+        {
+            save_scene_as(scene_name);
+
+            ImGui::CloseCurrentPopup();
+
+            Editor::load_assets();
+
+            scene_name = "scene";
         }
 
         ImGui::SameLine();

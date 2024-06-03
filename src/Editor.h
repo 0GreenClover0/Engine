@@ -168,7 +168,7 @@ private:
     void draw_game(std::shared_ptr<EditorWindow> const& window);
     void draw_inspector(std::shared_ptr<EditorWindow> const& window);
     void draw_scene_hierarchy(std::shared_ptr<EditorWindow> const& window);
-    void draw_scene_save() const;
+    void draw_scene_save();
 
     void draw_entity_recursively(std::shared_ptr<Transform> const& transform);
     static void entity_drag(std::shared_ptr<Entity> const& entity);
