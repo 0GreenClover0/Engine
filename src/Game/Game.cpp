@@ -137,15 +137,49 @@ void Game::initialize()
     spawn->transform->set_parent(lighthouse->transform);
     spawn->transform->set_local_position(glm::vec3(0.0f, 0.0f, 0.4f));
     lighthouse_comp->spawn_position = spawn;
+
 #pragma endregion
 
-    auto const level_controller = Entity::create("Level Controller");
-    auto const level_controller_comp = level_controller->add_component(LevelController::create());
-    level_controller->add_component(Player::create());
-    level_controller->add_component(ShipSpawner::create(lighthouse_light_comp));
+#pragma region Controller
+    auto const controller = Entity::create("Controller");
+    auto const controller_comp = controller->add_component(LevelController::create());
+    auto const ship_spawner_comp = controller->add_component(ShipSpawner::create(lighthouse_light->get_component<LighthouseLight>()));
+    controller->add_component(Player::create());
 
-    level_controller_comp->factories.emplace_back(generator_comp);
-    level_controller_comp->factories.emplace_back(workshop_comp);
+    controller_comp->ships_limit_curve = controller->add_component<Curve>(Curve::create());
+    controller_comp->ships_limit_curve.lock()->custom_name = "Ships limit";
+    controller_comp->ships_limit_curve.lock()->add_points({{0.0f, 2.0f}, {0.1f, 2.0f}, {0.6f, 6.0f}, {1.0f, 6.0f}});
+
+    controller_comp->ships_speed_curve = controller->add_component<Curve>(Curve::create());
+    controller_comp->ships_speed_curve.lock()->custom_name = "Ships speed";
+    controller_comp->ships_speed_curve.lock()->add_points({{0.0f, 0.21f}, {0.756f, 0.26f}, {1.0f, 0.26f}});
+
+    controller_comp->ships_range_curve = controller->add_component<Curve>(Curve::create());
+    controller_comp->ships_range_curve.lock()->custom_name = "Ships range";
+    controller_comp->ships_range_curve.lock()->add_points({{0.0f, 0.4f}, {0.5f, 0.6f}, {1.0f, 1.5f}});
+
+    controller_comp->ships_turn_curve = controller->add_component<Curve>(Curve::create());
+    controller_comp->ships_turn_curve.lock()->custom_name = "Ships turn";
+    controller_comp->ships_turn_curve.lock()->add_points({{0.0f, 15.0f}, {1.0f, 60.0f}});
+
+    controller_comp->ships_additional_speed_curve = controller->add_component<Curve>(Curve::create());
+    controller_comp->ships_additional_speed_curve.lock()->custom_name = "Ships additional speed";
+    controller_comp->ships_additional_speed_curve.lock()->add_points({{0.0f, 0.001f}, {0.2f, 0.0025f}, {1.0f, 0.01f}});
+
+    controller_comp->pirates_in_control_curve = controller->add_component<Curve>(Curve::create());
+    controller_comp->pirates_in_control_curve.lock()->custom_name = "Pirates in control";
+    controller_comp->pirates_in_control_curve.lock()->add_points({{0.0f, 0.16f}, {1.0f, 1.66f}});
+
+    controller_comp->factories.emplace_back(generator_comp);
+    controller_comp->factories.emplace_back(workshop_comp);
+
+    auto const path1 = controller->add_component<Path>(Path::create());
+    path1->add_points({{-5.0f, -2.5f}, {-5.0f, 1.7f}});
+
+    auto const path2 = controller->add_component<Path>(Path::create());
+    path2->add_points({{5.0f, -2.5f}, {5.0f, 1.7f}});
+
+#pragma endregion
 
     auto const water = Entity::create("Water");
     auto const water_comp = water->add_component(Water::create());
