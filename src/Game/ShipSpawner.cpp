@@ -114,8 +114,11 @@ void ShipSpawner::draw_editor()
         ImGui::Text(("Ship " + std::to_string(index)).c_str());
         ImGui::SameLine();
         std::string type_string = ship_type_to_string(ship_locked->type);
+        std::string state_string = behaviour_state_to_string(ship_locked->behavioral_state);
 
         ImGui::Text(("Type " + type_string).c_str());
+        ImGui::SameLine();
+        ImGui::Text(("State " + state_string).c_str());
         if (!ship_locked->is_destroyed)
         {
             ImGui::SameLine();

@@ -14,6 +14,16 @@ enum class ShipType
     Tool
 };
 
+enum class BehavioralState
+{
+    Normal,
+    Pirate,
+    Control,
+    Avoid,
+    Destroyed,
+    InPort,
+};
+
 static void ship_type_to_color(ShipType const type, ImVec4& bg_color, ImVec4& text_color)
 {
     auto constexpr light_green_color = ImVec4(0.0f, 0.91f, 0.118f, 1.0f);
@@ -77,6 +87,33 @@ static std::string ship_type_to_string(ShipType const type)
     }
 }
 
+static std::string behaviour_state_to_string(BehavioralState const state)
+{
+    switch (state)
+    {
+    case BehavioralState::Normal:
+        return "Normal";
+
+    case BehavioralState::Pirate:
+        return "Pirate";
+
+    case BehavioralState::Control:
+        return "Control";
+
+    case BehavioralState::Avoid:
+        return "Avoid";
+
+    case BehavioralState::Destroyed:
+        return "Destroyed";
+
+    case BehavioralState::InPort:
+        return "InPort";
+
+    default:
+        return "Undefined state";
+    }
+}
+
 class ShipSpawner;
 
 class Ship final : public Component
@@ -116,19 +153,10 @@ public:
 
     Event<void(std::shared_ptr<Ship>)> on_ship_destroyed;
 
+    NON_SERIALIZED
+    BehavioralState behavioral_state = BehavioralState::Normal;
+
 private:
-    enum class BehavioralState
-    {
-        Normal,
-        Pirate,
-        Control,
-        Avoid,
-        Destroyed,
-        InPort,
-    };
-
-    BehavioralState m_behavioral_state = BehavioralState::Normal;
-
     void follow_point(glm::vec2 ship_position, glm::vec2 target_position);
 
     void update_position() const;
