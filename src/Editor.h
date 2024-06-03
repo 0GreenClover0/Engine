@@ -164,7 +164,7 @@ private:
     void draw_game(std::shared_ptr<EditorWindow> const& window);
     void draw_inspector(std::shared_ptr<EditorWindow> const& window);
     void draw_scene_hierarchy(std::shared_ptr<EditorWindow> const& window);
-    void draw_scene_save() const;
+    void draw_scene_save();
 
     void draw_entity_recursively(std::shared_ptr<Transform> const& transform);
     static void entity_drag(std::shared_ptr<Entity> const& entity);
@@ -174,6 +174,7 @@ private:
 
     void load_assets();
     void save_scene() const;
+    void save_scene_as(std::string const& name) const;
     void set_style() const;
 
     void camera_input() const;
@@ -244,6 +245,8 @@ private:
 
     std::string m_search_filter = {};
     bool m_is_camera_options_locked = false;
+
+    bool m_is_save_scene_popup_open = false;
 };
 
 }
