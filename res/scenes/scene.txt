@@ -1,53 +1,61 @@
 Scene: Untitled
 Entities:
-  - Entity: 23ac349f2e3aee8499eb0d7f9803ea55e14ec25249c4cd622babed7478d7a83c
+  - Entity: Camera
+    guid: fabe94c97ea33c652e7687dc0a57176cdbbedf69dc9f7b98b383c85470d6ab3a
     Name: Camera
     TransformComponent:
-      Translation: [0, 11.3000002, 11.3000002]
-      Rotation: [-45, 0, 0]
+      Translation: [0, 17, 13]
+      Rotation: [-50, 0, 0]
       Scale: [1, 1, 1]
-      Parent: f1635d2772b83169e360a797561a01fc9429006de89950ddfa568d2590d0ea5f
+      Parent:
+        guid: 733e31407e81f6dcc521268b7fecb35794c4ab1613d3ace9f988ee87aae53b5d
     Components:
       - ComponentName: SoundListenerComponent
-        guid: 79cff663878b3918d2927b91aa261072ab9cdcd1762442ae1a1624152b14ed45
+        guid: 19a6dcdd854b954460e21043237828d4a5e7efbf0e1eb5915d4ae33f6be768df
       - ComponentName: CameraComponent
-        guid: 97327153a430cdca3bb42804df0106c9cf3befc46e226a86a79b133fd4f971ff
+        guid: 1b7d2ffc509a060adb91f3ccc836769245fd6ea3f08061b5b62e5a2734034e2b
         width: 1280
         height: 720
-        fov: 0.30560714
+        fov: 0.34906584
         near_plane: 0.100000001
-        far_plane: 1000000
-  - Entity: 5c2ff9b2fb4e99e2306ffe139328d759f979f6b24f3b2e4a38362c6951ff99f1
+        far_plane: 1000
+  - Entity: Player
+    guid: 5a63d0f86d9c2fc56e2939f502b7029422393c5a71f2236268f8d6ce5f9e5cd4
     Name: Player
     TransformComponent:
       Translation: [0, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
-      Parent: ""
+      Parent:
+        guid: ""
     Components:
       - ComponentName: PlayerInputComponent
-        guid: 367517f99870ae8cd343ec6bd5a18f5156c59f4d4420b46eabd72a44867a9892
+        guid: 475300cb427a6779fdd68586c56ebb490cc30c47d13ce6f28ce078b8e1486d16
         player_speed: 5
         camera_speed: 12.5
-  - Entity: f1635d2772b83169e360a797561a01fc9429006de89950ddfa568d2590d0ea5f
+  - Entity: CameraParent
+    guid: 733e31407e81f6dcc521268b7fecb35794c4ab1613d3ace9f988ee87aae53b5d
     Name: CameraParent
     TransformComponent:
       Translation: [0, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
-      Parent: 5c2ff9b2fb4e99e2306ffe139328d759f979f6b24f3b2e4a38362c6951ff99f1
+      Parent:
+        guid: 5a63d0f86d9c2fc56e2939f502b7029422393c5a71f2236268f8d6ce5f9e5cd4
     Components:
       []
-  - Entity: 6a210c107417874bab1939c80490b6811542ed0e15e626fe21c3047fbea7ecc0
+  - Entity: Directional light
+    guid: 69a57b4d420b830642fb41f41b7109391a32bcab2e4f69640fca20c913f2ac83
     Name: Directional light
     TransformComponent:
       Translation: [0, 14, 0]
       Rotation: [-90, 0, 0]
-      Scale: [1, 1, 1]
-      Parent: ""
+      Scale: [0.100000001, 0.100000001, 0.100000001]
+      Parent:
+        guid: ""
     Components:
       - ComponentName: SphereComponent
-        guid: 23815e07104f562a64197e520f79d57ccf830e5cb676cdfe52f5460c4f377e1e
+        guid: b594bd9c5a0e56cc036a4b3e273d095fd26c1f82c86c75cb1720429c761b731c
         sector_count: 10
         stack_count: 10
         texture_path: ./res/textures/container.png
@@ -60,23 +68,27 @@ Entities:
             GeometryPath: ""
           Color: [1, 1, 1, 1]
           RenderOrder: 0
+          NeedsForward: false
+          CastsShadows: true
       - ComponentName: DirectionalLightComponent
-        guid: a9d7d0d9c4fb1f0534771226a94e2109f0c6898a5717003a0733f68e58e0b977
+        guid: 09643ffab4ff7190c69cac10812fe8eace0fa69df2c3a35a742bedbc1338242f
         ambient: [1, 1, 1]
         diffuse: [1, 1, 1]
         specular: [1, 1, 1]
         m_near_plane: 0.100000001
         m_far_plane: 25
-  - Entity: d8cb4b48054cdbe30244c92d6bcc2fec144bfe99d1329bdcb01125182b3e55e1
-    Name: scene
+  - Entity: Scene
+    guid: e7078aae507597f79b4bdc0c8e73c61f65a1e354bcd12b5f428e1c025b9a49c9
+    Name: Scene
     TransformComponent:
       Translation: [0, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
-      Parent: ""
+      Parent:
+        guid: ""
     Components:
       - ComponentName: ModelComponent
-        guid: a4fce55abe1902a6aabf299bf675692dfe340241b28512255a86bc42b88654a3
+        guid: a9b62bb002bf807f2705fed9df67e2f6060e256c7b5255db5087d06a57ccd726
         model_path: ./res/models/scene/scene.gltf
         material:
           Shader:
@@ -85,88 +97,22 @@ Entities:
             GeometryPath: ""
           Color: [1, 1, 1, 1]
           RenderOrder: 0
-  - Entity: 609e8b927fee64e04d90d86c0ff86601552e205833432fb8f39004edf7aea46a
-    Name: light
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-      Parent: ""
-    Components:
-      - ComponentName: LighthouseLightComponent
-        guid: 2fe778d9033d5ab8905f5e2e58068dd38d03973b288ee630c81eb85d2850430d
-  - Entity: 98dd33bf8590848ff9f0d4a3c9d39cee3592932da3d55e21fd463cd7b030f78a
-    Name: Port
-    TransformComponent:
-      Translation: [-0.113046996, 0.0229230002, 2.16242909]
-      Rotation: [0, 0, 0]
-      Scale: [2.86684394, 0.323763013, 1]
-      Parent: ""
-    Components:
-      - ComponentName: PortComponent
-        guid: 7e44a4543af635bc9c0680f78e1a378ce47acfeecea5130faa9e92b2533842fd
-      - ComponentName: CubeComponent
-        guid: f15a7b500c77f9819751217eb15ea8419fb824911ce40c858be98a994a508d64
-        diffuse_texture_path: ./res/textures/skybox/interstellar/interstellar_bk.tga
-        specular_texture_path: ""
-        model_path: ""
-        material:
-          Shader:
-            VertexPath: ./res/shaders/lit.hlsl
-            FragmentPath: ./res/shaders/lit.hlsl
-            GeometryPath: ""
-          Color: [1, 1, 1, 1]
-          RenderOrder: 0
-      - ComponentName: Collider2DComponent
-        guid: 592e48eb4cd7f4a6ef80523b299957d565cf3ad037cd52362a86b404ca005f4e
-  - Entity: 852e30519b44fb7fc14a690efaddb7ffd60f32b7178ae8129961ecc6eaf78db2
-    Name: Lighthouse
-    TransformComponent:
-      Translation: [2.29456306, 0.223798007, 2.37870193]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-      Parent: ""
-    Components:
-      - ComponentName: ModelComponent
-        guid: bc7c302b60a5a5c442d3dc7d90f0fc9f4188c4104ad5f1dd43945bdad374f771
-        model_path: ./res/models/lighthouseNew/lighthouse.gltf
-        material:
-          Shader:
-            VertexPath: ./res/shaders/lit.hlsl
-            FragmentPath: ./res/shaders/lit.hlsl
-            GeometryPath: ""
-          Color: [1, 1, 1, 1]
-          RenderOrder: 0
-      - ComponentName: LighthouseComponent
-        guid: e3953bfeefa9a2669b8ef5d66ccaadf24f46629dad127ab825ef681d2f46c9e5
-        enterable_distance: 0.600000024
-        light:
-          guid: 2fe778d9033d5ab8905f5e2e58068dd38d03973b288ee630c81eb85d2850430d
-        port:
-          guid: 7e44a4543af635bc9c0680f78e1a378ce47acfeecea5130faa9e92b2533842fd
-        spawn_position:
-          guid: 7680e57f4f0d7773782422af610b4c1e31bb07436dec7351642af98880ca39d8
-  - Entity: 7680e57f4f0d7773782422af610b4c1e31bb07436dec7351642af98880ca39d8
-    Name: Spawn
-    TransformComponent:
-      Translation: [0, 0, 0.400000006]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-      Parent: 852e30519b44fb7fc14a690efaddb7ffd60f32b7178ae8129961ecc6eaf78db2
-    Components:
-      []
-  - Entity: bd3443df62b6d03810f6ea5d8719f810c092fecfcf75d4d38693239068557b1b
+          NeedsForward: false
+          CastsShadows: true
+  - Entity: Generator
+    guid: 85b0b4e44496f70ceeb565036674629e25dfaee721174c9ffbe15ad9b588a1f6
     Name: Generator
     TransformComponent:
-      Translation: [3, 1, 3]
+      Translation: [-5.84570312, 1, 2.59735203]
       Rotation: [0, 0, 0]
       Scale: [0.0500000007, 0.100000001, 0.0500000007]
-      Parent: ""
+      Parent:
+        guid: ""
     Components:
       - ComponentName: FactoryComponent
-        guid: a1a393d79941174f8fee05a664be010bd39f84e2fa167dc2aa8a742f5f2fee65
+        guid: 0e20c2375b4b17e8565fb884b2313653b145e3ae1cf209d796546a3d5f549810
       - ComponentName: ModelComponent
-        guid: efe5c5d7b9b3d61afc48862ca472f7388d0b50affff013336d793eb1442ac40e
+        guid: 8e61363ed31c1f3021ca3443768b49c183a332b9ee7730c4afd03d30a14ae525
         model_path: ./res/models/hubert/floor.gltf
         material:
           Shader:
@@ -175,18 +121,22 @@ Entities:
             GeometryPath: ""
           Color: [1, 1, 1, 1]
           RenderOrder: 0
-  - Entity: 0cd6609b84a867c9c727cafcf876665c44661edc909f88c1ed8b4934ad9cd6b2
-    Name: Generator
+          NeedsForward: false
+          CastsShadows: true
+  - Entity: Workshop
+    guid: 9e3e848abd40f98bdc69739073fcab3f2433c238668224c366f09b0115f2ba83
+    Name: Workshop
     TransformComponent:
-      Translation: [-3, 0, 3]
+      Translation: [6.13152313, 0, 2.49408054]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
-      Parent: ""
+      Parent:
+        guid: ""
     Components:
       - ComponentName: FactoryComponent
-        guid: ebae6a79b812aece28148916a763bc606bbf068c36a40f9a09ce2a88ceeb33a7
+        guid: 52e396d002181743558411a8f979fd2274c7a67216f6aea67bc6f9c88d5a75fc
       - ComponentName: ModelComponent
-        guid: 8b5b69ae717cf0d04db3b394abcd43394d7f8507f0041d91eadda471f571b81d
+        guid: 545d91a6e1dc5e97ba9b6d9a2662c9bf208acc181956c5de2f8042fd4bc755e0
         model_path: ./res/models/lighthouseOld/lighthouse.gltf
         material:
           Shader:
@@ -195,22 +145,105 @@ Entities:
             GeometryPath: ""
           Color: [1, 1, 1, 1]
           RenderOrder: 0
-  - Entity: e3fbccf662a8a6e6fe39df775a1a3dcf9e5f8d5934b645dfa8a95c262fb23017
+          NeedsForward: false
+          CastsShadows: true
+  - Entity: Lighthouse
+    guid: 7d74f1c90b410b3be76cf81d5bfca4a9795c30e250de738af250d5a9153ce1a5
+    Name: Lighthouse
+    TransformComponent:
+      Translation: [0, 0.505862296, 2.01540828]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: ""
+    Components:
+      - ComponentName: ModelComponent
+        guid: 1328f211b353982b4d9031eaa66bb940161320caf8d79353a55895efd8b5109e
+        model_path: ./res/models/lighthouseNew/lighthouse.gltf
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+          NeedsForward: false
+          CastsShadows: true
+      - ComponentName: LighthouseComponent
+        guid: 31c02634f68bbeb5e257d8412cbe9bcaeb8095f40b2bf4b6ae84af1f0134da66
+        enterable_distance: 0.600000024
+        light:
+          guid: 0e964ba3e74511090908757bf419ecb097f62be97380e16af66721be6a41e118
+        port:
+          guid: nullptr
+        spawn_position:
+          guid: 6e92dd7a9953eb2cb34ee3258ea80e69beccf3878748d25d89768fec9352a0bf
+  - Entity: Lighthouse Light
+    guid: eb00cf5cacaab213154a8e8135a7a02a01f8d415ec27527e27fd8d75ee93b8d0
+    Name: Lighthouse Light
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: ""
+    Components:
+      - ComponentName: LighthouseLightComponent
+        guid: 0e964ba3e74511090908757bf419ecb097f62be97380e16af66721be6a41e118
+        m_light:
+          guid: 81e65791b28802c30c001b58c67726a5dfe790373e76e89074f7df8d7cf65c11
+        m_light_beam_width: 1
+  - Entity: Lighthouse Spotlight
+    guid: 0b1ec48b6fe8b27eb3ad36dabe0c2f5b8463dad6dc4b9e98c0516a81fe3509a2
+    Name: Lighthouse Spotlight
+    TransformComponent:
+      Translation: [0, 0.875999987, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: 7d74f1c90b410b3be76cf81d5bfca4a9795c30e250de738af250d5a9153ce1a5
+    Components:
+      - ComponentName: SpotLightComponent
+        guid: 81e65791b28802c30c001b58c67726a5dfe790373e76e89074f7df8d7cf65c11
+        constant: 1
+        linear: 0.0900000036
+        quadratic: 0.0320000015
+        cut_off: 0.843391418
+        outer_cut_off: 0.49999997
+        ambient: [0.200000003, 0.200000003, 0.200000003]
+        diffuse: [1, 1, 1]
+        specular: [1, 1, 1]
+        m_near_plane: 0.100000001
+        m_far_plane: 25
+  - Entity: Spawn
+    guid: 6e92dd7a9953eb2cb34ee3258ea80e69beccf3878748d25d89768fec9352a0bf
+    Name: Spawn
+    TransformComponent:
+      Translation: [0, 0, 0.400000006]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: 7d74f1c90b410b3be76cf81d5bfca4a9795c30e250de738af250d5a9153ce1a5
+    Components:
+      []
+  - Entity: Level Controller
+    guid: 3b6647a3c65b1ce9ab0879b00222d247c83ecd29f9407c829e9782272250a50f
     Name: Level Controller
     TransformComponent:
       Translation: [0, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
-      Parent: ""
+      Parent:
+        guid: ""
     Components:
       - ComponentName: LevelControllerComponent
-        guid: 337d706e0942c97a26b3d9935870aa83bea7239b415ba3707b46b67416d27861
+        guid: 02fd93b3e381fae97d1789d925c3114f59b81c04ba2f6aeaf8fc2c617254d521
         map_time: 180
         map_food: 20
         maximum_lighthouse_level: 10
         factories:
-          - guid: a1a393d79941174f8fee05a664be010bd39f84e2fa167dc2aa8a742f5f2fee65
-          - guid: ebae6a79b812aece28148916a763bc606bbf068c36a40f9a09ce2a88ceeb33a7
+          - guid: 0e20c2375b4b17e8565fb884b2313653b145e3ae1cf209d796546a3d5f549810
+          - guid: 52e396d002181743558411a8f979fd2274c7a67216f6aea67bc6f9c88d5a75fc
         ships_limit_curve:
           guid: nullptr
         ships_limit: 0
@@ -226,23 +259,27 @@ Entities:
         pirates_in_control_curve:
           guid: nullptr
       - ComponentName: PlayerComponent
-        guid: de409a3d07e8a777ddb680f11e5805ee376893dcc375bfe5093bb50cd5fd8324
+        guid: 969165383c6f73bf4374c80157f04db7ad81661a1527a278faa21918bc9e4ec1
       - ComponentName: ShipSpawnerComponent
-        guid: bf8c9054e0b1c294b11d0e0c1afd552f95a296efbbf0f2f4026fbde1687dd718
+        guid: dde81427976abaaf1955c35f202f52c1fdc0408795a2a380040c606401047559
         paths:
           []
         light:
-          guid: 2fe778d9033d5ab8905f5e2e58068dd38d03973b288ee630c81eb85d2850430d
-  - Entity: a72ff0d24cc42220eb96e3d53636d68c5941694cd5709e1bc8c6406cac2d7b3e
+          guid: 0e964ba3e74511090908757bf419ecb097f62be97380e16af66721be6a41e118
+        last_chance_food_threshold: 5
+        last_chance_time_threshold: 30
+  - Entity: Water
+    guid: 726472e60d367bac6fc1d39d25bb69afdbea67bd7cd2fe13f11b42b9e40bd9ec
     Name: Water
     TransformComponent:
       Translation: [0, 0, 0]
       Rotation: [0, 0, 0]
-      Scale: [0.245000005, 1, 0.172000006]
-      Parent: ""
+      Scale: [1, 1, 1]
+      Parent:
+        guid: ""
     Components:
       - ComponentName: WaterComponent
-        guid: e320f969a69c67562035d69e4ab56e0a1ca895eb16215bcdc2aa8f9f546b80e0
+        guid: d254e2e480188421913768bae7c271ded99773d90db9eaf6d5e2b941e50ec95e
         texture_path: res/textures/water.jpg
         waves:
           - [[1, 0.5], [0, 0], 116, 0.699999988, 115, 0.0399999991]
@@ -256,20 +293,134 @@ Entities:
             GeometryPath: ""
           Color: [1, 1, 1, 1]
           RenderOrder: 0
-  - Entity: 012b95a4eb087067096869569dba89586ca954b027a773b7eee2c3c97ee8796e
-    Name: skybox
+          NeedsForward: true
+          CastsShadows: false
+  - Entity: Skybox
+    guid: c17994be6c667b77bd7d6cf0bb0e221930648180c1756069f7caad4e012b1b04
+    Name: Skybox
     TransformComponent:
       Translation: [0, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
-      Parent: ""
+      Parent:
+        guid: ""
     Components:
-      - ComponentName: DrawableComponent
-        guid: 21f790a19f21a17406abd2e3df3ebb0e2c20034c8d43016dc627311e941e6655
+      []
+  - Entity: Sea Floor
+    guid: 51b54e36274313b0a5468c839d6fa9a16bd5baf5f92887a10cf36c44160c096f
+    Name: Sea Floor
+    TransformComponent:
+      Translation: [0, -0.300000012, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: ""
+    Components:
+      - ComponentName: ModelComponent
+        guid: ac81c8b6bdda1bf1b2f7c911f19298409f02512d115b1fa94dd272c27aa54f1c
+        model_path: ./res/models/water/water.gltf
         material:
           Shader:
-            VertexPath: ./res/shaders/skybox.hlsl
-            FragmentPath: ./res/shaders/skybox.hlsl
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
             GeometryPath: ""
           Color: [1, 1, 1, 1]
           RenderOrder: 0
+          NeedsForward: false
+          CastsShadows: true
+  - Entity: Entity
+    guid: 4657ab0df9cb0849581780f95cec6736a60ae7d3e32d7ca25bd4ce1910265462
+    Name: Entity
+    TransformComponent:
+      Translation: [0, 0, -4.16762495]
+      Rotation: [0, 0, 0]
+      Scale: [17, 1, 1]
+      Parent:
+        guid: ""
+    Components:
+      - ComponentName: CubeComponent
+        guid: e05083d64789993af2e9e9597be322af49a4ee302e6e1918b2854101ff462cec
+        diffuse_texture_path: ""
+        specular_texture_path: ""
+        model_path: ""
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+          NeedsForward: false
+          CastsShadows: true
+  - Entity: Entity
+    guid: 1af0a0d44837af28f7b7ae9c203b417433d03e6e9d90f867e932bfa0c30eec44
+    Name: Entity
+    TransformComponent:
+      Translation: [3.04939651, 0, 2.12824774]
+      Rotation: [0, 0, 0]
+      Scale: [8, 1, 1]
+      Parent:
+        guid: ""
+    Components:
+      - ComponentName: CubeComponent
+        guid: 09ee7ab881ae51ab78183776e5ea4cb532ea217799f48507262068fecf686242
+        diffuse_texture_path: ""
+        specular_texture_path: ""
+        model_path: ""
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+          NeedsForward: false
+          CastsShadows: true
+  - Entity: Entity
+    guid: 6c6c8878ba5eb223c8f54673ddf92eb30c0751571ef22e2c136e47190412f064
+    Name: Entity
+    TransformComponent:
+      Translation: [-9, 0, 2.12800002]
+      Rotation: [0, 0, 0]
+      Scale: [8, 1, 1]
+      Parent:
+        guid: ""
+    Components:
+      - ComponentName: CubeComponent
+        guid: a76fbbd89d873848676d94f52df713bc4b7cd8cf550a94569856a72d95cab867
+        diffuse_texture_path: ""
+        specular_texture_path: ""
+        model_path: ""
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+          NeedsForward: false
+          CastsShadows: true
+  - Entity: Entity
+    guid: 42ff2bb5aefc9beef5b10f5bc860861f852bd7cf3cd981e9381603a77b111387
+    Name: Entity
+    TransformComponent:
+      Translation: [0, 0, 3.15630484]
+      Rotation: [0, 0, 0]
+      Scale: [15, 1, 1]
+      Parent:
+        guid: ""
+    Components:
+      - ComponentName: CubeComponent
+        guid: d926a05a21ee85a3544a7119c465137f5ef70a839fefc4618a9340e2fc57afd2
+        diffuse_texture_path: ""
+        specular_texture_path: ""
+        model_path: ""
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+          NeedsForward: false
+          CastsShadows: true
