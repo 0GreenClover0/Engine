@@ -25,16 +25,6 @@ Texture2D directional_shadow_map : register(t1);
 Texture2D spot_light_shadow_maps[20] : register(t20);
 TextureCube point_light_shadow_maps[20]: register(t40);
 
-#define BLOCKER_SEARCH_NUM_SAMPLES 16
-#define PCF_NUM_SAMPLES 16
-#define NEAR_PLANE 7.5f
-// Good explanation of what light world size is, is at:
-// https://http.download.nvidia.com/developer/presentations/2005/SIGGRAPH/Percentage_Closer_Soft_Shadows.pdf (slide 11)
-#define LIGHT_WORLD_SIZE 0.5f
-#define LIGHT_FRUSTUM_WIDTH 30.0f
-// Assuming that LIGHT_FRUSTUM_WIDTH == LIGHT_FRUSTUM_HEIGHT
-#define LIGHT_SIZE_UV (LIGHT_WORLD_SIZE / LIGHT_FRUSTUM_WIDTH)
-
 SamplerState point_sampler
 {
     Filter = MIN_MAG_MIP_POINT;
@@ -78,14 +68,14 @@ float PenumbraSize(float z_receiver, float z_blocker) // Parallel plane estimati
     return (z_receiver - z_blocker) / z_blocker;
 }
 
-void FindBlocker(out float avg_blocker_depth, out float num_blocker, float2 uv, float z_receiver, Texture2D t_depth_map, float bias)
+void FindBlocker(out float avg_blocker_depth, out float num_blocker, float2 uv, float z_receiver, Texture2D t_depth_map, float near_plane, float bias, float light_size_uv, int num_samples)
 {
     // This uses similar triangles to compute what area of the shadow map we should search.
-    float search_width = LIGHT_SIZE_UV * (z_receiver - NEAR_PLANE) / z_receiver;
+    float search_width = light_size_uv * (z_receiver - near_plane) / z_receiver;
     float blocker_sum = 0.0f;
     num_blocker = 0.0f;
 
-    for (int i = 0; i < BLOCKER_SEARCH_NUM_SAMPLES; ++i)
+    for (int i = 0; i < num_samples; ++i)
     {
         float shadow_map_depth = t_depth_map.Sample(point_sampler, uv + poisson_disk[i] * search_width);
         if (shadow_map_depth - bias < z_receiver)
@@ -98,29 +88,31 @@ void FindBlocker(out float avg_blocker_depth, out float num_blocker, float2 uv, 
     avg_blocker_depth = (num_blocker > 0) ? (blocker_sum / num_blocker) : 0.0f;
 }
 
-float PCF_Filter(float2 uv, float z_receiver, float filter_radius_uv, Texture2D t_depth_map, float bias)
+float PCF_Filter(float2 uv, float z_receiver, float filter_radius_uv, Texture2D t_depth_map, float bias, int num_samples)
 {
     float sum = 0.0f;
-    for (int i = 0; i < PCF_NUM_SAMPLES; ++i)
+    for (int i = 0; i < num_samples; ++i)
     {
         float2 offset = poisson_disk[i] * filter_radius_uv;
         float value = t_depth_map.Sample(pcf_sampler, uv + offset).r;
         sum += z_receiver - bias > value ? 1.0f : 0.0f;
     }
 
-    return sum / PCF_NUM_SAMPLES;
+    return sum / num_samples;
 }
 
-float PCSS(Texture2D shadow_map_tex, float4 coords, float bias)
+float PCSS(Texture2D shadow_map_tex, float4 coords, float bias, PCSSSettingsPerLight pcss_settings, float near_plane)
 {
     float2 uv = coords.xy;
     float z_receiver = coords.z;
 
     // STEP 1: Blocker search
     float avg_blocker_depth = 0.0f;
-    float num_blocker = 0.0f;
-    FindBlocker(avg_blocker_depth, num_blocker, uv, z_receiver, shadow_map_tex, bias);
-    if (num_blocker < 1)
+    float num_blockers = 0.0f;
+    float light_size_uv = pcss_settings.light_world_size / pcss_settings.light_frustum_width;
+    FindBlocker(avg_blocker_depth, num_blockers, uv, z_receiver, shadow_map_tex, near_plane, bias, light_size_uv, pcss_settings.blocker_search_num_samples);
+
+    if (num_blockers < 1.0f)
     {
         // There are no occluders so early out (this saves filtering).
         return 1.0f;
@@ -128,10 +120,10 @@ float PCSS(Texture2D shadow_map_tex, float4 coords, float bias)
 
     // STEP 2: Penumbra size
     float penumbra_ratio = PenumbraSize(z_receiver, avg_blocker_depth);
-    float filter_radius_uv = penumbra_ratio * LIGHT_SIZE_UV * NEAR_PLANE / z_receiver;
+    float filter_radius_uv = penumbra_ratio * light_size_uv * near_plane / z_receiver;
 
     // STEP 3: Filtering
-    return PCF_Filter(uv, z_receiver, filter_radius_uv, shadow_map_tex, bias);
+    return PCF_Filter(uv, z_receiver, filter_radius_uv, shadow_map_tex, bias, pcss_settings.pcf_num_samples);
 }
 
 float point_shadow_calculation(PointLight light, float3 world_pos, int index)
@@ -200,7 +192,7 @@ float spot_shadow_calculation(SpotLight light, float3 world_pos, int index, floa
     }
 
     float4 coords = float4(light_space_pos.xyz, 1.0f);
-    return PCSS(spot_light_shadow_maps[index], coords, bias);
+    return PCSS(spot_light_shadow_maps[index], coords, bias, light.pcss_settings, light.near_plane);
 }
 
 float directional_shadow_calculation(DirectionalLight light, float3 world_pos, float3 normal)
@@ -219,7 +211,7 @@ float directional_shadow_calculation(DirectionalLight light, float3 world_pos, f
     float bias = max(0.005f * (1.0f - dot(normal, light.direction)), 0.005f);
     float4 coords = float4(light_space_pos.xyz, 1.0f);
 
-    return PCSS(directional_shadow_map, coords, bias);
+    return PCSS(directional_shadow_map, coords, bias, light.pcss_settings, light.near_plane);
 }
 
 float3 calculate_directional_light(DirectionalLight light, float3 normal, float3 view_dir, float3 diffuse_texture, float3 world_pos, bool calculate_shadows, float ambient_occlusion = 1.0f)

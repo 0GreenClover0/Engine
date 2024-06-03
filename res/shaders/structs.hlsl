@@ -1,3 +1,11 @@
+struct PCSSSettingsPerLight
+{
+    int blocker_search_num_samples;
+    int pcf_num_samples;
+    float light_world_size;
+    float light_frustum_width;
+};
+
 struct PointLight
 {
     float3 position;
@@ -20,6 +28,10 @@ struct DirectionalLight
     float3 diffuse;
     float3 specular;
     float4x4 projection_view;
+
+    // PCSS variables
+    PCSSSettingsPerLight pcss_settings;
+    float near_plane;
 };
 
 struct SpotLight
@@ -42,6 +54,7 @@ struct SpotLight
     float4x4 projection_view;
     float4x4 inv_model;
     float4x4 model;
+    PCSSSettingsPerLight pcss_settings;
 };
 
 struct Wave

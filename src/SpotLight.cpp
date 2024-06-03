@@ -42,7 +42,7 @@ void SpotLight::set_render_target_for_shadow_mapping() const
 
 glm::mat4 SpotLight::get_projection_view_matrix()
 {
-    if (m_last_model_matrix != entity->transform->get_model_matrix() && entity != nullptr)
+    if ((m_planes_changed || m_last_model_matrix != entity->transform->get_model_matrix()) && entity != nullptr)
     {
         auto const renderer = RendererDX11::get_instance_dx11();
 

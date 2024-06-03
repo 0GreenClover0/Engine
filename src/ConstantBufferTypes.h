@@ -70,6 +70,11 @@ struct DXSpotLight
     glm::mat4 light_projection_view;
     glm::mat4 inv_light_model;
     glm::mat4 light_model;
+
+    u32 blocker_search_num_samples;
+    u32 pcf_num_samples;
+    float light_world_size;
+    float light_frustum_width;
 };
 
 struct DXDirectionalLight
@@ -84,6 +89,13 @@ struct DXDirectionalLight
     float padding4;
 
     glm::mat4 light_projection_view;
+
+    u32 blocker_search_num_samples;
+    u32 pcf_num_samples;
+    float light_world_size;
+    float light_frustum_width;
+    float near_plane;
+    glm::vec3 padding5;
 };
 
 struct ConstantBufferPerObject
