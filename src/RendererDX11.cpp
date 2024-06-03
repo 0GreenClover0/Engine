@@ -663,6 +663,11 @@ void RendererDX11::set_light_buffer() const
         light_data.directional_light.diffuse = m_directional_light->diffuse;
         light_data.directional_light.specular = m_directional_light->specular;
         light_data.directional_light.light_projection_view = m_directional_light->get_projection_view_matrix();
+        light_data.directional_light.light_frustum_width = m_directional_light->m_light_frustum_width;
+        light_data.directional_light.light_world_size = m_directional_light->m_light_world_size;
+        light_data.directional_light.pcf_num_samples = m_directional_light->m_pcf_num_samples;
+        light_data.directional_light.blocker_search_num_samples = m_directional_light->m_blocker_search_num_samples;
+        light_data.directional_light.near_plane = m_directional_light->m_near_plane;
     }
 
     for (i32 i = 0; i < m_point_lights.size(); i++)
@@ -699,6 +704,11 @@ void RendererDX11::set_light_buffer() const
         light_data.spot_lights[i].light_projection_view = m_spot_lights[i]->get_projection_view_matrix();
         light_data.spot_lights[i].inv_light_model = m_spot_lights[i]->get_rotated_inverse_model_matrix();
         light_data.spot_lights[i].light_model = m_spot_lights[i]->get_rotated_model_matrix();
+
+        light_data.spot_lights[i].light_frustum_width = m_spot_lights[i]->m_light_frustum_width;
+        light_data.spot_lights[i].light_world_size = m_spot_lights[i]->m_light_world_size;
+        light_data.spot_lights[i].pcf_num_samples = m_spot_lights[i]->m_pcf_num_samples;
+        light_data.spot_lights[i].blocker_search_num_samples = m_spot_lights[i]->m_blocker_search_num_samples;
     }
 
     light_data.camera_pos = Camera::get_main_camera()->entity->transform->get_position();

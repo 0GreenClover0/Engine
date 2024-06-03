@@ -324,6 +324,10 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "specular" << YAML::Value << light->specular;
         out << YAML::Key << "m_near_plane" << YAML::Value << light->m_near_plane;
         out << YAML::Key << "m_far_plane" << YAML::Value << light->m_far_plane;
+        out << YAML::Key << "m_blocker_search_num_samples" << YAML::Value << light->m_blocker_search_num_samples;
+        out << YAML::Key << "m_pcf_num_samples" << YAML::Value << light->m_pcf_num_samples;
+        out << YAML::Key << "m_light_world_size" << YAML::Value << light->m_light_world_size;
+        out << YAML::Key << "m_light_frustum_width" << YAML::Value << light->m_light_frustum_width;
         out << YAML::EndMap;
     }
     else if (auto const particlesystem = std::dynamic_pointer_cast<class ParticleSystem>(component); particlesystem != nullptr)
@@ -1136,6 +1140,22 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             {
                 deserialized_component->m_far_plane = component["m_far_plane"].as<float>();
             }
+            if (component["m_blocker_search_num_samples"].IsDefined())
+            {
+                deserialized_component->m_blocker_search_num_samples = component["m_blocker_search_num_samples"].as<u32>();
+            }
+            if (component["m_pcf_num_samples"].IsDefined())
+            {
+                deserialized_component->m_pcf_num_samples = component["m_pcf_num_samples"].as<u32>();
+            }
+            if (component["m_light_world_size"].IsDefined())
+            {
+                deserialized_component->m_light_world_size = component["m_light_world_size"].as<float>();
+            }
+            if (component["m_light_frustum_width"].IsDefined())
+            {
+                deserialized_component->m_light_frustum_width = component["m_light_frustum_width"].as<float>();
+            }
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
         }
@@ -1184,6 +1204,22 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             if (component["m_far_plane"].IsDefined())
             {
                 deserialized_component->m_far_plane = component["m_far_plane"].as<float>();
+            }
+            if (component["m_blocker_search_num_samples"].IsDefined())
+            {
+                deserialized_component->m_blocker_search_num_samples = component["m_blocker_search_num_samples"].as<u32>();
+            }
+            if (component["m_pcf_num_samples"].IsDefined())
+            {
+                deserialized_component->m_pcf_num_samples = component["m_pcf_num_samples"].as<u32>();
+            }
+            if (component["m_light_world_size"].IsDefined())
+            {
+                deserialized_component->m_light_world_size = component["m_light_world_size"].as<float>();
+            }
+            if (component["m_light_frustum_width"].IsDefined())
+            {
+                deserialized_component->m_light_frustum_width = component["m_light_frustum_width"].as<float>();
             }
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
@@ -1241,6 +1277,22 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             if (component["m_far_plane"].IsDefined())
             {
                 deserialized_component->m_far_plane = component["m_far_plane"].as<float>();
+            }
+            if (component["m_blocker_search_num_samples"].IsDefined())
+            {
+                deserialized_component->m_blocker_search_num_samples = component["m_blocker_search_num_samples"].as<u32>();
+            }
+            if (component["m_pcf_num_samples"].IsDefined())
+            {
+                deserialized_component->m_pcf_num_samples = component["m_pcf_num_samples"].as<u32>();
+            }
+            if (component["m_light_world_size"].IsDefined())
+            {
+                deserialized_component->m_light_world_size = component["m_light_world_size"].as<float>();
+            }
+            if (component["m_light_frustum_width"].IsDefined())
+            {
+                deserialized_component->m_light_frustum_width = component["m_light_frustum_width"].as<float>();
             }
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();

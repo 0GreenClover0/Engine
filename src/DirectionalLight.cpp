@@ -8,6 +8,8 @@ std::shared_ptr<DirectionalLight> DirectionalLight::create()
 {
     auto directional_light = std::make_shared<DirectionalLight>(AK::Badge<DirectionalLight> {});
     directional_light->set_up_shadow_mapping();
+    directional_light->m_near_plane = -20.0f;
+    directional_light->m_far_plane = 20.0f;
     return directional_light;
 }
 
@@ -57,14 +59,15 @@ void DirectionalLight::set_up_shadow_mapping()
 
 glm::mat4 DirectionalLight::get_projection_view_matrix()
 {
-    if (m_last_model_matrix != entity->transform->get_model_matrix() && entity != nullptr)
+    if ((m_planes_changed || m_last_model_matrix != entity->transform->get_model_matrix()) && entity != nullptr)
     {
         m_last_model_matrix = entity->transform->get_model_matrix();
-        glm::mat4 const projection_matrix = glm::ortho(-15.0f, 15.0f, -15.0f, 15.0f, -20.0f, 20.0f);
+        glm::mat4 const projection_matrix = glm::ortho(-15.0f, 15.0f, -15.0f, 15.0f, m_near_plane, m_far_plane);
         glm::mat4 const view_matrix =
             glm::lookAt(entity->transform->get_position(), entity->transform->get_position() + entity->transform->get_forward(),
                         entity->transform->get_up());
         m_projection_view_matrix = projection_matrix * view_matrix;
+        m_planes_changed = false;
     }
 
     return m_projection_view_matrix;

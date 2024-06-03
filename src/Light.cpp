@@ -26,6 +26,17 @@ void Light::draw_editor()
     float specular_color[] = {specular.x, specular.y, specular.z};
     ImGui::ColorEdit3("Specular color", specular_color);
     specular = glm::vec3(specular_color[0], specular_color[1], specular_color[2]);
+
+    m_planes_changed |= ImGui::SliderFloat("Near Plane", &m_near_plane, -25.0f, 25.0f, "%.2f");
+    m_planes_changed |= ImGui::SliderFloat("Far Plane", &m_far_plane, 0.1f, 100.0f, "%.2f");
+
+    u32 constexpr min = 1;
+    u32 constexpr max = 16;
+    ImGui::SliderScalar("Blocker Search Num Samples", ImGuiDataType_U32, &m_blocker_search_num_samples, &min, &max, "%u");
+    ImGui::SliderScalar("PCF Num Samples", ImGuiDataType_U32, &m_pcf_num_samples, &min, &max, "%u");
+
+    ImGui::SliderFloat("Light World Size", &m_light_world_size, 0.01f, 10.0f, "%.2f");
+    ImGui::SliderFloat("Light Frustum Width", &m_light_frustum_width, 0.01f, 100.0f, "%.2f");
 }
 #endif
 
