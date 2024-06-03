@@ -24,7 +24,7 @@ public:
     void set_type(FactoryType const type);
 
 private:
-    std::weak_ptr<Model> model = {};
-
     FactoryType type = FactoryType::Generator;
+
+    std::weak_ptr<Model> model = {};
 };
