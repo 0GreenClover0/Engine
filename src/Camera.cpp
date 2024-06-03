@@ -204,3 +204,12 @@ void Camera::update_internals()
         update_frustum();
     }
 }
+
+void Camera::draw_editor()
+{
+    Component::draw_editor();
+
+    float fov_angle = glm::degrees(get_main_camera()->fov);
+    ImGui::InputFloat("Camera FoV", &fov_angle, 1.0f, 90.0f);
+    fov = glm::radians(fov_angle);
+}
