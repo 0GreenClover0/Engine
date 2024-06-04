@@ -93,6 +93,11 @@ struct ConstantBufferPerObject
     glm::mat4 projection_view;
 };
 
+struct ConstantBufferParticle
+{
+    glm::vec4 color;
+};
+
 struct ConstantBufferCameraPosition
 {
     glm::vec3 camera_pos;

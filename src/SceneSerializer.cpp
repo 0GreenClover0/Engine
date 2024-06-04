@@ -33,6 +33,7 @@
 #include "Game/ShipSpawner.h"
 #include "Light.h"
 #include "Model.h"
+#include "Particle.h"
 #include "PointLight.h"
 #include "ScreenText.h"
 #include "ShaderFactory.h"
@@ -166,6 +167,13 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
             out << YAML::Key << "font_size" << YAML::Value << screentext->font_size;
             out << YAML::Key << "color" << YAML::Value << screentext->color;
             out << YAML::Key << "flags" << YAML::Value << screentext->flags;
+        }
+        else if (auto const particle = std::dynamic_pointer_cast<class Particle>(component); particle != nullptr)
+        {
+            out << YAML::Key << "ComponentName" << YAML::Value << "ParticleComponent";
+            out << YAML::Key << "guid" << YAML::Value << particle->guid;
+            out << YAML::Key << "custom_name" << YAML::Value << particle->custom_name;
+            out << YAML::Key << "color" << YAML::Value << particle->color;
         }
         else if (auto const model = std::dynamic_pointer_cast<class Model>(component); model != nullptr)
         {
