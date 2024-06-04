@@ -101,7 +101,7 @@ void Game::initialize()
     port->add_component(Cube::create("./res/textures/skybox/interstellar/interstellar_bk.tga", standard_material));
     auto const collider = port->add_component<Collider2D>(
         Collider2D::create({port->transform->get_local_scale().x / 2.0f, port->transform->get_local_scale().z / 2.0f}, true));
-    collider->set_is_trigger(true);
+    collider->is_trigger = true;
 
     auto const generator = Entity::create("Generator");
     auto const generator_comp = generator->add_component<Factory>(Factory::create());

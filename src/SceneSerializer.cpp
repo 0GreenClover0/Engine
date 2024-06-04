@@ -125,6 +125,12 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "guid" << YAML::Value << collider2d->guid;
         out << YAML::Key << "custom_name" << YAML::Value << collider2d->custom_name;
         out << YAML::Key << "offset" << YAML::Value << collider2d->offset;
+        out << YAML::Key << "is_trigger" << YAML::Value << collider2d->is_trigger;
+        out << YAML::Key << "is_static" << YAML::Value << collider2d->is_static;
+        out << YAML::Key << "collider_type" << YAML::Value << collider2d->collider_type;
+        out << YAML::Key << "width" << YAML::Value << collider2d->width;
+        out << YAML::Key << "height" << YAML::Value << collider2d->height;
+        out << YAML::Key << "radius" << YAML::Value << collider2d->radius;
         out << YAML::EndMap;
     }
     else if (auto const curve = std::dynamic_pointer_cast<class Curve>(component); curve != nullptr)
@@ -554,6 +560,30 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             if (component["offset"].IsDefined())
             {
                 deserialized_component->offset = component["offset"].as<glm::vec2>();
+            }
+            if (component["is_trigger"].IsDefined())
+            {
+                deserialized_component->is_trigger = component["is_trigger"].as<bool>();
+            }
+            if (component["is_static"].IsDefined())
+            {
+                deserialized_component->is_static = component["is_static"].as<bool>();
+            }
+            if (component["collider_type"].IsDefined())
+            {
+                deserialized_component->collider_type = component["collider_type"].as<ColliderType2D>();
+            }
+            if (component["width"].IsDefined())
+            {
+                deserialized_component->width = component["width"].as<float>();
+            }
+            if (component["height"].IsDefined())
+            {
+                deserialized_component->height = component["height"].as<float>();
+            }
+            if (component["radius"].IsDefined())
+            {
+                deserialized_component->radius = component["radius"].as<float>();
             }
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();

@@ -51,17 +51,17 @@ bool Collider2D::is_point_inside_obb(glm::vec2 const& point, std::array<glm::vec
 }
 
 Collider2D::Collider2D(AK::Badge<Collider2D>, float const radius, bool const is_static)
-    : m_is_static(is_static), m_collider_type(ColliderType2D::Circle), m_radius(radius)
+    : is_static(is_static), collider_type(ColliderType2D::Circle), radius(radius)
 {
 }
 
 Collider2D::Collider2D(AK::Badge<Collider2D>, glm::vec2 const bounds_dimensions, bool const is_static)
-    : m_is_static(is_static), m_collider_type(ColliderType2D::Rectangle), m_width(bounds_dimensions.x), m_height(bounds_dimensions.y)
+    : is_static(is_static), collider_type(ColliderType2D::Rectangle), width(bounds_dimensions.x), height(bounds_dimensions.y)
 {
 }
 
 Collider2D::Collider2D(AK::Badge<Collider2D>, float const width, float const height, bool const is_static)
-    : m_is_static(is_static), m_collider_type(ColliderType2D::Rectangle), m_width(width), m_height(height)
+    : is_static(is_static), collider_type(ColliderType2D::Rectangle), width(width), height(height)
 {
 }
 
@@ -82,12 +82,12 @@ void Collider2D::draw_editor()
     ImGui::Spacing();
     ImGui::Spacing();
 
-    if (m_collider_type == ColliderType2D::Circle)
+    if (collider_type == ColliderType2D::Circle)
     {
         ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Use RADIUS to control collider size.");
         m_debug_drawing->set_drawing_type(DrawingType::Sphere);
     }
-    else if (m_collider_type == ColliderType2D::Rectangle)
+    else if (collider_type == ColliderType2D::Rectangle)
     {
         ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Use EXTENTS to control collider size.");
         m_debug_drawing->set_drawing_type(DrawingType::Box);
@@ -98,31 +98,29 @@ void Collider2D::draw_editor()
 
     // Dropdown list
     std::array const collider_types = {"Rectangle", "Circle"};
-    i32 current_item_index = static_cast<i32>(m_collider_type);
+    i32 current_item_index = static_cast<i32>(collider_type);
     if (ImGui::Combo("Collider Type", &current_item_index, collider_types.data(), collider_types.size()))
     {
-        m_previous_collider_type = m_collider_type;
-
         is_dirty = true;
 
-        m_collider_type = static_cast<ColliderType2D>(current_item_index);
+        collider_type = static_cast<ColliderType2D>(current_item_index);
     }
 
-    if (m_collider_type == ColliderType2D::Circle)
+    if (collider_type == ColliderType2D::Circle)
     {
-        float const previous_radius = m_radius;
-        ImGui::InputFloat("Radius", &m_radius);
+        float const previous_radius = radius;
+        ImGui::InputFloat("Radius", &radius);
 
-        if (!AK::Math::are_nearly_equal(previous_radius, m_radius))
+        if (!AK::Math::are_nearly_equal(previous_radius, radius))
         {
             is_dirty = true;
-            set_radius_2d(m_radius);
-            m_debug_drawing->set_radius(m_radius);
+            set_radius_2d(radius);
+            m_debug_drawing->set_radius(radius);
         }
     }
-    else if (m_collider_type == ColliderType2D::Rectangle)
+    else if (collider_type == ColliderType2D::Rectangle)
     {
-        std::array extents = {m_width, m_height};
+        std::array extents = {width, height};
         std::array const previous_extents = extents;
         ImGui::InputFloat2("Extents", extents.data());
 
@@ -136,9 +134,9 @@ void Collider2D::draw_editor()
     ImGui::Spacing();
     ImGui::Spacing();
 
-    ImGui::Checkbox("Trigger", &m_is_trigger);
+    ImGui::Checkbox("Trigger", &is_trigger);
 
-    ImGui::Checkbox("Static", &m_is_static);
+    ImGui::Checkbox("Static", &is_static);
 
     ImGui::Spacing();
     ImGui::Spacing();
@@ -146,11 +144,11 @@ void Collider2D::draw_editor()
     if (is_dirty)
     {
         Debug::log("changed");
-        if (m_collider_type == ColliderType2D::Circle)
+        if (collider_type == ColliderType2D::Circle)
         {
             m_debug_drawing->set_drawing_type(DrawingType::Sphere);
         }
-        else if (m_collider_type == ColliderType2D::Rectangle)
+        else if (collider_type == ColliderType2D::Rectangle)
         {
             m_debug_drawing->set_drawing_type(DrawingType::Box);
         }
@@ -164,15 +162,15 @@ void Collider2D::initialize()
     Component::initialize();
     PhysicsEngine::get_instance()->emplace_collider(std::dynamic_pointer_cast<Collider2D>(shared_from_this()));
 
-    switch (m_collider_type)
+    switch (collider_type)
     {
     case ColliderType2D::Circle:
-        m_debug_drawing_entity = Debug::draw_debug_sphere({0.0f, 0.0f, 0.0f}, m_radius);
+        m_debug_drawing_entity = Debug::draw_debug_sphere({0.0f, 0.0f, 0.0f}, radius);
         m_debug_drawing_entity->transform->set_parent(entity->transform);
         break;
 
     case ColliderType2D::Rectangle:
-        m_debug_drawing_entity = Debug::draw_debug_box({0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {m_width * 2.0f, 0.5f, m_height * 2.0f});
+        m_debug_drawing_entity = Debug::draw_debug_box({0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {width * 2.0f, 0.5f, height * 2.0f});
         m_debug_drawing_entity->transform->set_parent(entity->transform);
         break;
 
@@ -181,8 +179,8 @@ void Collider2D::initialize()
     }
 
     m_debug_drawing = m_debug_drawing_entity->get_component<DebugDrawing>();
-    m_debug_drawing->set_radius(m_radius);
-    m_debug_drawing->set_extents({m_width * 2.0f, 0.25f, m_height * 2.0f});
+    m_debug_drawing->set_radius(radius);
+    m_debug_drawing->set_extents({width * 2.0f, 0.25f, height * 2.0f});
     update_center_and_corners();
 }
 
@@ -199,55 +197,25 @@ void Collider2D::awake()
     update_center_and_corners();
 }
 
-ColliderType2D Collider2D::get_collider_type() const
-{
-    return m_collider_type;
-}
-
-bool Collider2D::is_trigger() const
-{
-    return m_is_trigger;
-}
-
-void Collider2D::set_is_trigger(bool const is_trigger)
-{
-    m_is_trigger = is_trigger;
-}
-
-bool Collider2D::is_static() const
-{
-    return m_is_static;
-}
-
-void Collider2D::set_is_static(bool const value)
-{
-    if (m_is_static == value)
-    {
-        return;
-    }
-
-    m_is_static = value;
-}
-
 void Collider2D::set_radius_2d(float const new_radius)
 {
-    m_radius = new_radius;
+    radius = new_radius;
 }
 
 float Collider2D::get_radius_2d() const
 {
-    return m_radius;
+    return radius;
 }
 
 void Collider2D::set_extents(glm::vec2 const extents)
 {
-    m_width = extents.x;
-    m_height = extents.y;
+    width = extents.x;
+    height = extents.y;
 }
 
 glm::vec2 Collider2D::get_extents() const
 {
-    return {m_width, m_height};
+    return {width, height};
 }
 
 glm::vec2 Collider2D::get_center_2d() const
@@ -273,13 +241,13 @@ glm::vec2 Collider2D::get_center_2d() const
 
 glm::vec2 Collider2D::get_bounds_dimensions_2d() const
 {
-    return {m_width, m_height};
+    return {width, height};
 }
 
-void Collider2D::set_bounds_dimensions_2d(float const width, float const height)
+void Collider2D::set_bounds_dimensions_2d(float const new_width, float const new_height)
 {
-    m_width = width;
-    m_height = height;
+    width = new_width;
+    height = new_height;
 }
 
 std::array<glm::vec2, 4> Collider2D::get_corners() const
@@ -372,8 +340,8 @@ void Collider2D::compute_axes(glm::vec2 const& center, float const angle)
     auto x = glm::vec2(x_3d.x, x_3d.z);
     auto y = glm::vec2(z_3d.x, z_3d.z);
 
-    x *= m_width;
-    y *= m_height;
+    x *= width;
+    y *= height;
 
     m_corners[0] = center - x - y;
     m_corners[1] = center + x - y;
@@ -390,6 +358,6 @@ void Collider2D::compute_axes(glm::vec2 const& center, float const angle)
         m_axes[a] /= glm::pow(glm::length(m_axes[a]), 2);
     }
 
-    m_debug_drawing->set_radius(m_radius);
-    m_debug_drawing->set_extents({m_width * 2.0f, 0.25f, m_height * 2.0f});
+    m_debug_drawing->set_radius(radius);
+    m_debug_drawing->set_extents({width * 2.0f, 0.25f, height * 2.0f});
 }

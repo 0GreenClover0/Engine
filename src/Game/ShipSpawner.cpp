@@ -773,8 +773,8 @@ void ShipSpawner::spawn_ship(SpawnEvent const* being_spawn)
         collider_in_front->offset = {0.0f, -0.5f};
     }
 
-    collider->set_is_trigger(true);
-    collider_in_front->set_is_trigger(true);
+    collider->is_trigger = true;
+    collider_in_front->is_trigger = true;
 }
 
 bool ShipSpawner::is_spawn_possible() const
