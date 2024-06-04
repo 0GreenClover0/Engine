@@ -163,6 +163,8 @@ public:
     std::shared_ptr<Transform> transform;
     std::vector<std::shared_ptr<Component>> components = {};
 
+    bool is_serialized = true;
+
 private:
     std::string m_parent_guid; // NOTE: Only for serialization
 

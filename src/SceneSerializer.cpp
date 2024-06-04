@@ -1651,6 +1651,11 @@ void SceneSerializer::serialize(std::string const& file_path) const
 
     for (auto const& entity : m_scene->entities)
     {
+        if (!entity->is_serialized)
+        {
+            continue;
+        }
+
         serialize_entity(out, entity);
     }
 
