@@ -33,7 +33,7 @@ VS_Output vs_main(VS_Input input)
 float4 ps_main(VS_Output input) : SV_TARGET
 {
     float bias = 0.01f;
-    float test_value = 0.25f;
+    float test_value = 0.3f;
 
     float4 color = ObjTexture.Sample(ObjSamplerState, input.UV);
     clip(color.a - bias);
