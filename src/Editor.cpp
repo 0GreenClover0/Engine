@@ -1395,6 +1395,24 @@ void Editor::handle_input()
         switch_rendering_to_editor();
     }
 
+    if (input->get_key_down(GLFW_KEY_F2))
+    {
+        if (!ImGui::IsAnyItemActive())
+        {
+            ImGui::OpenPopup("RenamePopup");
+        }
+    }
+
+    if (ImGui::BeginPopup("RenamePopup"))
+    {
+        if (ImGui::InputText("##empty", &m_selected_entity.lock()->name, ImGuiInputTextFlags_EnterReturnsTrue))
+        {
+            ImGui::CloseCurrentPopup();
+        }
+
+        ImGui::EndPopup();
+    }
+
     if (input->get_key_down(GLFW_KEY_F5))
     {
         Renderer::get_instance()->reload_shaders();
