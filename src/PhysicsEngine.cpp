@@ -65,22 +65,22 @@ bool PhysicsEngine::compute_penetration(std::shared_ptr<Collider2D> const& colli
     assert(collider != nullptr);
     assert(other != nullptr);
 
-    if (collider->get_collider_type() == ColliderType2D::Circle && other->get_collider_type() == ColliderType2D::Circle)
+    if (collider->collider_type == ColliderType2D::Circle && other->collider_type == ColliderType2D::Circle)
     {
         return test_collision_circle_circle(*collider, *other, mtv);
     }
 
-    if (collider->get_collider_type() == ColliderType2D::Rectangle && other->get_collider_type() == ColliderType2D::Rectangle)
+    if (collider->collider_type == ColliderType2D::Rectangle && other->collider_type == ColliderType2D::Rectangle)
     {
         return test_collision_rectangle_rectangle(*collider, *other, mtv);
     }
 
-    if (collider->get_collider_type() == ColliderType2D::Circle && other->get_collider_type() == ColliderType2D::Rectangle)
+    if (collider->collider_type == ColliderType2D::Circle && other->collider_type == ColliderType2D::Rectangle)
     {
         return test_collision_circle_rectangle(*collider, *other, mtv);
     }
 
-    if (collider->get_collider_type() == ColliderType2D::Rectangle && other->get_collider_type() == ColliderType2D::Circle)
+    if (collider->collider_type == ColliderType2D::Rectangle && other->collider_type == ColliderType2D::Circle)
     {
         bool const overlapped = test_collision_circle_rectangle(*other, *collider, mtv);
         mtv = -mtv;
@@ -97,13 +97,13 @@ void PhysicsEngine::solve_collisions() const
     {
         for (u32 j = 0; j < colliders.size(); j++)
         {
-            if (i == j || (colliders[i]->is_static() && colliders[j]->is_static()))
+            if (i == j || (colliders[i]->is_static && colliders[j]->is_static))
                 continue;
 
             std::shared_ptr<Collider2D> collider1 = colliders[i];
             std::shared_ptr<Collider2D> collider2 = colliders[j];
 
-            bool const should_overlap_as_trigger = collider1->is_trigger() || collider2->is_trigger();
+            bool const should_overlap_as_trigger = collider1->is_trigger || collider2->is_trigger;
 
             glm::vec2 mtv = {};
 
@@ -132,16 +132,16 @@ void PhysicsEngine::solve_collisions() const
                 on_collision_enter(collider1, collider2);
                 on_collision_enter(collider2, collider1);
 
-                if (!collider1->is_static() && !collider2->is_static())
+                if (!collider1->is_static && !collider2->is_static)
                 {
                     collider1->apply_mtv(mtv);
                     collider2->apply_mtv(-mtv);
                 }
-                else if (collider1->is_static())
+                else if (collider1->is_static)
                 {
                     collider2->apply_mtv(-mtv);
                 }
-                else if (collider2->is_static())
+                else if (collider2->is_static)
                 {
                     collider1->apply_mtv(mtv);
                 }
@@ -258,7 +258,7 @@ bool PhysicsEngine::test_collision_circle_circle(Collider2D const& obb1, Collide
 bool PhysicsEngine::test_collision_circle_rectangle(Collider2D const& circle_collider, Collider2D const& rect_collider, glm::vec2& mtv)
 {
     // Function works in a way that obb1 is always a circle.
-    assert(circle_collider.get_collider_type() == ColliderType2D::Circle && rect_collider.get_collider_type() == ColliderType2D::Rectangle);
+    assert(circle_collider.collider_type == ColliderType2D::Circle && rect_collider.collider_type == ColliderType2D::Rectangle);
 
     glm::vec2 const center = circle_collider.get_center_2d();
     float const radius = circle_collider.get_radius_2d();

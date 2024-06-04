@@ -3,6 +3,8 @@
 #include "ConstantBufferTypes.h"
 #include "ResourceManager.h"
 
+#include "Collider2D.h"
+#include "type_traits"
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
@@ -11,6 +13,12 @@
 #include <yaml-cpp/node/node.h>
 
 #include "SceneSerializer.h"
+
+template<typename E>
+constexpr auto to_integral(E e) -> typename std::underlying_type<E>::type
+{
+    return static_cast<typename std::underlying_type<E>::type>(e);
+}
 
 namespace YAML
 {
@@ -260,6 +268,28 @@ struct convert<DXWave>
     }
 };
 
+template<>
+struct convert<ColliderType2D>
+{
+    static Node encode(ColliderType2D const rhs)
+    {
+        Node node;
+        node.push_back(to_integral(rhs));
+        return node;
+    }
+
+    static bool decode(Node const& node, ColliderType2D& rhs)
+    {
+        if (!node.IsScalar())
+        {
+            return false;
+        }
+
+        rhs = static_cast<ColliderType2D>(node.as<int>());
+        return true;
+    }
+};
+
 template<class T>
 Emitter& operator<<(YAML::Emitter& out, std::shared_ptr<T> const& v)
 requires(std::is_base_of_v<Component, T>)
@@ -440,6 +470,13 @@ inline Emitter& operator<<(YAML::Emitter& out, DXWave const& wave)
     out << YAML::Flow;
     out << YAML::BeginSeq << wave.direction << wave.padding << wave.speed << wave.steepness << wave.wave_length << wave.amplitude
         << YAML::EndSeq;
+    return out;
+}
+
+inline Emitter& operator<<(YAML::Emitter& out, ColliderType2D const& v)
+{
+    out << YAML::Flow;
+    out << to_integral(v);
     return out;
 }
 }
