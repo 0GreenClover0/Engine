@@ -35,6 +35,7 @@ std::shared_ptr<Entity> Debug::draw_debug_sphere(glm::vec3 const position, float
 {
     auto debug_entity = Entity::create("DEBUG_" + AK::generate_guid());
     debug_entity->add_component(DebugDrawing::create(position, radius, time));
+    debug_entity->is_serialized = false;
     return debug_entity;
 }
 
@@ -43,5 +44,6 @@ std::shared_ptr<Entity> Debug::draw_debug_box(glm::vec3 const position, glm::vec
 {
     auto debug_entity = Entity::create("DEBUG_" + AK::generate_guid());
     debug_entity->add_component(DebugDrawing::create(position, euler_angles, extents, time));
+    debug_entity->is_serialized = false;
     return debug_entity;
 }
