@@ -1448,6 +1448,14 @@ void Editor::switch_rendering_to_editor()
 {
     Renderer::get_instance()->switch_rendering_to_texture();
     m_rendering_to_editor = !m_rendering_to_editor;
+    if (m_rendering_to_editor)
+    {
+        glfwSetInputMode(Engine::window->get_glfw_window(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    }
+    else
+    {
+        glfwSetInputMode(Engine::window->get_glfw_window(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    }
 }
 
 void Editor::add_debug_window()
