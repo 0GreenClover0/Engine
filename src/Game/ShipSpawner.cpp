@@ -374,14 +374,17 @@ void ShipSpawner::add_warning()
     auto const warning = Entity::create("Warning");
     auto const warning_light_component = warning->add_component(SpotLight::create());
 
-    warning_light_component->ambient = glm::vec3(1.0f);
-    warning_light_component->diffuse = glm::vec3(1.0f);
+    warning_light_component->diffuse = glm::vec3(0.04f, 0.0f, 0.0f);
+    warning_light_component->ambient = glm::vec3(0.0f);
     warning_light_component->specular = glm::vec3(1.0f);
 
-    warning_light_component->linear = 10.0f;
-    warning_light_component->quadratic = 10.0f;
+    warning_light_component->cut_off = cos(glm::radians(29.0f));
+    warning_light_component->outer_cut_off = cos(glm::radians(30.0f));
 
-    warning->transform->set_local_position({m_spawn_position[0].x - glm::sign(m_spawn_position[0].x), 0.2f, m_spawn_position[0].y});
+    //warning_light_component->linear = 10.0f;
+    //warning_light_component->quadratic = 10.0f;
+
+    warning->transform->set_local_position({m_spawn_position[0].x - glm::sign(m_spawn_position[0].x) * 1.5f, 1.0f, m_spawn_position[0].y});
     warning->transform->set_euler_angles({-90.0f, 0.0f, 0.0f});
 
     if (m_spawn_type == SpawnType::Rapid)
