@@ -10,6 +10,7 @@
 #include "Globals.h"
 #include "Player.h"
 #include "Ship.h"
+#include <imgui_extensions.h>
 
 std::shared_ptr<LevelController> LevelController::create()
 {
@@ -63,6 +64,12 @@ void LevelController::update()
 void LevelController::draw_editor()
 {
     Component::draw_editor();
+
+    ImGuiEx::draw_ptr("Workshop", factories[0]);
+    ImGuiEx::draw_ptr("Generator", factories[1]);
+    ImGuiEx::draw_ptr("Port", port);
+
+    ImGui::Separator();
 
     static i32 minutes = 0;
     static i32 seconds = 0;

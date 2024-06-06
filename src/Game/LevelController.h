@@ -3,6 +3,7 @@
 #include "Component.h"
 #include "Curve.h"
 #include "Engine.h"
+#include "Factory.h"
 #include "Port.h"
 
 class ScreenText;
