@@ -131,7 +131,6 @@ void Game::initialize()
     lighthouse_light_comp->set_spot_light(spotlight_comp);
 
     lighthouse_comp->light = lighthouse_light_comp;
-    lighthouse_comp->port = port_comp;
 
     auto const spawn = Entity::create("Spawn");
     spawn->transform->set_parent(lighthouse->transform);

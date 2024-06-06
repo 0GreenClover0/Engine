@@ -24,7 +24,6 @@ public:
     float enterable_distance = 0.6f;
 
     std::weak_ptr<LighthouseLight> light = {};
-    std::weak_ptr<Port> port = {};
 
     std::weak_ptr<Entity> spawn_position = {};
 

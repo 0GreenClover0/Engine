@@ -9,6 +9,7 @@
 #include <imgui_extensions.h>
 
 #include "Collider2D.h"
+#include "LevelController.h"
 
 std::shared_ptr<Lighthouse> Lighthouse::create()
 {
@@ -71,7 +72,7 @@ void Lighthouse::exit()
     keeper->add_component(Collider2D::create(0.1f));
     auto const keeper_comp = keeper->add_component(LighthouseKeeper::create());
     keeper_comp->lighthouse = static_pointer_cast<Lighthouse>(shared_from_this());
-    keeper_comp->port = port;
+    keeper_comp->port = LevelController::get_instance()->port;
 
     keeper->transform->set_local_position(spawn_position.lock()->transform->get_position());
 }
