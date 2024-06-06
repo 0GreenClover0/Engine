@@ -323,6 +323,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "map_food" << YAML::Value << levelcontroller->map_food;
         out << YAML::Key << "maximum_lighthouse_level" << YAML::Value << levelcontroller->maximum_lighthouse_level;
         out << YAML::Key << "factories" << YAML::Value << levelcontroller->factories;
+        out << YAML::Key << "port" << YAML::Value << levelcontroller->port;
         out << YAML::Key << "playfield_width" << YAML::Value << levelcontroller->playfield_width;
         out << YAML::Key << "playfield_additional_width" << YAML::Value << levelcontroller->playfield_additional_width;
         out << YAML::Key << "playfield_height" << YAML::Value << levelcontroller->playfield_height;
@@ -344,7 +345,6 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "custom_name" << YAML::Value << lighthouse->custom_name;
         out << YAML::Key << "enterable_distance" << YAML::Value << lighthouse->enterable_distance;
         out << YAML::Key << "light" << YAML::Value << lighthouse->light;
-        out << YAML::Key << "port" << YAML::Value << lighthouse->port;
         out << YAML::Key << "spawn_position" << YAML::Value << lighthouse->spawn_position;
         out << YAML::EndMap;
     }
@@ -1107,6 +1107,10 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             {
                 deserialized_component->factories = component["factories"].as<std::vector<std::weak_ptr<Factory>>>();
             }
+            if (component["port"].IsDefined())
+            {
+                deserialized_component->port = component["port"].as<std::weak_ptr<Port>>();
+            }
             if (component["playfield_width"].IsDefined())
             {
                 deserialized_component->playfield_width = component["playfield_width"].as<float>();
@@ -1175,10 +1179,6 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             if (component["light"].IsDefined())
             {
                 deserialized_component->light = component["light"].as<std::weak_ptr<LighthouseLight>>();
-            }
-            if (component["port"].IsDefined())
-            {
-                deserialized_component->port = component["port"].as<std::weak_ptr<Port>>();
             }
             if (component["spawn_position"].IsDefined())
             {
