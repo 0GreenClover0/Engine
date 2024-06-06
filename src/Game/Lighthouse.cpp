@@ -67,7 +67,7 @@ void Lighthouse::exit()
     auto const standard_material = Material::create(standard_shader);
 
     auto const keeper = Entity::create("keeper");
-    keeper->add_component(Model::create("./res/models/keeperInHovercraft/keeperInHovercraft.gltf", standard_material));
+    keeper->add_component(Model::create("./res/models/keeperInHovercraft/keeper.gltf", standard_material));
     keeper->add_component(Collider2D::create(0.1f));
     auto const keeper_comp = keeper->add_component(LighthouseKeeper::create());
     keeper_comp->lighthouse = static_pointer_cast<Lighthouse>(shared_from_this());
