@@ -4,6 +4,9 @@
 
 #define MINIAUDIO_IMPLEMENTATION
 #include "miniaudio.h"
+#define WIN32_LEAN_AND_MEAN
+#define TRACY_ENABLE
+#include <tracy/Tracy.hpp>
 
 #if FORCE_DEDICATED_GPU
 extern "C"

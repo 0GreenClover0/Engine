@@ -51,6 +51,7 @@ target_link_libraries(${PROJECT_NAME} miniaudio)
 target_link_libraries(${PROJECT_NAME} imguizmo)
 target_link_libraries(${PROJECT_NAME} implot)
 target_link_libraries(${PROJECT_NAME} ddstextureloader)
+target_link_libraries(${PROJECT_NAME} Tracy::TracyClient)
 
 # Copy FW1FontWrapper.dll to output directory after build
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD

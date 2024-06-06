@@ -46,6 +46,8 @@ set(imgui_impl_SOURCE_DIR ${IMGUI_IMPL_DIR} CACHE INTERNAL "")
 add_library(imgui_impl STATIC ${IMGUI_IMPL_DIR}/imgui_impl_dx11.cpp ${IMGUI_IMPL_DIR}/imgui_impl_glfw.cpp ${IMGUI_IMPL_DIR}/imgui_impl_opengl3.cpp)
 target_include_directories(imgui_impl PRIVATE ${IMGUI_IMPL_DIR})
 
+
+
 # disable most assimp importers
 SET (ASSIMP_BUILD_AMF_IMPORTER OFF)
 SET (ASSIMP_BUILD_3DS_IMPORTER OFF)
@@ -119,6 +121,15 @@ CPMAddPackage("gh:g-truc/glm#0.9.9.8")
 CPMAddPackage("gh:ocornut/imgui#v1.90.4-docking")
 CPMAddPackage("gh:gabime/spdlog@1.10.0")
 CPMAddPackage("gh:jbeder/yaml-cpp#0.8.0")
+CPMAddPackage(
+    GITHUB_REPOSITORY wolfpld/tracy
+    VERSION 0.10
+    OPTIONS "TRACY_ENABLE ON"
+            "TRACY_ON_DEMAND ON"
+            "TRACY_NO_BROADCAST ON"
+            "TRACY_NO_SYSTEM_TRACING ON"
+            "TRACY_TIMER_QPC ON"
+)
 
 set(imgui_SOURCE_DIR ${imgui_SOURCE_DIR} CACHE INTERNAL "")
 add_library(imgui STATIC ${imgui_SOURCE_DIR}/imgui.cpp

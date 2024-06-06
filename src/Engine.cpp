@@ -25,6 +25,7 @@
 #include "RendererGL.h"
 #include "Window.h"
 #include <implot.h>
+#include <tracy/Tracy.hpp>
 
 i32 Engine::initialize()
 {
@@ -89,6 +90,7 @@ void Engine::run()
     // Main loop
     while (!glfwWindowShouldClose(window->get_glfw_window()))
     {
+        FrameMark;
         double const current_frame = glfwGetTime();
         delta_time = current_frame - last_frame;
         last_frame = current_frame;
