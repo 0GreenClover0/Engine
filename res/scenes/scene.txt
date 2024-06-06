@@ -163,8 +163,6 @@ Entities:
         enterable_distance: 0.600000024
         light:
           guid: 0e964ba3e74511090908757bf419ecb097f62be97380e16af66721be6a41e118
-        port:
-          guid: nullptr
         spawn_position:
           guid: 6e92dd7a9953eb2cb34ee3258ea80e69beccf3878748d25d89768fec9352a0bf
   - Entity: Lighthouse Light
@@ -287,7 +285,7 @@ Entities:
       Rotation: [0, 0, 0]
       Scale: [17, 1, 1]
       Parent:
-        guid: ""
+        guid: a000fe1fd53881a687da97e4a7a45f03b052b5adeba4c6174edc3a824e97b304
     Components:
       - ComponentName: CubeComponent
         guid: e05083d64789993af2e9e9597be322af49a4ee302e6e1918b2854101ff462cec
@@ -312,7 +310,7 @@ Entities:
       Rotation: [0, 0, 0]
       Scale: [8, 1, 1]
       Parent:
-        guid: ""
+        guid: a000fe1fd53881a687da97e4a7a45f03b052b5adeba4c6174edc3a824e97b304
     Components:
       - ComponentName: CubeComponent
         guid: 09ee7ab881ae51ab78183776e5ea4cb532ea217799f48507262068fecf686242
@@ -337,7 +335,7 @@ Entities:
       Rotation: [0, 0, 0]
       Scale: [8, 1, 1]
       Parent:
-        guid: ""
+        guid: a000fe1fd53881a687da97e4a7a45f03b052b5adeba4c6174edc3a824e97b304
     Components:
       - ComponentName: CubeComponent
         guid: a76fbbd89d873848676d94f52df713bc4b7cd8cf550a94569856a72d95cab867
@@ -362,7 +360,7 @@ Entities:
       Rotation: [0, 0, 0]
       Scale: [15, 1, 1]
       Parent:
-        guid: ""
+        guid: a000fe1fd53881a687da97e4a7a45f03b052b5adeba4c6174edc3a824e97b304
     Components:
       - ComponentName: CubeComponent
         guid: d926a05a21ee85a3544a7119c465137f5ef70a839fefc4618a9340e2fc57afd2
@@ -398,6 +396,8 @@ Entities:
         factories:
           - guid: 52e396d002181743558411a8f979fd2274c7a67216f6aea67bc6f9c88d5a75fc
           - guid: 0e20c2375b4b17e8565fb884b2313653b145e3ae1cf209d796546a3d5f549810
+        port:
+          guid: b0facf70c246fdf6f761c9a469a88bfa7955c70ac0d03584167cfd8b9de40101
         playfield_width: 6
         playfield_additional_width: 2
         playfield_height: 5.19999981
@@ -480,3 +480,37 @@ Entities:
         points:
           - [7.5, 1]
           - [8.5, -2.5]
+  - Entity: Bounds
+    guid: a000fe1fd53881a687da97e4a7a45f03b052b5adeba4c6174edc3a824e97b304
+    Name: Bounds
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: ""
+    Components:
+      []
+  - Entity: Port
+    guid: 1fbbf2fd4d35e0a3f0dce5f5977c2a3ce0d3644368e9dcf2715ae00de7870acf
+    Name: Port
+    TransformComponent:
+      Translation: [-2.98000002, 0.999485493, 2.53524446]
+      Rotation: [0, 0, 0]
+      Scale: [1, 0.774765253, 1]
+      Parent:
+        guid: ""
+    Components:
+      - ComponentName: PortComponent
+        guid: b0facf70c246fdf6f761c9a469a88bfa7955c70ac0d03584167cfd8b9de40101
+        custom_name: ""
+      - ComponentName: Collider2DComponent
+        guid: 4897f842db681924ed1652512d7d51e5f743d48708d4aa28e62fa563a5e24dfc
+        custom_name: ""
+        offset: [0, 0]
+        is_trigger: true
+        is_static: false
+        collider_type: 0
+        width: 2
+        height: 1
+        radius: 1
