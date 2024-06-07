@@ -50,6 +50,8 @@ public:
 
     void apply_mtv(glm::vec2 const mtv) const;
 
+    void set_collider_type(ColliderType2D const new_collider_type);
+
     void set_radius_2d(float const new_radius);
     float get_radius_2d() const;
 
