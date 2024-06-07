@@ -49,6 +49,7 @@
 #include "SpotLight.h"
 #include "Sprite.h"
 #include "Water.h"
+#include <imgui_internal.h>
 // # Put new header here
 
 namespace Editor
@@ -642,6 +643,23 @@ void Editor::entity_drag(std::shared_ptr<Entity> const& entity)
             }
         }
 
+        ImGui::EndDragDropTarget();
+    }
+
+    if (ImGui::BeginDragDropTargetCustom(ImGui::GetCurrentWindow()->ContentRegionRect, ImGui::GetID("CustomTarget")))
+    {
+        std::string guid;
+
+        if (ImGuiPayload const* payload = ImGui::AcceptDragDropPayload("guid"))
+        {
+            guid.resize(sizeof(i64) * 8);
+            memcpy(guid.data(), payload->Data, sizeof(i64) * 8);
+
+            if (auto const reparent_entity = MainScene::get_instance()->get_entity_by_guid(guid))
+            {
+                reparent_entity->transform->set_parent(nullptr);
+            }
+        }
         ImGui::EndDragDropTarget();
     }
 }
