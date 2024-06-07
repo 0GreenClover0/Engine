@@ -78,6 +78,8 @@ public:
     void add_overlapped_this_frame(std::shared_ptr<Collider2D> const& collider);
     void clear_overlapped_this_frame();
 
+    void update_center_and_corners();
+
     glm::vec2 offset = {};
 
     bool is_trigger = false;
@@ -91,7 +93,6 @@ public:
     float radius = 1.0f; // For circle
 
 private:
-    void update_center_and_corners();
     void compute_axes(glm::vec2 const& center, float const angle);
 
     std::array<glm::vec2, 4> m_corners = {}; // For rectangle, calculated each frame
