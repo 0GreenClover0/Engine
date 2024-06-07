@@ -495,8 +495,8 @@ bool Ship::is_out_of_room() const
         return true;
     }
 
-    if (x < -(LevelController::get_instance()->playfield_width + LevelController::get_instance()->playfield_additional_width)
-        || x > (LevelController::get_instance()->playfield_width + LevelController::get_instance()->playfield_additional_width))
+    if (x < -(LevelController::get_instance()->playfield_width + LevelController::get_instance()->playfield_additional_width * 2.0f)
+        || x > (LevelController::get_instance()->playfield_width + LevelController::get_instance()->playfield_additional_width * 2.0f))
     {
         return true;
     }
