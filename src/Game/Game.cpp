@@ -65,7 +65,7 @@ void Game::initialize()
 
     m_camera_comp = m_camera->add_component(Camera::create());
     m_camera_comp->set_can_tick(true);
-    m_camera_comp->set_fov(glm::radians(20.0f));
+    m_camera_comp->set_fov(glm::radians(22.0f));
     m_camera_comp->update();
 
     auto const player = Entity::create("Player");
