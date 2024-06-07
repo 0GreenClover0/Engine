@@ -11,4 +11,9 @@ public:
 
     virtual void awake() override;
     virtual void update() override;
+    virtual void draw_editor() override;
+
+private:
+    ColliderType2D m_type = ColliderType2D::Circle;
+    u32 m_size = 1;
 };
