@@ -37,6 +37,8 @@ void IceBound::draw_editor()
 
     if (entity->get_component<Collider2D>() != nullptr && entity->get_component<Model>() != nullptr)
     {
+        bool is_dirty = false;
+
         std::array const ice_types = {"Rectangle", "Circle"};
         i32 current_item_index = static_cast<i32>(m_type);
         if (ImGui::Combo("Collider Type", &current_item_index, ice_types.data(), ice_types.size()))
@@ -51,14 +53,20 @@ void IceBound::draw_editor()
             }
 
             entity->get_component<Collider2D>()->set_collider_type(m_type);
+
+            is_dirty = true;
         }
 
         u32 constexpr min_size = 1;
+        u32 const max_size = m_type == ColliderType2D::Circle ? 7 : 4;
 
-        if (m_type == ColliderType2D::Circle)
+        is_dirty |= ImGui::SliderScalar("Size: ", ImGuiDataType_U32, &m_size, &min_size, &max_size);
+
+        if (is_dirty)
         {
-            u32 constexpr max_size = 7;
-            if (ImGui::SliderScalar("Size: ", ImGuiDataType_U32, &m_size, &min_size, &max_size))
+            is_dirty = false;
+
+            if (m_type == ColliderType2D::Circle)
             {
                 if (m_size < 1 || m_size > max_size)
                 {
@@ -67,14 +75,38 @@ void IceBound::draw_editor()
                 }
 
                 entity->get_component<Model>()->model_path = "./res/models/iceIslands/c_" + std::to_string(m_size) + ".gltf";
+
+                switch (m_size)
+                {
+                case 1:
+                    entity->get_component<Collider2D>()->set_radius_2d(0.4f);
+                    break;
+                case 2:
+                    entity->get_component<Collider2D>()->set_radius_2d(0.4f);
+                    break;
+                case 3:
+                    entity->get_component<Collider2D>()->set_radius_2d(0.8f);
+                    break;
+                case 4:
+                    entity->get_component<Collider2D>()->set_radius_2d(0.8f);
+                    break;
+                case 5:
+                    entity->get_component<Collider2D>()->set_radius_2d(1.25f);
+                    break;
+                case 6:
+                    entity->get_component<Collider2D>()->set_radius_2d(1.4f);
+                    break;
+                case 7:
+                    entity->get_component<Collider2D>()->set_radius_2d(2.0f);
+                    break;
+                default:
+                    std::unreachable();
+                }
+
                 entity->get_component<Model>()->reprepare();
                 entity->get_component<Collider2D>()->update_center_and_corners();
             }
-        }
-        else if (m_type == ColliderType2D::Rectangle)
-        {
-            u32 constexpr max_size = 4;
-            if (ImGui::SliderScalar("Size: ", ImGuiDataType_U32, &m_size, &min_size, &max_size))
+            else
             {
                 if (m_size < 1 || m_size > max_size)
                 {
@@ -101,10 +133,10 @@ void IceBound::draw_editor()
                 default:
                     std::unreachable();
                 }
-
-                entity->get_component<Model>()->reprepare();
-                entity->get_component<Collider2D>()->update_center_and_corners();
             }
+
+            entity->get_component<Model>()->reprepare();
+            entity->get_component<Collider2D>()->update_center_and_corners();
         }
     }
     else
@@ -118,7 +150,7 @@ void IceBound::draw_editor()
             entity->get_component<Collider2D>()->is_trigger = true;
             entity->get_component<Collider2D>()->set_collider_type(ColliderType2D::Rectangle);
 
-            entity->add_component(Model::create("./res/models/iceIslands/c_1.gltf", standard_material));
+            entity->add_component(Model::create("./res/models/iceIslands/s_1.gltf", standard_material));
         }
     }
 }
