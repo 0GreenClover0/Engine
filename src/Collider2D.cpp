@@ -197,6 +197,20 @@ void Collider2D::awake()
     update_center_and_corners();
 }
 
+void Collider2D::set_collider_type(ColliderType2D new_collider_type)
+{
+    collider_type = new_collider_type;
+
+    if (new_collider_type == ColliderType2D::Circle)
+    {
+        m_debug_drawing->set_drawing_type(DrawingType::Sphere);
+    }
+    else if (new_collider_type == ColliderType2D::Rectangle)
+    {
+        m_debug_drawing->set_drawing_type(DrawingType::Box);
+    }
+}
+
 void Collider2D::set_radius_2d(float const new_radius)
 {
     radius = new_radius;
