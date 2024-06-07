@@ -34,6 +34,18 @@ bool Factory::interact() const
     return true;
 }
 
+void Factory::draw_editor()
+{
+    Component::draw_editor();
+
+    std::array const factory_types = {"Generator", "Workshop"};
+    i32 current_item_index = static_cast<i32>(type);
+    if (ImGui::Combo("Factory Type", &current_item_index, factory_types.data(), factory_types.size()))
+    {
+        type = static_cast<FactoryType>(current_item_index);
+    }
+}
+
 void Factory::set_type(FactoryType const type)
 {
     this->type = type;

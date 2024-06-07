@@ -303,6 +303,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "ComponentName" << YAML::Value << "FactoryComponent";
         out << YAML::Key << "guid" << YAML::Value << factory->guid;
         out << YAML::Key << "custom_name" << YAML::Value << factory->custom_name;
+        out << YAML::Key << "type" << YAML::Value << factory->type;
         out << YAML::EndMap;
     }
     else if (auto const icebound = std::dynamic_pointer_cast<class IceBound>(component); icebound != nullptr)
@@ -1057,6 +1058,10 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component =
                 std::dynamic_pointer_cast<class Factory>(get_from_pool(component["guid"].as<std::string>()));
+            if (component["type"].IsDefined())
+            {
+                deserialized_component->type = component["type"].as<FactoryType>();
+            }
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
         }
