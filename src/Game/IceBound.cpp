@@ -49,6 +49,8 @@ void IceBound::draw_editor()
                     m_size = 4;
                 }
             }
+
+            entity->get_component<Collider2D>()->set_collider_type(m_type);
         }
 
         u32 constexpr min_size = 1;
@@ -66,6 +68,7 @@ void IceBound::draw_editor()
 
                 entity->get_component<Model>()->model_path = "./res/models/iceIslands/c_" + std::to_string(m_size) + ".gltf";
                 entity->get_component<Model>()->reprepare();
+                entity->get_component<Collider2D>()->update_center_and_corners();
             }
         }
         else if (m_type == ColliderType2D::Rectangle)
@@ -80,7 +83,27 @@ void IceBound::draw_editor()
                 }
 
                 entity->get_component<Model>()->model_path = "./res/models/iceIslands/s_" + std::to_string(m_size) + ".gltf";
+
+                switch (m_size)
+                {
+                case 1:
+                    entity->get_component<Collider2D>()->set_bounds_dimensions_2d(0.4f, 0.4f);
+                    break;
+                case 2:
+                    entity->get_component<Collider2D>()->set_bounds_dimensions_2d(0.6f, 0.6f);
+                    break;
+                case 3:
+                    entity->get_component<Collider2D>()->set_bounds_dimensions_2d(1.4f, 1.3f);
+                    break;
+                case 4:
+                    entity->get_component<Collider2D>()->set_bounds_dimensions_2d(2.0f, 1.9f);
+                    break;
+                default:
+                    std::unreachable();
+                }
+
                 entity->get_component<Model>()->reprepare();
+                entity->get_component<Collider2D>()->update_center_and_corners();
             }
         }
     }
@@ -91,7 +114,10 @@ void IceBound::draw_editor()
             auto const standard_shader = ResourceManager::get_instance().load_shader("./res/shaders/lit.hlsl", "./res/shaders/lit.hlsl");
             auto const standard_material = Material::create(standard_shader);
 
-            entity->add_component(Collider2D::create(glm::vec2(1.0f, 1.0f), false));
+            entity->add_component(Collider2D::create(glm::vec2(0.4f, 0.4f), false));
+            entity->get_component<Collider2D>()->is_trigger = true;
+            entity->get_component<Collider2D>()->set_collider_type(ColliderType2D::Rectangle);
+
             entity->add_component(Model::create("./res/models/iceIslands/c_1.gltf", standard_material));
         }
     }
