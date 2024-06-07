@@ -67,6 +67,7 @@ void Player::update()
     {
         if (flash > 0 && glm::epsilonEqual(flash_counter, 0.0f, 0.0001f))
         {
+            flash -= 1;
             flash_counter = m_flash_time;
         }
     }
