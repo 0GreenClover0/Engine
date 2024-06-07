@@ -13,6 +13,7 @@
 #include <yaml-cpp/node/node.h>
 
 #include "SceneSerializer.h"
+#include <Game/Factory.h>
 
 template<typename E>
 constexpr auto to_integral(E e) -> typename std::underlying_type<E>::type
@@ -290,6 +291,28 @@ struct convert<ColliderType2D>
     }
 };
 
+template<>
+struct convert<FactoryType>
+{
+    static Node encode(FactoryType const rhs)
+    {
+        Node node;
+        node.push_back(to_integral(rhs));
+        return node;
+    }
+
+    static bool decode(Node const& node, FactoryType& rhs)
+    {
+        if (!node.IsScalar())
+        {
+            return false;
+        }
+
+        rhs = static_cast<FactoryType>(node.as<int>());
+        return true;
+    }
+};
+
 template<class T>
 Emitter& operator<<(YAML::Emitter& out, std::shared_ptr<T> const& v)
 requires(std::is_base_of_v<Component, T>)
@@ -474,6 +497,13 @@ inline Emitter& operator<<(YAML::Emitter& out, DXWave const& wave)
 }
 
 inline Emitter& operator<<(YAML::Emitter& out, ColliderType2D const& v)
+{
+    out << YAML::Flow;
+    out << to_integral(v);
+    return out;
+}
+
+inline Emitter& operator<<(YAML::Emitter& out, FactoryType const& v)
 {
     out << YAML::Flow;
     out << to_integral(v);
