@@ -14,6 +14,6 @@ public:
     virtual void draw_editor() override;
 
 private:
-    ColliderType2D m_type = ColliderType2D::Circle;
+    ColliderType2D m_type = ColliderType2D::Rectangle;
     u32 m_size = 1;
 };
