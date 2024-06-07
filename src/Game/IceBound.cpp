@@ -56,12 +56,32 @@ void IceBound::draw_editor()
         if (m_type == ColliderType2D::Circle)
         {
             u32 constexpr max_size = 7;
-            ImGui::SliderScalar("Size: ", ImGuiDataType_U32, &m_size, &min_size, &max_size);
+            if (ImGui::SliderScalar("Size: ", ImGuiDataType_U32, &m_size, &min_size, &max_size))
+            {
+                if (m_size < 1 || m_size > max_size)
+                {
+                    Debug::log("Error: Wrong ice bound size " + std::to_string(m_size), DebugType::Error);
+                    return;
+                }
+
+                entity->get_component<Model>()->model_path = "./res/models/iceIslands/c_" + std::to_string(m_size) + ".gltf";
+                entity->get_component<Model>()->reprepare();
+            }
         }
         else if (m_type == ColliderType2D::Rectangle)
         {
             u32 constexpr max_size = 4;
-            ImGui::SliderScalar("Size: ", ImGuiDataType_U32, &m_size, &min_size, &max_size);
+            if (ImGui::SliderScalar("Size: ", ImGuiDataType_U32, &m_size, &min_size, &max_size))
+            {
+                if (m_size < 1 || m_size > max_size)
+                {
+                    Debug::log("Error: Wrong ice bound size " + std::to_string(m_size), DebugType::Error);
+                    return;
+                }
+
+                entity->get_component<Model>()->model_path = "./res/models/iceIslands/s_" + std::to_string(m_size) + ".gltf";
+                entity->get_component<Model>()->reprepare();
+            }
         }
     }
     else
