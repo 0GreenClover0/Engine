@@ -61,6 +61,49 @@ inline std::string generate_guid()
     return result;
 }
 
+inline u32 murmur_hash(u8 const* key, size_t const len, u32 const seed)
+{
+    u32 h = seed;
+    if (len > 3)
+    {
+        u32 const* key_x4 = reinterpret_cast<u32 const*>(key);
+        size_t i = len >> 2;
+        do
+        {
+            u32 k = *key_x4++;
+            k *= 0xcc9e2d51;
+            k = (k << 15) | (k >> 17);
+            k *= 0x1b873593;
+            h ^= k;
+            h = (h << 13) | (h >> 19);
+            h = h * 5 + 0xe6546b64;
+        } while (--i);
+        key = reinterpret_cast<u8 const*>(key_x4);
+    }
+    if (len & 3)
+    {
+        size_t i = len & 3;
+        u32 k = 0;
+        key = &key[i - 1];
+        do
+        {
+            k <<= 8;
+            k |= *key--;
+        } while (--i);
+        k *= 0xcc9e2d51;
+        k = (k << 15) | (k >> 17);
+        k *= 0x1b873593;
+        h ^= k;
+    }
+    h ^= len;
+    h ^= h >> 16;
+    h *= 0x85ebca6b;
+    h ^= h >> 13;
+    h *= 0xc2b2ae35;
+    h ^= h >> 16;
+    return h;
+}
+
 template<typename T>
 void swap_and_erase(std::vector<T>& vector, T element)
 {

@@ -29,6 +29,10 @@ public:
 private:
     i32 virtual attach(char const* path, i32 type) const override;
 
+    static char* read_hlsl_shader_from_file(std::string const& path, size_t* p_size);
+    static bool save_compiled_shader(std::string const& path, ID3DBlob* blob);
+    static bool read_file_to_blob(std::string const& path, ID3DBlob** pp_blob);
+
     ID3D11InputLayout* m_input_layout = nullptr;
     ID3D11VertexShader* m_vertex_shader = nullptr;
     ID3D11PixelShader* m_pixel_shader = nullptr;

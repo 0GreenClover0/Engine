@@ -317,10 +317,14 @@ void Renderer::switch_rendering_to_texture()
 
 void Renderer::reload_shaders() const
 {
+    float const time = glfwGetTime();
+
     for (u32 i = 0; i < m_shaders.size(); i++)
     {
         m_shaders[i]->load_shader();
     }
+
+    Debug::log(std::format("Shader reload time: {}", glfwGetTime() - time));
 }
 
 void Renderer::set_vsync(bool const enabled)
