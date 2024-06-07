@@ -1451,10 +1451,16 @@ void Editor::switch_rendering_to_editor()
     if (m_rendering_to_editor)
     {
         glfwSetInputMode(Engine::window->get_glfw_window(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        GLFWvidmode const* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+        glfwSetWindowMonitor(Engine::window->get_glfw_window(), nullptr, 0, 0, Renderer::screen_width, Renderer::screen_height,
+                             mode->refreshRate);
     }
     else
     {
         glfwSetInputMode(Engine::window->get_glfw_window(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        GLFWvidmode const* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+        glfwSetWindowMonitor(Engine::window->get_glfw_window(), glfwGetPrimaryMonitor(), 0, 0, mode->width, mode->height,
+                             mode->refreshRate);
     }
 }
 
