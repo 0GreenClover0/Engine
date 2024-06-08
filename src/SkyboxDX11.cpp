@@ -26,7 +26,7 @@ void SkyboxDX11::bind()
 void SkyboxDX11::unbind()
 {
     ID3D11ShaderResourceView* null_shader_resource_view = nullptr;
-    RendererDX11::get_instance_dx11()->get_device_context()->PSSetShaderResources(10, 1, &null_shader_resource_view);
+    RendererDX11::get_instance_dx11()->get_device_context()->PSSetShaderResources(15, 1, &null_shader_resource_view);
 }
 
 void SkyboxDX11::draw() const
