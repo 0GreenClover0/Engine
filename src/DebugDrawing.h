@@ -45,9 +45,16 @@ public:
     glm::vec3 get_extents() const;
     void set_extents(glm::vec3 const& extents);
 
+    void enable_drawing() const;
+    void disable_drawing() const;
+
+    void set_drawing_enabled(bool const enabled);
+
 private:
     void create_box(bool const is_reload);
     void create_sphere(bool const is_reload);
+
+    bool m_drawing_enabled = true;
 
     DrawingType m_type = DrawingType::Sphere;
     DrawingType m_previous_drawing_type = DrawingType::Sphere;
