@@ -44,3 +44,16 @@ void solve_quadratic(float a, float b, float c, out float min_t, out float max_t
         max_t = furthestT;
     }
 }
+
+float3 normal_blend(float3 n1, float3 n2)
+{
+    // Unpack
+    n1 = n1 * 2.0f - 1.0f;
+    n2 = n2 * 2.0f - 1.0f;
+
+    float3x3 nBasis = float3x3(float3(n1.z, n1.y, -n1.x), // +90 degree rotation around y axis
+                               float3(n1.x, n1.z, -n1.y), // -90 degree rotation around x axis
+                               float3(n1.x, n1.y,  n1.z));
+
+    return normalize(n2.x*nBasis[0] + n2.y*nBasis[1] + n2.z*nBasis[2]);
+}
