@@ -175,7 +175,6 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
                 out << YAML::Key << "ComponentName" << YAML::Value << "WaterComponent";
                 out << YAML::Key << "guid" << YAML::Value << water->guid;
                 out << YAML::Key << "custom_name" << YAML::Value << water->custom_name;
-                out << YAML::Key << "texture_path" << YAML::Value << water->texture_path;
                 out << YAML::Key << "waves" << YAML::Value << water->waves;
                 out << YAML::Key << "tesselation_level" << YAML::Value << water->tesselation_level;
             }
@@ -765,10 +764,6 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         else
         {
             auto const deserialized_component = std::dynamic_pointer_cast<class Water>(get_from_pool(component["guid"].as<std::string>()));
-            if (component["texture_path"].IsDefined())
-            {
-                deserialized_component->texture_path = component["texture_path"].as<std::string>();
-            }
             if (component["waves"].IsDefined())
             {
                 deserialized_component->waves = component["waves"].as<std::vector<DXWave>>();
