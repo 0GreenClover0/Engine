@@ -91,6 +91,8 @@ std::shared_ptr<Editor> Editor::create()
 {
     auto editor = std::make_shared<Editor>(AK::Badge<Editor> {});
 
+    m_instance = editor;
+
     Input::input->on_set_cursor_pos_event.attach(&Editor::mouse_callback, editor);
 
     return editor;
