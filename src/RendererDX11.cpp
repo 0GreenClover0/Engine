@@ -14,6 +14,7 @@
 #include "Skybox.h"
 #include "TextureLoaderDX11.h"
 #include "Water.h"
+#include <SkyboxFactory.h>
 
 std::shared_ptr<RendererDX11> RendererDX11::create()
 {
@@ -144,6 +145,7 @@ std::shared_ptr<RendererDX11> RendererDX11::create()
 
     renderer->m_shadow_texture = ResourceManager::get_instance().load_texture("./res/textures/noise.jpg", TextureType::Diffuse);
 
+    Skybox::set_instance(SkyboxFactory::create());
     return renderer;
 }
 
