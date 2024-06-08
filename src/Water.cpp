@@ -24,9 +24,9 @@ std::shared_ptr<Water> Water::create()
     return water;
 }
 
-std::shared_ptr<Water> Water::create(u32 tesselation_level, std::string const& texture_path, std::shared_ptr<Material> const& material)
+std::shared_ptr<Water> Water::create(u32 tesselation_level, std::shared_ptr<Material> const& material)
 {
-    auto water = std::make_shared<Water>(AK::Badge<Water> {}, tesselation_level, texture_path, material);
+    auto water = std::make_shared<Water>(AK::Badge<Water> {}, tesselation_level, material);
     water->add_wave();
     return water;
 }
@@ -34,13 +34,11 @@ std::shared_ptr<Water> Water::create(u32 tesselation_level, std::string const& t
 Water::Water(AK::Badge<Water>, std::shared_ptr<Material> const& material) : Model(material)
 {
     create_constant_buffer_wave();
-    texture_path = "res/textures/water.jpg";
-
     Water::prepare();
 }
 
-Water::Water(AK::Badge<Water>, u32 const tesselation_level, std::string const& texture_path, std::shared_ptr<Material> const& material)
-    : Model(material), texture_path(texture_path), tesselation_level(tesselation_level)
+Water::Water(AK::Badge<Water>, u32 const tesselation_level, std::shared_ptr<Material> const& material)
+    : Model(material), tesselation_level(tesselation_level)
 {
     create_constant_buffer_wave();
 
@@ -110,11 +108,6 @@ void Water::prepare()
 
     std::vector<std::shared_ptr<Texture>> diffuse_maps = {};
 
-    if (!texture_path.empty())
-    {
-        diffuse_maps = {ResourceManager::get_instance().load_texture(texture_path, TextureType::Diffuse)};
-    }
-
     m_meshes.push_back(
         ResourceManager::get_instance().load_mesh(m_meshes.size(), "WATER", vertices, indices, diffuse_maps, m_draw_type, material));
 }
@@ -163,8 +156,6 @@ void Water::draw_editor()
     {
         add_wave();
     }
-
-    ImGui::InputText("Texture Path", &texture_path);
 
     if (ImGui::IsItemDeactivatedAfterEdit())
     {
