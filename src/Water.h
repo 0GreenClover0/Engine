@@ -24,12 +24,17 @@ public:
     void remove_wave(u32 const index);
     float get_wave_height(glm::vec2 const& position) const;
     std::vector<DXWave> waves = {};
+    ConstantBufferWater m_ps_buffer = {};
 
-    u32 tesselation_level = 2;
+    u32 tesselation_level = 7;
 
 private:
     void create_constant_buffer_wave();
     void set_constant_buffer() const;
 
     ID3D11Buffer* m_constant_buffer_wave = nullptr;
+    ID3D11Buffer* m_constant_buffer_water = nullptr;
+
+    std::shared_ptr<Texture> m_normal_map0;
+    std::shared_ptr<Texture> m_normal_map1;
 };
