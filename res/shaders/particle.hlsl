@@ -4,6 +4,11 @@ cbuffer object_buffer : register(b0)
     float4x4 world;
 };
 
+cbuffer ConstantBufferParticle : register(b4)
+{
+    float4 color;
+};
+
 struct VS_Input
 {
     float3 pos: POSITION;
@@ -35,13 +40,13 @@ float4 ps_main(VS_Output input) : SV_TARGET
     float bias = 0.01f;
     float test_value = 0.3f;
 
-    float4 color = ObjTexture.Sample(ObjSamplerState, input.UV);
-    clip(color.a - bias);
+    float4 final_color = ObjTexture.Sample(ObjSamplerState, input.UV);
+    clip(final_color.a - bias);
 
-    if (color.a > bias)
+    if (final_color.a > bias)
     {
-        color.a = test_value;
+        final_color = color;
     }
 
-    return color;
+    return final_color;
 }
