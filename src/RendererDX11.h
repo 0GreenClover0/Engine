@@ -110,7 +110,7 @@ private:
     ID3D11Buffer* m_constant_buffer_per_object = nullptr;
     ID3D11Buffer* m_constant_buffer_point_shadows = nullptr;
     ID3D11Buffer* m_constant_buffer_ssao = nullptr;
-    ID3D11Buffer* m_constant_buffer_time = nullptr;
+    ID3D11Buffer* m_constant_buffer_psmisc = nullptr;
     ID3D11DepthStencilView* m_depth_stencil_view = nullptr;
     ID3D11Texture2D* m_depth_stencil_buffer = nullptr;
     ID3D11DepthStencilState* m_depth_stencil_state = nullptr;

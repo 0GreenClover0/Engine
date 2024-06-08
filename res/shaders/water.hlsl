@@ -1,7 +1,9 @@
 #define PI 3.141592f
 #define gravity 9.81f
 
-#include "lighting_calculations.hlsl"
+#include "ssr.hlsl"
+
+
 cbuffer water_buffer : register(b4)
 {
     float4 top_color;
@@ -53,7 +55,6 @@ struct PositionAndNormal
     float3 normal;
 };
 
-Texture2D obj_texture : register(t0);
 TextureCube skybox : register(t15);
 Texture2D fog_tex : register(t16);
 Texture2D water_normal0 : register(t18);
@@ -72,7 +73,7 @@ PositionAndNormal calc_gerstner_wave_position_and_normal(float x, float y, float
 {
     float3 pos = float3(x, 0.0f, y);
     float3 normal = float3(0.0f, 1.0f, 0.0f);
-
+    [loop]
     for (int i = 0; i < no_of_waves; i++)
     {
         float speed = waves[i].speed;
@@ -152,6 +153,15 @@ float4 ps_main(VS_Output input) : SV_TARGET
     float3 normal2 = water_normal1.Sample(wrap_sampler_water, (input.UV.xy + time_ps.xx * normalmap_scroll_speed1) * normalmap_scale1);
     float3 combined_normal = normal_blend(normalize(normal1 * 2.0f - 1.0f.xxx), normalize(input.normal));
     combined_normal = normal_blend(normalize(normal2 * 2.0f - 1.0f.xxx), combined_normal);
+    
+    // SSR (reflection)
+    float3 view_normal = normalize(mul(view, float4(combined_normal, 0.0f)));
+    float3 view_pos = mul(view, float4(input.world_pos, 1.0f)).xyz;
+    float3 reflected_vector = normalize(reflect(normalize(view_pos), view_normal));
+    float4 reflection_coords = ray_cast(reflected_vector, view_pos);
+    float4 ssr_reflection = diffuse_buffer.Sample(wrap_sampler_water, reflection_coords.xy);
+    if(reflection_coords.w == 0.0f) ssr_reflection = float4(0.0f.xxxx);
+
     // Skybox reflection and refraction
     float ratio = 1.0f / 1.52f;
     float3 I = normalize(input.world_pos - camera_pos);
@@ -187,8 +197,9 @@ float4 ps_main(VS_Output input) : SV_TARGET
         result += calculate_scatter(spot_lights[j], float4(input.world_pos, 1.0f), j) * fog_value;
     }
 
-    result += reflection * 0.2f;
-    float4 return_value = gamma_correction(exposure_tonemapping(result.xyz, 1.1f));
-    return_value.a = 0.8f;
-    return return_value;
+    result = result * phong_contribution +  (1.0f - phong_contribution)  * ((ssr_reflection.w > 0.0f ? ssr_reflection.xyz : reflection ) * 0.5f + refraction * 0.5f);
+    float4 final;
+    final.xyz = gamma_correction(exposure_tonemapping(result.xyz, 1.1f));
+    final.a = 0.8f;
+    return final;
 }

@@ -91,9 +91,9 @@ std::shared_ptr<RendererDX11> RendererDX11::create()
     time_buffer_desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
     time_buffer_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
     time_buffer_desc.MiscFlags = 0;
-    time_buffer_desc.ByteWidth = static_cast<UINT>(sizeof(ConstantBufferTime) + (16 - (sizeof(ConstantBufferTime) % 16)));
+    time_buffer_desc.ByteWidth = static_cast<UINT>(sizeof(ConstantBufferPSMisc) + (16 - (sizeof(ConstantBufferPSMisc) % 16)));
 
-    hr = renderer->get_device()->CreateBuffer(&time_buffer_desc, nullptr, &renderer->m_constant_buffer_time);
+    hr = renderer->get_device()->CreateBuffer(&time_buffer_desc, nullptr, &renderer->m_constant_buffer_psmisc);
     assert(SUCCEEDED(hr));
 
     renderer->create_depth_stencil();
@@ -566,18 +566,20 @@ void RendererDX11::bind_universal_resources() const
 {
     g_pd3dDeviceContext->PSSetShaderResources(16, 1, &m_shadow_texture->shader_resource_view);
 
-    ConstantBufferTime time_data = {};
-    time_data.time = static_cast<float>(glfwGetTime());
-    time_data.is_fog_rendered = Engine::is_game_running();
+    ConstantBufferPSMisc misc_data = {};
+    misc_data.time = static_cast<float>(glfwGetTime());
+    misc_data.is_fog_rendered = Engine::is_game_running();
+    misc_data.projection = Camera::get_main_camera()->get_projection();
+    misc_data.view = Camera::get_main_camera()->get_view_matrix();
     D3D11_MAPPED_SUBRESOURCE time_resource;
-    HRESULT hr = get_device_context()->Map(m_constant_buffer_time, 0, D3D11_MAP_WRITE_DISCARD, 0, &time_resource);
+    HRESULT hr = get_device_context()->Map(m_constant_buffer_psmisc, 0, D3D11_MAP_WRITE_DISCARD, 0, &time_resource);
     assert(SUCCEEDED(hr));
     g_pd3dDeviceContext->PSSetSamplers(2, 1, &m_repeat_sampler_state);
 
-    CopyMemory(time_resource.pData, &time_data, sizeof(ConstantBufferTime));
+    CopyMemory(time_resource.pData, &misc_data, sizeof(ConstantBufferPSMisc));
 
-    get_device_context()->Unmap(m_constant_buffer_time, 0);
-    get_device_context()->PSSetConstantBuffers(3, 1, &m_constant_buffer_time);
+    get_device_context()->Unmap(m_constant_buffer_psmisc, 0);
+    get_device_context()->PSSetConstantBuffers(3, 1, &m_constant_buffer_psmisc);
 }
 
 void RendererDX11::initialize_global_renderer_settings()

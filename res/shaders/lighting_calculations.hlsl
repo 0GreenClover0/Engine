@@ -11,8 +11,10 @@ cbuffer light_buffer : register(b0)
     int number_of_spot_lights;
 };
 
-cbuffer ps_time_buffer : register(b3)
+cbuffer ps_misc_buffer : register(b3)
 {
+    float4x4 projection;
+    float4x4 view;
     float time_ps;
     bool is_fog_rendered;
 }

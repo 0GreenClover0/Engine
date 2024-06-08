@@ -3,6 +3,7 @@
 ## Buffer registers:
 - Every shader should have an `object_buffer` bound to `b0 (VS)`
 - **DO NOT OVERWRITE** `b0 (PS)` buffer which is declared in `lighting_calculations.hlsl`
+- `b3 (PS)` is occupied by a misc buffer
 
 ## Sampler registers:
 - `s0` is for the main texture sampler
