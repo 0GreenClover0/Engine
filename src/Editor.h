@@ -153,6 +153,11 @@ public:
     bool load_scene_name(std::string const& name) const;
     void save_scene_as(std::string const& name) const;
 
+    static std::shared_ptr<Editor> get_instance()
+    {
+        return m_instance;
+    }
+
 private:
     void switch_rendering_to_editor();
 
@@ -251,6 +256,8 @@ private:
     bool m_is_camera_options_locked = false;
 
     bool m_append_scene = false;
+
+    inline static std::shared_ptr<Editor> m_instance = nullptr;
 };
 
 }
