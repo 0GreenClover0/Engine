@@ -7,6 +7,7 @@
 
 #include <array>
 
+class DebugDrawing;
 class Camera;
 
 namespace Editor
@@ -153,6 +154,9 @@ public:
     bool load_scene_name(std::string const& name) const;
     void save_scene_as(std::string const& name) const;
 
+    void register_debug_drawing(std::shared_ptr<DebugDrawing> const& debug_drawing);
+    void unregister_debug_drawing(std::shared_ptr<DebugDrawing> const& debug_drawing);
+
     static std::shared_ptr<Editor> get_instance()
     {
         return m_instance;
@@ -199,6 +203,8 @@ private:
     void mouse_callback(double const x, double const y);
 
     glm::vec3 update_locked_value(glm::vec3 new_value, glm::vec3 const old_value) const;
+
+    std::vector<std::shared_ptr<DebugDrawing>> m_debug_drawings = {};
 
     std::string m_copied_entity_path = "./.editor/copied_entity.txt";
 

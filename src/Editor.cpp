@@ -1107,6 +1107,16 @@ void Editor::save_scene_as(std::string const& name) const
     scene_serializer->serialize("./res/scenes/" + name + ".txt");
 }
 
+void Editor::register_debug_drawing(std::shared_ptr<DebugDrawing> const& debug_drawing)
+{
+    m_debug_drawings.emplace_back(debug_drawing);
+}
+
+void Editor::unregister_debug_drawing(std::shared_ptr<DebugDrawing> const& debug_drawing)
+{
+    AK::swap_and_erase(m_debug_drawings, debug_drawing);
+}
+
 bool Editor::load_scene() const
 {
     return load_scene_name("scene");

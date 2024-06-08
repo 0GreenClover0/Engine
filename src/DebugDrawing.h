@@ -31,6 +31,7 @@ public:
 
     virtual void initialize() override;
     virtual void update() override;
+    virtual void uninitialize() override;
 
     // TODO: This should be in an update_editor() method
     virtual void draw_editor() override;
