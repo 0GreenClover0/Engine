@@ -739,6 +739,15 @@ bool Editor::draw_entity_popup(std::shared_ptr<Entity> const& entity)
             return true;
         }
 
+        if (ImGui::Button("Duplicate"))
+        {
+            copy_selected_entity();
+            paste_entity();
+            ImGui::CloseCurrentPopup();
+            ImGui::EndPopup();
+            return true;
+        }
+
         if (ImGui::Button("Add child"))
         {
             add_child_entity();
@@ -1515,6 +1524,15 @@ void Editor::handle_input()
         }
 
         ImGui::EndPopup();
+    }
+
+    if (ImGui::GetIO().KeyCtrl && input->get_key_down(GLFW_KEY_D))
+    {
+        if (!ImGui::IsAnyItemActive())
+        {
+            copy_selected_entity();
+            paste_entity();
+        }
     }
 
     if (input->get_key_down(GLFW_KEY_F5))
