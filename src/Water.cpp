@@ -3,6 +3,7 @@
 #include "MeshFactory.h"
 #include "RendererDX11.h"
 #include "ResourceManager.h"
+#include "Skybox.h"
 #include "Texture.h"
 #include "TextureLoader.h"
 
@@ -49,8 +50,10 @@ Water::Water(AK::Badge<Water>, u32 const tesselation_level, std::string const& t
 void Water::draw() const
 {
     set_constant_buffer();
+    Skybox::get_instance()->bind();
 
     Model::draw();
+    Skybox::get_instance()->unbind();
 }
 
 void Water::prepare()
