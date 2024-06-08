@@ -286,6 +286,38 @@ struct convert<ColliderType2D>
         }
 
         rhs = static_cast<ColliderType2D>(node.as<int>());
+    }
+};
+template<>
+struct convert<ConstantBufferWater>
+{
+    static Node encode(ConstantBufferWater const& rhs)
+    {
+        Node node;
+        node.push_back(rhs.top_color);
+        node.push_back(rhs.bottom_color);
+        node.push_back(rhs.normalmap_scroll_speed_0);
+        node.push_back(rhs.normalmap_scroll_speed_0);
+        node.push_back(rhs.normalmap_scale0);
+        node.push_back(rhs.normalmap_scale1);
+        node.push_back(rhs.combined_amplitude);
+        node.push_back(rhs.phong_contribution);
+        return node;
+    }
+
+    static bool decode(Node const& node, ConstantBufferWater& rhs)
+    {
+        if (!node.IsSequence() || node.size() != 8)
+            return false;
+
+        rhs.top_color = node[0].as<glm::vec4>();
+        rhs.bottom_color = node[1].as<glm::vec4>();
+        rhs.normalmap_scroll_speed_0 = node[2].as<float>();
+        rhs.normalmap_scroll_speed_0 = node[3].as<float>();
+        rhs.normalmap_scale0 = node[4].as<float>();
+        rhs.normalmap_scale1 = node[5].as<float>();
+        rhs.combined_amplitude = node[6].as<float>();
+        rhs.phong_contribution = node[7].as<float>();
         return true;
     }
 };
@@ -477,6 +509,13 @@ inline Emitter& operator<<(YAML::Emitter& out, ColliderType2D const& v)
 {
     out << YAML::Flow;
     out << to_integral(v);
+    return out;
+}
+inline Emitter& operator<<(YAML::Emitter& out, ConstantBufferWater const& cb)
+{
+    out << YAML::Flow;
+    out << YAML::BeginSeq << cb.top_color << cb.bottom_color << cb.normalmap_scroll_speed_0 << cb.normalmap_scroll_speed_1
+        << cb.normalmap_scale0 << cb.normalmap_scale1 << cb.combined_amplitude << cb.phong_contribution << YAML::EndSeq;
     return out;
 }
 }
