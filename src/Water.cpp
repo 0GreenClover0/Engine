@@ -19,7 +19,6 @@ std::shared_ptr<Water> Water::create()
     material->needs_skybox = true;
     material->needs_forward_rendering = true;
     auto water = std::make_shared<Water>(AK::Badge<Water> {}, material);
-    water->tesselation_level = 5;
     water->add_wave();
 
     water->m_ps_buffer.top_color = glm::vec4(0.1f, 0.1f, 0.5f, 1.0f);
@@ -148,7 +147,7 @@ void Water::draw_editor()
     u32 constexpr min = 0;
     u32 constexpr max = 9;
 
-    if (ImGui::SliderScalar("Value", ImGuiDataType_U32, &tesselation_level, &min, &max, "%u"))
+    if (ImGui::SliderScalar("Tesselation", ImGuiDataType_U32, &tesselation_level, &min, &max, "%u"))
     {
         reprepare();
     }
@@ -171,11 +170,11 @@ void Water::draw_editor()
     {
         if (ImGui::TreeNode(("Wave " + std::to_string(i)).c_str()))
         {
-            ImGui::DragFloat2("Direction", &waves[i].direction[0]);
-            ImGui::DragFloat("Speed", &waves[i].speed);
-            ImGui::DragFloat("Steepness", &waves[i].steepness);
-            ImGui::DragFloat("Wave Length", &waves[i].wave_length);
-            ImGui::DragFloat("Amplitude", &waves[i].amplitude);
+            ImGui::SliderFloat2("Direction", &waves[i].direction[0], -1.0f, 1.0f);
+            ImGui::DragFloat("Speed", &waves[i].speed, 0.5f, 0.0f, 1000.0f);
+            ImGui::SliderFloat("Steepness", &waves[i].steepness, 0.0f, 1.0f);
+            ImGui::DragFloat("Wave Length", &waves[i].wave_length, 0.5f, 0.5f, 1000.0f);
+            ImGui::SliderFloat("Amplitude", &waves[i].amplitude, 0.0f, 0.1f);
 
             if (ImGui::Button(("Delete##" + std::to_string(i)).c_str()))
             {
@@ -204,11 +203,22 @@ void Water::add_wave()
         return;
 
     DXWave wave = {};
-    wave.direction = glm::vec2(1.0f, 0.5f);
-    wave.amplitude = 0.5f;
-    wave.speed = 100.0f;
-    wave.steepness = 0.9f;
-    wave.wave_length = 500.0f;
+    if (waves.size() != 0)
+    {
+        wave.direction = waves[waves.size() - 1].direction;
+        wave.amplitude = waves[waves.size() - 1].amplitude;
+        wave.speed = waves[waves.size() - 1].speed;
+        wave.steepness = waves[waves.size() - 1].steepness;
+        wave.wave_length = waves[waves.size() - 1].wave_length;
+    }
+    else
+    {
+        wave.direction = glm::vec2(1.0f, 0.5f);
+        wave.amplitude = 0.5f;
+        wave.speed = 100.0f;
+        wave.steepness = 0.9f;
+        wave.wave_length = 500.0f;
+    }
     waves.emplace_back(wave);
 }
 
@@ -245,9 +255,12 @@ float Water::get_wave_height(glm::vec2 const& position) const
         for (i32 i = 0; i < iterations; i++)
         {
             glm::vec2 offset = {};
-            offset.x = steepness * wave.amplitude * wave.direction.x * cos(glm::dot((frequency * wave.direction), glm::vec2(new_position.x, new_position.y)) + phi * time);
-            offset.y = steepness * wave.amplitude * wave.direction.x * cos(glm::dot((frequency * wave.direction), glm::vec2(new_position.x, new_position.y)) + phi * time);
-            per_wave_height = wave.amplitude * sin(glm::dot((frequency * wave.direction), glm::vec2(new_position.x, new_position.y)) + phi * time);
+            offset.x = steepness * wave.amplitude * wave.direction.x
+                     * cos(glm::dot((frequency * wave.direction), glm::vec2(new_position.x, new_position.y)) + phi * time);
+            offset.y = steepness * wave.amplitude * wave.direction.x
+                     * cos(glm::dot((frequency * wave.direction), glm::vec2(new_position.x, new_position.y)) + phi * time);
+            per_wave_height =
+                wave.amplitude * sin(glm::dot((frequency * wave.direction), glm::vec2(new_position.x, new_position.y)) + phi * time);
             new_position = position - offset;
         }
         height += per_wave_height;
