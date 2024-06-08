@@ -115,6 +115,11 @@ Model::Model(std::shared_ptr<Material> const& material) : Drawable(material)
 
 void Model::draw() const
 {
+    if (m_rasterizer_draw_type == RasterizerDrawType::None)
+    {
+        return;
+    }
+
     // Either wireframe or solid for individual model
     Renderer::get_instance()->set_rasterizer_draw_type(m_rasterizer_draw_type);
 
