@@ -89,6 +89,17 @@ PositionAndNormal calc_gerstner_wave_position_and_normal(float x, float y, float
     return result;
 }
 
+// PIXEL SHADER functions
+float falloff(float3 current_world_position, float3 other_world_position, float threshold = 0.1f, float power = 10.0f)
+{
+    float distance = length(other_world_position - current_world_position);
+    if(abs(distance) < threshold)
+    {
+        return distance * power;
+    }
+    return 0.0f;
+}
+
 VS_Output vs_main(VS_Input input)
 {
     VS_Output output;
@@ -106,9 +117,17 @@ VS_Output vs_main(VS_Input input)
 
 float4 ps_main(VS_Output input) : SV_TARGET
 {
-    float2 screen_UV = float2(input.ndc.x, - input.ndc.y);
-    float ratio = 1.0f / 1.25f;
-    float3 norm = normalize(input.normal);
+    // FALLOFF CALCULATION
+    float2 UV = float2(input.ndc.x, (-input.ndc.y + 1.0f));
+    float3 deferred_world_pos = position_buffer.Sample(wrap_sampler_water, UV).xyz;
+    float falloff_value = falloff(input.world_pos, deferred_world_pos);
+    if(falloff_value > 0.0f)
+    {
+        return float4(1.0f, 1.0f, 1.0f, falloff_value);
+    }
+
+    // Skybox reflection and refraction
+    float ratio = 1.0f / 1.52f;
     float3 I = normalize(input.world_pos - camera_pos);
     float3 R_refract = refract(I, norm, ratio);
     float3 R_reflect = reflect(I, norm);
