@@ -205,6 +205,7 @@ private:
     glm::vec3 update_locked_value(glm::vec3 new_value, glm::vec3 const old_value) const;
 
     std::vector<std::shared_ptr<DebugDrawing>> m_debug_drawings = {};
+    bool m_debug_drawings_enabled = true;
 
     std::string m_copied_entity_path = "./.editor/copied_entity.txt";
 

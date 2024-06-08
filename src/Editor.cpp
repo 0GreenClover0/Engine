@@ -439,6 +439,14 @@ void Editor::draw_game(std::shared_ptr<EditorWindow> const& window)
 
         ImGui::PopStyleColor();
 
+        if (ImGui::Checkbox("Debug drawings", &m_debug_drawings_enabled))
+        {
+            for (auto const& debug_drawing : m_debug_drawings)
+            {
+                debug_drawing->set_drawing_enabled(m_debug_drawings_enabled);
+            }
+        }
+
         ImGui::EndMenuBar();
     }
 

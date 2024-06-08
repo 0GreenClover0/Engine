@@ -198,6 +198,49 @@ void DebugDrawing::set_extents(glm::vec3 const& extents)
         entity->transform->set_scale(extents);
 }
 
+void DebugDrawing::enable_drawing() const
+{
+    if (m_box_component != nullptr)
+    {
+        m_box_component->set_rasterizer_draw_type(RasterizerDrawType::Wireframe);
+    }
+
+    if (m_sphere_component != nullptr)
+    {
+        m_sphere_component->set_rasterizer_draw_type(RasterizerDrawType::Wireframe);
+    }
+}
+
+void DebugDrawing::disable_drawing() const
+{
+    if (m_box_component != nullptr)
+    {
+        m_box_component->set_rasterizer_draw_type(RasterizerDrawType::None);
+    }
+
+    if (m_sphere_component != nullptr)
+    {
+        m_sphere_component->set_rasterizer_draw_type(RasterizerDrawType::None);
+    }
+}
+
+void DebugDrawing::set_drawing_enabled(bool const enabled)
+{
+    if (enabled == m_drawing_enabled)
+        return;
+
+    if (enabled)
+    {
+        enable_drawing();
+    }
+    else
+    {
+        disable_drawing();
+    }
+
+    m_drawing_enabled = enabled;
+}
+
 void DebugDrawing::create_box(bool const is_reload)
 {
     m_box_component = entity->add_component<Cube>(Cube::create("./res/textures/white.jpg", m_plain_material));
@@ -210,6 +253,15 @@ void DebugDrawing::create_box(bool const is_reload)
 
     set_extents(m_extents);
     m_box_component->set_rasterizer_draw_type(RasterizerDrawType::Wireframe);
+
+    if (m_drawing_enabled)
+    {
+        enable_drawing();
+    }
+    else
+    {
+        disable_drawing();
+    }
 }
 
 void DebugDrawing::create_sphere(bool const is_reload)
@@ -223,4 +275,13 @@ void DebugDrawing::create_sphere(bool const is_reload)
 
     set_radius(m_radius);
     m_sphere_component->set_rasterizer_draw_type(RasterizerDrawType::Wireframe);
+
+    if (m_drawing_enabled)
+    {
+        enable_drawing();
+    }
+    else
+    {
+        disable_drawing();
+    }
 }
