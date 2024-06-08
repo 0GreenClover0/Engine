@@ -12,6 +12,7 @@ namespace InternalMeshData
 void initialize()
 {
     initialize_default_material();
+    initialize_particle_material();
 
     cube.vertices = std::vector<Vertex>();
     cube.vertices.reserve(24);
@@ -143,4 +144,13 @@ void initialize_default_material()
 {
     default_shader = ResourceManager::get_instance().load_shader("./res/shaders/lit.hlsl", "./res/shaders/lit.hlsl");
     default_material = Material::create(default_shader);
+}
+
+void initialize_particle_material()
+{
+    particle_shader = ResourceManager::get_instance().load_shader("./res/shaders/particle.hlsl", "./res/shaders/particle.hlsl");
+    particle_material = Material::create(particle_shader, 1);
+    particle_material->casts_shadows = false;
+    particle_material->needs_forward_rendering = true;
+    particle_material->is_billboard = true; // !
 }
