@@ -221,6 +221,12 @@ void Water::add_wave()
         wave.wave_length = 500.0f;
     }
     waves.emplace_back(wave);
+
+    m_ps_buffer.combined_amplitude = 0.0f;
+    for (int i = 0; i < waves.size(); i++)
+    {
+        m_ps_buffer.combined_amplitude += waves[i].amplitude;
+    }
 }
 
 void Water::remove_wave(u32 const index)
