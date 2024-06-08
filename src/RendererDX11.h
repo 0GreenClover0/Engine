@@ -128,6 +128,8 @@ private:
     ID3D11BlendState* m_deferred_blend_state = nullptr;
     ID3D11BlendState* m_forward_blend_state = nullptr;
 
+    std::shared_ptr<Entity> m_skybox_entity = {};
+
     std::shared_ptr<Texture> m_shadow_texture = nullptr;
     inline static u32 constexpr spot_light_shadow_register_offset = 20;
     inline static u32 constexpr point_light_shadow_register_offset = 40;
