@@ -2,6 +2,7 @@
 
 #include "AK/AK.h"
 #include "Cube.h"
+#include "Editor.h"
 #include "Engine.h"
 #include "Entity.h"
 #include "Globals.h"
@@ -41,6 +42,8 @@ std::shared_ptr<DebugDrawing> DebugDrawing::create(glm::vec3 position, glm::vec3
 void DebugDrawing::initialize()
 {
     Component::initialize();
+
+    Editor::Editor::get_instance()->register_debug_drawing(static_pointer_cast<DebugDrawing>(shared_from_this()));
 
     set_can_tick(true);
     m_light_source_shader =
@@ -87,6 +90,13 @@ void DebugDrawing::update()
 
     if (m_current_time > m_lifetime)
         entity->destroy_immediate();
+}
+
+void DebugDrawing::uninitialize()
+{
+    Component::uninitialize();
+
+    Editor::Editor::get_instance()->unregister_debug_drawing(static_pointer_cast<DebugDrawing>(shared_from_this()));
 }
 
 void DebugDrawing::draw_editor()
