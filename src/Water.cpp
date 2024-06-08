@@ -20,7 +20,22 @@ std::shared_ptr<Water> Water::create()
     material->needs_forward_rendering = true;
     auto water = std::make_shared<Water>(AK::Badge<Water> {}, material);
     water->tesselation_level = 5;
+    water->add_wave();
 
+    water->m_ps_buffer.top_color = glm::vec4(0.1f, 0.1f, 0.5f, 1.0f);
+    water->m_ps_buffer.bottom_color = glm::vec4(0.0f, 0.0f, 0.4f, 1.0f);
+    water->m_ps_buffer.normalmap_scroll_speed_0 = 1.0f / 500.0f;
+    water->m_ps_buffer.normalmap_scroll_speed_1 = 1.0f / 500.0f * 1.3f;
+    water->m_ps_buffer.normalmap_scale0 = 35.0f;
+    water->m_ps_buffer.normalmap_scale1 = 10.0f;
+    water->m_ps_buffer.phong_contribution = 0.98f;
+    water->m_ps_buffer.combined_amplitude = 0.0f;
+    // This is not right, but commit on other branch totally changes how Water is created
+    // so it doesn't matter, let it be like that for now
+    for (int i = 0; i < water->waves.size(); i++)
+    {
+        water->m_ps_buffer.combined_amplitude += water->waves[i].amplitude;
+    }
     return water;
 }
 
@@ -34,6 +49,8 @@ std::shared_ptr<Water> Water::create(u32 tesselation_level, std::shared_ptr<Mate
 Water::Water(AK::Badge<Water>, std::shared_ptr<Material> const& material) : Model(material)
 {
     create_constant_buffer_wave();
+    m_normal_map0 = ResourceManager::get_instance().load_texture("./res/textures/water/water_normal1.png", TextureType::Diffuse);
+    m_normal_map1 = ResourceManager::get_instance().load_texture("./res/textures/water/water_normal2.png", TextureType::Diffuse);
     Water::prepare();
 }
 
@@ -47,6 +64,9 @@ Water::Water(AK::Badge<Water>, u32 const tesselation_level, std::shared_ptr<Mate
 
 void Water::draw() const
 {
+    auto const renderer = RendererDX11::get_instance_dx11();
+    renderer->get_device_context()->PSSetShaderResources(18, 1, &m_normal_map0->shader_resource_view);
+    renderer->get_device_context()->PSSetShaderResources(19, 1, &m_normal_map1->shader_resource_view);
     set_constant_buffer();
 
     Skybox::get_instance()->bind();
@@ -54,6 +74,9 @@ void Water::draw() const
     Model::draw();
 
     Skybox::get_instance()->unbind();
+    ID3D11ShaderResourceView* null_shader_resource_view = nullptr;
+    renderer->get_device_context()->PSSetShaderResources(18, 1, &null_shader_resource_view);
+    renderer->get_device_context()->PSSetShaderResources(19, 1, &null_shader_resource_view);
 }
 
 void Water::prepare()
@@ -131,6 +154,19 @@ void Water::draw_editor()
         reprepare();
     }
 
+    // Pixel Shader Constants
+    ImGui::ColorEdit3("Top Color", &m_ps_buffer.top_color[0]);
+    ImGui::ColorEdit3("Bottom Color", &m_ps_buffer.bottom_color[0]);
+    ImGui::DragFloat("Normalmap Scroll Speed 0", &m_ps_buffer.normalmap_scroll_speed_0, 0.001f, -1.0f, 1.0f);
+    ImGui::DragFloat("Normalmap Scroll Speed 1", &m_ps_buffer.normalmap_scroll_speed_1, 0.001f, -1.0f, 1.0f);
+    ImGui::SliderFloat("Normalmap Scale 0", &m_ps_buffer.normalmap_scale0, 1.0f, 100.0f);
+    ImGui::SliderFloat("Normalmap Scale 1", &m_ps_buffer.normalmap_scale1, 1.0f, 100.0f);
+    ImGui::SliderFloat("Phong Contribution", &m_ps_buffer.phong_contribution, 0.0f, 1.0f);
+    m_ps_buffer.combined_amplitude = 0.0f;
+    for (int i = 0; i < waves.size(); i++)
+    {
+        m_ps_buffer.combined_amplitude += waves[i].amplitude;
+    }
     // List existing waves
     for (size_t i = 0; i < waves.size(); ++i)
     {
@@ -210,9 +246,12 @@ float Water::get_wave_height(glm::vec2 const& position) const
         for (i32 i = 0; i < iterations; i++)
         {
             glm::vec2 offset = {};
-            offset.x = steepness * wave.amplitude * wave.direction.x * cos(glm::dot((frequency * wave.direction), glm::vec2(new_position.x, new_position.y)) + phi * time);
-            offset.y = steepness * wave.amplitude * wave.direction.x * cos(glm::dot((frequency * wave.direction), glm::vec2(new_position.x, new_position.y)) + phi * time);
-            per_wave_height = wave.amplitude * sin(glm::dot((frequency * wave.direction), glm::vec2(new_position.x, new_position.y)) + phi * time);
+            offset.x = steepness * wave.amplitude * wave.direction.x
+                     * cos(glm::dot((frequency * wave.direction), glm::vec2(new_position.x, new_position.y)) + phi * time);
+            offset.y = steepness * wave.amplitude * wave.direction.x
+                     * cos(glm::dot((frequency * wave.direction), glm::vec2(new_position.x, new_position.y)) + phi * time);
+            per_wave_height =
+                wave.amplitude * sin(glm::dot((frequency * wave.direction), glm::vec2(new_position.x, new_position.y)) + phi * time);
             new_position = position - offset;
         }
         height += per_wave_height;
@@ -232,7 +271,13 @@ void Water::create_constant_buffer_wave()
     wave_buffer_desc.MiscFlags = 0;
     wave_buffer_desc.ByteWidth = static_cast<UINT>(sizeof(ConstantBufferWave) + (16 - (sizeof(ConstantBufferWave) % 16)));
 
-    HRESULT const hr = renderer->get_device()->CreateBuffer(&wave_buffer_desc, nullptr, &m_constant_buffer_wave);
+    HRESULT hr = renderer->get_device()->CreateBuffer(&wave_buffer_desc, nullptr, &m_constant_buffer_wave);
+    assert(SUCCEEDED(hr));
+
+    D3D11_BUFFER_DESC water_buffer_desc = wave_buffer_desc;
+    water_buffer_desc.ByteWidth = static_cast<UINT>(sizeof(ConstantBufferWater) + (16 - (sizeof(ConstantBufferWater) % 16)));
+
+    hr = renderer->get_device()->CreateBuffer(&water_buffer_desc, nullptr, &m_constant_buffer_water);
     assert(SUCCEEDED(hr));
 }
 
@@ -251,11 +296,18 @@ void Water::set_constant_buffer() const
 
     D3D11_MAPPED_SUBRESOURCE wave_buffer_resource = {};
 
-    HRESULT const hr = renderer->get_device_context()->Map(m_constant_buffer_wave, 0, D3D11_MAP_WRITE_DISCARD, 0, &wave_buffer_resource);
+    HRESULT hr = renderer->get_device_context()->Map(m_constant_buffer_wave, 0, D3D11_MAP_WRITE_DISCARD, 0, &wave_buffer_resource);
     assert(SUCCEEDED(hr));
 
     CopyMemory(wave_buffer_resource.pData, &wave_buffer, sizeof(ConstantBufferWave));
 
     renderer->get_device_context()->Unmap(m_constant_buffer_wave, 0);
     renderer->get_device_context()->VSSetConstantBuffers(1, 1, &m_constant_buffer_wave);
+
+    D3D11_MAPPED_SUBRESOURCE water_buffer_resource = {};
+    hr = renderer->get_device_context()->Map(m_constant_buffer_water, 0, D3D11_MAP_WRITE_DISCARD, 0, &water_buffer_resource);
+    assert(SUCCEEDED(hr));
+    CopyMemory(water_buffer_resource.pData, &m_ps_buffer, sizeof(ConstantBufferWater));
+    renderer->get_device_context()->Unmap(m_constant_buffer_water, 0);
+    renderer->get_device_context()->PSSetConstantBuffers(4, 1, &m_constant_buffer_water);
 }

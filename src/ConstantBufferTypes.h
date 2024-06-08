@@ -134,3 +134,18 @@ struct ConstantBufferSSAO
     glm::mat4 view;
     glm::vec4 kernel_samples[64];
 };
+
+struct ConstantBufferWater
+{
+    glm::vec4 top_color;
+    glm::vec4 bottom_color;
+
+    float normalmap_scroll_speed_0;
+    float normalmap_scroll_speed_1;
+
+    float normalmap_scale0;
+    float normalmap_scale1;
+
+    float combined_amplitude;
+    float phong_contribution;
+};

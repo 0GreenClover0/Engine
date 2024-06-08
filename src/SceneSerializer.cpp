@@ -176,6 +176,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
                 out << YAML::Key << "guid" << YAML::Value << water->guid;
                 out << YAML::Key << "custom_name" << YAML::Value << water->custom_name;
                 out << YAML::Key << "waves" << YAML::Value << water->waves;
+                out << YAML::Key << "m_ps_buffer" << YAML::Value << water->m_ps_buffer;
                 out << YAML::Key << "tesselation_level" << YAML::Value << water->tesselation_level;
             }
             else if (auto const sprite = std::dynamic_pointer_cast<class Sprite>(component); sprite != nullptr)
@@ -768,6 +769,10 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             if (component["waves"].IsDefined())
             {
                 deserialized_component->waves = component["waves"].as<std::vector<DXWave>>();
+            }
+            if (component["m_ps_buffer"].IsDefined())
+            {
+                deserialized_component->m_ps_buffer = component["m_ps_buffer"].as<ConstantBufferWater>();
             }
             if (component["tesselation_level"].IsDefined())
             {

@@ -3,6 +3,21 @@
 
 #include "lighting_calculations.hlsl"
 
+cbuffer water_buffer : register(b4)
+{
+    float4 top_color;
+    float4 bottom_color;
+
+    float normalmap_scroll_speed0;
+    float normalmap_scroll_speed1;
+
+    float normalmap_scale0;
+    float normalmap_scale1;
+
+    float combined_amplitude;
+    float phong_contribution; // Value between 0.0f and 1.0f
+}
+
 cbuffer object_buffer : register(b0)
 {
     float4x4 projection_view_model;
@@ -42,8 +57,16 @@ struct PositionAndNormal
 Texture2D obj_texture : register(t0);
 TextureCube skybox : register(t15);
 Texture2D fog_tex : register(t16);
+Texture2D water_normal0 : register(t18);
+Texture2D water_normal1 : register(t19);
 
-SamplerState obj_sampler_state : register(s0);
+SamplerState wrap_sampler_water
+{
+    Filter = MIN_MAG_MIP_LINEAR;
+    AddressU = WRAP;
+    AddressV = WRAP;
+    BorderColor = float4(0.0f, 0.0f, 0.0f, 0.0f);
+};
 
 // VERTEX SHADER FUNCTIONS
 PositionAndNormal calc_gerstner_wave_position_and_normal(float x, float y, float3 position_for_normal)
@@ -84,8 +107,7 @@ PositionAndNormal calc_gerstner_wave_position_and_normal(float x, float y, float
 
     PositionAndNormal result;
     result.position = pos;
-    result.normal = normal;
-
+    result.normal = normalize(normal);
     return result;
 }
 
@@ -108,7 +130,7 @@ VS_Output vs_main(VS_Input input)
 
     PositionAndNormal pos_and_normal = calc_gerstner_wave_position_and_normal(output.world_pos.x, output.world_pos.z, input.pos);
 
-    output.normal = mul(pos_and_normal.normal, (float3x3)model);
+    output.normal = normalize(mul((float3x3)model, pos_and_normal.normal));
     output.world_pos = pos_and_normal.position;
     output.UV = input.UV;
     output.pixel_pos = mul(projection_view, float4(output.world_pos, 1.0f));
@@ -127,35 +149,44 @@ float4 ps_main(VS_Output input) : SV_TARGET
         return float4(1.0f, 1.0f, 1.0f, falloff_value);
     }
 
+    // NORMAL MAPPING
+    float3 normal1 = water_normal0.Sample(wrap_sampler_water, (input.UV.xy + time_ps.xx * normalmap_scroll_speed0) * normalmap_scale0);
+    float3 normal2 = water_normal1.Sample(wrap_sampler_water, (input.UV.xy + time_ps.xx * normalmap_scroll_speed1) * normalmap_scale1);
+    float3 combined_normal = normal_blend(normalize(normal1 * 2.0f - 1.0f.xxx), normalize(input.normal));
+    combined_normal = normal_blend(normalize(normal2 * 2.0f - 1.0f.xxx), combined_normal);
+
     // Skybox reflection and refraction
     float ratio = 1.0f / 1.52f;
     float3 I = normalize(input.world_pos - camera_pos);
-    float3 R_refract = refract(I, norm, ratio);
-    float3 R_reflect = reflect(I, norm);
-    float3 refraction = skybox.Sample(obj_sampler_state, R_refract).rgb;
-    float3 reflection = skybox.Sample(obj_sampler_state, R_reflect).rgb;
+    float3 R_refract = refract(I, combined_normal, ratio);
+    float3 R_reflect = reflect(I, combined_normal);
+    float3 refraction = skybox.Sample(wrap_sampler_water, R_refract).rgb;
+    float3 reflection = skybox.Sample(wrap_sampler_water, R_reflect).rgb;
     
-    float3 view_dir = normalize(camera_pos.xyz - input.world_pos.xyz);
-    float3 diffuse_texture = obj_texture.Sample(obj_sampler_state, input.UV).rgb;
+    // Changing water color with height
+    float3 pixel_color = float3(0.0f, 0.0f, 0.0f);
+    float height = ((input.world_pos.y + combined_amplitude) / 2.0f) * (1.0f / combined_amplitude);
+    pixel_color = top_color * height + bottom_color * (1.0f - height);
 
-    float3 result = calculate_directional_light(directional_light, norm, view_dir, diffuse_texture, input.world_pos, false);
+    float3 view_dir = normalize(camera_pos.xyz - input.world_pos.xyz);
+    float3 result = calculate_directional_light(directional_light, combined_normal, view_dir, pixel_color, input.world_pos, false);
 
     float fog_value = 1.0f; 
     if (is_fog_rendered)
     {
-        fog_value = fog_tex.Sample(obj_sampler_state, screen_UV + time_ps / 100.0f).r;
+        fog_value = fog_tex.Sample(wrap_sampler_water, UV + time_ps / 100.0f).r;
         result += 0.2f * fog_value;
     }
 
     for (int i = 0; i < number_of_point_lights; i++)
     {
-        result += calculate_point_light(point_lights[i], norm, input.world_pos.rgb, view_dir, diffuse_texture, i, false);
+        result += calculate_point_light(point_lights[i], combined_normal, input.world_pos.rgb, view_dir, pixel_color, i, false);
         result += calculate_scatter(point_lights[i], float4(input.world_pos, 1.0f)) * fog_value;
     }
 
     for (int j = 0; j < number_of_spot_lights; j++)
     {
-        result += calculate_spot_light(spot_lights[j], norm, input.world_pos, view_dir, diffuse_texture, j, true);
+        result += calculate_spot_light(spot_lights[j], combined_normal, input.world_pos, view_dir, pixel_color, j, true);
         result += calculate_scatter(spot_lights[j], float4(input.world_pos, 1.0f), j) * fog_value;
     }
 
