@@ -81,4 +81,5 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
 
 if(MSVC)
     target_compile_definitions(${PROJECT_NAME} PUBLIC NOMINMAX)
+    target_compile_options(${PROJECT_NAME} PRIVATE "/MP")
 endif()
