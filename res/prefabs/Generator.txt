@@ -1,0 +1,29 @@
+Scene: Untitled
+Entities:
+  - Entity: Generator
+    guid: 85b0b4e44496f70ceeb565036674629e25dfaee721174c9ffbe15ad9b588a1f6
+    Name: Generator
+    TransformComponent:
+      Translation: [-5.84570312, 0.100000001, 2.09735203]
+      Rotation: [0, -0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: d661f1e56d48c4d9fd8f0722afa807187cab342a47f4db49efc5b0f345498c0a
+    Components:
+      - ComponentName: FactoryComponent
+        guid: 0e20c2375b4b17e8565fb884b2313653b145e3ae1cf209d796546a3d5f549810
+        custom_name: ""
+        type: 0
+      - ComponentName: ModelComponent
+        guid: 8e61363ed31c1f3021ca3443768b49c183a332b9ee7730c4afd03d30a14ae525
+        custom_name: ""
+        model_path: ./res/models\generator\generator.gltf
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+          NeedsForward: false
+          CastsShadows: true
