@@ -61,6 +61,22 @@ inline std::string generate_guid()
     return result;
 }
 
+inline i32 random_int(i32 const min, i32 const max)
+{
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dis(min, max);
+    return dis(gen);
+}
+
+inline float random_float(float const min, float const max)
+{
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_real_distribution<float> dis(min, max);
+    return dis(gen);
+}
+
 inline u32 murmur_hash(u8 const* key, size_t const len, u32 const seed)
 {
     u32 h = seed;
