@@ -124,6 +124,7 @@ enum class AssetType
     Unknown,
     Model,
     Scene,
+    Prefab,
 };
 
 class Asset
@@ -199,6 +200,8 @@ private:
     void copy_selected_entity() const;
     void paste_entity() const;
     void add_child_entity() const;
+    void save_entity_as_prefab();
+    [[nodiscard]] bool load_prefab(std::string const& name) const;
 
     void mouse_callback(double const x, double const y);
 
@@ -256,6 +259,7 @@ private:
 
     std::string m_content_path = "./res/";
     std::string m_scene_path = "./res/scenes/";
+    std::string m_prefab_path = "./res/prefabs/";
     std::array<std::string, 3> m_known_model_formats = {".gltf", ".obj", ".fbx"};
     std::array<std::string, 1> m_known_scene_formats = {".txt"};
 
