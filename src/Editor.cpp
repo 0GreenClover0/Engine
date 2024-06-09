@@ -40,6 +40,7 @@
 #include "Light.h"
 #include "Model.h"
 #include "Particle.h"
+#include "ParticleSystem.h"
 #include "PointLight.h"
 #include "RendererDX11.h"
 #include "SceneSerializer.h"
