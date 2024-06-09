@@ -1,0 +1,234 @@
+Scene: Untitled
+Entities:
+  - Entity: HarborBig
+    guid: aef2f33a4c5b6f44371de0c55b8caa8f96efc75923e120ea81528d3d229e8ede
+    Name: HarborBig
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: ""
+    Components:
+      []
+  - Entity: Ice
+    guid: aa930603534c7e712ee010e70a3fb99bf17b837c336967a3f082c370559711cf
+    Name: Ice
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: aef2f33a4c5b6f44371de0c55b8caa8f96efc75923e120ea81528d3d229e8ede
+    Components:
+      []
+  - Entity: cl
+    guid: 9f45d4460cfb9a0c4699bfcf0803be1168d03188ac21dfb31551eb54b18c553f
+    Name: cl
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: aa930603534c7e712ee010e70a3fb99bf17b837c336967a3f082c370559711cf
+    Components:
+      - ComponentName: ModelComponent
+        guid: ad3a84c48219ea009502a6f74f984e977d97f30602d79b0f270c40411df69a58
+        custom_name: ""
+        model_path: ./res/models\harborIslands\corner_big_l.gltf
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+          NeedsForward: false
+          CastsShadows: true
+  - Entity: b
+    guid: 3601767e436ee4a2c1e87c0ecbe5381b8de6569e8eb8721ddc2108ee4477e8e0
+    Name: b
+    TransformComponent:
+      Translation: [2, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: aa930603534c7e712ee010e70a3fb99bf17b837c336967a3f082c370559711cf
+    Components:
+      - ComponentName: ModelComponent
+        guid: 9d28fad24ee21ca22a10e19b189dcf578c0590f273840d774643bf9dd39e0746
+        custom_name: ""
+        model_path: ./res/models\harborIslands\bottom_big.gltf
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+          NeedsForward: false
+          CastsShadows: true
+  - Entity: rl
+    guid: 47379ef977072f6c48ce66898814dc6bcbbe3c5545a23aaec95479de2bc642cc
+    Name: rl
+    TransformComponent:
+      Translation: [4, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: aa930603534c7e712ee010e70a3fb99bf17b837c336967a3f082c370559711cf
+    Components:
+      - ComponentName: ModelComponent
+        guid: d64c138aba18505939efd558fade88f2a81787bd3f2691695fd1d4064dc60e73
+        custom_name: ""
+        model_path: ./res/models\harborIslands\corner_big_r.gltf
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+          NeedsForward: false
+          CastsShadows: true
+  - Entity: el
+    guid: 71c22b4d5e742ccaa70a7020fff3dee1ff7b6a3e3ac927c739054e24a47e7e38
+    Name: el
+    TransformComponent:
+      Translation: [0, 0, -1.70000005]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: aa930603534c7e712ee010e70a3fb99bf17b837c336967a3f082c370559711cf
+    Components:
+      - ComponentName: ModelComponent
+        guid: fa9cd2874c36518a955a406e61f7e01210d9bc89fefbd6417e29cb22224404e7
+        custom_name: ""
+        model_path: ./res/models\harborIslands\end_big_l.gltf
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+          NeedsForward: false
+          CastsShadows: true
+  - Entity: er
+    guid: a2f1552f9b72f782f9018926149937b96d4a0861fb0c96f70424affffc85c556
+    Name: er
+    TransformComponent:
+      Translation: [3.9000001, 0, -1.80000007]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: aa930603534c7e712ee010e70a3fb99bf17b837c336967a3f082c370559711cf
+    Components:
+      - ComponentName: ModelComponent
+        guid: 0d4881a2cbb479c75f94177644e5ec24d6a36e258a98b01c672077c0d6eb09e0
+        custom_name: ""
+        model_path: ./res/models\harborIslands\end_big_r.gltf
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+          NeedsForward: false
+          CastsShadows: true
+  - Entity: Lights
+    guid: 773eb62e7151309449a768aa96bd6cc07e4eade8e4d6fdf3225c799a90e9a2ef
+    Name: Lights
+    TransformComponent:
+      Translation: [0, 0.5, 0]
+      Rotation: [0, -0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: aef2f33a4c5b6f44371de0c55b8caa8f96efc75923e120ea81528d3d229e8ede
+    Components:
+      []
+  - Entity: Light
+    guid: e4dbf7b8726f8d9a4fc5dff0e9e493a6590b3603bd03b647a104c085afcf0b08
+    Name: Light
+    TransformComponent:
+      Translation: [0, 0, -2]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: 773eb62e7151309449a768aa96bd6cc07e4eade8e4d6fdf3225c799a90e9a2ef
+    Components:
+      - ComponentName: PointLightComponent
+        guid: 364bb4ef89c7445a6d18c387422c3ad8218470aa0337cd30e6e1431961f925f0
+        custom_name: ""
+        constant: 1
+        linear: 10
+        quadratic: 10
+        ambient: [0.200000003, 0.200000003, 0.200000003]
+        diffuse: [0, 1, 0]
+        specular: [1, 1, 1]
+        m_near_plane: 0.5
+        m_far_plane: 25
+  - Entity: Light
+    guid: fb93d69b89a0515b29baf818067adb91a026d74959b2b3bab0fffb936d71db81
+    Name: Light
+    TransformComponent:
+      Translation: [4, 0, -2]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: 773eb62e7151309449a768aa96bd6cc07e4eade8e4d6fdf3225c799a90e9a2ef
+    Components:
+      - ComponentName: PointLightComponent
+        guid: 3450e0dabb5d8b83dfa039243f7dbb0fa796977d5bd00e71245d05c2db167307
+        custom_name: ""
+        constant: 1
+        linear: 10
+        quadratic: 10
+        ambient: [0.200000003, 0.200000003, 0.200000003]
+        diffuse: [0, 1, 0]
+        specular: [1, 1, 1]
+        m_near_plane: 0.5
+        m_far_plane: 25
+  - Entity: Light
+    guid: 41fef5c31a570c0472514aa580e601e3ce4ccc42a08102dc40b60f1af2aaac0c
+    Name: Light
+    TransformComponent:
+      Translation: [4, 0, 0.300000012]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: 773eb62e7151309449a768aa96bd6cc07e4eade8e4d6fdf3225c799a90e9a2ef
+    Components:
+      - ComponentName: PointLightComponent
+        guid: f15c95b1ac18100e4ed1ec550d055f1b8fbc14112263450f817aa4d68adc68de
+        custom_name: ""
+        constant: 1
+        linear: 10
+        quadratic: 10
+        ambient: [0.200000003, 0.200000003, 0.200000003]
+        diffuse: [0, 1, 0]
+        specular: [1, 1, 1]
+        m_near_plane: 0.5
+        m_far_plane: 25
+  - Entity: Light
+    guid: 85152f69fb4e89f9f47b4c73713acf4ffa626756c8973698ee7356ab460b98d1
+    Name: Light
+    TransformComponent:
+      Translation: [0, 0, 0.300000012]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: 773eb62e7151309449a768aa96bd6cc07e4eade8e4d6fdf3225c799a90e9a2ef
+    Components:
+      - ComponentName: PointLightComponent
+        guid: 8dd0f03d2619ed37594c946da91927eab9dd201957f46999d43e88553ad72bb8
+        custom_name: ""
+        constant: 1
+        linear: 10
+        quadratic: 10
+        ambient: [0.200000003, 0.200000003, 0.200000003]
+        diffuse: [0, 1, 0]
+        specular: [1, 1, 1]
+        m_near_plane: 0.5
+        m_far_plane: 25
