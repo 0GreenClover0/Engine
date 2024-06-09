@@ -235,7 +235,7 @@ void Editor::draw_content_browser(std::shared_ptr<EditorWindow> const& window)
 
     for (auto const& asset : m_assets)
     {
-        if (asset.type != AssetType::Scene && ImGui::Selectable(asset.path.c_str()))
+        if (asset.type != AssetType::Scene && asset.type != AssetType::Prefab && ImGui::Selectable(asset.path.c_str()))
         {
             ImGui::SetClipboardText(asset.path.c_str());
         }
@@ -291,6 +291,31 @@ void Editor::draw_content_browser(std::shared_ptr<EditorWindow> const& window)
             {
                 Debug::log("Could not load a scene.", DebugType::Error);
             }
+        }
+    }
+
+    ImGui::Text("Prefabs");
+
+    for (auto const& asset : m_assets)
+    {
+        if (asset.type != AssetType::Prefab || !ImGui::Selectable(asset.path.c_str()))
+        {
+            continue;
+        }
+
+        std::filesystem::path file_path(asset.path);
+        std::string const filename = file_path.stem().string();
+
+        if (!m_append_scene && !ctrl_pressed)
+        {
+            MainScene::get_instance()->unload();
+        }
+
+        bool const loaded = load_prefab(filename);
+
+        if (!loaded)
+        {
+            Debug::log("Could not load a prefab.", DebugType::Error);
         }
     }
 
@@ -722,6 +747,14 @@ bool Editor::draw_entity_popup(std::shared_ptr<Entity> const& entity)
             return true;
         }
 
+        if (ImGui::Button("Save as prefab"))
+        {
+            save_entity_as_prefab();
+            ImGui::CloseCurrentPopup();
+            ImGui::EndPopup();
+            return true;
+        }
+
         ImGui::EndPopup();
     }
 
@@ -797,6 +830,19 @@ void Editor::load_assets()
         if (std::ranges::find(m_known_scene_formats, entry.path().extension().string()) != m_known_scene_formats.end())
         {
             m_assets.emplace_back(entry.path().string(), AssetType::Scene);
+        }
+    }
+
+    if (!std::filesystem::exists(m_prefab_path))
+    {
+        std::filesystem::create_directory(m_prefab_path);
+    }
+
+    for (auto const& entry : std::filesystem::recursive_directory_iterator(m_prefab_path))
+    {
+        if (std::ranges::find(m_known_scene_formats, entry.path().extension().string()) != m_known_scene_formats.end())
+        {
+            m_assets.emplace_back(entry.path().string(), AssetType::Prefab);
         }
     }
 }
@@ -1347,6 +1393,26 @@ void Editor::add_child_entity() const
     auto const entity = m_selected_entity.lock();
     auto const child_entity = Entity::create("Child");
     child_entity->transform->set_parent(entity->transform);
+}
+
+void Editor::save_entity_as_prefab()
+{
+    if (m_selected_entity.expired())
+        return;
+
+    auto const scene_serializer = std::make_shared<SceneSerializer>(m_open_scene);
+    scene_serializer->set_instance(scene_serializer);
+    scene_serializer->serialize_this_entity(m_selected_entity.lock(), m_prefab_path + m_selected_entity.lock()->name + ".txt");
+
+    load_assets();
+}
+
+bool Editor::load_prefab(std::string const& name) const
+{
+    auto const scene_serializer = std::make_shared<SceneSerializer>(m_open_scene);
+    scene_serializer->set_instance(scene_serializer);
+    bool const loaded = scene_serializer->deserialize_this_entity(m_prefab_path + name + ".txt");
+    return loaded;
 }
 
 void Editor::mouse_callback(double const x, double const y)
