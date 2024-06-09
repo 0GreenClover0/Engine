@@ -1,0 +1,29 @@
+Scene: Untitled
+Entities:
+  - Entity: Workshop
+    guid: 9e3e848abd40f98bdc69739073fcab3f2433c238668224c366f09b0115f2ba83
+    Name: Workshop
+    TransformComponent:
+      Translation: [5.03000021, 0.0700000003, 2.78999996]
+      Rotation: [0, -0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: d661f1e56d48c4d9fd8f0722afa807187cab342a47f4db49efc5b0f345498c0a
+    Components:
+      - ComponentName: FactoryComponent
+        guid: 52e396d002181743558411a8f979fd2274c7a67216f6aea67bc6f9c88d5a75fc
+        custom_name: ""
+        type: 1
+      - ComponentName: ModelComponent
+        guid: 545d91a6e1dc5e97ba9b6d9a2662c9bf208acc181956c5de2f8042fd4bc755e0
+        custom_name: ""
+        model_path: ./res/models\workshop\workshop.gltf
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+          NeedsForward: false
+          CastsShadows: true
