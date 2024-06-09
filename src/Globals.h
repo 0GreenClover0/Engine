@@ -15,11 +15,7 @@ inline i32 SKYBOX_RENDER_ORDER = 100;
 inline std::shared_ptr<Shader> default_shader;
 inline std::shared_ptr<Material> default_material;
 
-inline std::shared_ptr<Shader> particle_shader;
-inline std::shared_ptr<Material> particle_material;
-
 void initialize_default_material();
-void initialize_particle_material();
 
 struct MeshData
 {

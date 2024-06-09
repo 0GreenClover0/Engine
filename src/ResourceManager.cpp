@@ -183,7 +183,6 @@ void ResourceManager::reset_state() const
     }
 
     initialize_default_material();
-    initialize_particle_material();
 }
 
 std::string ResourceManager::generate_key(std::stringstream const& stream) const
