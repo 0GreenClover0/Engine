@@ -34,6 +34,7 @@
 #include "Light.h"
 #include "Model.h"
 #include "Particle.h"
+#include "ParticleSystem.h"
 #include "PointLight.h"
 #include "ScreenText.h"
 #include "ShaderFactory.h"
@@ -288,7 +289,23 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "ComponentName" << YAML::Value << "ParticleComponent";
         out << YAML::Key << "guid" << YAML::Value << particle->guid;
         out << YAML::Key << "custom_name" << YAML::Value << particle->custom_name;
-        out << YAML::Key << "color" << YAML::Value << particle->color;
+        out << YAML::EndMap;
+    }
+    else if (auto const particlesystem = std::dynamic_pointer_cast<class ParticleSystem>(component); particlesystem != nullptr)
+    {
+        out << YAML::BeginMap;
+        out << YAML::Key << "ComponentName" << YAML::Value << "ParticleSystemComponent";
+        out << YAML::Key << "guid" << YAML::Value << particlesystem->guid;
+        out << YAML::Key << "custom_name" << YAML::Value << particlesystem->custom_name;
+        out << YAML::Key << "min_spawn_interval" << YAML::Value << particlesystem->min_spawn_interval;
+        out << YAML::Key << "max_spawn_interval" << YAML::Value << particlesystem->max_spawn_interval;
+        out << YAML::Key << "min_particle_speed" << YAML::Value << particlesystem->min_particle_speed;
+        out << YAML::Key << "max_particle_speed" << YAML::Value << particlesystem->max_particle_speed;
+        out << YAML::Key << "min_spawn_alpha" << YAML::Value << particlesystem->min_spawn_alpha;
+        out << YAML::Key << "max_spawn_alpha" << YAML::Value << particlesystem->max_spawn_alpha;
+        out << YAML::Key << "emitter_bounds" << YAML::Value << particlesystem->emitter_bounds;
+        out << YAML::Key << "min_spawn_count" << YAML::Value << particlesystem->min_spawn_count;
+        out << YAML::Key << "max_spawn_count" << YAML::Value << particlesystem->max_spawn_count;
         out << YAML::EndMap;
     }
     else if (auto const sound = std::dynamic_pointer_cast<class Sound>(component); sound != nullptr)
@@ -1047,9 +1064,58 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component =
                 std::dynamic_pointer_cast<class Particle>(get_from_pool(component["guid"].as<std::string>()));
-            if (component["color"].IsDefined())
+            deserialized_entity->add_component(deserialized_component);
+            deserialized_component->reprepare();
+        }
+    }
+    else if (component_name == "ParticleSystemComponent")
+    {
+        if (first_pass)
+        {
+            auto const deserialized_component = ParticleSystem::create();
+            deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_component->custom_name = component["custom_name"].as<std::string>();
+            deserialized_pool.emplace_back(deserialized_component);
+        }
+        else
+        {
+            auto const deserialized_component =
+                std::dynamic_pointer_cast<class ParticleSystem>(get_from_pool(component["guid"].as<std::string>()));
+            if (component["min_spawn_interval"].IsDefined())
             {
-                deserialized_component->color = component["color"].as<glm::vec4>();
+                deserialized_component->min_spawn_interval = component["min_spawn_interval"].as<float>();
+            }
+            if (component["max_spawn_interval"].IsDefined())
+            {
+                deserialized_component->max_spawn_interval = component["max_spawn_interval"].as<float>();
+            }
+            if (component["min_particle_speed"].IsDefined())
+            {
+                deserialized_component->min_particle_speed = component["min_particle_speed"].as<float>();
+            }
+            if (component["max_particle_speed"].IsDefined())
+            {
+                deserialized_component->max_particle_speed = component["max_particle_speed"].as<float>();
+            }
+            if (component["min_spawn_alpha"].IsDefined())
+            {
+                deserialized_component->min_spawn_alpha = component["min_spawn_alpha"].as<float>();
+            }
+            if (component["max_spawn_alpha"].IsDefined())
+            {
+                deserialized_component->max_spawn_alpha = component["max_spawn_alpha"].as<float>();
+            }
+            if (component["emitter_bounds"].IsDefined())
+            {
+                deserialized_component->emitter_bounds = component["emitter_bounds"].as<float>();
+            }
+            if (component["min_spawn_count"].IsDefined())
+            {
+                deserialized_component->min_spawn_count = component["min_spawn_count"].as<i32>();
+            }
+            if (component["max_spawn_count"].IsDefined())
+            {
+                deserialized_component->max_spawn_count = component["max_spawn_count"].as<i32>();
             }
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
