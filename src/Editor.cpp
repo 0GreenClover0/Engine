@@ -1599,4 +1599,9 @@ void Editor::remove_window(std::shared_ptr<EditorWindow> const& window)
         m_editor_windows.erase(it);
 }
 
+bool Editor::are_debug_drawings_enabled() const
+{
+    return m_debug_drawings_enabled;
+}
+
 }
