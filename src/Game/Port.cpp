@@ -107,3 +107,98 @@ float Port::get_interactable_distance() const
 {
     return m_interactable_distance;
 }
+
+void Port::draw_editor()
+{
+    Component::draw_editor();
+
+    if (entity->get_component<Collider2D>() == nullptr)
+    {
+        if (ImGui::Button("Add collider"))
+        {
+            entity->add_component(Collider2D::create(glm::vec2(1.0f, 1.0f), false));
+            entity->get_component<Collider2D>()->is_trigger = true;
+            entity->get_component<Collider2D>()->set_collider_type(ColliderType2D::Rectangle);
+        }
+
+        return;
+    }
+
+    if (lights.size() != 4)
+    {
+        if (ImGui::Button("Add lights"))
+        {
+            for (auto const& light : lights)
+            {
+                light.lock()->destroy_immediate();
+            }
+
+            lights.clear();
+
+            auto const& light_ul = Entity::create("LightUL");
+            auto const& light_ur = Entity::create("LightUR");
+            auto const& light_bl = Entity::create("LightBL");
+            auto const& light_br = Entity::create("LightBR");
+
+            lights.emplace_back(light_ul);
+            lights.emplace_back(light_ur);
+            lights.emplace_back(light_bl);
+            lights.emplace_back(light_br);
+
+            for (auto const& light : lights)
+            {
+                light.lock()->add_component(PointLight::create());
+                light.lock()->transform->set_parent(entity->transform);
+            }
+
+            adjust_lights();
+        }
+    }
+    else
+    {
+        if (ImGui::Button("Adjust lights"))
+        {
+            adjust_lights();
+        }
+    }
+}
+
+void Port::adjust_lights() const
+{
+    u32 index = 0;
+
+    auto const collider = entity->get_component<Collider2D>();
+
+    glm::vec3 const upper_left = {-collider->width, 0.5f, -collider->height};
+    glm::vec3 const upper_right = {collider->width, 0.5f, -collider->height};
+    glm::vec3 const bottom_left = {-collider->width, 0.5f, collider->height};
+    glm::vec3 const bottom_right = {collider->width, 0.5f, collider->height};
+
+    for (auto const& light : lights)
+    {
+        auto const& light_comp = light.lock()->get_component<PointLight>();
+        light_comp->diffuse = glm::vec3(0.0f, 1.0f, 0.0f);
+        light_comp->linear = 10.0f;
+        light_comp->quadratic = 10.0f;
+
+        switch (index)
+        {
+        case 0:
+            light.lock()->transform->set_local_position(upper_left);
+            break;
+        case 1:
+            light.lock()->transform->set_local_position(upper_right);
+            break;
+        case 2:
+            light.lock()->transform->set_local_position(bottom_left);
+            break;
+        case 3:
+            light.lock()->transform->set_local_position(bottom_right);
+            break;
+        default:
+            std::unreachable();
+        }
+
+        index++;
+    }
+}
