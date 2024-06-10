@@ -509,7 +509,7 @@ void ShipSpawner::prepare_for_spawn()
         {
             if (m_ships.size() != 0)
             {
-                auto const nearest_ship_position = find_nearest_ship(m_spawn_position.back());
+                auto const nearest_ship_position = find_nearest_ship_position(m_spawn_position.back());
                 assert(nearest_ship_position.has_value());
 
                 if (glm::distance(nearest_ship_position.value(), m_spawn_position.back()) < minimum_spawn_distance)
@@ -575,7 +575,7 @@ void ShipSpawner::prepare_for_spawn()
         {
             if (m_ships.size() != 0)
             {
-                auto const nearest_ship_position = find_nearest_ship(m_spawn_position.back());
+                auto const nearest_ship_position = find_nearest_ship_position(m_spawn_position.back());
                 assert(nearest_ship_position.has_value());
 
                 if (glm::distance(nearest_ship_position.value(), m_spawn_position.back()) < minimum_spawn_distance)
@@ -635,7 +635,7 @@ void ShipSpawner::prepare_for_spawn()
                     std::weak_ptr<Path> const path = paths[std::rand() % paths.size()];
                     potential_spawn_point = path.lock()->get_point_at(glm::linearRand(0.0f, 1.0f));
 
-                    auto nearest_ship_position = find_nearest_ship(potential_spawn_point);
+                    auto nearest_ship_position = find_nearest_ship_position(potential_spawn_point);
                     if (!nearest_ship_position.has_value()
                         || glm::distance(nearest_ship_position.value(), potential_spawn_point) >= minimum_spawn_distance)
                     {
@@ -658,7 +658,7 @@ void ShipSpawner::prepare_for_spawn()
         {
             if (m_ships.size() != 0)
             {
-                auto const nearest_ship_position = find_nearest_ship(m_spawn_position.back());
+                auto const nearest_ship_position = find_nearest_ship_position(m_spawn_position.back());
                 assert(nearest_ship_position.has_value());
 
                 if (glm::distance(nearest_ship_position.value(), m_spawn_position.back()) < minimum_spawn_distance)
@@ -865,7 +865,7 @@ std::optional<glm::vec2> ShipSpawner::find_nearest_non_pirate_ship(std::shared_p
     return nearest_position;
 }
 
-std::optional<glm::vec2> ShipSpawner::find_nearest_ship(glm::vec2 center_position) const
+std::optional<glm::vec2> ShipSpawner::find_nearest_ship_position(glm::vec2 center_position) const
 {
     if (m_ships.empty())
     {
@@ -883,7 +883,7 @@ std::optional<glm::vec2> ShipSpawner::find_nearest_ship(glm::vec2 center_positio
         glm::vec2 position = AK::convert_3d_to_2d(ship_locked->entity->transform->get_local_position());
         float const distance = glm::distance(center_position, position);
 
-        if (nearest_distance < distance)
+        if (nearest_distance > distance)
         {
             nearest_distance = distance;
             nearest_position = position;
@@ -891,4 +891,42 @@ std::optional<glm::vec2> ShipSpawner::find_nearest_ship(glm::vec2 center_positio
     }
 
     return nearest_position;
+}
+
+std::optional<std::weak_ptr<Ship>> ShipSpawner::find_nearest_ship_object(glm::vec2 center_position) const
+{
+    if (m_ships.empty())
+    {
+        return std::nullopt;
+    }
+
+    auto nearest = m_ships[0];
+    auto nearest_locked = nearest.lock();
+    if (!nearest_locked)
+    {
+        return std::nullopt;
+    }
+
+    glm::vec2 nearest_position = AK::convert_3d_to_2d(nearest_locked->entity->transform->get_local_position());
+    float nearest_distance = glm::distance(center_position, nearest_position);
+
+    for (auto const& ship : m_ships)
+    {
+        auto const ship_locked = ship.lock();
+        if (!ship_locked)
+        {
+            continue;
+        }
+
+        glm::vec2 position = AK::convert_3d_to_2d(ship_locked->entity->transform->get_local_position());
+        float const distance = glm::distance(center_position, position);
+
+        if (nearest_distance > distance)
+        {
+            nearest_distance = distance;
+            nearest = ship;
+        }
+    }
+
+    return nearest;
 }

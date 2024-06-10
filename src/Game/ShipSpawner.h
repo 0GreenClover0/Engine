@@ -17,7 +17,8 @@ public:
     virtual void draw_editor() override;
 
     std::optional<glm::vec2> find_nearest_non_pirate_ship(std::shared_ptr<Ship> const& center_ship) const;
-    std::optional<glm::vec2> find_nearest_ship(glm::vec2 center_position) const;
+    std::optional<glm::vec2> find_nearest_ship_position(glm::vec2 center_position) const;
+    std::optional<std::weak_ptr<Ship>> find_nearest_ship_object(glm::vec2 center_position) const;
 
     std::vector<std::weak_ptr<Path>> paths = {};
 
