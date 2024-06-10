@@ -158,6 +158,8 @@ public:
     void register_debug_drawing(std::shared_ptr<DebugDrawing> const& debug_drawing);
     void unregister_debug_drawing(std::shared_ptr<DebugDrawing> const& debug_drawing);
 
+    [[nodiscard]] bool are_debug_drawings_enabled() const;
+
     static std::shared_ptr<Editor> get_instance()
     {
         return m_instance;

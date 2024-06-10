@@ -63,6 +63,8 @@ void DebugDrawing::initialize()
     default:
         std::unreachable();
     }
+
+    set_drawing_enabled(Editor::Editor::get_instance()->are_debug_drawings_enabled());
 }
 
 void DebugDrawing::update()
