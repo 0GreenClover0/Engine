@@ -233,89 +233,64 @@ void Editor::draw_content_browser(std::shared_ptr<EditorWindow> const& window)
 
     draw_scene_save();
 
-    for (auto const& asset : m_assets)
+    if (ImGui::CollapsingHeader("Models", ImGuiTreeNodeFlags_DefaultOpen))
     {
-        if (asset.type != AssetType::Scene && asset.type != AssetType::Prefab && ImGui::Selectable(asset.path.c_str()))
+        for (auto const& asset : m_assets)
         {
-            ImGui::SetClipboardText(asset.path.c_str());
+            if (asset.type != AssetType::Scene && asset.type != AssetType::Prefab && ImGui::Selectable(asset.path.c_str()))
+            {
+                ImGui::SetClipboardText(asset.path.c_str());
+            }
         }
     }
 
     bool const ctrl_pressed = ImGui::GetIO().KeyCtrl;
 
-    ImGui::Separator();
-
-    ImGui::Text("Scenes");
-
-    ImGui::SameLine();
-
-    ImVec4 constexpr active_button = {0.2f, 0.5f, 0.4f, 1.0f};
-    ImVec4 constexpr inactive_button = {0.05f, 0.05f, 0.05f, 0.54f};
-
-    if (m_append_scene || ctrl_pressed)
+    if (ImGui::CollapsingHeader("Scenes", ImGuiTreeNodeFlags_DefaultOpen))
     {
-        ImGui::PushStyleColor(ImGuiCol_Button, active_button);
-    }
-    else
-    {
-        ImGui::PushStyleColor(ImGuiCol_Button, inactive_button);
-    }
-
-    if (ImGui::Button("Append scene"))
-    {
-        m_append_scene = !m_append_scene;
-    }
-
-    if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
-    {
-        ImGui::SetTooltip("Shortcut: Ctrl");
-    }
-
-    ImGui::PopStyleColor();
-
-    for (auto const& asset : m_assets)
-    {
-        if (asset.type == AssetType::Scene && ImGui::Selectable(asset.path.c_str()))
+        for (auto const& asset : m_assets)
         {
-            std::filesystem::path file_path(asset.path);
-            std::string const filename = file_path.stem().string();
-
-            if (!m_append_scene && !ctrl_pressed)
+            if (asset.type == AssetType::Scene && ImGui::Selectable(asset.path.c_str()))
             {
-                MainScene::get_instance()->unload();
-            }
+                std::filesystem::path file_path(asset.path);
+                std::string const filename = file_path.stem().string();
 
-            bool const loaded = load_scene_name(filename);
+                if (!m_append_scene && !ctrl_pressed)
+                {
+                    MainScene::get_instance()->unload();
+                }
 
-            if (!loaded)
-            {
-                Debug::log("Could not load a scene.", DebugType::Error);
+                bool const loaded = load_scene_name(filename);
+
+                if (!loaded)
+                {
+                    Debug::log("Could not load a scene.", DebugType::Error);
+                }
             }
         }
     }
 
-    ImGui::Text("Prefabs");
-
-    for (auto const& asset : m_assets)
+    if (ImGui::CollapsingHeader("Prefabs", ImGuiTreeNodeFlags_DefaultOpen))
     {
-        if (asset.type != AssetType::Prefab || !ImGui::Selectable(asset.path.c_str()))
+        for (auto const& asset : m_assets)
         {
-            continue;
-        }
+            if (asset.type == AssetType::Prefab && ImGui::Selectable(asset.path.c_str()))
+            {
+                std::filesystem::path file_path(asset.path);
+                std::string const filename = file_path.stem().string();
 
-        std::filesystem::path file_path(asset.path);
-        std::string const filename = file_path.stem().string();
+                if (!m_append_scene && !ctrl_pressed)
+                {
+                    MainScene::get_instance()->unload();
+                }
 
-        if (!m_append_scene && !ctrl_pressed)
-        {
-            MainScene::get_instance()->unload();
-        }
+                bool const loaded = load_prefab(filename);
 
-        bool const loaded = load_prefab(filename);
-
-        if (!loaded)
-        {
-            Debug::log("Could not load a prefab.", DebugType::Error);
+                if (!loaded)
+                {
+                    Debug::log("Could not load a prefab.", DebugType::Error);
+                }
+            }
         }
     }
 
