@@ -493,6 +493,11 @@ void SceneSerializer::serialize_entity(YAML::Emitter& out, std::shared_ptr<Entit
 
 void SceneSerializer::serialize_entity_recursively(YAML::Emitter& out, std::shared_ptr<Entity> const& entity)
 {
+    if (!entity->is_serialized)
+    {
+        return;
+    }
+
     serialize_entity(out, entity);
 
     for (auto const& child : entity->transform->children)
