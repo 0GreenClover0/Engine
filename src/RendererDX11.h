@@ -56,6 +56,7 @@ private:
 
     [[nodiscard]] static D3D11_VIEWPORT create_viewport(i32 const width, i32 const height);
     void set_light_buffer() const;
+    void set_particle_buffer(std::shared_ptr<Drawable> const& drawable, std::shared_ptr<Material> const& material) const;
     void set_camera_position_buffer(std::shared_ptr<Drawable> const& drawable) const;
 
     [[nodiscard]] bool create_device_d3d(HWND const hwnd);
@@ -111,6 +112,7 @@ private:
     ID3D11Buffer* m_constant_buffer_point_shadows = nullptr;
     ID3D11Buffer* m_constant_buffer_ssao = nullptr;
     ID3D11Buffer* m_constant_buffer_psmisc = nullptr;
+    ID3D11Buffer* m_constant_buffer_particle = nullptr;
     ID3D11DepthStencilView* m_depth_stencil_view = nullptr;
     ID3D11Texture2D* m_depth_stencil_buffer = nullptr;
     ID3D11DepthStencilState* m_depth_stencil_state = nullptr;

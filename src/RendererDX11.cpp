@@ -57,6 +57,18 @@ std::shared_ptr<RendererDX11> RendererDX11::create()
 
     assert(SUCCEEDED(hr));
 
+    D3D11_BUFFER_DESC particle_desc = {};
+    particle_desc.Usage = D3D11_USAGE_DYNAMIC;
+    particle_desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    particle_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    particle_desc.MiscFlags = 0;
+    particle_desc.ByteWidth = static_cast<UINT>(sizeof(ConstantBufferParticle) + (16 - (sizeof(ConstantBufferParticle) % 16)));
+    particle_desc.StructureByteStride = 0;
+
+    hr = renderer->get_device()->CreateBuffer(&particle_desc, nullptr, &renderer->m_constant_buffer_particle);
+
+    assert(SUCCEEDED(hr));
+
     glfwSetWindowSizeCallback(Engine::window->get_glfw_window(), on_window_resize);
 
     D3D11_BUFFER_DESC light_buffer_desc = {};
@@ -556,6 +568,11 @@ void RendererDX11::update_object(std::shared_ptr<Drawable> const& drawable, std:
     get_device_context()->Unmap(m_constant_buffer_per_object, 0);
     get_device_context()->VSSetConstantBuffers(0, 1, &m_constant_buffer_per_object);
 
+    if (drawable->is_particle())
+    {
+        set_particle_buffer(drawable, material);
+    }
+
     set_light_buffer();
     set_camera_position_buffer(drawable);
 }
@@ -682,6 +699,24 @@ void RendererDX11::set_light_buffer() const
     CopyMemory(mapped_light_buffer_resource.pData, &light_data, sizeof(ConstantBufferLight));
     get_device_context()->Unmap(m_constant_buffer_light, 0);
     get_device_context()->PSSetConstantBuffers(0, 1, &m_constant_buffer_light);
+}
+
+void RendererDX11::set_particle_buffer(std::shared_ptr<Drawable> const& drawable, std::shared_ptr<Material> const& material) const
+{
+    assert(drawable->is_particle());
+
+    ConstantBufferParticle particle_data = {};
+    particle_data.color = material->color;
+
+    D3D11_MAPPED_SUBRESOURCE particle_mapped_resource = {};
+    HRESULT const hr = get_instance_dx11()->get_device_context()->Map(m_constant_buffer_particle, 0, D3D11_MAP_WRITE_DISCARD, 0,
+                                                                      &particle_mapped_resource);
+    assert(SUCCEEDED(hr));
+
+    CopyMemory(particle_mapped_resource.pData, &particle_data, sizeof(ConstantBufferParticle));
+
+    get_instance_dx11()->get_device_context()->Unmap(m_constant_buffer_particle, 0);
+    get_instance_dx11()->get_device_context()->PSSetConstantBuffers(4, 1, &m_constant_buffer_particle);
 }
 
 void RendererDX11::set_camera_position_buffer(std::shared_ptr<Drawable> const& drawable) const

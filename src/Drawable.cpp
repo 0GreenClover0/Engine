@@ -20,6 +20,11 @@ BoundingBox Drawable::get_adjusted_bounding_box(glm::mat4 const& model_matrix) c
     return {};
 }
 
+bool Drawable::is_particle() const
+{
+    return false;
+}
+
 RasterizerDrawType Drawable::get_rasterizer_draw_type() const
 {
     return m_rasterizer_draw_type;
