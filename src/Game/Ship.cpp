@@ -102,8 +102,13 @@ bool Ship::control_state_change()
 
         if (distance_to_light < Player::get_instance()->range)
         {
-            behavioral_state = BehavioralState::Control;
-            return true;
+            auto const nearest_ship = spawner.lock()->find_nearest_ship_object(light.lock()->get_position());
+
+            if (nearest_ship.value().lock() == shared_from_this())
+            {
+                behavioral_state = BehavioralState::Control;
+                return true;
+            }
         }
     }
 
