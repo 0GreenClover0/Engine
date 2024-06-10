@@ -9,7 +9,6 @@
     ENUMERATE_COMPONENT(Curve, "Curve")                             \
     ENUMERATE_COMPONENT(ExampleDynamicText, "Example Dynamic Text") \
     ENUMERATE_COMPONENT(ExampleUIBar, "Example UIBar")              \
-    ENUMERATE_COMPONENT(Particle, "Particle")                       \
     ENUMERATE_COMPONENT(ParticleSystem, "Particle System")          \
     ENUMERATE_COMPONENT(Sound, "Sound")                             \
     ENUMERATE_COMPONENT(SoundListener, "Sound Listener")            \
@@ -27,6 +26,7 @@
     ENUMERATE_COMPONENT(PlayerInput, "Player Input")                \
     ENUMERATE_COMPONENT(Path, "Path")                               \
     ENUMERATE_COMPONENT(Model, "Model")                             \
+    ENUMERATE_COMPONENT(Particle, "Particle")                       \
     ENUMERATE_COMPONENT(ScreenText, "Screen Text")                  \
     ENUMERATE_COMPONENT(Cube, "Cube")                               \
     ENUMERATE_COMPONENT(Sphere, "Sphere")                           \

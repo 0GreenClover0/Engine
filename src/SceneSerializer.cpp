@@ -169,6 +169,12 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
             out << YAML::Key << "color" << YAML::Value << screentext->color;
             out << YAML::Key << "flags" << YAML::Value << screentext->flags;
         }
+        else if (auto const particle = std::dynamic_pointer_cast<class Particle>(component); particle != nullptr)
+        {
+            out << YAML::Key << "ComponentName" << YAML::Value << "ParticleComponent";
+            out << YAML::Key << "guid" << YAML::Value << particle->guid;
+            out << YAML::Key << "custom_name" << YAML::Value << particle->custom_name;
+        }
         else if (auto const model = std::dynamic_pointer_cast<class Model>(component); model != nullptr)
         {
             // # Put new Model kid here
@@ -281,14 +287,6 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "specular" << YAML::Value << light->specular;
         out << YAML::Key << "m_near_plane" << YAML::Value << light->m_near_plane;
         out << YAML::Key << "m_far_plane" << YAML::Value << light->m_far_plane;
-        out << YAML::EndMap;
-    }
-    else if (auto const particle = std::dynamic_pointer_cast<class Particle>(component); particle != nullptr)
-    {
-        out << YAML::BeginMap;
-        out << YAML::Key << "ComponentName" << YAML::Value << "ParticleComponent";
-        out << YAML::Key << "guid" << YAML::Value << particle->guid;
-        out << YAML::Key << "custom_name" << YAML::Value << particle->custom_name;
         out << YAML::EndMap;
     }
     else if (auto const particlesystem = std::dynamic_pointer_cast<class ParticleSystem>(component); particlesystem != nullptr)
@@ -829,6 +827,27 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             deserialized_component->reprepare();
         }
     }
+    else if (component_name == "ParticleComponent")
+    {
+        if (first_pass)
+        {
+            auto const deserialized_component = Particle::create();
+            deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_component->custom_name = component["custom_name"].as<std::string>();
+            deserialized_pool.emplace_back(deserialized_component);
+        }
+        else
+        {
+            auto const deserialized_component =
+                std::dynamic_pointer_cast<class Particle>(get_from_pool(component["guid"].as<std::string>()));
+            if (component["material"].IsDefined())
+            {
+                deserialized_component->material = component["material"].as<std::shared_ptr<Material>>();
+            }
+            deserialized_entity->add_component(deserialized_component);
+            deserialized_component->reprepare();
+        }
+    }
     else if (component_name == "ScreenTextComponent")
     {
         if (first_pass)
@@ -1047,23 +1066,6 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             {
                 deserialized_component->m_far_plane = component["m_far_plane"].as<float>();
             }
-            deserialized_entity->add_component(deserialized_component);
-            deserialized_component->reprepare();
-        }
-    }
-    else if (component_name == "ParticleComponent")
-    {
-        if (first_pass)
-        {
-            auto const deserialized_component = Particle::create();
-            deserialized_component->guid = component["guid"].as<std::string>();
-            deserialized_component->custom_name = component["custom_name"].as<std::string>();
-            deserialized_pool.emplace_back(deserialized_component);
-        }
-        else
-        {
-            auto const deserialized_component =
-                std::dynamic_pointer_cast<class Particle>(get_from_pool(component["guid"].as<std::string>()));
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
         }

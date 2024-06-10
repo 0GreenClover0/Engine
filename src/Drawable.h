@@ -25,6 +25,8 @@ public:
     virtual void adjust_bounding_box();
     virtual BoundingBox get_adjusted_bounding_box(glm::mat4 const& model_matrix) const;
 
+    virtual bool is_particle() const;
+
     RasterizerDrawType get_rasterizer_draw_type() const;
     void set_rasterizer_draw_type(RasterizerDrawType const new_draw_mode);
 

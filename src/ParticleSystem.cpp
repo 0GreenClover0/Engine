@@ -36,8 +36,8 @@ void ParticleSystem::update()
             }
 
             auto const particle = Entity::create("PARTICLE_" + AK::generate_guid());
-            particle->add_component(
-                Particle::create(m_spawn_data_vector[i].particle_speed, m_spawn_data_vector[i].spawn_alpha, emitter_bounds));
+            particle->add_component(Particle::create(m_spawn_data_vector[i].particle_speed,
+                                                     {1.0f, 1.0f, 1.0f, m_spawn_data_vector[i].spawn_alpha}, emitter_bounds));
 
             particle->transform->set_parent(entity->transform);
             m_spawn_data_vector.erase(m_spawn_data_vector.begin() + i);
