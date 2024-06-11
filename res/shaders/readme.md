@@ -19,6 +19,7 @@
 - `t14` is for ambient occlusion
 - `t15` is for the SkyBox resource
 - `t16` is for the Fog texture
+- `t17` is for deferred pass copy
 - `t18` is for water normal map #0
 - `t19` is for water normal map #1
 - `t20` to `t39` are for spotlight shadow maps

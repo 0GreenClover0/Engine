@@ -441,6 +441,9 @@ void RendererDX11::render_lighting_pass() const
     FullscreenQuad::get_instance()->draw();
 
     g_pd3dDeviceContext->RSSetState(g_rasterizer_state);
+
+    g_pd3dDeviceContext->CopyResource(m_deferred_texture_copy, m_multipass_render_texture);
+    g_pd3dDeviceContext->PSSetShaderResources(17, 1, &m_deferred_srv_copy);
 }
 
 void RendererDX11::bind_for_render_frame() const
@@ -913,16 +916,24 @@ void RendererDX11::create_render_texture()
         m_multipass_render_texture->Release();
     }
 
-    hr = get_device()->CreateTexture2D(&render_texture_desc, nullptr, &m_multipass_render_texture);
+    if (m_deferred_texture_copy)
+    {
+        m_deferred_texture_copy->Release();
+    }
 
+    hr = get_device()->CreateTexture2D(&render_texture_desc, nullptr, &m_multipass_render_texture);
     assert(SUCCEEDED(hr));
 
     hr = get_device()->CreateShaderResourceView(m_multipass_render_texture, &shader_resource_view_desc, &m_multi_pass_render_srv);
-
     assert(SUCCEEDED(hr));
 
     hr = g_pd3dDevice->CreateRenderTargetView(m_multipass_render_texture, &render_target_view_desc, &g_multi_pass_render_target_view);
+    assert(SUCCEEDED(hr));
 
+    hr = get_device()->CreateTexture2D(&render_texture_desc, nullptr, &m_deferred_texture_copy);
+    assert(SUCCEEDED(hr));
+
+    hr = get_device()->CreateShaderResourceView(m_deferred_texture_copy, &shader_resource_view_desc, &m_deferred_srv_copy);
     assert(SUCCEEDED(hr));
 }
 

@@ -119,6 +119,9 @@ private:
     ID3D11Texture2D* m_multipass_render_texture = nullptr;
     ID3D11ShaderResourceView* m_multi_pass_render_srv = nullptr;
 
+    ID3D11ShaderResourceView* m_deferred_srv_copy = nullptr;
+    ID3D11Texture2D* m_deferred_texture_copy = nullptr;
+
     // Shadow mapping variables
     ID3D11RasterizerState* g_shadow_rasterizer_state = nullptr;
     ID3D11SamplerState* m_shadow_sampler_state = nullptr;
