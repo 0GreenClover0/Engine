@@ -21,9 +21,9 @@ public:
     bool is_inside_port() const;
     void set_is_inside_port(bool const value);
 
-    float maximum_speed = 3.17f;
-    float acceleration = 0.14f;
-    float deceleration = acceleration;
+    float maximum_speed = 5.0f;
+    float acceleration = 0.2f;
+    float deceleration = 0.1f;
 
     float interact_with_factory_distance = 0.5f;
 
