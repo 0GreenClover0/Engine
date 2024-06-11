@@ -48,7 +48,7 @@ void Particle::initialize()
 
     set_can_tick(true);
 
-    entity->add_component(Sprite::create(m_particle_material, "./res/textures/smoke.png"));
+    entity->add_component(Sprite::create(m_particle_material, "./res/textures/particle.png"));
 
     entity->transform->set_scale({0.1f, 0.1f, 0.1f});
     entity->transform->set_local_position({AK::random_float(-m_spawn_bounds, m_spawn_bounds),
@@ -77,14 +77,23 @@ void Particle::update_particle() const
 
 void Particle::update()
 {
-    m_color.a -= delta_time;
+    move();
+    decrement_alpha();
+    update_particle();
+}
+
+void Particle::move() const
+{
     glm::vec3 const p = entity->transform->get_position();
-    entity->transform->set_position({p.x, p.y + delta_time, p.z});
+    entity->transform->set_position({p.x, p.y + delta_time * m_speed, p.z});
+}
+
+void Particle::decrement_alpha()
+{
+    m_color.a -= delta_time;
 
     if (m_color.a < 0.01f)
         entity->destroy_immediate();
-
-    update_particle();
 }
 
 bool Particle::is_particle() const
