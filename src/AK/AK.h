@@ -82,6 +82,34 @@ inline bool random_bool()
     return random_int(0, 1) == 1;
 }
 
+inline glm::vec2 move_towards(glm::vec2 const current, glm::vec2 const target, float const max_distance_delta)
+{
+    if (max_distance_delta == 0.0f)
+        return current;
+
+    glm::vec2 const a = target - current;
+    float const magnitude = glm::length(a);
+
+    if (magnitude <= max_distance_delta || magnitude == 0.0f)
+        return target;
+
+    return current + a / magnitude * max_distance_delta;
+}
+
+inline glm::vec3 move_towards(glm::vec3 const current, glm::vec3 const target, float const max_distance_delta)
+{
+    if (max_distance_delta == 0.0f)
+        return current;
+
+    glm::vec3 const a = target - current;
+    float const magnitude = glm::length(a);
+
+    if (magnitude <= max_distance_delta || magnitude == 0.0f)
+        return target;
+
+    return current + a / magnitude * max_distance_delta;
+}
+
 inline u32 murmur_hash(u8 const* key, size_t const len, u32 const seed)
 {
     u32 h = seed;
