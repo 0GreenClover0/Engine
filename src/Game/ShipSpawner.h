@@ -26,7 +26,7 @@ public:
 
     float const spawn_warning_time = 5.0f;
     float const spawn_rapid_time = 2.5f;
-    float const minimum_spawn_distance = 1.25f;
+    float const minimum_spawn_distance = 2.25f;
 
     u32 last_chance_food_threshold = 5;
     float last_chance_time_threshold = 30.0f;
