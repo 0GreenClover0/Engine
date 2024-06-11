@@ -141,7 +141,6 @@ public:
     NON_SERIALIZED
     float maximum_speed = 0.23f;
 
-    NON_SERIALIZED
     ShipType type = ShipType::FoodSmall;
 
     std::weak_ptr<LighthouseLight> light = {};
