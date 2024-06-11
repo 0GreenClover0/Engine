@@ -361,6 +361,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "interact_with_factory_distance" << YAML::Value << lighthousekeeper->interact_with_factory_distance;
         out << YAML::Key << "lighthouse" << YAML::Value << lighthousekeeper->lighthouse;
         out << YAML::Key << "port" << YAML::Value << lighthousekeeper->port;
+        out << YAML::Key << "packages" << YAML::Value << lighthousekeeper->packages;
         out << YAML::EndMap;
     }
     else if (auto const lighthouselight = std::dynamic_pointer_cast<class LighthouseLight>(component); lighthouselight != nullptr)
@@ -1237,6 +1238,10 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             if (component["port"].IsDefined())
             {
                 deserialized_component->port = component["port"].as<std::weak_ptr<Port>>();
+            }
+            if (component["packages"].IsDefined())
+            {
+                deserialized_component->packages = component["packages"].as<std::vector<std::weak_ptr<Entity>>>();
             }
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();

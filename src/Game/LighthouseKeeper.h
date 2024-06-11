@@ -30,10 +30,22 @@ public:
     std::weak_ptr<Lighthouse> lighthouse = {};
     std::weak_ptr<Port> port = {};
 
+    std::vector<std::weak_ptr<Entity>> packages = {};
+
 private:
     void handle_input() const;
+
+    void add_package();
+
+    void remove_package();
 
     bool m_is_inside_port = false;
 
     glm::vec2 m_speed = glm::vec2(0.0f, 0.0f);
+
+    float m_package_tilt_x = 0.0f;
+    float m_target_package_tilt_x = 0.0f;
+
+    float m_package_tilt_z = 0.0f;
+    float m_target_package_tilt_z = 0.0f;
 };

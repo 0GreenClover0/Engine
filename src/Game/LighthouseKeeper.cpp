@@ -1,19 +1,19 @@
 #include "ExampleUIBar.h"
 
 #include <GLFW/glfw3.h>
+#include <glm/gtc/random.hpp>
 #include <imgui.h>
 
-#include "Entity.h"
-#include "Globals.h"
-#include "LighthouseKeeper.h"
-
 #include "AK/AK.h"
+#include "Entity.h"
 #include "Factory.h"
+#include "Globals.h"
 #include "LevelController.h"
 #include "Lighthouse.h"
+#include "LighthouseKeeper.h"
 #include "Port.h"
-
-#include <imgui_extensions.h>
+#include "ResourceManager.h"
+#include "imgui_extensions.h"
 
 std::shared_ptr<LighthouseKeeper> LighthouseKeeper::create()
 {
@@ -84,6 +84,9 @@ void LighthouseKeeper::update()
 
     entity->transform->set_local_position(entity->transform->get_local_position() + speed_vector);
 
+    m_target_package_tilt_x = 0.0f;
+    m_target_package_tilt_z = 5.0f * (glm::length(m_speed) / maximum_speed);
+
     if (glm::length(m_speed) >= maximum_speed * 0.25f)
     {
         float rotation = atan2(speed_vector.x, speed_vector.z) * (180.0f / 3.14f) - 90.0f;
@@ -108,6 +111,19 @@ void LighthouseKeeper::update()
         float new_rotation = actual_rotation + delta * 0.1f;
 
         entity->transform->set_euler_angles({0.0f, new_rotation, 0.0f});
+
+        if (std::abs(delta) > 0.5f)
+        {
+            m_target_package_tilt_x = glm::sign(delta) * 5.0f;
+        }
+    }
+
+    m_package_tilt_x = std::lerp(m_package_tilt_x, m_target_package_tilt_x, 0.04f);
+    m_package_tilt_z = std::lerp(m_package_tilt_z, m_target_package_tilt_z, 0.08f);
+
+    for (auto const& package : packages)
+    {
+        package.lock()->transform->set_euler_angles({m_package_tilt_x, 0.0f, m_package_tilt_z});
     }
 
     handle_input();
@@ -122,6 +138,18 @@ void LighthouseKeeper::draw_editor()
     ImGuiEx::InputFloat("Maximum speed", &maximum_speed);
 
     ImGuiEx::draw_ptr("Lighthouse", lighthouse);
+
+    if (ImGui::Button("Add package"))
+    {
+        add_package();
+    }
+
+    ImGui::SameLine();
+
+    if (ImGui::Button("Remove package"))
+    {
+        remove_package();
+    }
 }
 
 bool LighthouseKeeper::is_inside_port() const
@@ -198,5 +226,41 @@ void LighthouseKeeper::handle_input() const
             entity->destroy_immediate();
             return;
         }
+    }
+}
+
+void LighthouseKeeper::add_package()
+{
+    auto const& package = Entity::create("Package");
+
+    auto const standard_shader = ResourceManager::get_instance().load_shader("./res/shaders/lit.hlsl", "./res/shaders/lit.hlsl");
+    auto const standard_material = Material::create(standard_shader);
+
+    package->add_component(Model::create("./res/models/package/package.gltf", standard_material));
+    if (packages.size() > 0)
+    {
+        package->transform->set_parent(packages.back().lock()->transform);
+        float x = package->transform->parent.lock()->get_local_position().x;
+        float z = package->transform->parent.lock()->get_local_position().z;
+        package->transform->set_local_position(glm::vec3(glm::linearRand(-0.015f, 0.015f) - x, 0.13f, glm::linearRand(-0.02f, 0.02f) - z));
+    }
+    else
+    {
+        package->transform->set_parent(entity->transform);
+    }
+
+    packages.emplace_back(package);
+}
+
+void LighthouseKeeper::remove_package()
+{
+    if (packages.size() > 0)
+    {
+        packages.back().lock()->destroy_immediate();
+        packages.pop_back();
+    }
+    else
+    {
+        Debug::log("Game wants to remove package but there is no package to remove!", DebugType::Warning);
     }
 }
