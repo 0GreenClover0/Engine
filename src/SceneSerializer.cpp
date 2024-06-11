@@ -1518,14 +1518,14 @@ void SceneSerializer::serialize_this_entity(std::shared_ptr<Entity> const& entit
 
 // Deserialize entity (might include its children) from a file.
 // Replaces all guids that are not present in the scene with newly generated ones.
-bool SceneSerializer::deserialize_this_entity(std::string const& file_path)
+std::shared_ptr<Entity> SceneSerializer::deserialize_this_entity(std::string const& file_path)
 {
     std::ifstream scene_file(file_path);
 
     if (!scene_file.is_open())
     {
         Debug::log("Could not open a scene file: " + file_path + "\n", DebugType::Error);
-        return false;
+        return {};
     }
 
     std::stringstream stream;
@@ -1605,12 +1605,14 @@ bool SceneSerializer::deserialize_this_entity(std::string const& file_path)
     YAML::Node data = YAML::Load(output.str());
 
     if (!data["Scene"])
-        return false;
+        return {};
 
     DeserializationMode const previous_mode = m_deserialization_mode;
     m_deserialization_mode = DeserializationMode::InjectFromFile;
 
     auto const scene_name = data["Scene"].as<std::string>();
+
+    std::shared_ptr<Entity> first_entity = {};
 
     if (auto const entities = data["Entities"])
     {
@@ -1624,7 +1626,12 @@ bool SceneSerializer::deserialize_this_entity(std::string const& file_path)
             if (deserialized_entity == nullptr)
             {
                 m_deserialization_mode = previous_mode;
-                return false;
+                return {};
+            }
+
+            if (first_entity == nullptr)
+            {
+                first_entity = deserialized_entity;
             }
 
             deserialized_entities_pool.emplace_back(deserialized_entity);
@@ -1653,7 +1660,7 @@ bool SceneSerializer::deserialize_this_entity(std::string const& file_path)
 
     m_deserialization_mode = previous_mode;
 
-    return true;
+    return first_entity;
 }
 
 void SceneSerializer::serialize(std::string const& file_path) const
@@ -1748,4 +1755,14 @@ bool SceneSerializer::deserialize(std::string const& file_path)
     }
 
     return true;
+}
+
+// FIXME: We should probably cache entities that are prefabs and are referenced in the scene, just like Unity.
+//        So we won't need to read the .txt files here.
+std::shared_ptr<Entity> SceneSerializer::load_prefab(std::string const& prefab_name)
+{
+    auto const scene_serializer = std::make_shared<SceneSerializer>(MainScene::get_instance());
+    scene_serializer->set_instance(scene_serializer);
+    std::shared_ptr<Entity> entity = scene_serializer->deserialize_this_entity(m_prefab_path + prefab_name + ".txt");
+    return entity;
 }

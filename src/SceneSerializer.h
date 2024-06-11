@@ -30,10 +30,12 @@ public:
     [[nodiscard]] std::shared_ptr<Entity> get_entity_from_pool(std::string const& guid) const;
 
     void serialize_this_entity(std::shared_ptr<Entity> const& entity, std::string const& file_path) const;
-    bool deserialize_this_entity(std::string const& file_path);
+    std::shared_ptr<Entity> deserialize_this_entity(std::string const& file_path);
 
     void serialize(std::string const& file_path) const;
     bool deserialize(std::string const& file_path);
+
+    static std::shared_ptr<Entity> load_prefab(std::string const& prefab_name);
 
 private:
     static void serialize_entity(YAML::Emitter& out, std::shared_ptr<Entity> const& entity);
@@ -53,6 +55,9 @@ private:
     std::unordered_map<std::string, std::string> m_replaced_guids_map = {};
 
     DeserializationMode m_deserialization_mode = DeserializationMode::Normal;
+
+    // FIXME: Duplication of paths here and in Editor
+    inline static std::string m_prefab_path = "./res/prefabs/";
 
     inline static std::shared_ptr<SceneSerializer> m_instance;
 };
