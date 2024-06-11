@@ -1,15 +1,14 @@
 #include "Lighthouse.h"
 
+#include "Collider2D.h"
 #include "Entity.h"
 #include "Game/LighthouseKeeper.h"
 #include "Game/LighthouseLight.h"
+#include "LevelController.h"
 #include "Model.h"
 #include "ResourceManager.h"
-
-#include <imgui_extensions.h>
-
-#include "Collider2D.h"
-#include "LevelController.h"
+#include "SceneSerializer.h"
+#include "imgui_extensions.h"
 
 std::shared_ptr<Lighthouse> Lighthouse::create()
 {
@@ -66,15 +65,7 @@ void Lighthouse::exit()
     light.lock()->set_enabled(false);
     light.lock()->spotlight.lock()->set_enabled(false);
 
-    auto const standard_shader = ResourceManager::get_instance().load_shader("./res/shaders/lit.hlsl", "./res/shaders/lit.hlsl");
-    auto const standard_material = Material::create(standard_shader);
-
-    auto const keeper = Entity::create("keeper");
-    keeper->add_component(Model::create("./res/models/keeperInHovercraft/keeper.gltf", standard_material));
-    keeper->add_component(Collider2D::create(0.1f));
-    auto const keeper_comp = keeper->add_component(LighthouseKeeper::create());
-    keeper_comp->lighthouse = static_pointer_cast<Lighthouse>(shared_from_this());
-    keeper_comp->port = LevelController::get_instance()->port;
+    auto const keeper = SceneSerializer::load_prefab("Keeper");
 
     keeper->transform->set_local_position(spawn_position.lock()->transform->get_position());
 }
