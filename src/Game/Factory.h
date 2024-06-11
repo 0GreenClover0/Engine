@@ -34,4 +34,6 @@ public:
 
 private:
     std::weak_ptr<Model> model = {};
+
+    inline static constexpr i32 m_max_flash_count = 3;
 };
