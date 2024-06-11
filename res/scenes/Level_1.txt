@@ -82,33 +82,6 @@ Entities:
         specular: [1, 1, 1]
         m_near_plane: 0.100000001
         m_far_plane: 25
-  - Entity: Generator
-    guid: 85b0b4e44496f70ceeb565036674629e25dfaee721174c9ffbe15ad9b588a1f6
-    Name: Generator
-    TransformComponent:
-      Translation: [-5.78474426, 0.100000001, 2.06692314]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-      Parent:
-        guid: d661f1e56d48c4d9fd8f0722afa807187cab342a47f4db49efc5b0f345498c0a
-    Components:
-      - ComponentName: FactoryComponent
-        guid: 0e20c2375b4b17e8565fb884b2313653b145e3ae1cf209d796546a3d5f549810
-        custom_name: ""
-        type: 0
-      - ComponentName: ModelComponent
-        guid: 8e61363ed31c1f3021ca3443768b49c183a332b9ee7730c4afd03d30a14ae525
-        custom_name: ""
-        model_path: ./res/models\generator\generator.gltf
-        material:
-          Shader:
-            VertexPath: ./res/shaders/lit.hlsl
-            FragmentPath: ./res/shaders/lit.hlsl
-            GeometryPath: ""
-          Color: [1, 1, 1, 1]
-          RenderOrder: 0
-          NeedsForward: false
-          CastsShadows: true
   - Entity: Workshop
     guid: 9e3e848abd40f98bdc69739073fcab3f2433c238668224c366f09b0115f2ba83
     Name: Workshop
@@ -123,6 +96,8 @@ Entities:
         guid: 52e396d002181743558411a8f979fd2274c7a67216f6aea67bc6f9c88d5a75fc
         custom_name: ""
         type: 1
+        lights:
+          []
       - ComponentName: ModelComponent
         guid: 545d91a6e1dc5e97ba9b6d9a2662c9bf208acc181956c5de2f8042fd4bc755e0
         custom_name: ""
@@ -284,7 +259,7 @@ Entities:
         maximum_lighthouse_level: 10
         factories:
           - guid: 52e396d002181743558411a8f979fd2274c7a67216f6aea67bc6f9c88d5a75fc
-          - guid: 0e20c2375b4b17e8565fb884b2313653b145e3ae1cf209d796546a3d5f549810
+          - guid: 478030b3d04e5979caed830ae5217553ac058be7523deac81fd514ec74467760
         port:
           guid: b0facf70c246fdf6f761c9a469a88bfa7955c70ac0d03584167cfd8b9de40101
         playfield_width: 6
@@ -313,6 +288,10 @@ Entities:
           guid: 0e964ba3e74511090908757bf419ecb097f62be97380e16af66721be6a41e118
         last_chance_food_threshold: 5
         last_chance_time_threshold: 30
+        main_event_spawn:
+          []
+        backup_spawn:
+          []
       - ComponentName: PlayerComponent
         guid: 9954f2b973d77e733516bc45aaa28d74b5d22dd1ec6e3fe68e67d1ee68cc09af
         custom_name: ""
@@ -1445,5 +1424,99 @@ Entities:
         ambient: [0.200000003, 0.200000003, 0.200000003]
         diffuse: [0, 1, 0]
         specular: [1, 1, 1]
+        m_near_plane: 0.5
+        m_far_plane: 25
+  - Entity: Generator
+    guid: fe35f5f2ec04b5b67d1ba24654f70f1fada03610c35faa8fd70a0e4c3bc4e637
+    Name: Generator
+    TransformComponent:
+      Translation: [-5.84570312, 0.100000001, 2.09735203]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: d661f1e56d48c4d9fd8f0722afa807187cab342a47f4db49efc5b0f345498c0a
+    Components:
+      - ComponentName: FactoryComponent
+        guid: 478030b3d04e5979caed830ae5217553ac058be7523deac81fd514ec74467760
+        custom_name: ""
+        type: 0
+        lights:
+          - guid: a64a35c45890706c98e5252de84f1cd4fb1c24571a5bac20416ca96b53985ed2
+          - guid: 6e9f62dde7b54ee67f73dd9f10d93beead27b9b6362943f0472d4474c285c1ef
+          - guid: 846234c923134f75c5cd674388a0361250b5f6271307b0b37673cc074fd4a44a
+      - ComponentName: ModelComponent
+        guid: 76ef67e32b7e9fb2770c17f80de39a310b8059722194f444806f10650bf1a52a
+        custom_name: ""
+        model_path: ./res/models\generator\generator.gltf
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+          NeedsForward: false
+          CastsShadows: true
+  - Entity: Light1
+    guid: 3e00d9461c9d5604f259207332da01597fd3e09904618d7d471ba84e835c788c
+    Name: Light1
+    TransformComponent:
+      Translation: [-0.0707216263, 0.428870887, -0.0539073944]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: fe35f5f2ec04b5b67d1ba24654f70f1fada03610c35faa8fd70a0e4c3bc4e637
+    Components:
+      - ComponentName: PointLightComponent
+        guid: a64a35c45890706c98e5252de84f1cd4fb1c24571a5bac20416ca96b53985ed2
+        custom_name: ""
+        constant: 1
+        linear: 10
+        quadratic: 10
+        ambient: [0.961111128, 0.917505205, 0.699475348]
+        diffuse: [1, 0.933333337, 0]
+        specular: [1, 0.900000036, 0]
+        m_near_plane: 0.5
+        m_far_plane: 25
+  - Entity: Light2
+    guid: 6d33159902be0c971b4a10ed9c0220192f3e5bbf9a67915941ba12e4651301b0
+    Name: Light2
+    TransformComponent:
+      Translation: [0.053319931, 0.428870887, -0.0539073944]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: fe35f5f2ec04b5b67d1ba24654f70f1fada03610c35faa8fd70a0e4c3bc4e637
+    Components:
+      - ComponentName: PointLightComponent
+        guid: 6e9f62dde7b54ee67f73dd9f10d93beead27b9b6362943f0472d4474c285c1ef
+        custom_name: ""
+        constant: 1
+        linear: 10
+        quadratic: 10
+        ambient: [0.961111128, 0.917505205, 0.699475348]
+        diffuse: [1, 0.933333337, 0]
+        specular: [1, 0.900000036, 0]
+        m_near_plane: 0.5
+        m_far_plane: 25
+  - Entity: Light3
+    guid: 922004000e733e8c57257b3573fefc634fe53b018625e104f4ade47361cfaf16
+    Name: Light3
+    TransformComponent:
+      Translation: [0.178658962, 0.428870887, -0.0539073944]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: fe35f5f2ec04b5b67d1ba24654f70f1fada03610c35faa8fd70a0e4c3bc4e637
+    Components:
+      - ComponentName: PointLightComponent
+        guid: 846234c923134f75c5cd674388a0361250b5f6271307b0b37673cc074fd4a44a
+        custom_name: ""
+        constant: 1
+        linear: 10
+        quadratic: 10
+        ambient: [0.961111128, 0.917505205, 0.699475348]
+        diffuse: [1, 0.933333337, 0]
+        specular: [1, 0.900000036, 0]
         m_near_plane: 0.5
         m_far_plane: 25
