@@ -11,6 +11,7 @@
 #include "LevelController.h"
 #include "Lighthouse.h"
 #include "LighthouseKeeper.h"
+#include "Player.h"
 #include "Port.h"
 #include "ResourceManager.h"
 #include "imgui_extensions.h"
@@ -26,6 +27,11 @@ LighthouseKeeper::LighthouseKeeper(AK::Badge<LighthouseKeeper>)
 
 void LighthouseKeeper::awake()
 {
+    for (u32 i = 0; i < Player::get_instance()->packages; i++)
+    {
+        add_package();
+    }
+
     set_can_tick(true);
 }
 
@@ -138,18 +144,6 @@ void LighthouseKeeper::draw_editor()
     ImGuiEx::InputFloat("Maximum speed", &maximum_speed);
 
     ImGuiEx::draw_ptr("Lighthouse", lighthouse);
-
-    if (ImGui::Button("Add package"))
-    {
-        add_package();
-    }
-
-    ImGui::SameLine();
-
-    if (ImGui::Button("Remove package"))
-    {
-        remove_package();
-    }
 }
 
 bool LighthouseKeeper::is_inside_port() const
@@ -162,7 +156,7 @@ void LighthouseKeeper::set_is_inside_port(bool const value)
     m_is_inside_port = value;
 }
 
-void LighthouseKeeper::handle_input() const
+void LighthouseKeeper::handle_input()
 {
     auto const& factories = LevelController::get_instance()->factories;
     if (factories.size() > 0 && Input::input->get_key_down(GLFW_KEY_SPACE))
@@ -188,6 +182,7 @@ void LighthouseKeeper::handle_input() const
         {
             if (closest_factory->interact())
             {
+                remove_package();
                 return;
             }
         }
@@ -207,6 +202,10 @@ void LighthouseKeeper::handle_input() const
 
             if (has_interacted)
             {
+                if (packages.size() < Player::get_instance()->packages)
+                {
+                    add_package();
+                }
                 return;
             }
         }
