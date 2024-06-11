@@ -33,6 +33,11 @@ bool Factory::interact()
 
     if (type == FactoryType::Generator)
     {
+        if (Player::get_instance()->flash >= m_max_flash_count)
+        {
+            return false;
+        }
+
         Player::get_instance()->flash += 1;
         update_lights();
     }
