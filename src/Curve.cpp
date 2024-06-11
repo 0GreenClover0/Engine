@@ -152,13 +152,13 @@ float Curve::get_y_at(float x) const
     {
         if (x >= points[i].x && x <= points[i + 1].x)
         {
-            float x0 = points[i].x;
-            float y0 = points[i].y;
-            float x1 = points[i + 1].x;
-            float y1 = points[i + 1].y;
+            float const x0 = points[i].x;
+            float const y0 = points[i].y;
+            float const x1 = points[i + 1].x;
+            float const y1 = points[i + 1].y;
 
-            float t = (x - x0) / (x1 - x0);
-            float y = y0 + t * (y1 - y0);
+            float const t = (x - x0) / (x1 - x0);
+            float const y = y0 + t * (y1 - y0);
             return y;
         }
     }
