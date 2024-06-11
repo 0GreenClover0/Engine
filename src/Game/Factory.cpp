@@ -5,6 +5,7 @@
 #include "Model.h"
 #include "Player.h"
 #include "ResourceManager.h"
+#include "imgui_extensions.h"
 
 std::shared_ptr<Factory> Factory::create()
 {
@@ -15,7 +16,17 @@ Factory::Factory(AK::Badge<Factory>)
 {
 }
 
-bool Factory::interact() const
+void Factory::awake()
+{
+    if (type == FactoryType::Generator)
+    {
+        update_lights();
+    }
+
+    set_can_tick(true);
+}
+
+bool Factory::interact()
 {
     if (Player::get_instance()->packages <= 0)
         return false;
@@ -23,6 +34,7 @@ bool Factory::interact() const
     if (type == FactoryType::Generator)
     {
         Player::get_instance()->flash += 1;
+        update_lights();
     }
     else if (type == FactoryType::Workshop)
     {
@@ -67,5 +79,27 @@ void Factory::set_type(FactoryType const type)
     {
         model = entity->add_component<Model>(Model::create("./res/models/lighthouseOld/lighthouse.gltf", standard_material));
         entity->transform->set_local_scale({1.0f, 1.0f, 1.0f});
+    }
+}
+
+void Factory::update_lights() const
+{
+    if (type == FactoryType::Generator)
+    {
+        for (u32 i = 0; i < lights.size(); i++)
+        {
+            if (i < Player::get_instance()->flash)
+            {
+                lights[i].lock()->set_enabled(true);
+            }
+            else
+            {
+                lights[i].lock()->set_enabled(false);
+            }
+        }
+    }
+    else
+    {
+        Debug::log("Something wants to update lights in Workshop where there are no lights!", DebugType::Warning);
     }
 }

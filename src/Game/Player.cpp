@@ -69,6 +69,14 @@ void Player::update()
         {
             flash -= 1;
             flash_counter = m_flash_time;
+
+            for (size_t i = 0; i < LevelController::get_instance()->factories.size(); i++)
+            {
+                if (LevelController::get_instance()->factories[i].lock()->type == FactoryType::Generator)
+                {
+                    LevelController::get_instance()->factories[i].lock()->update_lights();
+                }
+            }
         }
     }
 

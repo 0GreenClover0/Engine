@@ -3,6 +3,7 @@
 #include "Component.h"
 
 #include "AK/Badge.h"
+#include "PointLight.h"
 
 class Model;
 
@@ -20,11 +21,16 @@ public:
     explicit Factory(AK::Badge<Factory>);
     virtual void draw_editor() override;
 
-    bool interact() const;
+    virtual void awake() override;
+    bool interact();
 
     void set_type(FactoryType const type);
 
+    void update_lights() const;
+
     FactoryType type = FactoryType::Generator;
+
+    std::vector<std::weak_ptr<PointLight>> lights = {};
 
 private:
     std::weak_ptr<Model> model = {};
