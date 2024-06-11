@@ -12,7 +12,7 @@ float3 reinhard_tonemapping(float3 color)
     return color / (color + float3(1.0f, 1.0f, 1.0f));
 }
 
-float3 exposure_tonemapping(float3 color, float exposure)
+float3 exposure_tonemapping(float3 color, float exposure = 1.5f)
 {
     return float3(1.0f, 1.0f, 1.0f) - exp(-color * exposure);
 }
