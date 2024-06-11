@@ -1,0 +1,48 @@
+Scene: Untitled
+Entities:
+  - Entity: Keeper
+    guid: 8aafa34b4e5199eeb04ad1fe4e5448b540fd029720ecf4194532188fd2caec5e
+    Name: Keeper
+    TransformComponent:
+      Translation: [1.9251647, 0.0700712204, 2.15936828]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: ""
+    Components:
+      - ComponentName: ModelComponent
+        guid: 9587c12910c6f8b786a343d5c6bca4167f8570f5f3470a7f4c1bfae698be0c0f
+        custom_name: ""
+        model_path: ./res/models/keeperInHovercraft/keeper.gltf
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+          NeedsForward: false
+          CastsShadows: true
+      - ComponentName: Collider2DComponent
+        guid: a19b246e640f25199a290f41cb9e881a43daede60625e6c607d02e4cd7180222
+        custom_name: ""
+        offset: [0, 0]
+        is_trigger: false
+        is_static: false
+        collider_type: 1
+        width: 1
+        height: 1
+        radius: 0.100000001
+      - ComponentName: LighthouseKeeperComponent
+        guid: b1cdb56eaaa8d1362e446bde64eeef1b60a6d459a839be3b56f263d6bd1544a1
+        custom_name: ""
+        maximum_speed: 5
+        acceleration: 0.200000003
+        deceleration: 0.100000001
+        interact_with_factory_distance: 0.5
+        lighthouse:
+          guid: 31c02634f68bbeb5e257d8412cbe9bcaeb8095f40b2bf4b6ae84af1f0134da66
+        port:
+          guid: b0facf70c246fdf6f761c9a469a88bfa7955c70ac0d03584167cfd8b9de40101
+        packages:
+          []
