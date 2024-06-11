@@ -203,7 +203,7 @@ float4 ps_main(VS_Output input) : SV_TARGET
 
     result = result * phong_contribution +  (1.0f - phong_contribution)  * ((ssr_reflection.w > 0.0f ? ssr_reflection.xyz : reflection ) * 0.5f + refraction * 0.5f);
     float4 final;
-    final.xyz = gamma_correction(exposure_tonemapping(result.xyz, 1.1f));
     final.a = 0.8f;
+    final.xyz = gamma_correction(exposure_tonemapping(final.xyz));
     return final;
 }
