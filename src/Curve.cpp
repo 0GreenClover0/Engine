@@ -109,7 +109,7 @@ glm::vec2 Curve::get_point_at(float x) const
 {
     if (points.empty())
     {
-        return glm::vec2(0.0f, 0.0f);
+        return {0.0f, 0.0f};
     }
 
     if (points.size() == 1)
@@ -120,23 +120,23 @@ glm::vec2 Curve::get_point_at(float x) const
     x = glm::clamp(x, 0.0f, 1.0f);
 
     float const path_length = length();
-    float const desire_length = path_length * x;
+    float const desired_length = path_length * x;
     float distance = 0.0f;
 
     for (u32 i = 0; i < points.size() - 1; i++)
     {
         float const segment_length = glm::distance(points[i], points[i + 1]);
-        if (distance + segment_length < desire_length)
+
+        if (distance + segment_length >= desired_length)
         {
-            distance += segment_length;
+            float const segment_ratio = (desired_length - distance) / segment_length;
+            return glm::mix(points[i], points[i + 1], segment_ratio);
         }
-        else
-        {
-            return (((desire_length - distance) / (segment_length)) * (points[i + 1] - points[i])) + points[i];
-        }
+
+        distance += segment_length;
     }
 
-    return glm::vec2(0.0f, 0.0f);
+    return points.back();
 }
 
 float Curve::get_y_at(float x) const
