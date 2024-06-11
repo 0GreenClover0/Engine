@@ -21,6 +21,9 @@ public:
     bool is_inside_port() const;
     void set_is_inside_port(bool const value);
 
+    void add_package();
+    void remove_package();
+
     float maximum_speed = 5.0f;
     float acceleration = 0.2f;
     float deceleration = 0.1f;
@@ -33,11 +36,7 @@ public:
     std::vector<std::weak_ptr<Entity>> packages = {};
 
 private:
-    void handle_input() const;
-
-    void add_package();
-
-    void remove_package();
+    void handle_input();
 
     bool m_is_inside_port = false;
 
