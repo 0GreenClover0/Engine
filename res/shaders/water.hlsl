@@ -117,7 +117,7 @@ float falloff(float3 current_world_position, float3 other_world_position, float 
     float distance = length(other_world_position - current_world_position);
     if (abs(distance) < threshold)
     {
-        return distance * power;
+        return 1.0f - distance * power;
     }
 
     return 0.0f;
@@ -144,10 +144,6 @@ float4 ps_main(VS_Output input) : SV_TARGET
     float2 UV = float2(input.ndc.x, (-input.ndc.y + 1.0f));
     float3 deferred_world_pos = position_buffer.Sample(wrap_sampler_water, UV).xyz;
     float falloff_value = falloff(input.world_pos, deferred_world_pos);
-    if (falloff_value > 0.0f)
-    {
-        return float4(1.0f, 1.0f, 1.0f, falloff_value);
-    }
 
     // NORMAL MAPPING
     float3 normal1 = water_normal0.Sample(wrap_sampler_water, (input.UV.xy + time_ps.xx * normalmap_scroll_speed0) * normalmap_scale0);
@@ -204,6 +200,8 @@ float4 ps_main(VS_Output input) : SV_TARGET
     result = result * phong_contribution +  (1.0f - phong_contribution)  * ((ssr_reflection.w > 0.0f ? ssr_reflection.xyz : reflection ) * 0.5f + refraction * 0.5f);
     float4 final;
     final.a = 0.8f;
+    falloff_value = clamp(falloff_value, 0.0f, 1.0f);
+    final.xyz = falloff_value * float3(0.1f, 0.1f, 0.6f) + (1.0f - falloff_value) * result;
     final.xyz = gamma_correction(exposure_tonemapping(final.xyz));
     return final;
 }
