@@ -55,29 +55,29 @@ void ShipSpawner::awake()
         s5.spawn_list.emplace_back(ShipType::Tool);
         s5.spawn_type = SpawnType::Sequence;
 
-        m_backup_spawn.emplace_back(s1);
-        m_backup_spawn.emplace_back(s2);
-        m_backup_spawn.emplace_back(s3);
-        m_backup_spawn.emplace_back(s4);
-        m_backup_spawn.emplace_back(s5);
+        backup_spawn.emplace_back(s1);
+        backup_spawn.emplace_back(s2);
+        backup_spawn.emplace_back(s3);
+        backup_spawn.emplace_back(s4);
+        backup_spawn.emplace_back(s5);
     }
     else
     {
-        m_backup_spawn.insert(m_backup_spawn.end(), m_main_event_spawn.begin(), m_main_event_spawn.end());
-        m_main_event_spawn.clear();
+        backup_spawn.insert(backup_spawn.end(), main_event_spawn.begin(), main_event_spawn.end());
+        main_event_spawn.clear();
     }
 
-    for (u32 i = 0; i < m_backup_spawn.size(); i++)
+    for (u32 i = 0; i < backup_spawn.size(); i++)
     {
-        if (m_backup_spawn[i].spawn_list.size() == 0)
+        if (backup_spawn[i].spawn_list.size() == 0)
         {
             Debug::log("Removed empty event!", DebugType::Warning);
-            m_backup_spawn.erase(m_backup_spawn.begin() + i);
+            backup_spawn.erase(backup_spawn.begin() + i);
             i--;
         }
     }
 
-    m_main_spawn = m_backup_spawn;
+    m_main_spawn = backup_spawn;
 
     auto const seed = std::chrono::system_clock::now().time_since_epoch().count();
     std::ranges::shuffle(m_main_spawn, std::default_random_engine(seed));
@@ -164,17 +164,17 @@ void ShipSpawner::draw_editor()
             new_element.spawn_list.emplace_back(ShipType::FoodSmall);
             new_element.spawn_type = SpawnType::Sequence;
 
-            m_main_event_spawn.emplace_back(new_element);
+            main_event_spawn.emplace_back(new_element);
         }
 
-        for (u32 i = 0; i < m_main_event_spawn.size(); i++)
+        for (u32 i = 0; i < main_event_spawn.size(); i++)
         {
             ImGui::PushID(i);
 
             ImVec4 bg_color = {};
             ImVec4 text_color = {};
 
-            ship_type_to_color(m_main_event_spawn[i].spawn_list[0], bg_color, text_color);
+            ship_type_to_color(main_event_spawn[i].spawn_list[0], bg_color, text_color);
 
             ImGui::PushStyleColor(ImGuiCol_Text, text_color);
             ImGui::PushStyleColor(ImGuiCol_FrameBg, bg_color);
@@ -183,11 +183,11 @@ void ShipSpawner::draw_editor()
 
             ImGui::SetNextItemWidth(half_width);
             if (ImGui::BeginCombo(("##Ship Type MainEvent" + std::to_string(i)).c_str(),
-                                  ship_type_to_string(m_main_event_spawn[i].spawn_list[0]).c_str()))
+                                  ship_type_to_string(main_event_spawn[i].spawn_list[0]).c_str()))
             {
                 for (u32 k = static_cast<u32>(ShipType::FoodSmall); k <= static_cast<u32>(ShipType::Tool); k++)
                 {
-                    bool const is_selected = m_main_event_spawn[i].spawn_list[0] == static_cast<ShipType>(k);
+                    bool const is_selected = main_event_spawn[i].spawn_list[0] == static_cast<ShipType>(k);
 
                     ship_type_to_color(static_cast<ShipType>(k), bg_color, text_color);
 
@@ -198,7 +198,7 @@ void ShipSpawner::draw_editor()
 
                     if (ImGui::Selectable(ship_type_to_string(static_cast<ShipType>(k)).c_str(), true))
                     {
-                        m_main_event_spawn[i].spawn_list[0] = static_cast<ShipType>(k);
+                        main_event_spawn[i].spawn_list[0] = static_cast<ShipType>(k);
                     }
 
                     if (is_selected)
@@ -216,7 +216,7 @@ void ShipSpawner::draw_editor()
             ImGui::SameLine();
             if (ImGui::Button(("Remove ship##" + std::to_string(i)).c_str(), ImVec2(half_width, 20)))
             {
-                m_main_event_spawn.erase(m_main_event_spawn.begin() + i);
+                main_event_spawn.erase(main_event_spawn.begin() + i);
                 i = i - 1;
                 ImGui::PopID();
                 continue;
@@ -238,12 +238,12 @@ void ShipSpawner::draw_editor()
         if (ImGui::Button("Add Event", ImVec2(-FLT_MIN, 20)))
         {
             SpawnEvent new_element = {};
-            m_backup_spawn.emplace_back(new_element);
+            backup_spawn.emplace_back(new_element);
         }
 
         ImGui::Spacing();
 
-        for (u32 i = 0; i < m_backup_spawn.size(); i++)
+        for (u32 i = 0; i < backup_spawn.size(); i++)
         {
             ImGui::PushStyleColor(ImGuiCol_Separator, IM_COL32(110, 110, 110, 255));
             ImGui::Separator();
@@ -259,21 +259,21 @@ void ShipSpawner::draw_editor()
 
             if (ImGui::Button(("Add Ship##" + std::to_string(i)).c_str(), ImVec2(third_width, 20)))
             {
-                m_backup_spawn[i].spawn_list.emplace_back(ShipType::FoodSmall);
+                backup_spawn[i].spawn_list.emplace_back(ShipType::FoodSmall);
             }
 
             ImGui::SameLine();
             ImGui::SetNextItemWidth(third_width);
 
-            if (ImGui::BeginCombo(("##SpawnType" + std::to_string(i)).c_str(), spawn_type_to_string(m_backup_spawn[i].spawn_type).c_str()))
+            if (ImGui::BeginCombo(("##SpawnType" + std::to_string(i)).c_str(), spawn_type_to_string(backup_spawn[i].spawn_type).c_str()))
             {
                 for (u32 j = static_cast<u32>(SpawnType::Sequence); j <= static_cast<u32>(SpawnType::Rapid); j++)
                 {
-                    bool const is_selected = m_backup_spawn[i].spawn_type == static_cast<SpawnType>(j);
+                    bool const is_selected = backup_spawn[i].spawn_type == static_cast<SpawnType>(j);
 
                     if (ImGui::Selectable(spawn_type_to_string(static_cast<SpawnType>(j)).c_str(), is_selected))
                     {
-                        m_backup_spawn[i].spawn_type = static_cast<SpawnType>(j);
+                        backup_spawn[i].spawn_type = static_cast<SpawnType>(j);
                     }
 
                     if (is_selected)
@@ -286,12 +286,12 @@ void ShipSpawner::draw_editor()
             ImGui::SameLine();
             if (ImGui::Button(("Remove Event##" + std::to_string(i)).c_str(), ImVec2(third_width, 20)))
             {
-                m_backup_spawn.erase(m_backup_spawn.begin() + i);
+                backup_spawn.erase(backup_spawn.begin() + i);
                 i = i - 1;
                 continue;
             }
 
-            if (m_backup_spawn[i].spawn_list.size() == 0)
+            if (backup_spawn[i].spawn_list.size() == 0)
             {
                 ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 250, 0, 255));
 
@@ -305,14 +305,14 @@ void ShipSpawner::draw_editor()
                 ImGui::PopStyleColor();
             }
 
-            for (u32 j = 0; j < m_backup_spawn[i].spawn_list.size(); j++)
+            for (u32 j = 0; j < backup_spawn[i].spawn_list.size(); j++)
             {
                 ImGui::PushID(j);
 
                 ImGui::SetNextItemWidth(half_width);
 
                 ImVec4 bg_color, text_color;
-                ship_type_to_color(m_backup_spawn[i].spawn_list[j], bg_color, text_color);
+                ship_type_to_color(backup_spawn[i].spawn_list[j], bg_color, text_color);
 
                 ImGui::PushStyleColor(ImGuiCol_Text, text_color);
                 ImGui::PushStyleColor(ImGuiCol_FrameBg, bg_color);
@@ -320,11 +320,11 @@ void ShipSpawner::draw_editor()
                 ImGui::PushStyleColor(ImGuiCol_FrameBgActive, bg_color);
 
                 if (ImGui::BeginCombo(("##ShipType" + std::to_string(i) + std::to_string(j)).c_str(),
-                                      ship_type_to_string(m_backup_spawn[i].spawn_list[j]).c_str()))
+                                      ship_type_to_string(backup_spawn[i].spawn_list[j]).c_str()))
                 {
                     for (u32 k = static_cast<u32>(ShipType::FoodSmall); k <= static_cast<u32>(ShipType::Tool); k++)
                     {
-                        bool const is_selected = (m_backup_spawn[i].spawn_list[j] == static_cast<ShipType>(k));
+                        bool const is_selected = (backup_spawn[i].spawn_list[j] == static_cast<ShipType>(k));
 
                         ship_type_to_color(static_cast<ShipType>(k), bg_color, text_color);
 
@@ -336,7 +336,7 @@ void ShipSpawner::draw_editor()
 
                         if (ImGui::Selectable(ship_type_to_string(static_cast<ShipType>(k)).c_str(), true))
                         {
-                            m_backup_spawn[i].spawn_list[j] = static_cast<ShipType>(k);
+                            backup_spawn[i].spawn_list[j] = static_cast<ShipType>(k);
                         }
 
                         if (is_selected)
@@ -355,7 +355,7 @@ void ShipSpawner::draw_editor()
                 ImGui::SameLine();
                 if (ImGui::Button(("Remove ship##" + std::to_string(i) + std::to_string(j)).c_str(), ImVec2(half_width, 0.0f)))
                 {
-                    m_backup_spawn[i].spawn_list.erase(m_backup_spawn[i].spawn_list.begin() + j);
+                    backup_spawn[i].spawn_list.erase(backup_spawn[i].spawn_list.begin() + j);
                     j = j - 1;
                     ImGui::PopID();
                     continue;
@@ -409,7 +409,7 @@ bool ShipSpawner::is_time_for_last_chance()
         return false;
     }
 
-    m_backup_spawn.clear();
+    backup_spawn.clear();
     m_main_spawn.clear();
 
     SpawnEvent last_chance_event = {};
@@ -456,7 +456,7 @@ bool ShipSpawner::is_time_for_last_chance()
 
 void ShipSpawner::prepare_for_spawn()
 {
-    if (!m_is_last_chance_activated && m_backup_spawn.empty())
+    if (!m_is_last_chance_activated && backup_spawn.empty())
     {
         Debug::log("Ship spawn list is empty!", DebugType::Error);
         return;
@@ -473,7 +473,7 @@ void ShipSpawner::prepare_for_spawn()
 
     if (m_main_spawn.empty())
     {
-        m_main_spawn = m_backup_spawn;
+        m_main_spawn = backup_spawn;
         return;
     }
 

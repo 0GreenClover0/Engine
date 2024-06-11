@@ -419,6 +419,8 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "light" << YAML::Value << shipspawner->light;
         out << YAML::Key << "last_chance_food_threshold" << YAML::Value << shipspawner->last_chance_food_threshold;
         out << YAML::Key << "last_chance_time_threshold" << YAML::Value << shipspawner->last_chance_time_threshold;
+        out << YAML::Key << "main_event_spawn" << YAML::Value << shipspawner->main_event_spawn;
+        out << YAML::Key << "backup_spawn" << YAML::Value << shipspawner->backup_spawn;
         out << YAML::EndMap;
     }
     else if (auto const playerinput = std::dynamic_pointer_cast<class PlayerInput>(component); playerinput != nullptr)
@@ -1374,6 +1376,14 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             if (component["last_chance_time_threshold"].IsDefined())
             {
                 deserialized_component->last_chance_time_threshold = component["last_chance_time_threshold"].as<float>();
+            }
+            if (component["main_event_spawn"].IsDefined())
+            {
+                deserialized_component->main_event_spawn = component["main_event_spawn"].as<std::vector<SpawnEvent>>();
+            }
+            if (component["backup_spawn"].IsDefined())
+            {
+                deserialized_component->backup_spawn = component["backup_spawn"].as<std::vector<SpawnEvent>>();
             }
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();

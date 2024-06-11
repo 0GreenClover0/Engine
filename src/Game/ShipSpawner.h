@@ -4,8 +4,22 @@
 #include "Path.h"
 #include "Ship.h"
 
+enum class SpawnType
+{
+    Sequence,
+    Immediate,
+    Rapid
+};
+
+struct SpawnEvent
+{
+    std::vector<ShipType> spawn_list = {};
+    SpawnType spawn_type = SpawnType::Sequence;
+};
+
 class ShipSpawner final : public Component
 {
+
 public:
     static std::shared_ptr<ShipSpawner> create();
     static std::shared_ptr<ShipSpawner> create(std::shared_ptr<LighthouseLight> const& light);
@@ -31,20 +45,10 @@ public:
     u32 last_chance_food_threshold = 5;
     float last_chance_time_threshold = 30.0f;
 
+    std::vector<SpawnEvent> main_event_spawn = {};
+    std::vector<SpawnEvent> backup_spawn = {};
+
 private:
-    enum class SpawnType
-    {
-        Sequence,
-        Immediate,
-        Rapid
-    };
-
-    struct SpawnEvent
-    {
-        std::vector<ShipType> spawn_list = {};
-        SpawnType spawn_type = SpawnType::Sequence;
-    };
-
     void spawn_ship(SpawnEvent const* being_spawn);
     void prepare_for_spawn();
     void remove_ship(std::shared_ptr<Ship> const& ship_to_remove);
@@ -54,10 +58,7 @@ private:
 
     static std::string spawn_type_to_string(SpawnType const type);
 
-    std::vector<SpawnEvent> m_main_event_spawn = {};
-
     std::vector<SpawnEvent> m_main_spawn = {};
-    std::vector<SpawnEvent> m_backup_spawn = {};
 
     std::vector<std::weak_ptr<Entity>> m_warning_lights = {};
     float m_spawn_warning_counter = 0.0f;

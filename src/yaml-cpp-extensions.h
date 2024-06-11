@@ -14,6 +14,7 @@
 
 #include "SceneSerializer.h"
 #include <Game/Factory.h>
+#include <Game/ShipSpawner.h>
 
 template<typename E>
 constexpr auto to_integral(E e) -> typename std::underlying_type<E>::type
@@ -347,6 +348,72 @@ struct convert<FactoryType>
     }
 };
 
+template<>
+struct convert<SpawnType>
+{
+    static Node encode(SpawnType const rhs)
+    {
+        Node node;
+        node.push_back(to_integral(rhs));
+        return node;
+    }
+
+    static bool decode(Node const& node, SpawnType& rhs)
+    {
+        if (!node.IsScalar())
+        {
+            return false;
+        }
+
+        rhs = static_cast<SpawnType>(node.as<int>());
+        return true;
+    }
+};
+
+template<>
+struct convert<ShipType>
+{
+    static Node encode(ShipType const rhs)
+    {
+        Node node;
+        node.push_back(to_integral(rhs));
+        return node;
+    }
+
+    static bool decode(Node const& node, ShipType& rhs)
+    {
+        if (!node.IsScalar())
+        {
+            return false;
+        }
+
+        rhs = static_cast<ShipType>(node.as<int>());
+        return true;
+    }
+};
+
+template<>
+struct convert<SpawnEvent>
+{
+    static Node encode(SpawnEvent const& rhs)
+    {
+        Node node;
+        node.push_back(rhs.spawn_list);
+        node.push_back(rhs.spawn_type);
+        return node;
+    }
+
+    static bool decode(Node const& node, SpawnEvent& rhs)
+    {
+        if (!node.IsSequence())
+            return false;
+
+        rhs.spawn_list = node[0].as<std::vector<ShipType>>();
+        rhs.spawn_type = node[1].as<SpawnType>();
+        return true;
+    }
+};
+
 template<class T>
 Emitter& operator<<(YAML::Emitter& out, std::shared_ptr<T> const& v)
 requires(std::is_base_of_v<Component, T>)
@@ -552,4 +619,24 @@ inline Emitter& operator<<(YAML::Emitter& out, ConstantBufferWater const& cb)
     return out;
 }
 
+inline Emitter& operator<<(YAML::Emitter& out, SpawnType const& v)
+{
+    out << YAML::Flow;
+    out << to_integral(v);
+    return out;
+}
+
+inline Emitter& operator<<(YAML::Emitter& out, ShipType const& v)
+{
+    out << YAML::Flow;
+    out << to_integral(v);
+    return out;
+}
+
+inline Emitter& operator<<(YAML::Emitter& out, SpawnEvent const& v)
+{
+    out << YAML::Flow;
+    out << YAML::BeginSeq << v.spawn_list << v.spawn_type << YAML::EndSeq;
+    return out;
+}
 }
