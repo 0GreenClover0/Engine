@@ -1395,8 +1395,8 @@ bool Editor::load_prefab(std::string const& name) const
 {
     auto const scene_serializer = std::make_shared<SceneSerializer>(m_open_scene);
     scene_serializer->set_instance(scene_serializer);
-    bool const loaded = scene_serializer->deserialize_this_entity(m_prefab_path + name + ".txt");
-    return loaded;
+    std::shared_ptr<Entity> const entity = scene_serializer->deserialize_this_entity(m_prefab_path + name + ".txt");
+    return entity != nullptr;
 }
 
 void Editor::mouse_callback(double const x, double const y)
