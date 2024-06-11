@@ -48,6 +48,8 @@ public:
     virtual void awake() override;
     void physics_update();
 
+    void add_force(glm::vec2 const force);
+
     void apply_mtv(glm::vec2 const mtv) const;
 
     void set_collider_type(ColliderType2D const new_collider_type);
@@ -91,6 +93,10 @@ public:
     float height = 1.0f; // For rectangle
 
     float radius = 1.0f; // For circle
+
+    // FIXME: This should belong to some kind of Rigidbody component.
+    float drag = 0.01f;
+    glm::vec2 velocity = {};
 
 private:
     void compute_axes(glm::vec2 const& center, float const angle);
