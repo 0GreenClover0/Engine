@@ -328,6 +328,19 @@ void Collider2D::clear_overlapped_this_frame()
 void Collider2D::physics_update()
 {
     update_center_and_corners();
+
+    if (glm::epsilonEqual(velocity, {0.0f, 0.0f}, 0.001f) != glm::bvec2(true, true))
+    {
+        entity->transform->set_position(entity->transform->get_position()
+                                        + AK::convert_2d_to_3d(velocity) * static_cast<float>(delta_time));
+
+        velocity = AK::move_towards(velocity, {0.0f, 0.0f}, drag);
+    }
+}
+
+void Collider2D::add_force(glm::vec2 const force)
+{
+    velocity += force;
 }
 
 void Collider2D::update_center_and_corners()
