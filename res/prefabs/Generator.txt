@@ -1,21 +1,25 @@
 Scene: Untitled
 Entities:
   - Entity: Generator
-    guid: 85b0b4e44496f70ceeb565036674629e25dfaee721174c9ffbe15ad9b588a1f6
+    guid: 546b170240de390b29b19c1927c12ca74476a42b60d59d900ac10896d73dc6e3
     Name: Generator
     TransformComponent:
       Translation: [-5.84570312, 0.100000001, 2.09735203]
-      Rotation: [0, -0, 0]
+      Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: d661f1e56d48c4d9fd8f0722afa807187cab342a47f4db49efc5b0f345498c0a
+        guid: ""
     Components:
       - ComponentName: FactoryComponent
-        guid: 0e20c2375b4b17e8565fb884b2313653b145e3ae1cf209d796546a3d5f549810
+        guid: c0d83bb40a279064a75aa9193071b06a5cd3583dd6d2dfa672a946dde09403cc
         custom_name: ""
         type: 0
+        lights:
+          - guid: 7330c67585038a6e3c72073cbb4162e22bd90236793b8bce82e0fabbc22eb740
+          - guid: 4c4dd2ceda0a4b4b7444c0e344714ce3d41926bf8b0fdca6317bb10adacc18f9
+          - guid: 4ea55fd77b8191ff9c858d58d33a772b82af36ff1f7b310fe9e7a2be0343e52f
       - ComponentName: ModelComponent
-        guid: 8e61363ed31c1f3021ca3443768b49c183a332b9ee7730c4afd03d30a14ae525
+        guid: a2da65b614c755ea6cbbc1d20da2011d7b90729e983098b8cab57598a2984fdc
         custom_name: ""
         model_path: ./res/models\generator\generator.gltf
         material:
@@ -27,3 +31,66 @@ Entities:
           RenderOrder: 0
           NeedsForward: false
           CastsShadows: true
+  - Entity: Light1
+    guid: 878648e4d840e4fdfc8b3103b2bf864676dab9f995fb3705d7300de8e69d04ec
+    Name: Light1
+    TransformComponent:
+      Translation: [-0.0707216263, 0.428870887, -0.0539073944]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: 546b170240de390b29b19c1927c12ca74476a42b60d59d900ac10896d73dc6e3
+    Components:
+      - ComponentName: PointLightComponent
+        guid: 7330c67585038a6e3c72073cbb4162e22bd90236793b8bce82e0fabbc22eb740
+        custom_name: ""
+        constant: 1
+        linear: 10
+        quadratic: 10
+        ambient: [0.961111128, 0.917505205, 0.699475348]
+        diffuse: [1, 0.933333337, 0]
+        specular: [1, 0.900000036, 0]
+        m_near_plane: 0.5
+        m_far_plane: 25
+  - Entity: Light2
+    guid: 28174688aa13e0255ced316115e281f046274eef1f4c988661fab05e53be3d94
+    Name: Light2
+    TransformComponent:
+      Translation: [0.053319931, 0.428870887, -0.0539073944]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: 546b170240de390b29b19c1927c12ca74476a42b60d59d900ac10896d73dc6e3
+    Components:
+      - ComponentName: PointLightComponent
+        guid: 4c4dd2ceda0a4b4b7444c0e344714ce3d41926bf8b0fdca6317bb10adacc18f9
+        custom_name: ""
+        constant: 1
+        linear: 10
+        quadratic: 10
+        ambient: [0.961111128, 0.917505205, 0.699475348]
+        diffuse: [1, 0.933333337, 0]
+        specular: [1, 0.900000036, 0]
+        m_near_plane: 0.5
+        m_far_plane: 25
+  - Entity: Light3
+    guid: 3d606e51efbafbd74d09a565c8e54fb3e65f225f4997782ffa4b1aa8fd7ae8bf
+    Name: Light3
+    TransformComponent:
+      Translation: [0.178658962, 0.428870887, -0.0539073944]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: 546b170240de390b29b19c1927c12ca74476a42b60d59d900ac10896d73dc6e3
+    Components:
+      - ComponentName: PointLightComponent
+        guid: 4ea55fd77b8191ff9c858d58d33a772b82af36ff1f7b310fe9e7a2be0343e52f
+        custom_name: ""
+        constant: 1
+        linear: 10
+        quadratic: 10
+        ambient: [0.961111128, 0.917505205, 0.699475348]
+        diffuse: [1, 0.933333337, 0]
+        specular: [1, 0.900000036, 0]
+        m_near_plane: 0.5
+        m_far_plane: 25
