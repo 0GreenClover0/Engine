@@ -18,7 +18,9 @@ public:
     explicit ParticleSystem(AK::Badge<ParticleSystem>);
 
     virtual void awake() override;
+    virtual void draw_editor() override;
     virtual void update() override;
+    void update_system();
 
     float min_spawn_interval = 0.5f;
     float max_spawn_interval = 1.0f;
@@ -29,10 +31,13 @@ public:
     float min_spawn_alpha = 0.5f;
     float max_spawn_alpha = 0.8f;
 
+    float min_particle_size = 1.0f;
+    float max_particle_size = 2.0f;
+
     float emitter_bounds = 0.1f;
 
-    i32 min_spawn_count = 1;
-    i32 max_spawn_count = 3;
+    i32 min_spawn_count = 3;
+    i32 max_spawn_count = 6;
 
 private:
     void spawn_calculations();

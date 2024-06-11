@@ -301,6 +301,8 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "max_particle_speed" << YAML::Value << particlesystem->max_particle_speed;
         out << YAML::Key << "min_spawn_alpha" << YAML::Value << particlesystem->min_spawn_alpha;
         out << YAML::Key << "max_spawn_alpha" << YAML::Value << particlesystem->max_spawn_alpha;
+        out << YAML::Key << "min_particle_size" << YAML::Value << particlesystem->min_particle_size;
+        out << YAML::Key << "max_particle_size" << YAML::Value << particlesystem->max_particle_size;
         out << YAML::Key << "emitter_bounds" << YAML::Value << particlesystem->emitter_bounds;
         out << YAML::Key << "min_spawn_count" << YAML::Value << particlesystem->min_spawn_count;
         out << YAML::Key << "max_spawn_count" << YAML::Value << particlesystem->max_spawn_count;
@@ -1106,6 +1108,14 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             if (component["max_spawn_alpha"].IsDefined())
             {
                 deserialized_component->max_spawn_alpha = component["max_spawn_alpha"].as<float>();
+            }
+            if (component["min_particle_size"].IsDefined())
+            {
+                deserialized_component->min_particle_size = component["min_particle_size"].as<float>();
+            }
+            if (component["max_particle_size"].IsDefined())
+            {
+                deserialized_component->max_particle_size = component["max_particle_size"].as<float>();
             }
             if (component["emitter_bounds"].IsDefined())
             {

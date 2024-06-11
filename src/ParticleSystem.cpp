@@ -5,6 +5,8 @@
 #include "Globals.h"
 #include "Particle.h"
 
+#include <imgui.h>
+
 std::shared_ptr<ParticleSystem> ParticleSystem::create()
 {
     auto particle_system = std::make_shared<ParticleSystem>(AK::Badge<ParticleSystem> {});
@@ -20,7 +22,24 @@ void ParticleSystem::awake()
     set_can_tick(true);
 }
 
+void ParticleSystem::draw_editor()
+{
+    Component::draw_editor();
+
+    ImGui::DragFloatRange2("Spawn interval", &min_spawn_interval, &max_spawn_interval, 0.1f, 0.0f, FLT_MAX);
+    ImGui::DragFloatRange2("Particle speed", &min_particle_speed, &max_particle_speed, 0.1f, 0.0f, FLT_MAX);
+    ImGui::DragFloatRange2("Particle size", &min_particle_size, &max_particle_size, 0.1f, 0.0f, FLT_MAX);
+    ImGui::DragFloatRange2("Spawn alpha", &min_spawn_alpha, &max_spawn_alpha, 0.1f, 0.0f, 1.0f);
+    ImGui::DragFloat("Emitter size", &emitter_bounds, 0.1f, 0.0f, FLT_MAX);
+    ImGui::DragIntRange2("Spawn count", &min_spawn_count, &max_spawn_count, 1, 0, INT_MAX);
+}
+
 void ParticleSystem::update()
+{
+    update_system();
+}
+
+void ParticleSystem::update_system()
 {
     if (m_spawn_data_vector.empty())
     {
@@ -28,6 +47,8 @@ void ParticleSystem::update()
     }
     else
     {
+        //  TODO: Modes in shader/cbuffer: override/multiply color, adjustable alpha bias and sprite in emitter, random rotation of sprite
+
         for (u32 i = 0; i < m_random_spawn_count; i++)
         {
             if (m_time_counter < m_spawn_data_vector[i].spawn_time)
@@ -40,6 +61,12 @@ void ParticleSystem::update()
                                                      {1.0f, 1.0f, 1.0f, m_spawn_data_vector[i].spawn_alpha}, emitter_bounds));
 
             particle->transform->set_parent(entity->transform);
+
+            // Adjust scale
+            float const scale_factor = AK::random_float(min_particle_size, max_particle_size);
+            glm::vec3 const scale = particle->transform->get_local_scale() * scale_factor;
+            particle->transform->set_local_scale(scale);
+
             m_spawn_data_vector.erase(m_spawn_data_vector.begin() + i);
             m_random_spawn_count -= 1;
         }

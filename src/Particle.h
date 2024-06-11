@@ -19,8 +19,10 @@ public:
     virtual void draw() const override;
     virtual void draw_editor() override;
 
-private:
+protected:
+    void move() const;
     void update_particle() const;
+    void decrement_alpha();
 
     std::shared_ptr<Material> m_particle_material = {};
 
