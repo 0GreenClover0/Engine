@@ -1,0 +1,68 @@
+Scene: Untitled
+Entities:
+  - Entity: ShipBig
+    guid: cdc68b8d4a914d4e6c6a2824dedd00923a8668acdb45a790186a1b7eef761959
+    Name: ShipBig
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: ""
+    Components:
+      - ComponentName: ShipComponent
+        guid: 4a5ac42964b4de51d14d67b5febc280770f2010ff58d0f622490e504adc2c429
+        custom_name: ""
+        type: 2
+        light:
+          guid: 0e964ba3e74511090908757bf419ecb097f62be97380e16af66721be6a41e118
+        spawner:
+          guid: feea9f188b095ed1723fb09cc01eddb681afb2313e02ab80d9ae233ee7222c34
+        eyes:
+          guid: aa427576fd806a875f718bb92ac61f0670d9861a11dc502d5fee94e7dbab26b8
+      - ComponentName: Collider2DComponent
+        guid: 7b45616ccbb06659180428dc2cbc849ab6332195f0a1995fdead117eb42f2198
+        custom_name: ""
+        offset: [0, 0.00499999989]
+        is_trigger: true
+        is_static: false
+        collider_type: 0
+        width: 0.25
+        height: 0.800000012
+        radius: 1
+      - ComponentName: ModelComponent
+        guid: a3525a97b08a0f228f07f67f134b8e59c58ae759c900376f046fceb8e6a7f9d5
+        custom_name: ""
+        model_path: ./res/models/shipBig/shipBig.gltf
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+          NeedsForward: false
+          CastsShadows: true
+  - Entity: Eyes
+    guid: fe55caa736c173d0d96c08bba36b887b9125b8f0f1e304ad2d946a6fc3a4c07f
+    Name: Eyes
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: cdc68b8d4a914d4e6c6a2824dedd00923a8668acdb45a790186a1b7eef761959
+    Components:
+      - ComponentName: ShipEyesComponent
+        guid: aa427576fd806a875f718bb92ac61f0670d9861a11dc502d5fee94e7dbab26b8
+        custom_name: ""
+      - ComponentName: Collider2DComponent
+        guid: e7bd2e3a9a1b435a6a3b78c530fec2adef22e584b029327dfbe82d05f4d00184
+        custom_name: ""
+        offset: [0, -1.14999998]
+        is_trigger: true
+        is_static: false
+        collider_type: 0
+        width: 0.100000001
+        height: 0.349999994
+        radius: 1
