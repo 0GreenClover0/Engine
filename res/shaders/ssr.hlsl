@@ -1,6 +1,6 @@
 #include "lighting_calculations.hlsl"
 
-Texture2D diffuse_buffer : register(t12);
+Texture2D rendered_scene : register(t17);
 Texture2D position_buffer : register(t10);
 
 SamplerState wrap_sampler
@@ -11,16 +11,17 @@ SamplerState wrap_sampler
     BorderColor = float4(0.0f, 0.0f, 0.0f, 0.0f);
 };
 
-#define ray_step 0.03f;
-#define max_steps 20
-#define num_binary_search_steps 30
+#define refraction_ray_step 0.10f
+#define refraction_max_steps 70
+#define refraction_thickness 0.2f
+#define num_binary_search_steps 10
 
 float3 fresnel_schlick(float cosTheta, float3 F0)
 {
     return F0 + (1.0f - F0) * pow(1.0f - cosTheta, 5.0f);
 }
 
-float3 binary_search(inout float3 dir, inout float3 hit_coords, out float dDepth)
+float3 binary_search(float3 dir, float3 hit_coords, float dDepth)
 {
     float depth;
     float4 projected_coord;
@@ -59,17 +60,17 @@ float3 binary_search(inout float3 dir, inout float3 hit_coords, out float dDepth
     return float3(projected_coord.xy, depth);
 }
 
-float4 ray_cast(float3 dir, inout float3 hit_coord)
+float4 ray_cast(float3 dir, float3 hit_coord)
 {
-    dir *= ray_step;
+    dir *= refraction_ray_step;
 
     float depth;
-    int steps;
+    int steps = 0;
     float4 projected_coord;
     float dDepth; // Not sure what this is supposed to mean
 
     [loop]
-    for (int i = 0; i < max_steps; ++i)
+    for (int i = 0; i < refraction_max_steps; ++i)
     {
         hit_coord += dir;
 
@@ -94,7 +95,7 @@ float4 ray_cast(float3 dir, inout float3 hit_coord)
         dDepth = hit_coord.z - depth;
 
         // If over a threshold the object will reproject into infinity
-        if ((dir.z - dDepth) < 1.0f)
+        if (dir.z - dDepth < refraction_thickness)
         {
             if (dDepth <= 0.0f)
             {
@@ -107,5 +108,6 @@ float4 ray_cast(float3 dir, inout float3 hit_coord)
         steps++;
     }
 
+    // If we ever get here, it means we couldn't get anywhere close a surface
     return float4(projected_coord.xy, depth, 0.0f);
 }
