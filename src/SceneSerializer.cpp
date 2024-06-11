@@ -398,6 +398,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "ComponentName" << YAML::Value << "ShipComponent";
         out << YAML::Key << "guid" << YAML::Value << ship->guid;
         out << YAML::Key << "custom_name" << YAML::Value << ship->custom_name;
+        out << YAML::Key << "type" << YAML::Value << ship->type;
         out << YAML::Key << "light" << YAML::Value << ship->light;
         out << YAML::Key << "spawner" << YAML::Value << ship->spawner;
         out << YAML::Key << "eyes" << YAML::Value << ship->eyes;
@@ -1325,6 +1326,10 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         else
         {
             auto const deserialized_component = std::dynamic_pointer_cast<class Ship>(get_from_pool(component["guid"].as<std::string>()));
+            if (component["type"].IsDefined())
+            {
+                deserialized_component->type = component["type"].as<ShipType>();
+            }
             if (component["light"].IsDefined())
             {
                 deserialized_component->light = component["light"].as<std::weak_ptr<LighthouseLight>>();

@@ -12,6 +12,7 @@
 #include "Player.h"
 #include "ResourceManager.h"
 #include "ShipEyes.h"
+#include <SceneSerializer.h>
 #include <imgui_extensions.h>
 
 std::shared_ptr<ShipSpawner> ShipSpawner::create()
@@ -716,68 +717,39 @@ void ShipSpawner::prepare_for_spawn()
 
 void ShipSpawner::spawn_ship(SpawnEvent const* being_spawn)
 {
-    auto const standard_shader = ResourceManager::get_instance().load_shader("./res/shaders/lit.hlsl", "./res/shaders/lit.hlsl");
-    auto const standard_material = Material::create(standard_shader);
+    std::shared_ptr<Entity> ship;
 
-    auto const ship = Entity::create("Ship");
+    if (being_spawn->spawn_list.back() == ShipType::FoodSmall)
+    {
+        ship = SceneSerializer::load_prefab("ShipSmall");
+    }
+    else if (being_spawn->spawn_list.back() == ShipType::FoodMedium)
+    {
+        ship = SceneSerializer::load_prefab("ShipMedium");
+    }
+    else if (being_spawn->spawn_list.back() == ShipType::FoodBig)
+    {
+        ship = SceneSerializer::load_prefab("ShipBig");
+    }
+    else if (being_spawn->spawn_list.back() == ShipType::Pirates)
+    {
+        ship = SceneSerializer::load_prefab("ShipPirates");
+    }
+    else if (being_spawn->spawn_list.back() == ShipType::Tool)
+    {
+        ship = SceneSerializer::load_prefab("ShipTool");
+    }
+
     ship->transform->set_local_position({m_spawn_position.back().x, 0.0f, m_spawn_position.back().y});
 
-    auto const eyes = Entity::create("Eyes");
-    eyes->transform->set_parent(ship->transform);
-    auto const eyes_comp = eyes->add_component<ShipEyes>(ShipEyes::create());
-
-    auto const collider_in_front = eyes->add_component<Collider2D>(Collider2D::create(0.1f, 0.2f));
-
-    auto const ship_comp =
-        ship->add_component(Ship::create(light.lock(), std::static_pointer_cast<ShipSpawner>(shared_from_this()), eyes_comp));
-    auto const collider = ship->add_component<Collider2D>(Collider2D::create(1.0f, 1.0f));
+    auto const& ship_comp = ship->get_component<Ship>();
 
     ship_comp->on_ship_destroyed.attach(&ShipSpawner::remove_ship, shared_from_this());
     ship_comp->maximum_speed = LevelController::get_instance()->ships_speed;
 
-    m_ships.emplace_back(ship_comp);
+    ship_comp->set_start_direction();
 
-    ship_comp->type = being_spawn->spawn_list.back();
-
-    if (ship_comp->type == ShipType::FoodSmall)
-    {
-        ship->add_component(Model::create("./res/models/shipSmall/shipSmall.gltf", standard_material));
-        collider->set_bounds_dimensions_2d(0.25f / 2.0f, 0.65f / 2.0f);
-        collider->offset = {0.0f, 0.035f};
-        collider_in_front->offset = {0.0f, -0.5f};
-    }
-    else if (ship_comp->type == ShipType::FoodMedium)
-    {
-        ship->add_component(Model::create("./res/models/shipMedium/shipMedium.gltf", standard_material));
-        collider->set_bounds_dimensions_2d(0.5f / 2.0f, 1.1f / 2.0f);
-        collider_in_front->set_bounds_dimensions_2d(0.2f / 2.0f, 0.5f / 2.0f);
-        collider_in_front->offset = {0.0f, -0.8f};
-    }
-    else if (ship_comp->type == ShipType::FoodBig)
-    {
-        ship->add_component(Model::create("./res/models/shipBig/shipBig.gltf", standard_material));
-        collider->set_bounds_dimensions_2d(0.5f / 2.0f, 1.6f / 2.0f);
-        collider_in_front->set_bounds_dimensions_2d(0.2f / 2.0f, 0.7f / 2.0f);
-        collider->offset = {0.0f, 0.005f};
-        collider_in_front->offset = {0.0f, -1.15f};
-    }
-    else if (ship_comp->type == ShipType::Pirates)
-    {
-        ship->add_component(Model::create("./res/models/shipPirates/shipPirates.gltf", standard_material));
-        collider->set_bounds_dimensions_2d(0.25f / 2.0f, 0.65f / 2.0f);
-        collider->offset = {0.0f, 0.035f};
-        collider_in_front->offset = {0.0f, -0.5f};
-    }
-    else if (ship_comp->type == ShipType::Tool)
-    {
-        ship->add_component(Model::create("./res/models/shipTool/shipTool.gltf", standard_material));
-        collider->set_bounds_dimensions_2d(0.25f / 2.0f, 0.65f / 2.0f);
-        collider->offset = {0.0f, 0.035f};
-        collider_in_front->offset = {0.0f, -0.5f};
-    }
-
-    collider->is_trigger = true;
-    collider_in_front->is_trigger = true;
+    m_ships.emplace_back(ship->get_component<Ship>());
 }
 
 bool ShipSpawner::is_spawn_possible() const
