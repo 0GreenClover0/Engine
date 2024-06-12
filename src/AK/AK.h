@@ -77,6 +77,11 @@ inline float random_float(float const min, float const max)
     return dis(gen);
 }
 
+inline bool random_bool()
+{
+    return random_int(0, 1) == 1;
+}
+
 inline u32 murmur_hash(u8 const* key, size_t const len, u32 const seed)
 {
     u32 h = seed;
