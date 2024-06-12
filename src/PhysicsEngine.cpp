@@ -124,11 +124,17 @@ void PhysicsEngine::solve_collisions() const
 #if _DEBUG
                 if (collider1->is_inside_trigger(collider2->guid))
                 {
-                    assert(collider2->is_inside_trigger(collider1->guid));
+                    if (!collider2->is_inside_trigger(collider1->guid))
+                    {
+                        Debug::log("Colllider2 does not have collider1 inside trigger, but the opposite is true", DebugType::Error);
+                    }
                 }
                 else
                 {
-                    assert(!collider2->is_inside_trigger(collider1->guid));
+                    if (collider2->is_inside_trigger(collider1->guid))
+                    {
+                        Debug::log("Colllider1 does not have collider2 inside trigger, but the opposite is true", DebugType::Error);
+                    }
                 }
 #endif
             }
