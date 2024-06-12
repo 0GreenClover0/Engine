@@ -76,5 +76,11 @@ glm::vec2 Input::get_mouse_position() const
 
     i32 width, height;
     glfwGetWindowSize(m_window->get_glfw_window(), &width, &height);
+
+    if (width == 0 || height == 0)
+    {
+        return {0.0f, 0.0f};
+    }
+
     return glm::vec2((x_position / width) - 0.5f, (y_position / height) - 0.5f) * 2.0f;
 }
