@@ -6,14 +6,15 @@
 #include <random>
 
 #include "AK/AK.h"
+#include "AK/Math.h"
 #include "Collider2D.h"
 #include "Entity.h"
 #include "Globals.h"
 #include "Player.h"
 #include "ResourceManager.h"
+#include "SceneSerializer.h"
 #include "ShipEyes.h"
-#include <SceneSerializer.h>
-#include <imgui_extensions.h>
+#include "imgui_extensions.h"
 
 std::shared_ptr<ShipSpawner> ShipSpawner::create()
 {
@@ -494,6 +495,11 @@ void ShipSpawner::prepare_for_spawn()
 
     if (m_spawn_warning_counter > 0.0f)
     {
+        if (!AK::Math::are_nearly_equal(Player::get_instance()->flash_counter, 0.0f))
+        {
+            return;
+        }
+
         if (m_spawn_type != SpawnType::Rapid)
         {
             m_spawn_warning_counter -= delta_time;
