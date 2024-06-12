@@ -32,5 +32,6 @@ protected:
     glm::vec4 m_color = {1.0f, 1.0f, 1.0f, 1.0f};
     float m_speed = 1.0f;
     float m_spawn_bounds = 1.0f;
+    float m_rotation_direction = 1.0f;
     std::string m_path = "./res/textures/particle.png";
 };

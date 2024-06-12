@@ -1,6 +1,7 @@
 #include "ParticleSystem.h"
 
 #include "AK/AK.h"
+#include "Camera.h"
 #include "Entity.h"
 #include "Globals.h"
 #include "Particle.h"
@@ -51,7 +52,7 @@ void ParticleSystem::update_system()
     }
     else
     {
-        //  TODO: Modes in shader/cbuffer: override/multiply color, adjustable alpha bias, random rotation of sprite
+        //  TODO: Modes in shader/cbuffer: override/multiply color, adjustable alpha bias
 
         for (u32 i = 0; i < m_random_spawn_count; i++)
         {
@@ -60,12 +61,14 @@ void ParticleSystem::update_system()
                 continue;
             }
 
+            auto const particle_parent = Entity::create("PARTICLE_PARENT" + AK::generate_guid());
             auto const particle = Entity::create("PARTICLE_" + AK::generate_guid());
             particle->add_component(Particle::create(m_spawn_data_vector[i].particle_speed,
                                                      {color.r, color.g, color.b, m_spawn_data_vector[i].spawn_alpha}, emitter_bounds,
                                                      sprite_path));
 
-            particle->transform->set_parent(entity->transform);
+            particle_parent->transform->set_parent(entity->transform);
+            particle->transform->set_parent(particle_parent->transform);
 
             // Adjust scale
             float const scale_factor = AK::random_float(min_particle_size, max_particle_size);
