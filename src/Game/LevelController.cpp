@@ -56,6 +56,12 @@ void LevelController::update()
             time -= delta_time;
         }
     }
+    else
+    {
+        Debug::log(std::to_string(Player::get_instance()->food) + " / " + std::to_string(map_food));
+        Engine::set_game_running(false);
+        return;
+    }
 
     float x = (((time / map_time) * -1.0) + 1.0f);
 
