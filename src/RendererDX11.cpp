@@ -869,6 +869,18 @@ void RendererDX11::cleanup_render_target()
         g_mainRenderTargetView->Release();
         g_mainRenderTargetView = nullptr;
     }
+
+    if (g_textureRenderTargetView)
+    {
+        g_textureRenderTargetView->Release();
+        g_textureRenderTargetView = nullptr;
+    }
+
+    if (g_multi_pass_render_target_view)
+    {
+        g_multi_pass_render_target_view->Release();
+        g_multi_pass_render_target_view = nullptr;
+    }
 }
 
 void RendererDX11::create_render_texture()
@@ -939,6 +951,7 @@ void RendererDX11::create_render_texture()
 
 void RendererDX11::cleanup_render_texture()
 {
+    // RTV's
     if (m_render_target_texture_view)
     {
         m_render_target_texture_view->Release();
@@ -955,5 +968,36 @@ void RendererDX11::cleanup_render_texture()
     {
         g_multi_pass_render_target_view->Release();
         g_multi_pass_render_target_view = nullptr;
+    }
+
+    // SRV's and textures
+    if (m_multi_pass_render_srv)
+    {
+        m_multi_pass_render_srv->Release();
+        m_multi_pass_render_srv = nullptr;
+    }
+
+    if (m_deferred_srv_copy)
+    {
+        m_deferred_srv_copy->Release();
+        m_deferred_srv_copy = nullptr;
+    }
+
+    if (m_render_target_texture)
+    {
+        m_render_target_texture->Release();
+        m_render_target_texture = nullptr;
+    }
+
+    if (m_multipass_render_texture)
+    {
+        m_multipass_render_texture->Release();
+        m_multipass_render_texture = nullptr;
+    }
+
+    if (m_deferred_texture_copy)
+    {
+        m_deferred_texture_copy->Release();
+        m_deferred_texture_copy = nullptr;
     }
 }
