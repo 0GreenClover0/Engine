@@ -39,6 +39,13 @@ Ship::Ship(AK::Badge<Ship>)
 
 void Ship::awake()
 {
+    set_start_direction();
+
+    set_can_tick(true);
+}
+
+void Ship::set_start_direction()
+{
     glm::vec2 const ship_position = AK::convert_3d_to_2d(entity->transform->get_local_position());
 
     if (glm::epsilonEqual(ship_position, {0.0f, 0.0f}, 0.0001f) == glm::bvec2(true, true))
@@ -52,7 +59,8 @@ void Ship::awake()
     m_direction = glm::degrees(glm::angle(glm::vec2(1.0f, 0.0f), target_direction)) * rotate_direction;
     m_direction += glm::linearRand(-m_start_direction_wiggle, m_start_direction_wiggle);
 
-    set_can_tick(true);
+    update_position();
+    update_rotation();
 }
 
 void Ship::update_position() const
