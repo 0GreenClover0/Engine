@@ -132,6 +132,7 @@ public:
 
     virtual void on_trigger_enter(std::shared_ptr<Collider2D> const& other) override;
 
+    void set_start_direction();
     void destroy();
     void stop();
     bool is_in_port() const;
