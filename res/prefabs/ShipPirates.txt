@@ -1,7 +1,7 @@
 Scene: Untitled
 Entities:
   - Entity: ShipPirates
-    guid: 5329d8e2f2477882f14ab48b253021a8d5ce57b2cc864ac574d1b47b01fd1461
+    guid: eb5f433e7358b9d21d427389bb21c6eecf1c4bf85fdf7ef1896ae34f73139f6f
     Name: ShipPirates
     TransformComponent:
       Translation: [0, 0, 0]
@@ -11,7 +11,7 @@ Entities:
         guid: ""
     Components:
       - ComponentName: ShipComponent
-        guid: 539091a2ba761414f6615271be60dde1805f5f8dc00e818a5df667dc0a374fa4
+        guid: 151bea7a6ca09d9b509cfc5193cf20a743638c37edc1c244376088979314f4f6
         custom_name: ""
         type: 3
         light:
@@ -19,9 +19,11 @@ Entities:
         spawner:
           guid: feea9f188b095ed1723fb09cc01eddb681afb2313e02ab80d9ae233ee7222c34
         eyes:
-          guid: 020222ba44d0acf798feffff3c2c3130d3b9b2bd3bc22df5e9c4e95749c2349b
+          guid: a8592832711486c1befe46fcea85512605cee7570608ad4d04535cfa75e60c6e
+        my_light:
+          guid: 1234b072734d17fc915d4bf124738a8cf2c7bf2e53a14599325d156e1e2b740a
       - ComponentName: Collider2DComponent
-        guid: 06685bdbe295147e388328239a986019c7626e7d778ea8449fef79dbe4a43b99
+        guid: 4df5c4557fec5e6c62939600b145994d4cbbeb833e838b4ffbc2a8432be78967
         custom_name: ""
         offset: [0, 0.0350000001]
         is_trigger: true
@@ -31,7 +33,7 @@ Entities:
         height: 0.324999988
         radius: 1
       - ComponentName: ModelComponent
-        guid: deb42f6317d8de2d05e37e90039e2c2d9a3ab23a69d42ec563ac150aa8d9ca9b
+        guid: 2ebb28b807d5f6b4bcdd444897afd2fad479afc9bd22e91e11fe0798fe200383
         custom_name: ""
         model_path: ./res/models/shipPirates/shipPirates.gltf
         material:
@@ -44,20 +46,20 @@ Entities:
           NeedsForward: false
           CastsShadows: true
   - Entity: Eyes
-    guid: c6be526e45bce4b68e1196899f665e66544161b0d39a37c257bfd93ac7132300
+    guid: e2553eba8b15b6edbe2f989538d5665a6f285add7b2f0c6a1edd60ca5afc0ade
     Name: Eyes
     TransformComponent:
       Translation: [0, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: 5329d8e2f2477882f14ab48b253021a8d5ce57b2cc864ac574d1b47b01fd1461
+        guid: eb5f433e7358b9d21d427389bb21c6eecf1c4bf85fdf7ef1896ae34f73139f6f
     Components:
       - ComponentName: ShipEyesComponent
-        guid: 020222ba44d0acf798feffff3c2c3130d3b9b2bd3bc22df5e9c4e95749c2349b
+        guid: a8592832711486c1befe46fcea85512605cee7570608ad4d04535cfa75e60c6e
         custom_name: ""
       - ComponentName: Collider2DComponent
-        guid: a7264ad0b8fb20784a5bc1e5fd5ea9cb205b228fa5466086b1c8b0f896c9b5f0
+        guid: d0cb3f97e9b6cdae084c3c9ac7d482f047b9151a8a0dae856857d12c6f38c0c5
         custom_name: ""
         offset: [0, -0.5]
         is_trigger: true
@@ -66,3 +68,24 @@ Entities:
         width: 0.100000001
         height: 0.200000003
         radius: 1
+  - Entity: Light
+    guid: 80304c7325bedc67e0c76301c6bb3fddecad0300c44688c65da5780c465ee153
+    Name: Light
+    TransformComponent:
+      Translation: [0, 0.409877598, 0.211868599]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: eb5f433e7358b9d21d427389bb21c6eecf1c4bf85fdf7ef1896ae34f73139f6f
+    Components:
+      - ComponentName: PointLightComponent
+        guid: 1234b072734d17fc915d4bf124738a8cf2c7bf2e53a14599325d156e1e2b740a
+        custom_name: ""
+        constant: 1
+        linear: 10
+        quadratic: 10
+        ambient: [0, 0, 0]
+        diffuse: [1, 0, 0]
+        specular: [1, 0, 0]
+        m_near_plane: 0.5
+        m_far_plane: 25
