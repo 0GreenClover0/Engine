@@ -1,16 +1,15 @@
 #include <GLFW/glfw3.h>
 #include <imgui.h>
 
+#include "AK/Math.h"
 #include "Entity.h"
+#include "Globals.h"
 #include "Input.h"
 #include "LevelController.h"
-
-#include "ScreenText.h"
-
-#include "Globals.h"
 #include "Player.h"
+#include "ScreenText.h"
 #include "Ship.h"
-#include <imgui_extensions.h>
+#include "imgui_extensions.h"
 
 std::shared_ptr<LevelController> LevelController::create()
 {
@@ -50,9 +49,12 @@ void LevelController::awake()
 
 void LevelController::update()
 {
-    if (time > 0)
+    if (time > 0.0f)
     {
-        time -= delta_time;
+        if (AK::Math::are_nearly_equal(Player::get_instance()->flash_counter, 0.0f))
+        {
+            time -= delta_time;
+        }
     }
 
     float x = (((time / map_time) * -1.0) + 1.0f);
