@@ -255,7 +255,7 @@ Entities:
         guid: 555a3f6b48d47133a837d039ec8ff11189899f27c290d309a7053b83ed7e2b97
         custom_name: ""
         map_time: 90
-        map_food: 10
+        map_food: 7
         maximum_lighthouse_level: 10
         factories:
           - guid: 52e396d002181743558411a8f979fd2274c7a67216f6aea67bc6f9c88d5a75fc
@@ -1525,3 +1525,39 @@ Entities:
         specular: [1, 0.900000036, 0]
         m_near_plane: 0.5
         m_far_plane: 25
+  - Entity: Floe
+    guid: 91a20e38504b35be23167795cf2304ad3009d0db572b2b516be83524581056a3
+    Name: Floe
+    TransformComponent:
+      Translation: [2.83219385, -6.10351562e-05, -1.57389736]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: 55d5f2e23312b173d4972ec1a4c8e7ac26c40e0ebb1487264f7f0478cb0f6092
+    Components:
+      - ComponentName: IceBoundComponent
+        guid: 7eb5f9a6d029444059e47e8306c446de2dc32622d59b16e4b3314f30efadb03e
+        custom_name: ""
+      - ComponentName: Collider2DComponent
+        guid: 767beff59f081c243035cabdfe9027c8b3312726566ba9b32d745a807eaa38aa
+        custom_name: ""
+        offset: [0, 0]
+        is_trigger: true
+        is_static: false
+        collider_type: 1
+        width: 0.400000006
+        height: 0.400000006
+        radius: 0.400000006
+      - ComponentName: ModelComponent
+        guid: 37a9bfac17d8842f2eade7d8b093b51cf8a9b1149c0ea67afbeb5c020251302e
+        custom_name: ""
+        model_path: ./res/models/iceIslands/c_2.gltf
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+          NeedsForward: false
+          CastsShadows: true
