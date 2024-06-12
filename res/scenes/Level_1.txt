@@ -16,8 +16,8 @@ Entities:
       - ComponentName: CameraComponent
         guid: 1b7d2ffc509a060adb91f3ccc836769245fd6ea3f08061b5b62e5a2734034e2b
         custom_name: ""
-        width: 1280
-        height: 720
+        width: 1920
+        height: 1001
         fov: 0.383972436
         near_plane: 0.100000001
         far_plane: 1000
@@ -254,8 +254,8 @@ Entities:
       - ComponentName: LevelControllerComponent
         guid: 555a3f6b48d47133a837d039ec8ff11189899f27c290d309a7053b83ed7e2b97
         custom_name: ""
-        map_time: 60
-        map_food: 20
+        map_time: 90
+        map_food: 10
         maximum_lighthouse_level: 10
         factories:
           - guid: 52e396d002181743558411a8f979fd2274c7a67216f6aea67bc6f9c88d5a75fc
@@ -286,12 +286,16 @@ Entities:
           []
         light:
           guid: 0e964ba3e74511090908757bf419ecb097f62be97380e16af66721be6a41e118
-        last_chance_food_threshold: 5
+        last_chance_food_threshold: 3
         last_chance_time_threshold: 30
         main_event_spawn:
-          []
+          - [[0], 0]
+          - [[1], 0]
+          - [[0], 0]
         backup_spawn:
-          []
+          - [[4, 0, 4], 0]
+          - [[1, 3, 2, 3], 0]
+          - [[0, 1], 0]
       - ComponentName: PlayerComponent
         guid: 9954f2b973d77e733516bc45aaa28d74b5d22dd1ec6e3fe68e67d1ee68cc09af
         custom_name: ""
@@ -300,30 +304,31 @@ Entities:
         custom_name: Ships limit
         points:
           - [0, 2]
-          - [0.100000001, 2]
-          - [0.600000024, 6]
+          - [0.200000003, 2]
+          - [0.353862494, 3]
+          - [0.629801631, 5]
           - [1, 6]
       - ComponentName: CurveComponent
         guid: 1c38daaabb83b02ab860122db4800ab0e490d6b87da610b005a2876fad4d2568
         custom_name: Ships speed
         points:
-          - [0, 0.280000001]
-          - [0.755999982, 0.349999994]
-          - [1, 0.400000006]
+          - [0, 0.400000006]
+          - [0.221183807, 0.400000006]
+          - [1, 0.5]
       - ComponentName: CurveComponent
         guid: dc0ae2a203f556504ddf2a8d7de37e8155777cd6b053b56fa1faf3a06f5cbb90
         custom_name: Ships range
         points:
-          - [0, 1]
-          - [0.600000024, 1.5]
+          - [0, 1.5]
+          - [0.600000024, 1.79999995]
           - [1, 2.5]
       - ComponentName: CurveComponent
         guid: ab492e29fac8ade35088b86e871630d6d3129a6490eb3a15bb165cc7b08cef7c
         custom_name: Ships turn
         points:
-          - [0, 15]
-          - [0.25, 30]
-          - [1, 60]
+          - [0, 10]
+          - [0.200000003, 15]
+          - [1, 30]
       - ComponentName: CurveComponent
         guid: 56657f586f28432bb861a8ce5a67ec2c0bec4387df10fc5e2b8ab4f09b886a68
         custom_name: Ships additional speed
