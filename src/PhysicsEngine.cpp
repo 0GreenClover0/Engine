@@ -12,8 +12,13 @@ void PhysicsEngine::initialize()
     set_instance(physics_engine);
 }
 
-void PhysicsEngine::update_physics()
+void PhysicsEngine::update_physics() const
 {
+    for (auto const& collider : colliders)
+    {
+        collider->physics_update();
+    }
+
     solve_collisions();
 }
 

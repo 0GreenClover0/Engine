@@ -325,7 +325,7 @@ void Collider2D::clear_overlapped_this_frame()
     m_overlapped_this_frame_map.clear();
 }
 
-void Collider2D::update()
+void Collider2D::physics_update()
 {
     update_center_and_corners();
 }
