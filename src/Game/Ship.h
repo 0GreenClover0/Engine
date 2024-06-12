@@ -147,6 +147,7 @@ public:
     std::weak_ptr<LighthouseLight> light = {};
     std::weak_ptr<ShipSpawner> spawner = {};
     std::weak_ptr<ShipEyes> eyes = {};
+    std::weak_ptr<PointLight> my_light = {};
 
     NON_SERIALIZED
     bool is_destroyed = false;

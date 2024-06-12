@@ -151,6 +151,9 @@ bool Ship::in_port_state_change()
     if (m_is_in_port)
     {
         behavioral_state = BehavioralState::InPort;
+
+        my_light.lock()->diffuse = glm::vec3(1.0f, 1.0f, 0.0f);
+
         return true;
     }
 
