@@ -43,6 +43,13 @@ void draw_ptr(std::string const& label, std::weak_ptr<T>& ptr)
                     ptr = added_component;
                 }
             }
+            else if constexpr (std::is_base_of_v<Entity, T>)
+            {
+                if (auto const entity = MainScene::get_instance()->get_entity_by_guid(guid))
+                {
+                    ptr = entity;
+                }
+            }
         }
 
         ImGui::EndDragDropTarget();
