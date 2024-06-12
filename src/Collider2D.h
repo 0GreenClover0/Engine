@@ -46,7 +46,7 @@ public:
     virtual void uninitialize() override;
 
     virtual void awake() override;
-    virtual void update() override;
+    void physics_update();
 
     void apply_mtv(glm::vec2 const mtv) const;
 
