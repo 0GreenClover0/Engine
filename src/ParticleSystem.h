@@ -4,6 +4,8 @@
 #include "AK/Types.h"
 #include "Component.h"
 
+#include <glm/vec4.hpp>
+
 struct ParticleSpawnData
 {
     float spawn_time = 0.0f;
@@ -22,6 +24,8 @@ public:
     virtual void update() override;
     void update_system();
 
+    std::string sprite_path = "./res/textures/particle.png"; // Default particle
+
     float min_spawn_interval = 0.5f;
     float max_spawn_interval = 1.0f;
 
@@ -38,6 +42,8 @@ public:
 
     i32 min_spawn_count = 3;
     i32 max_spawn_count = 6;
+
+    glm::vec4 color = {1.0f, 1.0f, 1.0f, 1.0f};
 
 private:
     void spawn_calculations();

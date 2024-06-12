@@ -7,8 +7,9 @@ class Particle final : public Drawable
 {
 public:
     static std::shared_ptr<Particle> create();
-    static std::shared_ptr<Particle> create(float speed, glm::vec4 const& color, float spawn_bounds);
-    explicit Particle(AK::Badge<Particle>, float speed, glm::vec4 const& color, float spawn_bounds, std::shared_ptr<Material> const& mat);
+    static std::shared_ptr<Particle> create(float speed, glm::vec4 const& color, float spawn_bounds, std::string const& path);
+    explicit Particle(AK::Badge<Particle>, float speed, glm::vec4 const& color, float spawn_bounds, std::string const& path,
+                      std::shared_ptr<Material> const& mat);
 
     virtual void initialize() override;
 
@@ -31,4 +32,5 @@ protected:
     glm::vec4 m_color = {1.0f, 1.0f, 1.0f, 1.0f};
     float m_speed = 1.0f;
     float m_spawn_bounds = 1.0f;
+    std::string m_path = "./res/textures/particle.png";
 };
