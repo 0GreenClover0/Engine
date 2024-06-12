@@ -21,11 +21,11 @@ std::shared_ptr<Particle> Particle::create()
 
     glm::vec4 color = {1.0f, 1.0f, 1.0f, 1.0f};
 
-    auto particle = std::make_shared<Particle>(AK::Badge<Particle> {}, 1.0f, color, 1.0f, particle_material);
+    auto particle = std::make_shared<Particle>(AK::Badge<Particle> {}, 1.0f, color, 1.0f, "./res/textures/particle.png", particle_material);
     return particle;
 }
 
-std::shared_ptr<Particle> Particle::create(float speed, glm::vec4 const& color, float spawn_bounds)
+std::shared_ptr<Particle> Particle::create(float speed, glm::vec4 const& color, float spawn_bounds, std::string const& path)
 {
     auto const particle_shader = ResourceManager::get_instance().load_shader("./res/shaders/particle.hlsl", "./res/shaders/particle.hlsl");
     auto const particle_material = Material::create(particle_shader);
@@ -33,12 +33,13 @@ std::shared_ptr<Particle> Particle::create(float speed, glm::vec4 const& color, 
     particle_material->needs_forward_rendering = true;
     particle_material->is_billboard = true; // !
 
-    auto particle = std::make_shared<Particle>(AK::Badge<Particle> {}, speed, color, spawn_bounds, particle_material);
+    auto particle = std::make_shared<Particle>(AK::Badge<Particle> {}, speed, color, spawn_bounds, path, particle_material);
     return particle;
 }
 
-Particle::Particle(AK::Badge<Particle>, float speed, glm::vec4 const& color, float spawn_bounds, std::shared_ptr<Material> const& mat)
-    : Drawable(mat), m_particle_material(mat), m_color(color), m_speed(speed), m_spawn_bounds(spawn_bounds)
+Particle::Particle(AK::Badge<Particle>, float speed, glm::vec4 const& color, float spawn_bounds, std::string const& path,
+                   std::shared_ptr<Material> const& mat)
+    : Drawable(mat), m_particle_material(mat), m_color(color), m_speed(speed), m_spawn_bounds(spawn_bounds), m_path(path)
 {
 }
 
@@ -48,7 +49,7 @@ void Particle::initialize()
 
     set_can_tick(true);
 
-    entity->add_component(Sprite::create(m_particle_material, "./res/textures/particle.png"));
+    entity->add_component(Sprite::create(m_particle_material, m_path));
 
     entity->transform->set_scale({0.1f, 0.1f, 0.1f});
     entity->transform->set_local_position({AK::random_float(-m_spawn_bounds, m_spawn_bounds),

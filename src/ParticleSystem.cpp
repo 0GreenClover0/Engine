@@ -5,7 +5,9 @@
 #include "Globals.h"
 #include "Particle.h"
 
+#include <glm/gtc/type_ptr.inl>
 #include <imgui.h>
+#include <imgui_stdlib.h>
 
 std::shared_ptr<ParticleSystem> ParticleSystem::create()
 {
@@ -26,6 +28,8 @@ void ParticleSystem::draw_editor()
 {
     Component::draw_editor();
 
+    ImGui::InputText("Particle sprite", &sprite_path);
+    ImGui::ColorEdit4("Particle color", value_ptr(color));
     ImGui::DragFloatRange2("Spawn interval", &min_spawn_interval, &max_spawn_interval, 0.1f, 0.0f, FLT_MAX);
     ImGui::DragFloatRange2("Particle speed", &min_particle_speed, &max_particle_speed, 0.1f, 0.0f, FLT_MAX);
     ImGui::DragFloatRange2("Particle size", &min_particle_size, &max_particle_size, 0.1f, 0.0f, FLT_MAX);
@@ -47,7 +51,7 @@ void ParticleSystem::update_system()
     }
     else
     {
-        //  TODO: Modes in shader/cbuffer: override/multiply color, adjustable alpha bias and sprite in emitter, random rotation of sprite
+        //  TODO: Modes in shader/cbuffer: override/multiply color, adjustable alpha bias, random rotation of sprite
 
         for (u32 i = 0; i < m_random_spawn_count; i++)
         {
@@ -58,7 +62,8 @@ void ParticleSystem::update_system()
 
             auto const particle = Entity::create("PARTICLE_" + AK::generate_guid());
             particle->add_component(Particle::create(m_spawn_data_vector[i].particle_speed,
-                                                     {1.0f, 1.0f, 1.0f, m_spawn_data_vector[i].spawn_alpha}, emitter_bounds));
+                                                     {color.r, color.g, color.b, m_spawn_data_vector[i].spawn_alpha}, emitter_bounds,
+                                                     sprite_path));
 
             particle->transform->set_parent(entity->transform);
 

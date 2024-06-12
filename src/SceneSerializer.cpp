@@ -295,6 +295,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "ComponentName" << YAML::Value << "ParticleSystemComponent";
         out << YAML::Key << "guid" << YAML::Value << particlesystem->guid;
         out << YAML::Key << "custom_name" << YAML::Value << particlesystem->custom_name;
+        out << YAML::Key << "sprite_path" << YAML::Value << particlesystem->sprite_path;
         out << YAML::Key << "min_spawn_interval" << YAML::Value << particlesystem->min_spawn_interval;
         out << YAML::Key << "max_spawn_interval" << YAML::Value << particlesystem->max_spawn_interval;
         out << YAML::Key << "min_particle_speed" << YAML::Value << particlesystem->min_particle_speed;
@@ -306,6 +307,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "emitter_bounds" << YAML::Value << particlesystem->emitter_bounds;
         out << YAML::Key << "min_spawn_count" << YAML::Value << particlesystem->min_spawn_count;
         out << YAML::Key << "max_spawn_count" << YAML::Value << particlesystem->max_spawn_count;
+        out << YAML::Key << "color" << YAML::Value << particlesystem->color;
         out << YAML::EndMap;
     }
     else if (auto const sound = std::dynamic_pointer_cast<class Sound>(component); sound != nullptr)
@@ -1085,6 +1087,10 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component =
                 std::dynamic_pointer_cast<class ParticleSystem>(get_from_pool(component["guid"].as<std::string>()));
+            if (component["sprite_path"].IsDefined())
+            {
+                deserialized_component->sprite_path = component["sprite_path"].as<std::string>();
+            }
             if (component["min_spawn_interval"].IsDefined())
             {
                 deserialized_component->min_spawn_interval = component["min_spawn_interval"].as<float>();
@@ -1128,6 +1134,10 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             if (component["max_spawn_count"].IsDefined())
             {
                 deserialized_component->max_spawn_count = component["max_spawn_count"].as<i32>();
+            }
+            if (component["color"].IsDefined())
+            {
+                deserialized_component->color = component["color"].as<glm::vec4>();
             }
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
