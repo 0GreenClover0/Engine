@@ -14,6 +14,8 @@
 #include "Renderer.h"
 #include "RendererDX11.h"
 
+#include <filesystem>
+
 ShaderDX11::ShaderDX11(AK::Badge<ShaderFactory>, std::string const& compute_path) : Shader(compute_path)
 {
 }
@@ -240,7 +242,14 @@ bool ShaderDX11::save_compiled_shader(std::string const& path, ID3DBlob* p_blob)
 {
     size_t const last_slash_pos = path.find_last_of('/');
     std::string const filename = path.substr(last_slash_pos + 1);
-    std::string const full_path = "./res/shaders/compiled/" + filename;
+    std::string const full_path = m_compiled_path + filename;
+
+    std::filesystem::path const directory = m_compiled_path;
+
+    if (!std::filesystem::exists(directory))
+    {
+        std::filesystem::create_directories(directory);
+    }
 
     if (!p_blob)
     {
@@ -273,7 +282,14 @@ bool ShaderDX11::read_file_to_blob(std::string const& path, ID3DBlob** pp_blob)
 {
     size_t const last_slash_pos = path.find_last_of('/');
     std::string const filename = path.substr(last_slash_pos + 1);
-    std::string const full_path = "./res/shaders/compiled/" + filename;
+    std::string const full_path = m_compiled_path + filename;
+
+    std::filesystem::path const directory = m_compiled_path;
+
+    if (!std::filesystem::exists(directory))
+    {
+        std::filesystem::create_directories(directory);
+    }
 
     if (!pp_blob)
     {

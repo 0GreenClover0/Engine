@@ -36,4 +36,8 @@ private:
     ID3D11InputLayout* m_input_layout = nullptr;
     ID3D11VertexShader* m_vertex_shader = nullptr;
     ID3D11PixelShader* m_pixel_shader = nullptr;
+
+    // NOTE: Do not use constexpr here! The string will not live until runtime because of that.
+    //       https://developercommunity.visualstudio.com/t/c20-constexpr-stdstring-with-static-is-not-working/1441363
+    inline static std::string m_compiled_path = "./res/shaders/compiled/";
 };
