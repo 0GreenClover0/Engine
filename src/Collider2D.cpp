@@ -355,36 +355,29 @@ void Collider2D::update_center_and_corners()
 //       Currently we just update it every frame.
 void Collider2D::compute_axes(glm::vec2 const& center, float const angle)
 {
-    // Create a 3D rotation matrix around the y-axis (y-up) and xz-plane.
-    glm::mat4 const rotation_matrix = glm::rotate(glm::mat4(1.0f), angle, glm::vec3(0.0f, 1.0f, 0.0f));
+    // Create a 2D rotation matrix
+    glm::mat2 const rotation_matrix = glm::mat2(glm::vec2(cos(angle), sin(angle)), glm::vec2(-sin(angle), cos(angle)));
 
-    // Rotate the 2D vectors
-    auto const x_3d = glm::vec3(rotation_matrix * glm::vec4(1, 0, 0, 1)); // Rotate the X-axis vector
-    auto const z_3d = glm::vec3(rotation_matrix * glm::vec4(0, 0, 1, 1)); // Rotate the Z-axis vector
+    // Define the half-dimensions of the collider
+    glm::vec2 const half_extents = glm::vec2(width, height) * 0.5f;
 
-    // Convert the 3D vectors back to 2D by ignoring the y-component.
-    // Not using AK, because we've been rotating individual axes.
-    auto x = glm::vec2(x_3d.x, x_3d.z);
-    auto y = glm::vec2(z_3d.x, z_3d.z);
+    // Calculate the rotated corners
+    std::array const corners_local = {
+        glm::vec2(-half_extents.x, -half_extents.y),
+        glm::vec2(half_extents.x, -half_extents.y),
+        glm::vec2(half_extents.x, half_extents.y),
+        glm::vec2(-half_extents.x, half_extents.y),
+    };
 
-    x *= width;
-    y *= height;
-
-    m_corners[0] = center - x - y;
-    m_corners[1] = center + x - y;
-    m_corners[2] = center + x + y;
-    m_corners[3] = center - x + y;
-
-    m_axes[0] = m_corners[1] - m_corners[0];
-    m_axes[1] = m_corners[3] - m_corners[0];
-
-    // Make the length of each axis 1/edge length so we know any
-    // dot product must be less than 1 to fall within the edge.
-    for (u32 a = 0; a < m_axes.size(); ++a)
+    for (u32 i = 0; i < 4; ++i)
     {
-        m_axes[a] /= glm::pow(glm::length(m_axes[a]), 2);
+        m_corners[i] = center + rotation_matrix * corners_local[i];
     }
 
+    // Compute the axes for the SAT (Separating Axis Theorem) test
+    m_axes[0] = glm::normalize(m_corners[1] - m_corners[0]);
+    m_axes[1] = glm::normalize(m_corners[3] - m_corners[0]);
+
     m_debug_drawing->set_radius(radius);
-    m_debug_drawing->set_extents({width * 2.0f, 0.25f, height * 2.0f});
+    m_debug_drawing->set_extents({width, 0.25f, height});
 }
