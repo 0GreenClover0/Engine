@@ -19,6 +19,7 @@
 #include "ExampleDynamicText.h"
 #include "ExampleUIBar.h"
 #include "Game/Factory.h"
+#include "Game/GameController.h"
 #include "Game/IceBound.h"
 #include "Game/LevelController.h"
 #include "Game/Lighthouse.h"
@@ -334,6 +335,16 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "custom_name" << YAML::Value << factory->custom_name;
         out << YAML::Key << "type" << YAML::Value << factory->type;
         out << YAML::Key << "lights" << YAML::Value << factory->lights;
+        out << YAML::EndMap;
+    }
+    else if (auto const gamecontroller = std::dynamic_pointer_cast<class GameController>(component); gamecontroller != nullptr)
+    {
+        out << YAML::BeginMap;
+        out << YAML::Key << "ComponentName" << YAML::Value << "GameControllerComponent";
+        out << YAML::Key << "guid" << YAML::Value << gamecontroller->guid;
+        out << YAML::Key << "custom_name" << YAML::Value << gamecontroller->custom_name;
+        out << YAML::Key << "current_scene" << YAML::Value << gamecontroller->current_scene;
+        out << YAML::Key << "next_scene" << YAML::Value << gamecontroller->next_scene;
         out << YAML::EndMap;
     }
     else if (auto const icebound = std::dynamic_pointer_cast<class IceBound>(component); icebound != nullptr)
@@ -1196,6 +1207,31 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             if (component["lights"].IsDefined())
             {
                 deserialized_component->lights = component["lights"].as<std::vector<std::weak_ptr<PointLight>>>();
+            }
+            deserialized_entity->add_component(deserialized_component);
+            deserialized_component->reprepare();
+        }
+    }
+    else if (component_name == "GameControllerComponent")
+    {
+        if (first_pass)
+        {
+            auto const deserialized_component = GameController::create();
+            deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_component->custom_name = component["custom_name"].as<std::string>();
+            deserialized_pool.emplace_back(deserialized_component);
+        }
+        else
+        {
+            auto const deserialized_component =
+                std::dynamic_pointer_cast<class GameController>(get_from_pool(component["guid"].as<std::string>()));
+            if (component["current_scene"].IsDefined())
+            {
+                deserialized_component->current_scene = component["current_scene"].as<std::weak_ptr<Entity>>();
+            }
+            if (component["next_scene"].IsDefined())
+            {
+                deserialized_component->next_scene = component["next_scene"].as<std::weak_ptr<Entity>>();
             }
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
