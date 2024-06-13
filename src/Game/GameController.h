@@ -17,11 +17,18 @@ public:
     virtual void update() override;
     virtual void draw_editor() override;
 
+    bool is_moving_to_next_scene() const;
+
     std::weak_ptr<Entity> current_scene = {};
     std::weak_ptr<Entity> next_scene = {};
 
+    NON_SERIALIZED
+    std::vector<std::string> levels_order = {"Level_1", "Level_2"};
+
 private:
     float ease_in_out_cubic(float const x) const;
+
+    void update_scenes_position() const;
 
     inline static std::shared_ptr<GameController> m_instance;
 
