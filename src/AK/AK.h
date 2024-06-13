@@ -1,5 +1,7 @@
 #pragma once
 
+#include <codecvt>
+#include <locale>
 #include <memory>
 #include <random>
 #include <sstream>
@@ -35,6 +37,12 @@ inline std::string generate_hex(u32 const length)
         ss << (hex.length() < 2 ? '0' + hex : hex);
     }
     return ss.str();
+}
+
+inline std::wstring string_to_wstring(std::string const& str)
+{
+    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+    return converter.from_bytes(str);
 }
 
 inline glm::vec3 convert_2d_to_3d(glm::vec2 const& v, float desired_y = 0.0f)
