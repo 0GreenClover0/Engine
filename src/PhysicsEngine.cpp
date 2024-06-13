@@ -208,41 +208,62 @@ bool PhysicsEngine::test_collision_rectangle_rectangle(Collider2D const& obb1, C
     std::array const corners2 = obb2.get_corners();
 
     // Get the axes of both rectangles.
-    std::array axes1 = {AK::Math::get_perpendicular_axis(corners1, 0), AK::Math::get_perpendicular_axis(corners1, 1)};
-    std::array axes2 = {AK::Math::get_perpendicular_axis(corners2, 0), AK::Math::get_perpendicular_axis(corners2, 1)};
+    std::array const axes1 = {AK::Math::get_perpendicular_axis(corners1, 0), AK::Math::get_perpendicular_axis(corners1, 1)};
+    std::array const axes2 = {AK::Math::get_perpendicular_axis(corners2, 0), AK::Math::get_perpendicular_axis(corners2, 1)};
 
     // We need to find the minimal overlap and axis on which it happens.
     float min_overlap = std::numeric_limits<float>::infinity();
+    glm::vec2 smallest_axis = {};
 
-    // Check overlap along the axes of both rectangles.
-    for (auto& axis : {axes1, axes2})
+    // Check overlap along the axes of the first rectangle.
+    for (auto& axis : axes1)
     {
-        for (u32 i = 0; i < 2; ++i)
+        glm::vec2 projection1 = AK::Math::project_on_axis(corners1, axis);
+        glm::vec2 projection2 = AK::Math::project_on_axis(corners2, axis);
+
+        float const overlap = AK::Math::get_ranges_overlap_length(projection1, projection2);
+
+        // Shapes are not overlapping
+        if (AK::Math::are_nearly_equal(overlap, 0.0f, 0.05f))
         {
-            glm::vec2 projection1 = AK::Math::project_on_axis(corners1, axis[i]);
-            glm::vec2 projection2 = AK::Math::project_on_axis(corners2, axis[i]);
+            return false;
+        }
 
-            float const overlap = AK::Math::get_ranges_overlap_length(projection1, projection2);
-
-            // Shapes are not overlapping
-            if (AK::Math::are_nearly_equal(overlap, 0.0f))
-            {
-                return false;
-            }
-
-            if (overlap < min_overlap)
-            {
-                min_overlap = overlap;
-                mtv = axis[i] * min_overlap;
-            }
+        if (overlap < min_overlap)
+        {
+            min_overlap = overlap;
+            smallest_axis = axis;
         }
     }
+
+    // Check overlap along the axes of the second rectangle.
+    for (auto& axis : axes2)
+    {
+        glm::vec2 projection1 = AK::Math::project_on_axis(corners1, axis);
+        glm::vec2 projection2 = AK::Math::project_on_axis(corners2, axis);
+
+        float const overlap = AK::Math::get_ranges_overlap_length(projection1, projection2);
+
+        // Shapes are not overlapping
+        if (AK::Math::are_nearly_equal(overlap, 0.0f, 0.05f))
+        {
+            return false;
+        }
+
+        if (overlap < min_overlap)
+        {
+            min_overlap = overlap;
+            smallest_axis = axis;
+        }
+    }
+
+    mtv = smallest_axis * min_overlap;
 
     glm::vec2 const center1 = AK::convert_3d_to_2d(obb1.entity->transform->get_position());
     glm::vec2 const center2 = AK::convert_3d_to_2d(obb2.entity->transform->get_position());
 
     // Need to reverse the MTV if center offset and overlap are not pointing in the same direction.
-    if (glm::dot(center1 - center2, mtv) < 0.0f)
+    if (glm::dot(center2 - center1, mtv) < 0.0f)
         mtv = -mtv;
 
     return true;
