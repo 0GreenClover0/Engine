@@ -2,6 +2,7 @@
 #define gravity 9.81f
 
 #include "ssr.hlsl"
+#include "ShadingDefines.h"
 
 cbuffer water_buffer : register(b4)
 {
@@ -187,8 +188,8 @@ float4 ps_main(VS_Output input) : SV_TARGET
 
     for (int i = 0; i < number_of_point_lights; i++)
     {
-        result += calculate_point_light(point_lights[i], combined_normal, input.world_pos.rgb, view_dir, pixel_color, i, false);
         scatter += calculate_scatter(point_lights[i], float4(input.world_pos, 1.0f)) * fog_value;
+        result += calculate_point_light(point_lights[i], combined_normal, input.world_pos.rgb, view_dir, pixel_color, i, RENDER_POINT_SHADOW_MAPS);
     }
 
     for (int j = 0; j < number_of_spot_lights; j++)
