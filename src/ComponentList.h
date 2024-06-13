@@ -4,6 +4,7 @@
 
 // # Auto component list start
 #define ENUMERATE_COMPONENTS                                        \
+    ENUMERATE_COMPONENT(Button, "Button")                           \
     ENUMERATE_COMPONENT(Camera, "Camera")                           \
     ENUMERATE_COMPONENT(Collider2D, "Collider2D")                   \
     ENUMERATE_COMPONENT(Curve, "Curve")                             \

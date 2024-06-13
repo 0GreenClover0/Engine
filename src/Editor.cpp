@@ -14,6 +14,7 @@
 #include <glm/gtc/type_ptr.inl>
 #include <glm/gtx/string_cast.hpp>
 
+#include "Button.h"
 #include "Camera.h"
 #include "Collider2D.h"
 #include "ComponentList.h"

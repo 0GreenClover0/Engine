@@ -7,6 +7,7 @@
 
 #include <yaml-cpp/yaml.h>
 
+#include "Button.h"
 #include "Camera.h"
 #include "Collider2D.h"
 #include "Cube.h"
@@ -112,7 +113,15 @@ std::shared_ptr<Entity> SceneSerializer::get_entity_from_pool(std::string const&
 void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_ptr<Component> const& component)
 {
     // # Auto serialization start
-    if (auto const camera = std::dynamic_pointer_cast<class Camera>(component); camera != nullptr)
+    if (auto const button = std::dynamic_pointer_cast<class Button>(component); button != nullptr)
+    {
+        out << YAML::BeginMap;
+        out << YAML::Key << "ComponentName" << YAML::Value << "ButtonComponent";
+        out << YAML::Key << "guid" << YAML::Value << button->guid;
+        out << YAML::Key << "custom_name" << YAML::Value << button->custom_name;
+        out << YAML::EndMap;
+    }
+    else if (auto const camera = std::dynamic_pointer_cast<class Camera>(component); camera != nullptr)
     {
         out << YAML::BeginMap;
         out << YAML::Key << "ComponentName" << YAML::Value << "CameraComponent";
@@ -633,7 +642,23 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
 {
     auto component_name = component["ComponentName"].as<std::string>();
     // # Auto deserialization start
-    if (component_name == "CameraComponent")
+    if (component_name == "ButtonComponent")
+    {
+        if (first_pass)
+        {
+            auto const deserialized_component = Button::create();
+            deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_component->custom_name = component["custom_name"].as<std::string>();
+            deserialized_pool.emplace_back(deserialized_component);
+        }
+        else
+        {
+            auto const deserialized_component = std::dynamic_pointer_cast<class Button>(get_from_pool(component["guid"].as<std::string>()));
+            deserialized_entity->add_component(deserialized_component);
+            deserialized_component->reprepare();
+        }
+    }
+    else if (component_name == "CameraComponent")
     {
         if (first_pass)
         {
