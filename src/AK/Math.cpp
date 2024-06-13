@@ -63,9 +63,9 @@ float Math::get_ranges_overlap_length(glm::vec2 const& a, glm::vec2 const& b)
     return std::min(a.y, b.y) - std::max(a.x, b.x);
 }
 
-bool Math::are_nearly_equal(float const x, float const y)
+bool Math::are_nearly_equal(float const x, float const y, float const epsilon)
 {
-    return glm::epsilonEqual(x, y, 0.001f);
+    return glm::epsilonEqual(x, y, epsilon);
 }
 
 glm::vec2 Math::line_intersection(glm::vec2 const& point1, glm::vec2 const& point2, glm::vec2 const& point3, glm::vec2 const& point4)

@@ -19,7 +19,7 @@ public:
     static float get_ranges_overlap_length(glm::vec2 const& a, glm::vec2 const& b);
     static bool are_ranges_overlapping(glm::vec2 const& a, glm::vec2 const& b);
 
-    static bool are_nearly_equal(float const x, float const y);
+    static bool are_nearly_equal(float const x, float const y, float const epsilon = 0.001f);
 
     static glm::vec2 line_intersection(glm::vec2 const& point1, glm::vec2 const& point2, glm::vec2 const& point3, glm::vec2 const& point4);
 };
