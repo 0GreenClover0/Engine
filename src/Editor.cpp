@@ -22,6 +22,7 @@
 #include "ExampleDynamicText.h"
 #include "ExampleUIBar.h"
 #include "Game/Factory.h"
+#include "Game/GameController.h"
 #include "Game/IceBound.h"
 #include "Game/LevelController.h"
 #include "Game/Lighthouse.h"
