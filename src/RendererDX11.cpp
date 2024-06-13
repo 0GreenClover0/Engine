@@ -419,14 +419,13 @@ void RendererDX11::render_aa() const
     }
 
     g_pd3dDeviceContext->PSSetShaderResources(0, 1, &m_multi_pass_render_srv);
+    g_pd3dDeviceContext->RSSetState(g_rasterizer_state_solid);
     FullscreenQuad::get_instance()->draw();
 }
 
 void RendererDX11::render_lighting_pass() const
 {
     set_light_buffer();
-
-    g_pd3dDeviceContext->RSSetState(g_rasterizer_state);
 
     update_shader(nullptr, glm::mat4(1.0f), glm::mat4(1.0f));
 
@@ -441,8 +440,6 @@ void RendererDX11::render_lighting_pass() const
     g_pd3dDeviceContext->RSSetState(g_rasterizer_state_solid);
 
     FullscreenQuad::get_instance()->draw();
-
-    g_pd3dDeviceContext->RSSetState(g_rasterizer_state);
 
     g_pd3dDeviceContext->CopyResource(m_deferred_texture_copy, m_multipass_render_texture);
     g_pd3dDeviceContext->PSSetShaderResources(17, 1, &m_deferred_srv_copy);
