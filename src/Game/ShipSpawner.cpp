@@ -9,6 +9,7 @@
 #include "AK/Math.h"
 #include "Collider2D.h"
 #include "Entity.h"
+#include "GameController.h"
 #include "Globals.h"
 #include "Player.h"
 #include "ResourceManager.h"
@@ -374,6 +375,7 @@ void ShipSpawner::draw_editor()
 void ShipSpawner::add_warning()
 {
     auto const warning = Entity::create("Warning");
+    warning->transform->set_parent(GameController::get_instance()->current_scene.lock()->transform);
     auto const warning_light_component = warning->add_component(SpotLight::create());
 
     warning_light_component->diffuse = glm::vec3(0.04f, 0.0f, 0.0f);
@@ -747,6 +749,7 @@ void ShipSpawner::spawn_ship(SpawnEvent const* being_spawn)
     }
 
     ship->transform->set_local_position({m_spawn_position.back().x, 0.0f, m_spawn_position.back().y});
+    ship->transform->set_parent(GameController::get_instance()->current_scene.lock()->transform);
 
     auto const& ship_comp = ship->get_component<Ship>();
 
