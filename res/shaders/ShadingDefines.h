@@ -1,0 +1,1 @@
+#define RENDER_POINT_SHADOW_MAPS false

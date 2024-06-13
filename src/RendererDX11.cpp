@@ -10,6 +10,7 @@
 #include "GBuffer.h"
 #include "Model.h"
 #include "ResourceManager.h"
+#include "ShadingDefines.h"
 #include "ShaderFactory.h"
 #include "Skybox.h"
 #include "SkyboxFactory.h"
@@ -369,8 +370,8 @@ void RendererDX11::render_shadow_maps() const
         render_single_shadow_map(m_directional_light->get_projection_view_matrix());
     }
 
+#if RENDER_POINT_SHADOW_MAPS == true
     // Point lights
-
     if (m_point_lights.size() > 0)
     {
         m_point_shadow_shader->use();
@@ -385,6 +386,7 @@ void RendererDX11::render_shadow_maps() const
             render_single_shadow_map(m_point_lights[i]->get_projection_view_matrix(face));
         }
     }
+#endif // RENDER_POINT_SHADOW_MAPS == true
 
     // Spot lights
 
