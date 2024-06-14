@@ -144,9 +144,8 @@ float4 ps_main(VS_Output input) : SV_TARGET
     // NORMAL MAPPING
     float3 normal1 = water_normal0.Sample(wrap_sampler_water, (input.UV.xy + time_ps.xx * normalmap_scroll_speed0) * normalmap_scale0) * float4(0.1f.xxx,1.0f);
     float3 normal2 = water_normal1.Sample(wrap_sampler_water, (input.UV.xy + time_ps.xx * -normalmap_scroll_speed1) * normalmap_scale1);
-    float3 combined_normal = normal_blend(normalize(normal1 * 2.0f - 1.0f.xxx), input.normal);
-    combined_normal = normal_blend(normalize(normal2 * 2.0f - 1.0f.xxx), combined_normal);
-
+    float3 combined_normal = normal_blend(normalize(normal2), input.normal);
+    combined_normal = normal_blend(normalize(normal1), combined_normal);
     // SSR (reflection)
     float3 view_normal = normalize(mul(view, float4(combined_normal, 0.0f)));
     float3 view_pos = mul(view, float4(input.world_pos, 1.0f)).xyz;
