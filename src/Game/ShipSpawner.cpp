@@ -95,7 +95,10 @@ void ShipSpawner::awake()
 
 void ShipSpawner::update()
 {
-    prepare_for_spawn();
+    if (LevelController::get_instance()->is_started)
+    {
+        prepare_for_spawn();
+    }
 }
 
 void ShipSpawner::draw_editor()
