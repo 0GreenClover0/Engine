@@ -34,6 +34,8 @@ public:
     std::optional<glm::vec2> find_nearest_ship_position(glm::vec2 center_position) const;
     std::optional<std::weak_ptr<Ship>> find_nearest_ship_object(glm::vec2 center_position) const;
 
+    void get_spawn_paths();
+
     std::vector<std::weak_ptr<Path>> paths = {};
 
     std::weak_ptr<LighthouseLight> light = {};

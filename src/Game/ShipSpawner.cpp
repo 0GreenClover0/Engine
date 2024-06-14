@@ -85,12 +85,17 @@ void ShipSpawner::awake()
     auto const seed = std::chrono::system_clock::now().time_since_epoch().count();
     std::ranges::shuffle(m_main_spawn, std::default_random_engine(seed));
 
+    get_spawn_paths();
+
+    set_can_tick(true);
+}
+
+void ShipSpawner::get_spawn_paths()
+{
     for (auto const& path : entity->get_components<Path>())
     {
         paths.emplace_back(path);
     }
-
-    set_can_tick(true);
 }
 
 void ShipSpawner::update()
