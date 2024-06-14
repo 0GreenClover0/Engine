@@ -22,9 +22,6 @@ public:
     std::weak_ptr<Entity> current_scene = {};
     std::weak_ptr<Entity> next_scene = {};
 
-    NON_SERIALIZED
-    std::vector<std::string> levels_order = {"Level_1", "Level_2"};
-
 private:
     float ease_in_out_cubic(float const x) const;
 
@@ -34,4 +31,10 @@ private:
 
     bool m_move_to_next_scene = false;
     float m_move_to_next_scene_counter = 0.0f;
+
+    glm::vec2 m_current_position = {};
+    glm::vec2 m_next_position = {};
+    u32 m_level_number = 0;
+
+    std::vector<std::string> m_levels_order = {"Level_1", "Level_2"};
 };

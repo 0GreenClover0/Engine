@@ -8,6 +8,7 @@
 #include "Globals.h"
 #include "Input.h"
 #include "LevelController.h"
+#include "Path.h"
 #include "SceneSerializer.h"
 
 std::shared_ptr<GameController> GameController::create()
@@ -41,10 +42,10 @@ void GameController::uninitialize()
 
 void GameController::awake()
 {
-    std::ranges::reverse(levels_order);
+    std::ranges::reverse(m_levels_order);
 
-    std::string const level = levels_order.back();
-    levels_order.pop_back();
+    std::string const level = m_levels_order.back();
+    m_levels_order.pop_back();
     current_scene = SceneSerializer::load_prefab(level);
 
     set_can_tick(true);
@@ -83,14 +84,24 @@ void GameController::draw_editor()
 {
     Component::draw_editor();
 
-    ImGuiEx::draw_ptr("Scene 1", current_scene);
-    ImGuiEx::draw_ptr("Scene 2", next_scene);
-
     if (ImGui::Button("Move"))
     {
         LevelController::get_instance()->destroy_immediate();
 
-        next_scene = SceneSerializer::load_prefab(levels_order.back());
+        next_scene = SceneSerializer::load_prefab(m_levels_order.back());
+
+        auto const& path = entity->get_component<Path>();
+        m_current_position = path->points[m_level_number];
+        m_next_position = path->points[m_level_number + 1];
+
+        glm::vec2 const delta = path->points[m_level_number + 1] - path->points[m_level_number];
+
+        for (auto& point : path->points)
+        {
+            point -= delta;
+        }
+
+        m_level_number++;
 
         m_move_to_next_scene = true;
     }
@@ -109,7 +120,9 @@ float GameController::ease_in_out_cubic(float const x) const
 void GameController::update_scenes_position() const
 {
     current_scene.lock()->transform->set_local_position(
-        glm::vec3(0.0f - ease_in_out_cubic(m_move_to_next_scene_counter) * 18.0f, 0.0f, 0.0f));
+        glm::vec3(m_current_position.x - ease_in_out_cubic(m_move_to_next_scene_counter) * m_next_position.x, 0.0f,
+                  m_current_position.y - ease_in_out_cubic(m_move_to_next_scene_counter) * m_next_position.y));
     next_scene.lock()->transform->set_local_position(
-        glm::vec3(18.0f - ease_in_out_cubic(m_move_to_next_scene_counter) * 18.0f, 0.0f, 0.0f));
+        glm::vec3(m_next_position.x - ease_in_out_cubic(m_move_to_next_scene_counter) * m_next_position.x, 0.0f,
+                  m_next_position.y - ease_in_out_cubic(m_move_to_next_scene_counter) * m_next_position.y));
 }
