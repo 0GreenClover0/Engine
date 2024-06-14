@@ -27,9 +27,14 @@ void Path::draw_editor()
     {
         ImPlot::PushStyleVar(ImPlotStyleVar_LineWeight, 2.0f);
         ImPlot::SetupLegend(ImPlotFlags_NoLegend);
-        ImPlot::SetupAxesLimits(-LevelController::get_instance()->playfield_width, LevelController::get_instance()->playfield_width,
-                                -LevelController::get_instance()->playfield_height, LevelController::get_instance()->playfield_height,
-                                ImGuiCond_Once);
+
+        if (LevelController::get_instance() != nullptr)
+        {
+            ImPlot::SetupAxesLimits(-LevelController::get_instance()->playfield_width, LevelController::get_instance()->playfield_width,
+                                    -LevelController::get_instance()->playfield_height, LevelController::get_instance()->playfield_height,
+                                    ImGuiCond_Once);
+        }
+
         ImGui::Checkbox("Reverse y-axis", &m_reverse_y);
 
         std::vector<float> xs, ys;
