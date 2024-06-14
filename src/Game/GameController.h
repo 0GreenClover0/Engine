@@ -18,6 +18,7 @@ public:
     virtual void draw_editor() override;
 
     bool is_moving_to_next_scene() const;
+    void move_to_next_scene();
 
     std::weak_ptr<Entity> current_scene = {};
     std::weak_ptr<Entity> next_scene = {};

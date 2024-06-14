@@ -86,24 +86,7 @@ void GameController::draw_editor()
 
     if (ImGui::Button("Move"))
     {
-        LevelController::get_instance()->destroy_immediate();
-
-        next_scene = SceneSerializer::load_prefab(m_levels_order.back());
-
-        auto const& path = entity->get_component<Path>();
-        m_current_position = path->points[m_level_number];
-        m_next_position = path->points[m_level_number + 1];
-
-        glm::vec2 const delta = path->points[m_level_number + 1] - path->points[m_level_number];
-
-        for (auto& point : path->points)
-        {
-            point -= delta;
-        }
-
-        m_level_number++;
-
-        m_move_to_next_scene = true;
+        move_to_next_scene();
     }
 }
 
@@ -125,4 +108,26 @@ void GameController::update_scenes_position() const
     next_scene.lock()->transform->set_local_position(
         glm::vec3(m_next_position.x - ease_in_out_cubic(m_move_to_next_scene_counter) * m_next_position.x, 0.0f,
                   m_next_position.y - ease_in_out_cubic(m_move_to_next_scene_counter) * m_next_position.y));
+}
+
+void GameController::move_to_next_scene()
+{
+    LevelController::get_instance()->destroy_immediate();
+
+    next_scene = SceneSerializer::load_prefab(m_levels_order.back());
+
+    auto const& path = entity->get_component<Path>();
+    m_current_position = path->points[m_level_number];
+    m_next_position = path->points[m_level_number + 1];
+
+    glm::vec2 const delta = path->points[m_level_number + 1] - path->points[m_level_number];
+
+    for (auto& point : path->points)
+    {
+        point -= delta;
+    }
+
+    m_level_number++;
+
+    m_move_to_next_scene = true;
 }
