@@ -28,6 +28,20 @@ void Player::uninitialize()
     m_instance = nullptr;
 }
 
+void Player::reset_player()
+{
+    food = 0;
+    flash = 0;
+    flash_counter = 0.0f;
+    packages = 2;
+    lighthouse_level = 0;
+
+    range = 0.0f;
+    additional_ship_speed = 0.0f;
+    turn_speed = 0.0f;
+    pirates_in_control = 0.0f;
+}
+
 void Player::upgrade_lighthouse()
 {
     lighthouse_level++;
