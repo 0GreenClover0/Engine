@@ -117,9 +117,9 @@ float3 calculate_directional_light(DirectionalLight light, float3 normal, float3
     float3 diff = max(dot(normal, light_direction), 0.0f);
 
     // Specular
-    //float3 reflect_dir = reflect(-light_direction,normal); // Phong
-    float3 halfway_dir = normalize(light_direction + view_dir); // Blinn-Phong
-    float spec = pow(max(dot(view_dir, halfway_dir), 0.0f), 32); // TODO: Take shininess from the material
+    float3 reflect_dir = reflect(light_direction,normal); // Phong
+    //float3 halfway_dir = normalize(light_direction + view_dir); // Blinn-Phong
+    float spec = pow(max(dot(view_dir, reflect_dir), 0.0f), 1); // TODO: Take shininess from the material
 
     float3 ambient = light.ambient * diffuse_texture * ambient_occlusion; // We should be sampling diffuse map
     float3 diffuse = light.diffuse * diff * diffuse_texture; // We should be sampling diffuse map
