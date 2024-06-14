@@ -14,5 +14,5 @@ public:
 
 private:
     std::shared_ptr<ScreenText> m_foo = nullptr;
-    std::wstring m_example = L"test";
+    std::string m_example = "test";
 };

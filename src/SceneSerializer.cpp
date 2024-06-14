@@ -983,7 +983,7 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
                 std::dynamic_pointer_cast<class ScreenText>(get_from_pool(component["guid"].as<std::string>()));
             if (component["text"].IsDefined())
             {
-                deserialized_component->text = component["text"].as<std::wstring>();
+                deserialized_component->text = component["text"].as<std::string>();
             }
             if (component["position"].IsDefined())
             {

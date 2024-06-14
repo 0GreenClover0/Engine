@@ -1,8 +1,13 @@
 #include "ScreenText.h"
+
 #include "AK/AK.h"
 #include "RendererDX11.h"
 #include "ResourceManager.h"
 #include "ShaderFactory.h"
+
+#if EDITOR
+#include "imgui_stdlib.h"
+#endif
 
 #include <glm/gtc/type_ptr.inl>
 
@@ -10,31 +15,25 @@ std::shared_ptr<ScreenText> ScreenText::create()
 {
     auto const ui_shader = ResourceManager::get_instance().load_shader("./res/shaders/ui.hlsl", "./res/shaders/ui.hlsl");
     auto const ui_material = Material::create(ui_shader, 1);
-    auto text = std::make_shared<ScreenText>(AK::Badge<ScreenText> {}, ui_material);
+
+    auto text = std::make_shared<ScreenText>(AK::Badge<ScreenText> {}, ui_material, "Example text", glm::vec2(0, 0), 40, 0xff0099ff,
+                                             FW1_RESTORESTATE | FW1_CENTER | FW1_VCENTER);
 
     return text;
 }
 
-std::shared_ptr<ScreenText> ScreenText::create(std::wstring const& content, glm::vec2 const& position, float const font_size,
-                                               u32 const color, u16 const flags)
+std::shared_ptr<ScreenText> ScreenText::create(std::shared_ptr<Material> const& material, std::string const& content,
+                                               glm::vec2 const& position, float const font_size, u32 const color, u16 const flags)
 {
-    auto text = std::make_shared<ScreenText>(AK::Badge<ScreenText> {}, content, position, font_size, color, flags);
-
+    auto text = std::make_shared<ScreenText>(AK::Badge<ScreenText> {}, material, content, position, font_size, color, flags);
     return text;
 }
 
-ScreenText::ScreenText(AK::Badge<ScreenText>, std::shared_ptr<Material> const& material) : Drawable(material), flags(FW1_RESTORESTATE)
-{
-}
-
-ScreenText::ScreenText(AK::Badge<ScreenText>, std::wstring const& content, glm::vec2 const& position, float const font_size,
-                       u32 const color, u16 const flags)
-    : Drawable(nullptr), text(content), position(position), font_size(font_size), color(color),
+ScreenText::ScreenText(AK::Badge<ScreenText>, std::shared_ptr<Material> const& material, std::string const& content,
+                       glm::vec2 const& position, float const font_size, u32 const color, u16 const flags)
+    : Drawable(material), text(content), position(position), font_size(font_size), color(color),
       flags(flags | FW1_RESTORESTATE) // Restore DX11 state by default
 {
-    auto const ui_shader = ResourceManager::get_instance().load_shader("./res/shaders/ui.hlsl", "./res/shaders/ui.hlsl");
-    auto const ui_material = Material::create(ui_shader);
-    material = ui_material;
 }
 
 ScreenText::~ScreenText()
@@ -65,21 +64,28 @@ void ScreenText::initialize()
         }
     }
 
-    reprepare();
+    refresh_layout();
 }
 
 void ScreenText::draw() const
 {
-    m_font_wrapper->DrawTextLayout(RendererDX11::get_instance_dx11()->get_device_context(), m_d_write_text_layout, position.x, position.y,
-                                   color, flags);
+    if (m_align_to_center)
+    {
+        glm::vec2 const centered_pos = {position.x - m_layout_width * 0.5f, position.y - m_layout_height * 0.5f};
+        m_font_wrapper->DrawTextLayout(RendererDX11::get_instance_dx11()->get_device_context(), m_d_write_text_layout, centered_pos.x,
+                                       centered_pos.y, color, flags);
+    }
+    else
+    {
+        m_font_wrapper->DrawTextLayout(RendererDX11::get_instance_dx11()->get_device_context(), m_d_write_text_layout, position.x,
+                                       position.y, color, flags);
+    }
 }
 
 #if EDITOR
 void ScreenText::draw_editor()
 {
     Component::draw_editor();
-
-    ImGui::DragFloat2("Position", glm::value_ptr(position));
 
     std::string preview = {};
     if (Renderer::loaded_fonts.size() <= 0)
@@ -103,7 +109,7 @@ void ScreenText::draw_editor()
             if (ImGui::Selectable(font.family_name.c_str(), is_selected))
             {
                 font_name = font.family_name;
-                reprepare();
+                refresh_layout();
             }
         }
 
@@ -112,40 +118,43 @@ void ScreenText::draw_editor()
 
     if (ImGui::Checkbox("Bold", &bold))
     {
-        reprepare();
+        refresh_layout();
     }
+
+    ImGui::InputText("Text", &text);
+
+    set_text(text);
+
+    ImGui::Checkbox("Align to Center", &m_align_to_center);
+
+    realign_text(m_align_to_center);
 }
 #endif
 
-void ScreenText::set_text(std::wstring const& new_content)
+void ScreenText::set_text(std::string const& new_content)
 {
     text = new_content;
+    refresh_layout();
+}
 
-    // Update the DirectWrite text layout if necessary
-    if (m_d_write_text_layout != nullptr)
+void ScreenText::realign_text(bool const center) const
+{
+    if (center)
     {
-        // Release the existing text layout
-        m_d_write_text_layout->Release();
-        m_d_write_text_layout = nullptr;
+        HRESULT hr = m_d_write_text_layout->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER);
+        assert(SUCCEEDED(hr));
+
+        hr = m_d_write_text_layout->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
+        assert(SUCCEEDED(hr));
     }
+    else
+    {
+        HRESULT hr = m_d_write_text_layout->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_JUSTIFIED);
+        assert(SUCCEEDED(hr));
 
-    // Create a new text layout with the updated content
-    HRESULT hr = m_d_write_factory->CreateTextLayout(new_content.data(), new_content.size(), m_d_write_text_format, 2048, 2048,
-                                                     &m_d_write_text_layout);
-    assert(SUCCEEDED(hr));
-
-    DWRITE_TEXT_METRICS text_metrics = {};
-
-    hr = m_d_write_text_layout->GetMetrics(&text_metrics);
-    assert(SUCCEEDED(hr));
-
-    // Release mock layout needed for text size deduction.
-    m_d_write_text_layout->Release();
-    m_d_write_text_layout = nullptr;
-
-    hr = m_d_write_factory->CreateTextLayout(text.data(), text.size(), m_d_write_text_format, text_metrics.width, text_metrics.height,
-                                             &m_d_write_text_layout);
-    assert(SUCCEEDED(hr));
+        hr = m_d_write_text_layout->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_NEAR);
+        assert(SUCCEEDED(hr));
+    }
 }
 
 D3D11_VIEWPORT ScreenText::get_viewport()
@@ -156,10 +165,8 @@ D3D11_VIEWPORT ScreenText::get_viewport()
     return viewports[0];
 }
 
-void ScreenText::reprepare()
+void ScreenText::refresh_layout()
 {
-    Drawable::reprepare();
-
     if (m_d_write_factory != nullptr)
     {
         m_d_write_factory->Release();
@@ -195,7 +202,9 @@ void ScreenText::reprepare()
                                         &m_d_write_text_format);
     assert(SUCCEEDED(hr));
 
-    hr = m_d_write_factory->CreateTextLayout(text.data(), text.size(), m_d_write_text_format, 2048, 2048, &m_d_write_text_layout);
+    std::wstring const content = AK::string_to_wstring(text);
+
+    hr = m_d_write_factory->CreateTextLayout(content.data(), text.size(), m_d_write_text_format, 2048, 2048, &m_d_write_text_layout);
     assert(SUCCEEDED(hr));
 
     DWRITE_TEXT_METRICS text_metrics = {};
@@ -203,7 +212,7 @@ void ScreenText::reprepare()
     hr = m_d_write_text_layout->GetMetrics(&text_metrics);
     assert(SUCCEEDED(hr));
 
-    hr = m_d_write_factory->CreateTextLayout(text.data(), // Text to be laid out
+    hr = m_d_write_factory->CreateTextLayout(content.data(), // Text to be laid out
                                              text.size(), // Length of the text
                                              m_d_write_text_format, // Text format
                                              text_metrics.width, // Use measured text width
@@ -212,22 +221,24 @@ void ScreenText::reprepare()
     );
     assert(SUCCEEDED(hr));
 
-    DWRITE_TEXT_RANGE tr = {};
-    tr.length = 256;
-    tr.startPosition = 0;
-
-    hr = m_d_write_text_layout->SetFontSize(font_size, tr);
-    assert(SUCCEEDED(hr));
-
-    hr = m_d_write_text_layout->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER);
-    assert(SUCCEEDED(hr));
-
-    hr = m_d_write_text_layout->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
-    assert(SUCCEEDED(hr));
-
     hr = m_FW1_factory->CreateFontWrapper(RendererDX11::get_instance_dx11()->get_device(), AK::string_to_wstring(font_name).c_str(),
                                           &m_font_wrapper);
     assert(SUCCEEDED(hr));
 
     m_FW1_factory->Release();
+
+    // Create a new text layout with the updated content
+    hr = m_d_write_factory->CreateTextLayout(content.data(), text.size(), m_d_write_text_format, m_layout_width, m_layout_height,
+                                             &m_d_write_text_layout);
+    assert(SUCCEEDED(hr));
+
+    realign_text(m_align_to_center);
+    DWRITE_TEXT_RANGE tr = {};
+    tr.length = 256;
+    tr.startPosition = 0;
+
+    realign_text(m_align_to_center);
+
+    hr = m_d_write_text_layout->SetFontSize(font_size, tr);
+    assert(SUCCEEDED(hr));
 }
