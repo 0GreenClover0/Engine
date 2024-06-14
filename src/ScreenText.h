@@ -1,21 +1,23 @@
 #pragma once
+
 #include "Drawable.h"
-#include "FW1FontWrapper.h"
 #include "RendererDX11.h"
 
-#include "dwrite.h"
+#include <FW1FontWrapper.h>
+
+#include <dwrite.h>
+
 #pragma comment(lib, "Dwrite")
 
 class ScreenText final : public Drawable
 {
 public:
     static std::shared_ptr<ScreenText> create();
-    static std::shared_ptr<ScreenText> create(std::wstring const& content, glm::vec2 const& position, float const font_size,
-                                              u32 const color, u16 const flags);
+    static std::shared_ptr<ScreenText> create(std::shared_ptr<Material> const& material, std::string const& content,
+                                              glm::vec2 const& position, float const font_size, u32 const color, u16 const flags);
 
-    ScreenText(AK::Badge<ScreenText>, std::shared_ptr<Material> const& material);
-    ScreenText(AK::Badge<ScreenText>, std::wstring const& content, glm::vec2 const& position, float const font_size, u32 const color,
-               u16 const flags);
+    ScreenText(AK::Badge<ScreenText>, std::shared_ptr<Material> const& material, std::string const& content, glm::vec2 const& position,
+               float const font_size, u32 const color, u16 const flags);
     ~ScreenText() override;
 
     virtual void initialize() override;
@@ -24,13 +26,12 @@ public:
     virtual void draw_editor() override;
 #endif
 
-    virtual void reprepare() override;
-
-    // Only content of the text component is now dynamically updated.
-    void set_text(std::wstring const& new_content);
+    // This can be updated.
+    void set_text(std::string const& new_content);
+    void realign_text(bool const center) const;
 
     // Text properties
-    std::wstring text = L"Example text";
+    std::string text = "Example text";
     glm::vec2 position = {};
     float font_size = 40;
     u32 color = 0;
@@ -40,6 +41,7 @@ public:
 
 private:
     static D3D11_VIEWPORT get_viewport();
+    void refresh_layout();
 
     // DWrite and FW1 variables
     IFW1Factory* m_FW1_factory = nullptr;
@@ -47,6 +49,9 @@ private:
     IDWriteFactory* m_d_write_factory = nullptr;
     IDWriteTextFormat* m_d_write_text_format = nullptr;
     IDWriteTextLayout* m_d_write_text_layout = nullptr;
+    float m_layout_width = 2048.0f;
+    float m_layout_height = 2048.0f;
+    bool m_align_to_center = true;
 
     // DirectX stuff
     D3D11_VIEWPORT m_viewport = {};
