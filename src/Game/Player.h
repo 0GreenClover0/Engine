@@ -18,6 +18,8 @@ public:
     virtual void draw_editor() override;
     virtual void uninitialize() override;
 
+    void reset_player();
+
     void upgrade_lighthouse();
 
     NON_SERIALIZED
