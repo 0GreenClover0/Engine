@@ -766,6 +766,8 @@ void ShipSpawner::spawn_ship(SpawnEvent const* being_spawn)
 
     ship_comp->on_ship_destroyed.attach(&ShipSpawner::remove_ship, shared_from_this());
     ship_comp->maximum_speed = LevelController::get_instance()->ships_speed;
+    ship_comp->light = light;
+    ship_comp->spawner = std::static_pointer_cast<ShipSpawner>(shared_from_this());
 
     ship_comp->set_start_direction();
 

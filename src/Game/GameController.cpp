@@ -50,6 +50,7 @@ void GameController::awake()
     current_scene = SceneSerializer::load_prefab(level);
 
     LevelController::get_instance()->entity->get_component<ShipSpawner>()->get_spawn_paths();
+    LevelController::get_instance()->on_lighthouse_upgraded();
 
     set_can_tick(true);
 }
@@ -120,6 +121,7 @@ void GameController::move_to_next_scene()
     next_scene = SceneSerializer::load_prefab(m_levels_order.back());
 
     LevelController::get_instance()->entity->get_component<ShipSpawner>()->get_spawn_paths();
+    LevelController::get_instance()->on_lighthouse_upgraded();
 
     auto const& path = entity->get_component<Path>();
     m_current_position = path->points[m_level_number];
