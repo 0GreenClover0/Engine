@@ -10,6 +10,7 @@
 #include "LevelController.h"
 #include "Path.h"
 #include "SceneSerializer.h"
+#include "ShipSpawner.h"
 
 std::shared_ptr<GameController> GameController::create()
 {
@@ -47,6 +48,8 @@ void GameController::awake()
     std::string const level = m_levels_order.back();
     m_levels_order.pop_back();
     current_scene = SceneSerializer::load_prefab(level);
+
+    LevelController::get_instance()->entity->get_component<ShipSpawner>()->get_spawn_paths();
 
     set_can_tick(true);
 }
@@ -115,6 +118,8 @@ void GameController::move_to_next_scene()
     LevelController::get_instance()->destroy_immediate();
 
     next_scene = SceneSerializer::load_prefab(m_levels_order.back());
+
+    LevelController::get_instance()->entity->get_component<ShipSpawner>()->get_spawn_paths();
 
     auto const& path = entity->get_component<Path>();
     m_current_position = path->points[m_level_number];
