@@ -198,7 +198,7 @@ float4 ps_main(VS_Output input) : SV_TARGET
         scatter += calculate_scatter(spot_lights[j], float4(input.world_pos, 1.0f), j) * fog_value;
     }
 
-    result = normalize(ssr_refraction.xyz * 0.3f + result) / 3.0f;
+    result = (ssr_refraction.xyz * 0.3f + result) / 3.0f;
     result += scatter;
     float4 final;
     falloff_value = clamp(falloff_value, 0.0f, 1.0f);
