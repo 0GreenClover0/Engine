@@ -13,7 +13,5 @@ public:
     virtual void draw_editor() override;
 
 private:
-    float length() const;
-
     bool m_reverse_y = true;
 };
