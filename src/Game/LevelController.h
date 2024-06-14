@@ -24,6 +24,9 @@ public:
 
     void on_lighthouse_upgraded() const;
 
+    NON_SERIALIZED
+    bool is_started = false;
+
     float map_time = 180.0f;
     u32 map_food = 20;
     i32 maximum_lighthouse_level = 10;

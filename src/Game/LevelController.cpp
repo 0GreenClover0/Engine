@@ -49,24 +49,35 @@ void LevelController::awake()
 
 void LevelController::update()
 {
-    if (time > 0.0f)
+    if (is_started)
     {
-        if (AK::Math::are_nearly_equal(Player::get_instance()->flash_counter, 0.0f))
+        if (time > 0.0f)
         {
-            time -= delta_time;
+            if (AK::Math::are_nearly_equal(Player::get_instance()->flash_counter, 0.0f))
+            {
+                time -= delta_time;
+            }
         }
+        else
+        {
+            Debug::log(std::to_string(Player::get_instance()->food) + " / " + std::to_string(map_food));
+            Engine::set_game_running(false);
+            return;
+        }
+
+        float const x = time / map_time * -1.0 + 1.0f;
+
+        ships_limit = glm::ceil(ships_limit_curve.lock()->get_y_at(x));
+        ships_speed = ships_speed_curve.lock()->get_y_at(x);
     }
     else
     {
-        Debug::log(std::to_string(Player::get_instance()->food) + " / " + std::to_string(map_food));
-        Engine::set_game_running(false);
-        return;
+        // TODO: Change RMB to LMB in final game
+        if (Input::input->get_key_down(GLFW_MOUSE_BUTTON_RIGHT))
+        {
+            is_started = true;
+        }
     }
-
-    float x = (((time / map_time) * -1.0) + 1.0f);
-
-    ships_limit = glm::ceil(ships_limit_curve.lock()->get_y_at(x));
-    ships_speed = ships_speed_curve.lock()->get_y_at(x);
 }
 
 void LevelController::draw_editor()
