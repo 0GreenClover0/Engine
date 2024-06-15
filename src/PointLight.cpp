@@ -1,6 +1,7 @@
 #include "PointLight.h"
 
 #include "Entity.h"
+#include "Globals.h"
 #include "Renderer.h"
 #include "RendererDX11.h"
 
@@ -14,12 +15,27 @@ std::shared_ptr<PointLight> PointLight::create()
     return point_light;
 }
 
+void PointLight::awake()
+{
+    set_can_tick(true);
+}
+
+void PointLight::update()
+{
+    if (m_pulsate)
+    {
+        pulsate();
+    }
+}
+
 void PointLight::draw_editor()
 {
     Light::draw_editor();
     ImGui::Text("Attenuation:");
     ImGui::SliderFloat("Linear", &linear, 0.0f, 10.0f);
     ImGui::SliderFloat("Quadratic", &quadratic, 0.0f, 10.0f);
+
+    ImGui::Text(("Action timer:" + std::to_string(m_action_timer)).c_str());
 }
 
 void PointLight::set_up_shadow_mapping()
@@ -115,4 +131,23 @@ void PointLight::update_pv_matrices()
     m_projection_view_matrices[4] = shadow_proj * glm::lookAt(light_pos, light_pos + glm::vec3(0.0, 0.0, 1.0), glm::vec3(0.0, -1.0, 0.0));
 
     m_projection_view_matrices[5] = shadow_proj * glm::lookAt(light_pos, light_pos + glm::vec3(0.0, 0.0, -1.0), glm::vec3(0.0, -1.0, 0.0));
+}
+
+void PointLight::set_pulsate(bool const value)
+{
+    m_pulsate = value;
+    m_action_timer = 0.0f;
+}
+
+void PointLight::pulsate()
+{
+    m_action_timer += static_cast<float>(delta_time);
+
+    if (m_action_timer > 2 * glm::pi<float>())
+    {
+        m_action_timer = 0.0f;
+    }
+
+    linear = std::abs(std::sin(m_action_timer)) * 10.0f + 1.0f;
+    quadratic = std::abs(std::sin(m_action_timer)) * 10.0f + 1.0f;
 }

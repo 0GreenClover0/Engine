@@ -17,10 +17,14 @@ public:
     {
     }
 
+    virtual void awake() override;
+    virtual void update() override;
     virtual void draw_editor() override;
 
     void set_render_target_for_shadow_mapping(u32 const face_index) const;
     glm::mat4 get_projection_view_matrix(u32 const face_index);
+
+    void set_pulsate(bool const value);
 
     // Default values for an around 50m distance of cover
     float constant = 1.0f; // Should not be changed
@@ -32,6 +36,12 @@ protected:
 
 private:
     void update_pv_matrices();
+
+    void pulsate();
+
+    bool m_pulsate = false;
+
+    float m_action_timer = 0.0f;
 
     std::vector<ID3D11DepthStencilView*> m_shadow_depth_stencil_views = {};
     std::array<glm::mat4, 6> m_projection_view_matrices = {};
