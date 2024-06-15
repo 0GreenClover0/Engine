@@ -57,6 +57,11 @@ void Renderer::register_drawable(std::shared_ptr<Drawable> const& drawable)
 void Renderer::unregister_drawable(std::shared_ptr<Drawable> const& drawable)
 {
     AK::swap_and_erase(drawable->material->drawables, drawable);
+
+    if (drawable->material->drawables.size() == 0)
+    {
+        unregister_material(drawable->material);
+    }
 }
 
 void Renderer::register_material(std::shared_ptr<Material> const& material)
