@@ -233,6 +233,7 @@ void RendererDX11::render_geometry_pass(glm::mat4 const& projection_view) const
 {
     std::array constexpr blend_factor = {0.0f, 0.0f, 0.0f, 0.0f};
     get_device_context()->OMSetBlendState(m_deferred_blend_state, blend_factor.data(), 0xffffffff);
+    get_device_context()->OMSetDepthStencilState(m_depth_stencil_state, 0);
 
     m_gbuffer->bind_render_targets();
 
@@ -472,6 +473,7 @@ void RendererDX11::bind_for_render_frame() const
 
     std::array constexpr blend_factor = {0.0f, 0.0f, 0.0f, 0.0f};
     get_device_context()->OMSetBlendState(m_forward_blend_state, blend_factor.data(), 0xffffffff);
+    get_device_context()->OMSetDepthStencilState(m_transparent_depth_stencil_state, 0);
 }
 
 void RendererDX11::setup_shadow_mapping()
@@ -886,6 +888,15 @@ void RendererDX11::create_depth_stencil()
     dssDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
 
     hr = g_pd3dDevice->CreateDepthStencilState(&dssDesc, &m_depth_stencil_state);
+    assert(SUCCEEDED(hr));
+
+    dssDesc = {};
+    dssDesc.DepthEnable = true;
+    dssDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+    dssDesc.DepthFunc = D3D11_COMPARISON_LESS;
+    dssDesc.StencilEnable = false;
+
+    hr = g_pd3dDevice->CreateDepthStencilState(&dssDesc, &m_transparent_depth_stencil_state);
     assert(SUCCEEDED(hr));
 }
 
