@@ -1162,6 +1162,17 @@ void Editor::save_scene_as(std::string const& name) const
     scene_serializer->serialize("./res/scenes/" + name + ".txt");
 }
 
+glm::vec2 Editor::get_game_size() const
+{
+    // TODO: ImGui is REMOVED from game build so it's important to get window size from glfw or use fullscreen size.
+    return m_game_size;
+}
+
+bool Editor::is_rendering_to_editor() const
+{
+    return m_rendering_to_editor;
+}
+
 void Editor::register_debug_drawing(std::shared_ptr<DebugDrawing> const& debug_drawing)
 {
     m_debug_drawings.emplace_back(debug_drawing);
