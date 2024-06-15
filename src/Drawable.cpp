@@ -61,7 +61,13 @@ void Drawable::on_enabled()
 
 void Drawable::on_disabled()
 {
-    Renderer::get_instance()->unregister_drawable(std::dynamic_pointer_cast<Drawable>(shared_from_this()));
+    auto const drawable = std::dynamic_pointer_cast<Drawable>(shared_from_this());
+
+    // Drawable might have already been unregistered in uninitialize() method
+    if (!Renderer::get_instance()->is_drawable_registered(drawable))
+    {
+        Renderer::get_instance()->unregister_drawable(std::dynamic_pointer_cast<Drawable>(shared_from_this()));
+    }
 }
 
 void Drawable::draw_instanced(i32 const size)
