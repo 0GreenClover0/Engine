@@ -77,6 +77,7 @@ public:
     inline static i32 screen_width = 1280;
     inline static i32 screen_height = 720;
 
+    inline static constexpr i32 transparent_render_order = 1000;
 protected:
     Renderer() = default;
     virtual ~Renderer() = default;
@@ -150,6 +151,7 @@ private:
     };
 
     std::multiset<MaterialWithOrder> m_custom_render_order_materials = {};
+    std::vector<std::shared_ptr<Material>> m_transparent_materials = {};
 
     std::vector<std::shared_ptr<Camera>> m_cameras = {};
 };
