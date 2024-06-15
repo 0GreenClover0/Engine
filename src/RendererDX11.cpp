@@ -885,7 +885,7 @@ void RendererDX11::create_depth_stencil()
     D3D11_DEPTH_STENCIL_DESC dssDesc = {};
     dssDesc.DepthEnable = true;
     dssDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-    dssDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
+    dssDesc.DepthFunc = D3D11_COMPARISON_LESS;
 
     hr = g_pd3dDevice->CreateDepthStencilState(&dssDesc, &m_depth_stencil_state);
     assert(SUCCEEDED(hr));
