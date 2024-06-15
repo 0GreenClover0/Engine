@@ -60,7 +60,7 @@ Texture2D fog_tex : register(t16);
 Texture2D water_normal0 : register(t18);
 Texture2D water_normal1 : register(t19);
 
-SamplerState wrap_sampler_water : register(s2);
+SamplerState clamp_border_sampler : register(s3);
 
 // VERTEX SHADER FUNCTIONS
 PositionAndNormal calc_gerstner_wave_position_and_normal(float x, float y, float3 position_for_normal)
@@ -137,52 +137,64 @@ float4 ps_main(VS_Output input) : SV_TARGET
 {
     // FALLOFF CALCULATION
     float2 UV = float2(input.ndc.x, (-input.ndc.y + 1.0f));
-    float3 deferred_world_pos = position_buffer.Sample(wrap_sampler_water, UV).xyz;
+    float3 deferred_world_pos = position_buffer.Sample(clamp_border_sampler, UV).xyz;
     float falloff_value = falloff(input.world_pos, deferred_world_pos);
 
-    // REFRACTIONS DONT WORK WHEN FACING AWAY FROM WORLD CENTER
     // NORMAL MAPPING
-    float3 normal1 = water_normal0.Sample(wrap_sampler_water, (input.UV.xy + time_ps.xx * normalmap_scroll_speed0) * normalmap_scale0) * float4(0.1f.xxx,1.0f);
-    float3 normal2 = water_normal1.Sample(wrap_sampler_water, (input.UV.xy + time_ps.xx * -normalmap_scroll_speed1) * normalmap_scale1);
-    float3 combined_normal = normal_blend(normalize(normal2), input.normal);
-    combined_normal = normal_blend(normalize(normal1), combined_normal);
-    // SSR (reflection)
-    float3 view_normal = normalize(mul(view, float4(combined_normal, 0.0f)));
+    float3 normal1 = water_normal0.Sample(wrap_sampler, (input.UV.xy + time_ps.xx * normalmap_scroll_speed0) * normalmap_scale0) * float4(0.1f.xxx, 1.0f);
+    float3 normal2 = water_normal1.Sample(wrap_sampler, (input.UV.xy + time_ps.xx * -normalmap_scroll_speed1) * normalmap_scale1);
+    float3 combined_normal = normal_blend(normalize(normal2 * 2.0f - 1.0f), input.normal);
+    combined_normal = normal_blend(normalize(normal1 * 2.0f - 1.0f), combined_normal);
+
+    // VIEW SPACE VARIABLES
+    float3 view_normal = normalize(mul((float3x3)view, combined_normal));
+    // In this case, normal2 has it's B channel almost removed, so it doesn't offset reflections
+    float3 view_reflection_normal = normalize(mul((float3x3)view, normalize(input.normal + normal2 * float3(0.3f, 0.3f, 0.05f))));
     float3 view_pos = mul(view, float4(input.world_pos, 1.0f)).xyz;
 
+    // REFRACTION
     float3 refracted_vector = normalize(refract(normalize(view_pos), view_normal, 1.0f/1.52f));
-    float4 refraction_coords = ray_cast(refracted_vector, view_pos);
+    float4 refraction_coords = ray_cast(refracted_vector, view_pos, false);
     float4 ssr_refraction;
+
+    // Handle cases, where there is no refraction found
     if (refraction_coords.x > 1.0f || refraction_coords.x < 0.0f || refraction_coords.y > 1.0f || refraction_coords.y < 0.0f || refraction_coords.w == 0.0f)
     {
         ssr_refraction = float4(0.0f.xxxx);
-    } 
+    }
     else
     {
-        ssr_refraction = rendered_scene.Sample(wrap_sampler_water, refraction_coords.xy);
+        ssr_refraction = rendered_scene.Sample(clamp_border_sampler, refraction_coords.xy);
     }
 
-    if (ssr_refraction.a == 0.0f)
+    // REFLECTION
+    float3 reflected_vector = normalize(reflect(normalize(view_pos), view_reflection_normal));
+    float4 reflection_coords = ray_cast(reflected_vector, view_pos, true);
+    float4 ssr_reflection = rendered_scene.Sample(clamp_border_sampler, reflection_coords.xy);
+
+    // Handle cases, where there is no reflection found
+    if (reflection_coords.x > 1.0f || reflection_coords.x < 0.0f || reflection_coords.y > 1.0f || reflection_coords.y < 0.0f || reflection_coords.w == 0.0f)
     {
-        // If we didn't find anything to refract at these coordinates
-        // We just sample the color behind the pixel
-        // It's unnoticable
-        ssr_refraction = rendered_scene.Sample(wrap_sampler_water, UV.xy);
+        ssr_reflection = float4(0.0f.xxx, 1.0f);
     }
 
-    // Changing water color with height
+    // Make reflection darker
+    ssr_reflection = gamma_correction(ssr_reflection.xyz, 0.6);
+
+    // Tint the water based on the height
     float3 pixel_color = float3(0.0f, 0.0f, 0.0f);
     float height = ((input.world_pos.y + combined_amplitude) / 2.0f) * (1.0f / combined_amplitude);
     pixel_color = top_color * height + bottom_color * (1.0f - height);
 
     float3 view_dir = normalize(camera_pos.xyz - input.world_pos.xyz);
-    float3 result = calculate_directional_light(directional_light, combined_normal, view_dir, pixel_color, input.world_pos, false);
+    float3 result = calculate_directional_light(directional_light, combined_normal, view_dir, pixel_color, input.world_pos, true);
+
+    // Volumetric lighting variables
     float3 scatter = float3(0.0f.xxx);
-    float fog_value = 1.0f; 
+    float fog_value;
     if (is_fog_rendered)
     {
-        fog_value = fog_tex.Sample(wrap_sampler_water, UV + time_ps / 100.0f).r;
-        result += 0.55f * fog_value;
+        fog_value = fog_tex.Sample(wrap_sampler, UV + time_ps / 100.0f).r;
     }
 
     for (int i = 0; i < number_of_point_lights; i++)
@@ -197,10 +209,12 @@ float4 ps_main(VS_Output input) : SV_TARGET
         scatter += calculate_scatter(spot_lights[j], float4(input.world_pos, 1.0f), j) * fog_value;
     }
 
-    result = (ssr_refraction.xyz * 0.3f + result) / 3.0f;
+    result = ((ssr_refraction.xyz) * 0.3f + result + ssr_reflection.xyz) / 3.0f;
     result += scatter;
-    float4 final;
+
     falloff_value = clamp(falloff_value, 0.0f, 1.0f);
+    
+    float4 final;
     final.xyz = falloff_value * float3(0.1f, 0.1f, 0.6f) + (1.0f - falloff_value) * result;
     final.xyz = gamma_correction(exposure_tonemapping(final.xyz));
     final.a = 1.0f;

@@ -128,7 +128,7 @@ private:
     // Shadow mapping variables
     ID3D11RasterizerState* g_shadow_rasterizer_state = nullptr;
     ID3D11SamplerState* m_shadow_sampler_state = nullptr;
-    ID3D11SamplerState* m_default_sampler_state = nullptr;
+    ID3D11SamplerState* m_clamp_border_sampler_state = nullptr;
     ID3D11SamplerState* m_repeat_sampler_state = nullptr;
 
     ID3D11BlendState* m_deferred_blend_state = nullptr;

@@ -3,18 +3,19 @@
 Texture2D rendered_scene : register(t17);
 Texture2D position_buffer : register(t10);
 
-SamplerState wrap_sampler
-{
-    Filter = MIN_MAG_MIP_LINEAR;
-    AddressU = WRAP;
-    AddressV = WRAP;
-    BorderColor = float4(0.0f, 0.0f, 0.0f, 0.0f);
-};
+SamplerState wrap_sampler : register(s2);
 
-#define refraction_ray_step 0.10f
-#define refraction_max_steps 70
-#define refraction_thickness 0.2f
-#define num_binary_search_steps 10
+#define num_binary_search_steps 30
+
+// REFRACTION
+#define refraction_ray_step 0.1f
+#define refraction_max_steps 50
+#define refraction_thickness 0.1f
+
+// REFLECTION
+#define reflection_ray_step 0.02f
+#define reflection_max_steps 40
+#define reflection_thickness 0.1f
 
 float3 fresnel_schlick(float cosTheta, float3 F0)
 {
@@ -34,8 +35,8 @@ float3 binary_search(float3 dir, float3 hit_coords, float dDepth)
         projected_coord.xy = projected_coord.xy * 0.5f + 0.5f;
         projected_coord.y *= -1.0f;
         projected_coord.y += 1.0f;
-        float3 view_pos = position_buffer.Sample(wrap_sampler, projected_coord.xy).xyz;
-        view_pos = mul(view, float4(view_pos, 1.0f));
+        float3 world_pos = position_buffer.Sample(wrap_sampler, projected_coord.xy).xyz;
+        float3 view_pos = mul(view, float4(world_pos, 1.0f));
         depth = view_pos.z;
 
         dDepth = hit_coords.z - depth;
@@ -60,17 +61,21 @@ float3 binary_search(float3 dir, float3 hit_coords, float dDepth)
     return float3(projected_coord.xy, depth);
 }
 
-float4 ray_cast(float3 dir, float3 hit_coord)
+float4 ray_cast(float3 dir, float3 hit_coord, bool reflection)
 {
-    dir *= refraction_ray_step;
+    float ray_step = reflection ? reflection_ray_step : refraction_ray_step;
+    dir *= ray_step;
 
     float depth;
     int steps = 0;
     float4 projected_coord;
     float dDepth; // Not sure what this is supposed to mean
 
+    int max_steps = reflection ? reflection_max_steps : refraction_max_steps;
+    float thickness = reflection ? reflection_thickness : refraction_thickness;
+
     [loop]
-    for (int i = 0; i < refraction_max_steps; ++i)
+    for (int i = 0; i < max_steps; ++i)
     {
         hit_coord += dir;
 
@@ -82,8 +87,9 @@ float4 ray_cast(float3 dir, float3 hit_coord)
         projected_coord.y *= -1.0f;
         projected_coord.y += 1.0f;
 
-        float3 view_pos = position_buffer.Sample(wrap_sampler, projected_coord.xy).xyz;
-        view_pos = mul(view, float4(view_pos, 1.0f));
+        float3 world_pos = position_buffer.Sample(wrap_sampler, projected_coord.xy).xyz;
+        float3 view_pos = mul(view, float4(world_pos, 1.0f));
+
         depth = view_pos.z;
 
         if (depth > 1000.0f)
@@ -95,7 +101,7 @@ float4 ray_cast(float3 dir, float3 hit_coord)
         dDepth = hit_coord.z - depth;
 
         // If over a threshold the object will reproject into infinity
-        if (dir.z - dDepth < refraction_thickness)
+        if (dir.z - dDepth < thickness)
         {
             if (dDepth <= 0.0f)
             {
