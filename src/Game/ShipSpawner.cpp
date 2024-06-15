@@ -734,6 +734,24 @@ void ShipSpawner::prepare_for_spawn()
     }
 }
 
+void ShipSpawner::burn_out_all_ships(bool const value) const
+{
+    if (value)
+    {
+        for (auto ship : m_ships)
+        {
+            ship.lock()->my_light.lock()->set_burn_out(true);
+        }
+    }
+    else
+    {
+        for (auto ship : m_ships)
+        {
+            ship.lock()->my_light.lock()->set_enabled(true);
+        }
+    }
+}
+
 void ShipSpawner::spawn_ship(SpawnEvent const* being_spawn)
 {
     std::shared_ptr<Entity> ship;

@@ -7,6 +7,7 @@
 #include "LevelController.h"
 #include "Player.h"
 #include "ScreenText.h"
+#include "ShipSpawner.h"
 
 std::shared_ptr<Player> Player::create()
 {
@@ -91,6 +92,8 @@ void Player::update()
                     LevelController::get_instance()->factories[i].lock()->update_lights();
                 }
             }
+
+            LevelController::get_instance()->entity->get_component<ShipSpawner>()->burn_out_all_ships(true);
         }
     }
 
@@ -101,6 +104,7 @@ void Player::update()
     else
     {
         flash_counter = 0.0f;
+        LevelController::get_instance()->entity->get_component<ShipSpawner>()->burn_out_all_ships(false);
     }
 }
 
