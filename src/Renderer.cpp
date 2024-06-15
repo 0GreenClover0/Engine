@@ -66,6 +66,11 @@ void Renderer::register_material(std::shared_ptr<Material> const& material)
 
     if (material->has_custom_render_order())
         m_custom_render_order_materials.insert({material->get_render_order(), material});
+
+    if (material->is_transparent)
+    {
+        m_transparent_materials.emplace_back(material);
+    }
 }
 
 void Renderer::unregister_material(std::shared_ptr<Material> const& material)
@@ -76,6 +81,11 @@ void Renderer::unregister_material(std::shared_ptr<Material> const& material)
     // FIXME: Not sure if find works
     if (material->has_custom_render_order())
         m_custom_render_order_materials.erase(m_custom_render_order_materials.find({material->get_render_order(), material}));
+
+    if (material->is_transparent)
+    {
+        AK::swap_and_erase(m_transparent_materials, material);
+    }
 }
 
 bool Renderer::is_light_registered(std::shared_ptr<Light> const& light) const
