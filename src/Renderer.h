@@ -78,6 +78,8 @@ public:
     inline static i32 screen_height = 720;
 
     inline static constexpr i32 transparent_render_order = 1000;
+    inline static constexpr i32 aa_render_order = 2000;
+
 protected:
     Renderer() = default;
     virtual ~Renderer() = default;
@@ -106,7 +108,10 @@ protected:
     virtual void render_forward_pass(glm::mat4 const& projection_view, glm::mat4 const& projection_view_no_translation) const;
     virtual void render_ssao() const;
     virtual void render_aa() const;
-    virtual void render_custom_render_order(glm::mat4 const& projection_view, glm::mat4 const& projection_view_no_translation) const;
+    virtual void render_custom_render_order_before_aa(glm::mat4 const& projection_view,
+                                                      glm::mat4 const& projection_view_no_translation) const;
+    virtual void render_custom_render_order_after_aa(glm::mat4 const& projection_view,
+                                                     glm::mat4 const& projection_view_no_translation) const;
 
     virtual void bind_universal_resources() const;
     virtual void bind_for_render_frame() const;
@@ -139,6 +144,8 @@ protected:
     std::shared_ptr<Shader> m_fxaa_shader = nullptr;
 
 private:
+    void draw_transparent(glm::mat4 const& projection_view, glm::mat4 const& projection_view_no_translation) const;
+
     struct MaterialWithOrder
     {
         i32 render_order;
@@ -150,7 +157,8 @@ private:
         }
     };
 
-    std::multiset<MaterialWithOrder> m_custom_render_order_materials = {};
+    std::multiset<MaterialWithOrder> m_custom_render_order_materials_before_aa = {};
+    std::multiset<MaterialWithOrder> m_custom_render_order_materials_after_aa = {};
     std::vector<std::shared_ptr<Material>> m_transparent_materials = {};
 
     std::vector<std::shared_ptr<Camera>> m_cameras = {};
