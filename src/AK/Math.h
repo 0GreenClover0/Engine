@@ -21,6 +21,12 @@ public:
 
     static bool are_nearly_equal(float const x, float const y, float const epsilon = 0.001f);
 
+    // Applies only for axis-aligned rectangles. Used mostly for buttons. Collider2D handles OBB in different way.
+    static bool is_point_inside_rectangle(glm::vec2 const& point, std::array<glm::vec2, 4> const& rectangle_corners);
+
+    // Maps range A to B
+    static float map_range_clamped(float min_a, float max_a, float min_b, float max_b, float value);
+
     static glm::vec2 line_intersection(glm::vec2 const& point1, glm::vec2 const& point2, glm::vec2 const& point3, glm::vec2 const& point4);
 };
 
