@@ -464,6 +464,15 @@ void ShipSpawner::prepare_for_spawn()
         return;
     }
 
+    if (m_main_spawn.empty())
+    {
+        if (!m_is_last_chance_activated)
+        {
+            m_main_spawn = backup_spawn;
+        }
+        return;
+    }
+
     if (m_main_spawn.back().spawn_list.empty())
     {
         if (m_spawn_type == SpawnType::Immediate || m_spawn_type == SpawnType::Rapid)
@@ -471,12 +480,6 @@ void ShipSpawner::prepare_for_spawn()
             m_spawn_warning_counter = spawn_warning_time;
         }
         m_main_spawn.pop_back();
-    }
-
-    if (m_main_spawn.empty())
-    {
-        m_main_spawn = backup_spawn;
-        return;
     }
 
     if (paths.size() == 0)
