@@ -3,6 +3,8 @@
 #include "Drawable.h"
 #include "GBuffer.h"
 
+class Mesh;
+
 class Particle final : public Drawable
 {
 public:
@@ -20,7 +22,11 @@ public:
     virtual void draw() const override;
     virtual void draw_editor() override;
 
-protected:
+    void prepare();
+
+private:
+    [[nodiscard]] std::shared_ptr<Mesh> create_sprite() const;
+
     void move() const;
     void update_particle() const;
     void decrement_alpha();
@@ -34,4 +40,6 @@ protected:
     float m_spawn_bounds = 1.0f;
     float m_rotation_direction = 1.0f;
     std::string m_path = "./res/textures/particle.png";
+
+    std::shared_ptr<Mesh> mesh = {};
 };

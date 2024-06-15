@@ -6,7 +6,6 @@
 #include "Globals.h"
 #include "RendererDX11.h"
 #include "ResourceManager.h"
-#include "Sprite.h"
 
 #include <glm/gtc/type_ptr.inl>
 
@@ -20,6 +19,9 @@ std::shared_ptr<Particle> Particle::create()
     glm::vec4 color = {1.0f, 1.0f, 1.0f, 1.0f};
 
     auto particle = std::make_shared<Particle>(AK::Badge<Particle> {}, 1.0f, color, 1.0f, "./res/textures/particle.png", particle_material);
+
+    particle->prepare();
+
     return particle;
 }
 
@@ -31,6 +33,9 @@ std::shared_ptr<Particle> Particle::create(float speed, glm::vec4 const& color, 
     particle_material->needs_forward_rendering = true;
 
     auto particle = std::make_shared<Particle>(AK::Badge<Particle> {}, speed, color, spawn_bounds, path, particle_material);
+
+    particle->prepare();
+
     return particle;
 }
 
@@ -46,8 +51,6 @@ void Particle::initialize()
 
     set_can_tick(true);
 
-    entity->add_component(Sprite::create(m_particle_material, m_path));
-
     entity->transform->set_scale({0.1f, 0.1f, 0.1f});
     entity->transform->set_local_position({AK::random_float(-m_spawn_bounds, m_spawn_bounds),
                                            AK::random_float(-m_spawn_bounds, m_spawn_bounds),
@@ -62,6 +65,21 @@ void Particle::initialize()
 void Particle::draw() const
 {
     entity->transform->parent.lock()->set_euler_angles(Camera::get_main_camera()->entity->transform->get_euler_angles());
+
+    if (m_rasterizer_draw_type == RasterizerDrawType::None)
+    {
+        return;
+    }
+
+    // Either wireframe or solid for individual model
+    Renderer::get_instance()->set_rasterizer_draw_type(m_rasterizer_draw_type);
+
+    if (mesh != nullptr)
+    {
+        mesh->draw();
+    }
+
+    Renderer::get_instance()->restore_default_rasterizer_draw_type();
 }
 
 void Particle::draw_editor()
@@ -113,4 +131,35 @@ void Particle::decrement_alpha()
 bool Particle::is_particle() const
 {
     return true;
+}
+
+void Particle::prepare()
+{
+    mesh = create_sprite();
+}
+
+std::shared_ptr<Mesh> Particle::create_sprite() const
+{
+    std::vector<Vertex> const vertices = {
+        {glm::vec3(-1.0f, -1.0f, 0.0f), {}, {0.0f, 0.0f}}, // bottom left
+        {glm::vec3(1.0f, -1.0f, 0.0f), {}, {1.0f, 0.0f}}, // bottom right
+        {glm::vec3(1.0f, 1.0f, 0.0f), {}, {1.0f, 1.0f}}, // top right
+        {glm::vec3(-1.0f, 1.0f, 0.0f), {}, {0.0f, 1.0f}}, // top left
+    };
+
+    std::vector<u32> const indices = {0, 1, 2, 0, 2, 3};
+
+    std::vector<std::shared_ptr<Texture>> textures;
+
+    std::vector<std::shared_ptr<Texture>> diffuse_maps = {};
+    TextureSettings texture_settings = {};
+    texture_settings.wrap_mode_x = TextureWrapMode::ClampToEdge;
+    texture_settings.wrap_mode_y = TextureWrapMode::ClampToEdge;
+
+    if (!m_path.empty())
+        diffuse_maps.emplace_back(ResourceManager::get_instance().load_texture(m_path, TextureType::Diffuse, texture_settings));
+
+    textures.insert(textures.end(), diffuse_maps.begin(), diffuse_maps.end());
+
+    return ResourceManager::get_instance().load_mesh(0, m_path, vertices, indices, textures, DrawType::Triangles, material);
 }
