@@ -619,7 +619,15 @@ void RendererDX11::initialize_global_renderer_settings()
     HRESULT hr = get_device()->CreateBlendState(&blend_desc, &m_deferred_blend_state);
     assert(SUCCEEDED(hr));
 
+    blend_desc = {};
     blend_desc.RenderTarget[0].BlendEnable = true;
+    blend_desc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+    blend_desc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+    blend_desc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+    blend_desc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_SRC_ALPHA;
+    blend_desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_INV_SRC_ALPHA;
+    blend_desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+    blend_desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 
     hr = get_device()->CreateBlendState(&blend_desc, &m_forward_blend_state);
     assert(SUCCEEDED(hr));
