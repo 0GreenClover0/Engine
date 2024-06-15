@@ -1,6 +1,8 @@
 #include "ScreenText.h"
 
 #include "AK/AK.h"
+#include "Editor.h"
+#include "Entity.h"
 #include "RendererDX11.h"
 #include "ResourceManager.h"
 #include "ShaderFactory.h"
@@ -14,7 +16,7 @@
 std::shared_ptr<ScreenText> ScreenText::create()
 {
     auto const ui_shader = ResourceManager::get_instance().load_shader("./res/shaders/ui.hlsl", "./res/shaders/ui.hlsl");
-    auto const ui_material = Material::create(ui_shader, 1);
+    auto const ui_material = Material::create(ui_shader, 2);
 
     auto text = std::make_shared<ScreenText>(AK::Badge<ScreenText> {}, ui_material, "Example text", glm::vec2(0, 0), 40, 0xff0099ff,
                                              FW1_RESTORESTATE | FW1_CENTER | FW1_VCENTER);
@@ -69,17 +71,23 @@ void ScreenText::initialize()
 
 void ScreenText::draw() const
 {
+    glm::vec3 const entity_pos = entity->transform->get_position();
+    glm::vec2 const screen_size = {Renderer::get_instance()->screen_width, Renderer::get_instance()->screen_height};
+
+    glm::vec2 pos_to_draw = {AK::map_range_clamped(-1.0f, 1.0f, 0, screen_size.x, entity_pos.x),
+                             screen_size.y - AK::map_range_clamped(-1.0f, 1.0f, 0, screen_size.y, entity_pos.y)};
+
     if (m_align_to_center)
     {
-        glm::vec2 const centered_pos = {position.x - m_layout_width * 0.5f, position.y - m_layout_height * 0.5f};
-        m_font_wrapper->DrawTextLayout(RendererDX11::get_instance_dx11()->get_device_context(), m_d_write_text_layout, centered_pos.x,
-                                       centered_pos.y, color, flags);
+        pos_to_draw = {AK::map_range_clamped(-1.0f, 3.0f, 0, screen_size.x, entity_pos.x),
+                       screen_size.y - AK::map_range_clamped(-1.0f, 3.0f, 0, screen_size.y, entity_pos.y + 2.0f)};
+
+        glm::vec2 const align_offset = {pos_to_draw.x - m_layout_width * 0.5f, pos_to_draw.y - m_layout_height * 0.5f};
+        pos_to_draw += align_offset;
     }
-    else
-    {
-        m_font_wrapper->DrawTextLayout(RendererDX11::get_instance_dx11()->get_device_context(), m_d_write_text_layout, position.x,
-                                       position.y, color, flags);
-    }
+
+    m_font_wrapper->DrawTextLayout(RendererDX11::get_instance_dx11()->get_device_context(), m_d_write_text_layout, pos_to_draw.x,
+                                   pos_to_draw.y, color, flags);
 }
 
 #if EDITOR

@@ -155,6 +155,8 @@ public:
     void save_scene() const;
     bool load_scene_name(std::string const& name) const;
     void save_scene_as(std::string const& name) const;
+    glm::vec2 get_game_size() const;
+    bool is_rendering_to_editor() const;
 
     void register_debug_drawing(std::shared_ptr<DebugDrawing> const& debug_drawing);
     void unregister_debug_drawing(std::shared_ptr<DebugDrawing> const& debug_drawing);
