@@ -153,6 +153,7 @@ bool Ship::in_port_state_change()
         behavioral_state = BehavioralState::InPort;
 
         my_light.lock()->diffuse = glm::vec3(1.0f, 1.0f, 0.0f);
+        my_light.lock()->set_pulsate(true);
 
         return true;
     }
