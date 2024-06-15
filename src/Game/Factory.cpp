@@ -90,11 +90,13 @@ void Factory::update_lights() const
         {
             if (i < Player::get_instance()->flash)
             {
+                lights[i].lock()->set_burn_out(false);
                 lights[i].lock()->set_enabled(true);
             }
             else
             {
-                lights[i].lock()->set_enabled(false);
+                // TODO: Make lights disabled at level start after scene change merge.
+                lights[i].lock()->set_burn_out(true);
             }
         }
     }
