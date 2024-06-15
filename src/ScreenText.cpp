@@ -1,6 +1,7 @@
 #include "ScreenText.h"
 
 #include "AK/AK.h"
+#include "AK/Math.h"
 #include "Editor.h"
 #include "Entity.h"
 #include "RendererDX11.h"
@@ -74,13 +75,13 @@ void ScreenText::draw() const
     glm::vec3 const entity_pos = entity->transform->get_position();
     glm::vec2 const screen_size = {Renderer::get_instance()->screen_width, Renderer::get_instance()->screen_height};
 
-    glm::vec2 pos_to_draw = {AK::map_range_clamped(-1.0f, 1.0f, 0, screen_size.x, entity_pos.x),
-                             screen_size.y - AK::map_range_clamped(-1.0f, 1.0f, 0, screen_size.y, entity_pos.y)};
+    glm::vec2 pos_to_draw = {AK::Math::map_range_clamped(-1.0f, 1.0f, 0, screen_size.x, entity_pos.x),
+                             screen_size.y - AK::Math::map_range_clamped(-1.0f, 1.0f, 0, screen_size.y, entity_pos.y)};
 
     if (m_align_to_center)
     {
-        pos_to_draw = {AK::map_range_clamped(-1.0f, 3.0f, 0, screen_size.x, entity_pos.x),
-                       screen_size.y - AK::map_range_clamped(-1.0f, 3.0f, 0, screen_size.y, entity_pos.y + 2.0f)};
+        pos_to_draw = {AK::Math::map_range_clamped(-1.0f, 3.0f, 0, screen_size.x, entity_pos.x),
+                       screen_size.y - AK::Math::map_range_clamped(-1.0f, 3.0f, 0, screen_size.y, entity_pos.y + 2.0f)};
 
         glm::vec2 const align_offset = {pos_to_draw.x - m_layout_width * 0.5f, pos_to_draw.y - m_layout_height * 0.5f};
         pos_to_draw += align_offset;
