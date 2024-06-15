@@ -26,8 +26,6 @@ Texture2D noise_tex : register(t13);
 SamplerState gbuffer_sampler : register(s0);
 SamplerState noise_sampler : register(s1);
 
-const float2 noise_scale = float2(800.0f / 4.0f, 600.0f / 4.0f);
-
 VS_Output vs_main(VS_Input input)
 {
     VS_Output output;
@@ -41,34 +39,42 @@ VS_Output vs_main(VS_Input input)
 float4 ps_main(VS_Output input) : SV_Target
 {
     float3 world_pos = pos_tex.Sample(gbuffer_sampler, input.UV);
-    float3 view_pos = mul(view, float4(world_pos,1.0f));
-    float3 normal = normalize(normal_tex.Sample(gbuffer_sampler, input.UV).xyz);
-    normal = mul(view, float4(normal, 1.0f));
-    float3 random_vec = normalize(noise_tex.Sample(noise_sampler, input.UV * noise_scale).xyz);
+    
+    float2 noise_scale;
+    pos_tex.GetDimensions(noise_scale.x, noise_scale.y);
+    noise_scale /= 4.0f;
 
+    float4 view_pos = mul(view, float4(world_pos, 1.0f));
+    view_pos.xyz /= view_pos.w;
+    float3 normal = normalize(normal_tex.Sample(gbuffer_sampler, input.UV).xyz);
+    normal = normalize(mul((float3x3)view, normal));
+    float3 random_vec = normalize(noise_tex.Sample(noise_sampler, input.UV * noise_scale).xyz);
     float3 tangent = normalize(random_vec - normal * dot(random_vec, normal));
     float3 bitangent = cross(normal, tangent);
     float3x3 TBN = float3x3(tangent, bitangent, normal);
 
     float occlusion = 0.0f;
-    float radius = 7.5f;
-    float bias = 1.25f;
-    for (int i = 0; i < 64; ++i)
+    float radius = 1.5f;
+    float bias = 0.001f;
+    for (int i = 0; i < 16; ++i)
     {
         float3 sample_pos = mul(TBN, kernel_samples[i]);
-        sample_pos = view_pos + sample_pos * radius;
+        sample_pos = view_pos.xyz + sample_pos * radius;
 
         float4 offset = float4(sample_pos, 1.0f);
         offset = mul(projection, offset); // From view to clip-space
-        offset.xyz /= offset.w; // Perspective divide
-        offset.xyz  = offset.xyz * 0.5f + 0.5f; // Transform to range 0.0 - 1.0  
-
-        float sample_depth = pos_tex.Sample(gbuffer_sampler, offset.xy).z;
-        float range_check = smoothstep(0.0f, 1.0f, radius / abs(view_pos.z - sample_depth));
-        occlusion += (sample_depth >= sample_pos.z + bias ? 1.0f : 0.0f) * range_check;
+        offset.xyz /= offset.w; // Perspective division
+        offset.xyz = offset.xyz * 0.5f + 0.5f; // From clip-space to texture coordinates
+        offset.xy = float2(offset.x, 1.0f - offset.y); // Flip y-axis
+        float4 sample_depth = mul(view, float4(pos_tex.Sample(gbuffer_sampler, offset.xy).xyz, 1.0f));
+        float range_check = smoothstep(0.0f, 1.0f, radius / abs(view_pos.z - sample_depth.z));
+        if (sample_depth.z >= sample_pos.z + bias)
+        {
+            occlusion += range_check;
+        }
     }
 
-    occlusion = 1.0f - (occlusion / 64.0f);
-    occlusion = pow(occlusion, 2.0f);
+    occlusion = 1.0f - (occlusion / 16.0f);
+    occlusion = pow(occlusion, 3.0f);
     return float4(occlusion, occlusion, occlusion, occlusion);
 }
