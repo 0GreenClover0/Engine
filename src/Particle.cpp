@@ -45,10 +45,8 @@ Particle::Particle(AK::Badge<Particle>, float speed, glm::vec4 const& color, flo
 {
 }
 
-void Particle::initialize()
+void Particle::awake()
 {
-    Drawable::initialize();
-
     set_can_tick(true);
 
     entity->transform->set_scale({0.1f, 0.1f, 0.1f});
@@ -60,6 +58,8 @@ void Particle::initialize()
     m_rotation_direction = AK::random_bool() ? 1.0f : -1.0f;
 
     update_particle();
+
+    entity->transform->parent.lock()->set_euler_angles(Camera::get_main_camera()->entity->transform->get_euler_angles());
 }
 
 void Particle::draw() const
@@ -111,7 +111,7 @@ void Particle::move() const
 
     // Move up
     glm::vec3 const p = entity->transform->get_position();
-    entity->transform->set_position({p.x, p.y + delta_time * m_speed, p.z});
+    entity->transform->set_position({p.x, p.y + static_cast<float>(delta_time) * m_speed, p.z});
 
     // Rotate
     glm::vec3 const rot = entity->transform->get_euler_angles();

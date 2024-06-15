@@ -63,12 +63,13 @@ void ParticleSystem::update_system()
 
             auto const particle_parent = Entity::create("PARTICLE_PARENT" + AK::generate_guid());
             auto const particle = Entity::create("PARTICLE_" + AK::generate_guid());
-            particle->add_component(Particle::create(m_spawn_data_vector[i].particle_speed,
-                                                     {color.r, color.g, color.b, m_spawn_data_vector[i].spawn_alpha}, emitter_bounds,
-                                                     sprite_path));
 
             particle_parent->transform->set_parent(entity->transform);
             particle->transform->set_parent(particle_parent->transform);
+
+            particle->add_component(Particle::create(m_spawn_data_vector[i].particle_speed,
+                                                     {color.r, color.g, color.b, m_spawn_data_vector[i].spawn_alpha}, emitter_bounds,
+                                                     sprite_path));
 
             // Adjust scale
             float const scale_factor = AK::random_float(min_particle_size, max_particle_size);
