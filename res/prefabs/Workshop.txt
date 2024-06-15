@@ -1,21 +1,23 @@
 Scene: Untitled
 Entities:
   - Entity: Workshop
-    guid: 9e3e848abd40f98bdc69739073fcab3f2433c238668224c366f09b0115f2ba83
+    guid: e04579ef379ef2454b912135ffca835a99298d918a5beb56434c23bf20abee04
     Name: Workshop
     TransformComponent:
       Translation: [5.03000021, 0.0700000003, 2.78999996]
-      Rotation: [0, -0, 0]
+      Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: d661f1e56d48c4d9fd8f0722afa807187cab342a47f4db49efc5b0f345498c0a
+        guid: ""
     Components:
       - ComponentName: FactoryComponent
-        guid: 52e396d002181743558411a8f979fd2274c7a67216f6aea67bc6f9c88d5a75fc
+        guid: 0d743caf48a6f51c148adb2715127f3d2baff71af6a3a44924c56aa56214e92f
         custom_name: ""
         type: 1
+        lights:
+          []
       - ComponentName: ModelComponent
-        guid: 545d91a6e1dc5e97ba9b6d9a2662c9bf208acc181956c5de2f8042fd4bc755e0
+        guid: ceaf48d039f44e3532b424194300e3c055668c3edba3c317fb610f7ac05279f1
         custom_name: ""
         model_path: ./res/models\workshop\workshop.gltf
         material:
@@ -27,3 +29,13 @@ Entities:
           RenderOrder: 0
           NeedsForward: false
           CastsShadows: true
+      - ComponentName: Collider2DComponent
+        guid: 20f17e6d98509c6f37ee984187556eb0723a09928bc628e008fb2c8e2efc5841
+        custom_name: ""
+        offset: [0, 0]
+        is_trigger: false
+        is_static: true
+        collider_type: 1
+        width: 1
+        height: 1
+        radius: 0.300000012

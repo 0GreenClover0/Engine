@@ -1,7 +1,7 @@
 Scene: Untitled
 Entities:
   - Entity: Generator
-    guid: 546b170240de390b29b19c1927c12ca74476a42b60d59d900ac10896d73dc6e3
+    guid: 8793381d82d96d9609178780422c208b7d07c6e50ba953a2b385426106d917ff
     Name: Generator
     TransformComponent:
       Translation: [-5.84570312, 0.100000001, 2.09735203]
@@ -11,15 +11,15 @@ Entities:
         guid: ""
     Components:
       - ComponentName: FactoryComponent
-        guid: c0d83bb40a279064a75aa9193071b06a5cd3583dd6d2dfa672a946dde09403cc
+        guid: aac6e6de71e0b35ec413c1a4751e14891859b265838ee8675a78188099d4adb8
         custom_name: ""
         type: 0
         lights:
-          - guid: 7330c67585038a6e3c72073cbb4162e22bd90236793b8bce82e0fabbc22eb740
-          - guid: 4c4dd2ceda0a4b4b7444c0e344714ce3d41926bf8b0fdca6317bb10adacc18f9
-          - guid: 4ea55fd77b8191ff9c858d58d33a772b82af36ff1f7b310fe9e7a2be0343e52f
+          - guid: 01c9ad1c5a09294342489f68da5a8370517d8191281494296bac6328b44aa50b
+          - guid: 95565894bde9f603cded207435ccab88ec442ed2b960e597aad070f17e7d8591
+          - guid: 7db8696734a1512913bfac2b889925ebada404db364e4837cb210754dcd12f7c
       - ComponentName: ModelComponent
-        guid: a2da65b614c755ea6cbbc1d20da2011d7b90729e983098b8cab57598a2984fdc
+        guid: bfe65461b1136358e51daecbf51bd74180b6f0369fcddb8fa1e70ed701501b82
         custom_name: ""
         model_path: ./res/models\generator\generator.gltf
         material:
@@ -31,18 +31,28 @@ Entities:
           RenderOrder: 0
           NeedsForward: false
           CastsShadows: true
+      - ComponentName: Collider2DComponent
+        guid: 5f29b2af9a1443b51c86c9b604d30f33340a7cc7fb0d018f11d883af2829e96a
+        custom_name: ""
+        offset: [0, 0]
+        is_trigger: false
+        is_static: true
+        collider_type: 1
+        width: 1
+        height: 1
+        radius: 0.300000012
   - Entity: Light1
-    guid: 878648e4d840e4fdfc8b3103b2bf864676dab9f995fb3705d7300de8e69d04ec
+    guid: 42b224a3495662d42ef0862a6387099598786673486edb39850ea91bacdb09ab
     Name: Light1
     TransformComponent:
       Translation: [-0.0707216263, 0.428870887, -0.0539073944]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: 546b170240de390b29b19c1927c12ca74476a42b60d59d900ac10896d73dc6e3
+        guid: 8793381d82d96d9609178780422c208b7d07c6e50ba953a2b385426106d917ff
     Components:
       - ComponentName: PointLightComponent
-        guid: 7330c67585038a6e3c72073cbb4162e22bd90236793b8bce82e0fabbc22eb740
+        guid: 01c9ad1c5a09294342489f68da5a8370517d8191281494296bac6328b44aa50b
         custom_name: ""
         constant: 1
         linear: 10
@@ -53,17 +63,17 @@ Entities:
         m_near_plane: 0.5
         m_far_plane: 25
   - Entity: Light2
-    guid: 28174688aa13e0255ced316115e281f046274eef1f4c988661fab05e53be3d94
+    guid: 095c7a5b1a1b0c78b7cdb373ceed2d9cb5c2d4b6525dbe20f3bd72215f016a43
     Name: Light2
     TransformComponent:
       Translation: [0.053319931, 0.428870887, -0.0539073944]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: 546b170240de390b29b19c1927c12ca74476a42b60d59d900ac10896d73dc6e3
+        guid: 8793381d82d96d9609178780422c208b7d07c6e50ba953a2b385426106d917ff
     Components:
       - ComponentName: PointLightComponent
-        guid: 4c4dd2ceda0a4b4b7444c0e344714ce3d41926bf8b0fdca6317bb10adacc18f9
+        guid: 95565894bde9f603cded207435ccab88ec442ed2b960e597aad070f17e7d8591
         custom_name: ""
         constant: 1
         linear: 10
@@ -74,17 +84,17 @@ Entities:
         m_near_plane: 0.5
         m_far_plane: 25
   - Entity: Light3
-    guid: 3d606e51efbafbd74d09a565c8e54fb3e65f225f4997782ffa4b1aa8fd7ae8bf
+    guid: 4e81ac56e171dda14119bfea488b8844011a95ba58a44bdc5b7f72823039810b
     Name: Light3
     TransformComponent:
       Translation: [0.178658962, 0.428870887, -0.0539073944]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: 546b170240de390b29b19c1927c12ca74476a42b60d59d900ac10896d73dc6e3
+        guid: 8793381d82d96d9609178780422c208b7d07c6e50ba953a2b385426106d917ff
     Components:
       - ComponentName: PointLightComponent
-        guid: 4ea55fd77b8191ff9c858d58d33a772b82af36ff1f7b310fe9e7a2be0343e52f
+        guid: 7db8696734a1512913bfac2b889925ebada404db364e4837cb210754dcd12f7c
         custom_name: ""
         constant: 1
         linear: 10
