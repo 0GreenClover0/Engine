@@ -55,19 +55,6 @@ inline glm::vec2 convert_3d_to_2d(glm::vec3 const& v)
     return {v.x, v.z};
 }
 
-// Maps range A to B
-inline float map_range_clamped(float const min_a, float const max_a, float const min_b, float const max_b, float value)
-{
-    // First, clamp the value within range A to handle values outside the range
-    value = std::max(min_a, std::min(max_a, value));
-
-    // Map the clamped value from range A to range B
-    float const mapped_value = min_b + (value - min_a) * (max_b - min_b) / (max_a - min_a);
-
-    // Clamp the mapped value within range B and return
-    return std::max(min_b, std::min(max_b, mapped_value));
-}
-
 inline std::string generate_guid()
 {
     std::string result;

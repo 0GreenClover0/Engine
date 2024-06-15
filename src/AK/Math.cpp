@@ -52,6 +52,35 @@ bool Math::are_ranges_overlapping(glm::vec2 const& a, glm::vec2 const& b)
     return a.x <= b.y && a.y >= b.x;
 }
 
+bool Math::is_point_inside_rectangle(glm::vec2 const& point, std::array<glm::vec2, 4> const& rectangle_corners)
+{
+    float const x = point.x;
+    float const y = point.y;
+
+    float const minX =
+        std::min(rectangle_corners[0].x, std::min(rectangle_corners[1].x, std::min(rectangle_corners[2].x, rectangle_corners[3].x)));
+    float const maxX =
+        std::max(rectangle_corners[0].x, std::max(rectangle_corners[1].x, std::max(rectangle_corners[2].x, rectangle_corners[3].x)));
+    float const minY =
+        std::min(rectangle_corners[0].y, std::min(rectangle_corners[1].y, std::min(rectangle_corners[2].y, rectangle_corners[3].y)));
+    float const maxY =
+        std::max(rectangle_corners[0].y, std::max(rectangle_corners[1].y, std::max(rectangle_corners[2].y, rectangle_corners[3].y)));
+
+    return x >= minX && x <= maxX && y >= minY && y <= maxY;
+}
+
+float Math::map_range_clamped(float const min_a, float const max_a, float const min_b, float const max_b, float value)
+{
+    // First, clamp the value within range A to handle values outside the range
+    value = std::max(min_a, std::min(max_a, value));
+
+    // Map the clamped value from range A to range B
+    float const mapped_value = min_b + (value - min_a) * (max_b - min_b) / (max_a - min_a);
+
+    // Clamp the mapped value within range B and return
+    return std::max(min_b, std::min(max_b, mapped_value));
+}
+
 float Math::get_ranges_overlap_length(glm::vec2 const& a, glm::vec2 const& b)
 {
     // A and B are ranges and it's assumed that a.x <= a.y and b.x <= b.y
