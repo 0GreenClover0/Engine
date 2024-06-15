@@ -144,4 +144,5 @@ void GameController::reset_level()
 
     LevelController::get_instance()->entity->get_component<ShipSpawner>()->get_spawn_paths();
     LevelController::get_instance()->on_lighthouse_upgraded();
+    LevelController::get_instance()->factories[1].lock()->update_lights();
 }
