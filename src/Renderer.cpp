@@ -15,6 +15,8 @@
 #include "ShaderFactory.h"
 #include "Skybox.h"
 
+#include <glm/gtx/norm.hpp>
+
 void Renderer::initialize()
 {
     initialize_global_renderer_settings();
@@ -67,10 +69,21 @@ void Renderer::unregister_drawable(std::shared_ptr<Drawable> const& drawable)
 void Renderer::register_material(std::shared_ptr<Material> const& material)
 {
     if (material->is_gpu_instanced)
+    {
         m_instanced_materials.emplace_back(material);
+    }
 
     if (material->has_custom_render_order())
-        m_custom_render_order_materials.insert({material->get_render_order(), material});
+    {
+        if (material->get_render_order() <= aa_render_order)
+        {
+            m_custom_render_order_materials_before_aa.insert({material->get_render_order(), material});
+        }
+        else
+        {
+            m_custom_render_order_materials_after_aa.insert({material->get_render_order(), material});
+        }
+    }
 
     if (material->is_transparent)
     {
@@ -81,11 +94,24 @@ void Renderer::register_material(std::shared_ptr<Material> const& material)
 void Renderer::unregister_material(std::shared_ptr<Material> const& material)
 {
     if (material->is_gpu_instanced)
+    {
         AK::swap_and_erase(m_instanced_materials, material);
+    }
 
     // FIXME: Not sure if find works
     if (material->has_custom_render_order())
-        m_custom_render_order_materials.erase(m_custom_render_order_materials.find({material->get_render_order(), material}));
+    {
+        if (material->get_render_order() <= aa_render_order)
+        {
+            m_custom_render_order_materials_before_aa.erase(
+                m_custom_render_order_materials_before_aa.find({material->get_render_order(), material}));
+        }
+        else
+        {
+            m_custom_render_order_materials_after_aa.erase(
+                m_custom_render_order_materials_after_aa.find({material->get_render_order(), material}));
+        }
+    }
 
     if (material->is_transparent)
     {
@@ -224,14 +250,16 @@ void Renderer::render() const
     // Renders opaque objects
     render_lighting_pass();
 
-    // Renders transparent objects and UI
+    // Renders transparent objects
     render_forward_pass(projection_view, projection_view_no_translation);
+
+    render_custom_render_order_before_aa(projection_view, projection_view_no_translation);
 
     // Render AA (FXAA)
     render_aa();
 
     // Render custom render order materials, so in our case UI, as it should not be affected by AA
-    render_custom_render_order(projection_view, projection_view_no_translation);
+    render_custom_render_order_after_aa(projection_view, projection_view_no_translation);
 }
 
 void Renderer::render_geometry_pass(glm::mat4 const& projection_view) const
@@ -246,9 +274,40 @@ void Renderer::render_aa() const
 {
 }
 
-void Renderer::render_custom_render_order(glm::mat4 const& projection_view, glm::mat4 const& projection_view_no_translation) const
+void Renderer::render_custom_render_order_before_aa(glm::mat4 const& projection_view, glm::mat4 const& projection_view_no_translation) const
 {
-    for (auto const& [render_order, material] : m_custom_render_order_materials)
+    bool drawn_transparent = false;
+
+    for (auto const& [render_order, material] : m_custom_render_order_materials_before_aa)
+    {
+        if (render_order == transparent_render_order)
+        {
+            if (!drawn_transparent)
+            {
+                draw_transparent(projection_view, projection_view_no_translation);
+                drawn_transparent = true;
+            }
+
+            if (material->is_transparent)
+            {
+                continue;
+            }
+        }
+
+        material->shader->use();
+
+        update_shader(material->shader, projection_view, projection_view_no_translation);
+
+        if (material->is_gpu_instanced)
+            draw_instanced(material, projection_view, projection_view_no_translation);
+        else
+            draw(material, projection_view);
+    }
+}
+
+void Renderer::render_custom_render_order_after_aa(glm::mat4 const& projection_view, glm::mat4 const& projection_view_no_translation) const
+{
+    for (auto const& [render_order, material] : m_custom_render_order_materials_after_aa)
     {
         material->shader->use();
 
@@ -414,4 +473,51 @@ void Renderer::draw_instanced(std::shared_ptr<Material> const& material, glm::ma
     shader->set_float("material.shininess", first_drawable->material->shininess);
 
     first_drawable->draw_instanced(material->model_matrices.size());
+}
+
+void Renderer::draw_transparent(glm::mat4 const& projection_view, glm::mat4 const& projection_view_no_translation) const
+{
+    std::vector<std::shared_ptr<Drawable>> transparent_drawables = {};
+
+    for (auto const& material : m_transparent_materials)
+    {
+        transparent_drawables.insert(transparent_drawables.end(), material->drawables.begin(), material->drawables.end());
+    }
+
+    std::shared_ptr<Camera> const camera = Camera::get_main_camera();
+    glm::vec3 camera_position = camera->entity->transform->get_position();
+
+    std::ranges::sort(transparent_drawables, [&camera_position](std::shared_ptr<Drawable> const& a, std::shared_ptr<Drawable> const& b) {
+        float const distance_a = glm::distance2(camera_position, a->entity->transform->get_position());
+        float const distance_b = glm::distance2(camera_position, b->entity->transform->get_position());
+        return distance_a >= distance_b; // For back-to-front rendering
+    });
+
+    for (auto const& drawable : transparent_drawables)
+    {
+        drawable->material->shader->use();
+
+        update_shader(drawable->material->shader, projection_view, projection_view_no_translation);
+
+#if _DEBUG
+        if (drawable->material->is_gpu_instanced)
+        {
+            Debug::log("GPU instanced transparent materials are not supported.", DebugType::Error);
+            return;
+        }
+#endif
+
+        update_material(drawable->material);
+
+        update_object(drawable, drawable->material, projection_view);
+
+        if (drawable->material->is_billboard)
+        {
+            drawable->entity->transform->set_euler_angles(Camera::get_main_camera()->entity->transform->get_euler_angles());
+        }
+
+        drawable->draw();
+
+        unbind_material(drawable->material);
+    }
 }
