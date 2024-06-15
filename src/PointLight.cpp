@@ -26,6 +26,11 @@ void PointLight::update()
     {
         pulsate();
     }
+
+    if (m_burn_out)
+    {
+        burn_out();
+    }
 }
 
 void PointLight::draw_editor()
@@ -139,6 +144,17 @@ void PointLight::set_pulsate(bool const value)
     m_action_timer = 0.0f;
 }
 
+void PointLight::set_burn_out(bool const value)
+{
+    if (m_burn_out == value)
+    {
+        return;
+    }
+
+    m_burn_out = value;
+    m_action_timer = 0.0f;
+}
+
 void PointLight::pulsate()
 {
     m_action_timer += static_cast<float>(delta_time);
@@ -150,4 +166,27 @@ void PointLight::pulsate()
 
     linear = std::abs(std::sin(m_action_timer)) * 10.0f + 1.0f;
     quadratic = std::abs(std::sin(m_action_timer)) * 10.0f + 1.0f;
+}
+
+void PointLight::burn_out()
+{
+    m_action_timer += static_cast<float>(delta_time);
+
+    if (m_action_timer > 1.0f)
+    {
+        set_burn_out(false);
+        set_enabled(false);
+        return;
+    }
+
+    linear = ease_in_back(m_action_timer) * 10.0f + 1.0f;
+    quadratic = ease_in_back(m_action_timer) * 10.0f + 1.0f;
+}
+
+float PointLight::ease_in_back(float const x)
+{
+    float constexpr c1 = 1.70158f;
+    float constexpr c3 = c1 + 1.0f;
+
+    return c3 * x * x * x - c1 * x * x;
 }

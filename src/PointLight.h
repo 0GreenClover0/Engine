@@ -25,6 +25,7 @@ public:
     glm::mat4 get_projection_view_matrix(u32 const face_index);
 
     void set_pulsate(bool const value);
+    void set_burn_out(bool const value);
 
     // Default values for an around 50m distance of cover
     float constant = 1.0f; // Should not be changed
@@ -38,8 +39,12 @@ private:
     void update_pv_matrices();
 
     void pulsate();
+    void burn_out();
+
+    static float ease_in_back(float const x);
 
     bool m_pulsate = false;
+    bool m_burn_out = false;
 
     float m_action_timer = 0.0f;
 
