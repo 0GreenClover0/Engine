@@ -47,7 +47,7 @@ protected:
                                glm::mat4 const& projection_view) const override;
 
     virtual void unbind_material(std::shared_ptr<Material> const& material) const override;
-    virtual void bind_universal_resources() const;
+    virtual void bind_universal_resources() const override;
 
 private:
     virtual void initialize_global_renderer_settings() override;
@@ -116,6 +116,7 @@ private:
     ID3D11DepthStencilView* m_depth_stencil_view = nullptr;
     ID3D11Texture2D* m_depth_stencil_buffer = nullptr;
     ID3D11DepthStencilState* m_depth_stencil_state = nullptr;
+    ID3D11DepthStencilState* m_transparent_depth_stencil_state = nullptr;
     ID3D11Texture2D* m_render_target_texture = nullptr;
     ID3D11ShaderResourceView* m_render_target_texture_view = nullptr;
     ID3D11Texture2D* m_multipass_render_texture = nullptr;
