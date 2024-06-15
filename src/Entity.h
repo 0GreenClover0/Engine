@@ -41,7 +41,10 @@ public:
             component->awake();
             component->has_been_awaken = true;
 
-            component->on_enabled();
+            if (component->enabled())
+            {
+                component->on_enabled();
+            }
         }
         else
         {
@@ -73,7 +76,10 @@ public:
             component->awake();
             component->has_been_awaken = true;
 
-            component->on_enabled();
+            if (component->enabled())
+            {
+                component->on_enabled();
+            }
         }
         else
         {
@@ -106,7 +112,10 @@ public:
             component->awake();
             component->has_been_awaken = true;
 
-            component->on_enabled();
+            if (component->enabled())
+            {
+                component->on_enabled();
+            }
         }
         else
         {
