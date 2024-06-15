@@ -244,6 +244,7 @@ private:
     i32 m_last_window_id = 0;
 
     bool m_polygon_mode_active = false;
+    bool m_always_newest_logs = false;
     i64 m_frame_count = 0;
     double m_current_time = 0.0;
     double m_last_second = 0.0;

@@ -180,6 +180,8 @@ void Editor::draw_debug_window(std::shared_ptr<EditorWindow> const& window)
     draw_window_menu_bar(window);
 
     ImGui::Checkbox("Polygon mode", &m_polygon_mode_active);
+    ImGui::SameLine();
+    ImGui::Checkbox("Show newest logs", &m_always_newest_logs);
     ImGui::Text("Application average %.3f ms/frame", m_average_ms_per_frame);
     draw_scene_save();
 
@@ -215,6 +217,11 @@ void Editor::draw_debug_window(std::shared_ptr<EditorWindow> const& window)
                 ImGui::Text(Debug::debug_messages[i].text.c_str());
                 ImGui::PopStyleColor();
             }
+        }
+
+        if (m_always_newest_logs)
+        {
+            ImGui::SetScrollHereY(1.0f); // Scroll to bottom so the latest logs are always shown
         }
 
         ImGui::EndListBox();
