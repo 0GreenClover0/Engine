@@ -14,7 +14,7 @@
 std::shared_ptr<Water> Water::create()
 {
     auto const shader = ResourceManager::get_instance().load_shader("./res/shaders/water.hlsl", "./res/shaders/water.hlsl");
-    auto material = Material::create(shader);
+    auto material = Material::create(shader, 1001);
     material->casts_shadows = false;
     material->needs_skybox = true;
     material->needs_forward_rendering = true;

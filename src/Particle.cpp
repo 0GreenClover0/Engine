@@ -12,7 +12,7 @@
 std::shared_ptr<Particle> Particle::create()
 {
     auto const particle_shader = ResourceManager::get_instance().load_shader("./res/shaders/particle.hlsl", "./res/shaders/particle.hlsl");
-    auto const particle_material = Material::create(particle_shader);
+    auto const particle_material = Material::create(particle_shader, 1000, false, false, true);
     particle_material->casts_shadows = false;
     particle_material->needs_forward_rendering = true;
 
@@ -28,7 +28,7 @@ std::shared_ptr<Particle> Particle::create()
 std::shared_ptr<Particle> Particle::create(float speed, glm::vec4 const& color, float spawn_bounds, std::string const& path)
 {
     auto const particle_shader = ResourceManager::get_instance().load_shader("./res/shaders/particle.hlsl", "./res/shaders/particle.hlsl");
-    auto const particle_material = Material::create(particle_shader);
+    auto const particle_material = Material::create(particle_shader, 1000, false, false, true);
     particle_material->casts_shadows = false;
     particle_material->needs_forward_rendering = true;
 
