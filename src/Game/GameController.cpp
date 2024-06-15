@@ -50,10 +50,7 @@ void GameController::awake()
     m_levels_order.pop_back();
     current_scene = SceneSerializer::load_prefab(level);
 
-    Player::get_instance()->reset_player();
-
-    LevelController::get_instance()->entity->get_component<ShipSpawner>()->get_spawn_paths();
-    LevelController::get_instance()->on_lighthouse_upgraded();
+    reset_level();
 
     set_can_tick(true);
 }
@@ -123,10 +120,7 @@ void GameController::move_to_next_scene()
 
     next_scene = SceneSerializer::load_prefab(m_levels_order.back());
 
-    Player::get_instance()->reset_player();
-
-    LevelController::get_instance()->entity->get_component<ShipSpawner>()->get_spawn_paths();
-    LevelController::get_instance()->on_lighthouse_upgraded();
+    reset_level();
 
     auto const& path = entity->get_component<Path>();
     m_current_position = path->points[m_level_number];
@@ -142,4 +136,12 @@ void GameController::move_to_next_scene()
     m_level_number++;
 
     m_move_to_next_scene = true;
+}
+
+void GameController::reset_level()
+{
+    Player::get_instance()->reset_player();
+
+    LevelController::get_instance()->entity->get_component<ShipSpawner>()->get_spawn_paths();
+    LevelController::get_instance()->on_lighthouse_upgraded();
 }
