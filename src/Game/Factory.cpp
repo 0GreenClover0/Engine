@@ -18,11 +18,6 @@ Factory::Factory(AK::Badge<Factory>)
 
 void Factory::awake()
 {
-    if (type == FactoryType::Generator)
-    {
-        update_lights();
-    }
-
     set_can_tick(true);
 }
 
