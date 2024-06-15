@@ -10,8 +10,8 @@
 #include "GBuffer.h"
 #include "Model.h"
 #include "ResourceManager.h"
-#include "ShadingDefines.h"
 #include "ShaderFactory.h"
+#include "ShadingDefines.h"
 #include "Skybox.h"
 #include "SkyboxFactory.h"
 #include "TextureLoaderDX11.h"
@@ -144,16 +144,16 @@ std::shared_ptr<RendererDX11> RendererDX11::create()
     hr = renderer->get_device()->CreateSamplerState(&repeat_sampler_desc, &renderer->m_repeat_sampler_state);
     assert(SUCCEEDED(hr));
 
-    D3D11_SAMPLER_DESC default_sampler_desc = {};
-    default_sampler_desc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-    default_sampler_desc.AddressU = D3D11_TEXTURE_ADDRESS_BORDER;
-    default_sampler_desc.AddressV = D3D11_TEXTURE_ADDRESS_BORDER;
-    default_sampler_desc.AddressW = D3D11_TEXTURE_ADDRESS_BORDER;
-    default_sampler_desc.MipLODBias = 0.0f;
-    default_sampler_desc.MaxAnisotropy = 1;
-    default_sampler_desc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+    D3D11_SAMPLER_DESC clamp_sampler_desc = {};
+    clamp_sampler_desc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+    clamp_sampler_desc.AddressU = D3D11_TEXTURE_ADDRESS_BORDER;
+    clamp_sampler_desc.AddressV = D3D11_TEXTURE_ADDRESS_BORDER;
+    clamp_sampler_desc.AddressW = D3D11_TEXTURE_ADDRESS_BORDER;
+    clamp_sampler_desc.MipLODBias = 0.0f;
+    clamp_sampler_desc.MaxAnisotropy = 1;
+    clamp_sampler_desc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
 
-    hr = renderer->get_device()->CreateSamplerState(&default_sampler_desc, &renderer->m_default_sampler_state);
+    hr = renderer->get_device()->CreateSamplerState(&clamp_sampler_desc, &renderer->m_clamp_border_sampler_state);
     assert(SUCCEEDED(hr));
 
     renderer->m_shadow_texture = ResourceManager::get_instance().load_texture("./res/textures/noise.jpg", TextureType::Diffuse);
@@ -296,7 +296,7 @@ void RendererDX11::render_ssao() const
 
     m_gbuffer->bind_shader_resources();
 
-    g_pd3dDeviceContext->PSSetSamplers(0, 1, &m_default_sampler_state);
+    g_pd3dDeviceContext->PSSetSamplers(0, 1, &m_clamp_border_sampler_state);
     g_pd3dDeviceContext->PSSetSamplers(1, 1, &m_repeat_sampler_state);
 
     g_pd3dDeviceContext->RSSetState(g_rasterizer_state_solid);
@@ -442,7 +442,7 @@ void RendererDX11::render_lighting_pass() const
 
     update_shader(nullptr, glm::mat4(1.0f), glm::mat4(1.0f));
 
-    g_pd3dDeviceContext->PSSetSamplers(0, 1, &m_default_sampler_state);
+    g_pd3dDeviceContext->PSSetSamplers(0, 1, &m_clamp_border_sampler_state);
 
     g_pd3dDeviceContext->OMSetRenderTargets(1, &g_multi_pass_render_target_view, nullptr);
 
@@ -474,6 +474,8 @@ void RendererDX11::bind_for_render_frame() const
     std::array constexpr blend_factor = {0.0f, 0.0f, 0.0f, 0.0f};
     get_device_context()->OMSetBlendState(m_forward_blend_state, blend_factor.data(), 0xffffffff);
     get_device_context()->OMSetDepthStencilState(m_transparent_depth_stencil_state, 0);
+    g_pd3dDeviceContext->PSSetSamplers(2, 1, &m_repeat_sampler_state);
+    g_pd3dDeviceContext->PSSetSamplers(3, 1, &m_clamp_border_sampler_state);
 }
 
 void RendererDX11::setup_shadow_mapping()
