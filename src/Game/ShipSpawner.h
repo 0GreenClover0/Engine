@@ -50,6 +50,8 @@ public:
     std::vector<SpawnEvent> main_event_spawn = {};
     std::vector<SpawnEvent> backup_spawn = {};
 
+    void burn_out_all_ships(bool const value) const;
+
 private:
     void spawn_ship(SpawnEvent const* being_spawn);
     void prepare_for_spawn();
