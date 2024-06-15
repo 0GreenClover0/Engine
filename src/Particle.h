@@ -13,7 +13,7 @@ public:
     explicit Particle(AK::Badge<Particle>, float speed, glm::vec4 const& color, float spawn_bounds, std::string const& path,
                       std::shared_ptr<Material> const& mat);
 
-    virtual void initialize() override;
+    virtual void awake() override;
 
     virtual void update() override;
 
