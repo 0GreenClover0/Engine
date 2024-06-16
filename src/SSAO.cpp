@@ -1,5 +1,5 @@
 #include "SSAO.h"
-
+#include <chrono>
 #include <random>
 
 #include <glm/geometric.hpp>
@@ -16,6 +16,9 @@ std::shared_ptr<SSAO> SSAO::create()
 
 SSAO::SSAO(AK::Badge<SSAO>)
 {
+    u32 const seed = std::chrono::steady_clock::now().time_since_epoch().count();
+    m_generator = std::default_random_engine(seed);
+
     m_pass_shader = ResourceManager::get_instance().load_shader("./res/shaders/ssao.hlsl", "./res/shaders/ssao.hlsl");
 
     update();
@@ -44,14 +47,13 @@ void SSAO::bind_shader_resources() const
 void SSAO::update()
 {
     std::uniform_real_distribution random_floats(0.0f, 1.0f);
-    std::default_random_engine generator = {};
 
     for (u32 i = 0; i < kernel_size; ++i)
     {
-        glm::vec4 sample(random_floats(generator) * 2.0f - 1.0f, random_floats(generator) * 2.0f - 1.0f, random_floats(generator), 0.0f);
+        glm::vec4 sample(random_floats(m_generator) * 2.0f - 1.0f, random_floats(m_generator) * 2.0f - 1.0f, random_floats(m_generator), 0.0f);
 
         sample = glm::normalize(sample);
-        sample *= random_floats(generator);
+        sample *= random_floats(m_generator);
 
         float scale = static_cast<float>(i) / static_cast<float>(kernel_size);
         scale = std::lerp(0.1f, 1.0f, scale * scale);
@@ -59,10 +61,10 @@ void SSAO::update()
         m_ssao_kernel[i] = sample;
     }
 
-    std::array<glm::vec3, noise_size> ssao_noise = {};
+    std::array<glm::vec4, noise_size> ssao_noise = {};
     for (u32 i = 0; i < noise_size; ++i)
     {
-        ssao_noise[i] = {random_floats(generator) * 2.0f - 1.0f, random_floats(generator) * 2.0f - 1.0f, 0.0f};
+        ssao_noise[i] = {random_floats(m_generator) * 2.0f - 1.0f, random_floats(m_generator) * 2.0f - 1.0f, 0.0f, 1.0f};
     }
 
     if (m_ssao_kernel_rotations_buffer != nullptr)
@@ -75,7 +77,7 @@ void SSAO::update()
     rotations_tex_desc.Height = 4;
     rotations_tex_desc.MipLevels = 1;
     rotations_tex_desc.ArraySize = 1;
-    rotations_tex_desc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
+    rotations_tex_desc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
     rotations_tex_desc.SampleDesc.Count = 1;
     rotations_tex_desc.SampleDesc.Quality = 0;
     rotations_tex_desc.Usage = D3D11_USAGE_DEFAULT;
@@ -83,7 +85,13 @@ void SSAO::update()
     rotations_tex_desc.CPUAccessFlags = 0;
 
     auto renderer = RendererDX11::get_instance_dx11();
-    HRESULT hr = renderer->get_device()->CreateTexture2D(&rotations_tex_desc, nullptr, &m_ssao_kernel_rotations_buffer);
+    D3D11_SUBRESOURCE_DATA ssao_noise_subresource_data = {};
+    ssao_noise_subresource_data.pSysMem = ssao_noise.data();
+    ssao_noise_subresource_data.SysMemPitch = sizeof(glm::vec4) * 4; // Row size in bytes
+    ssao_noise_subresource_data.SysMemSlicePitch = 0;
+
+    HRESULT hr =
+        renderer->get_device()->CreateTexture2D(&rotations_tex_desc, &ssao_noise_subresource_data, &m_ssao_kernel_rotations_buffer);
     assert(SUCCEEDED(hr));
 
     if (m_ssao_texture != nullptr)
@@ -127,7 +135,7 @@ void SSAO::update()
     }
 
     D3D11_SHADER_RESOURCE_VIEW_DESC rotations_srv_desc = {};
-    rotations_srv_desc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
+    rotations_srv_desc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
     rotations_srv_desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
     rotations_srv_desc.Texture2D.MostDetailedMip = 0;
     rotations_srv_desc.Texture2D.MipLevels = 1;
