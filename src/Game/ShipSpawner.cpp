@@ -416,7 +416,14 @@ bool ShipSpawner::is_time_for_last_chance()
         return false;
     }
 
-    if (Player::get_instance()->food < LevelController::get_instance()->map_food - last_chance_food_threshold)
+    i32 food_shortage = LevelController::get_instance()->map_food - Player::get_instance()->food;
+
+    if (food_shortage <= 0)
+    {
+        return false;
+    }
+
+    if (food_shortage > last_chance_food_threshold)
     {
         return false;
     }
@@ -425,8 +432,6 @@ bool ShipSpawner::is_time_for_last_chance()
     m_main_spawn.clear();
 
     SpawnEvent last_chance_event = {};
-
-    u32 food_shortage = LevelController::get_instance()->map_food - Player::get_instance()->food;
 
     while (food_shortage > 0)
     {
