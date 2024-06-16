@@ -584,6 +584,9 @@ void Editor::draw_scene_hierarchy(std::shared_ptr<EditorWindow> const& window)
 
 void Editor::draw_entity_recursively(std::shared_ptr<Transform> const& transform)
 {
+    if (transform == nullptr || transform->entity.expired())
+        return;
+
     auto const entity = transform->entity.lock();
     ImGuiTreeNodeFlags const node_flags =
         (!m_selected_entity.expired() && m_selected_entity.lock()->hashed_guid == entity->hashed_guid ? ImGuiTreeNodeFlags_Selected : 0)
