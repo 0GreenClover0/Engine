@@ -2,6 +2,7 @@
 
 #include "AK/Badge.h"
 #include "Component.h"
+#include "Water.h"
 
 class Port;
 class LighthouseLight;
@@ -24,6 +25,7 @@ public:
     float enterable_distance = 0.6f;
 
     std::weak_ptr<LighthouseLight> light = {};
+    std::weak_ptr<Water> water = {};
 
     std::weak_ptr<Entity> spawn_position = {};
 

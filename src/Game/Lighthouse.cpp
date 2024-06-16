@@ -2,6 +2,7 @@
 
 #include "Collider2D.h"
 #include "Entity.h"
+#include "Floater.h"
 #include "Game/LighthouseKeeper.h"
 #include "Game/LighthouseLight.h"
 #include "LevelController.h"
@@ -38,6 +39,7 @@ void Lighthouse::draw_editor()
 
     ImGuiEx::draw_ptr("Light", light);
     ImGuiEx::draw_ptr("Spawn", spawn_position);
+    ImGuiEx::draw_ptr("Water", water);
 }
 
 void Lighthouse::enter()
@@ -70,4 +72,5 @@ void Lighthouse::exit()
     keeper->transform->set_local_position(spawn_position.lock()->transform->get_position());
     keeper->get_component<LighthouseKeeper>()->port = LevelController::get_instance()->port;
     keeper->get_component<LighthouseKeeper>()->lighthouse = std::static_pointer_cast<Lighthouse>(shared_from_this());
+    keeper->get_component<Floater>()->water = water;
 }
