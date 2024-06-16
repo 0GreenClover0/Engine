@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Component.h"
+#include "FloatersManager.h"
 #include "Path.h"
 #include "Ship.h"
 
@@ -38,6 +39,7 @@ public:
 
     std::vector<std::weak_ptr<Path>> paths = {};
 
+    std::weak_ptr<FloatersManager> floaters_manager = {};
     std::weak_ptr<LighthouseLight> light = {};
 
     float const spawn_warning_time = 5.0f;

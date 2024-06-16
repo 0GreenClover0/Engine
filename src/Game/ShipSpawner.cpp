@@ -9,6 +9,7 @@
 #include "AK/Math.h"
 #include "Collider2D.h"
 #include "Entity.h"
+#include "Floater.h"
 #include "GameController.h"
 #include "Globals.h"
 #include "Player.h"
@@ -111,6 +112,7 @@ void ShipSpawner::draw_editor()
     Component::draw_editor();
 
     ImGuiEx::draw_ptr("Light", light);
+    ImGuiEx::draw_ptr("Floater manager", floaters_manager);
     ImGui::Separator();
 
     ImGui::InputFloat("Last Chance time threshold", &last_chance_time_threshold);
@@ -770,36 +772,45 @@ void ShipSpawner::spawn_ship(SpawnEvent const* being_spawn)
 {
     std::shared_ptr<Entity> ship;
 
+    FloaterSettings spawning_boat_settings = {};
     if (being_spawn->spawn_list.back() == ShipType::FoodSmall)
     {
         ship = SceneSerializer::load_prefab("ShipSmall");
+        spawning_boat_settings = floaters_manager.lock()->small_boat_settings;
     }
     else if (being_spawn->spawn_list.back() == ShipType::FoodMedium)
     {
         ship = SceneSerializer::load_prefab("ShipMedium");
+        spawning_boat_settings = floaters_manager.lock()->medium_boat_settings;
     }
     else if (being_spawn->spawn_list.back() == ShipType::FoodBig)
     {
         ship = SceneSerializer::load_prefab("ShipBig");
+        spawning_boat_settings = floaters_manager.lock()->big_boat_settings;
     }
     else if (being_spawn->spawn_list.back() == ShipType::Pirates)
     {
         ship = SceneSerializer::load_prefab("ShipPirates");
+        spawning_boat_settings = floaters_manager.lock()->pirate_boat_settings;
     }
     else if (being_spawn->spawn_list.back() == ShipType::Tool)
     {
         ship = SceneSerializer::load_prefab("ShipTool");
+        spawning_boat_settings = floaters_manager.lock()->tool_boat_settings;
     }
-
+    auto const floater = ship->add_component(
+        Floater::create(floaters_manager.lock()->water, spawning_boat_settings.sink_rate, spawning_boat_settings.side_floaters_offset,
+                        spawning_boat_settings.side_rotation_strength, spawning_boat_settings.forward_rotation_strength,
+                        spawning_boat_settings.forward_floaters_offset));
     ship->transform->set_local_position({m_spawn_position.back().x, 0.0f, m_spawn_position.back().y});
     ship->transform->set_parent(GameController::get_instance()->current_scene.lock()->transform);
 
     auto const& ship_comp = ship->get_component<Ship>();
-
     ship_comp->on_ship_destroyed.attach(&ShipSpawner::remove_ship, shared_from_this());
     ship_comp->maximum_speed = LevelController::get_instance()->ships_speed;
     ship_comp->light = light;
     ship_comp->spawner = std::static_pointer_cast<ShipSpawner>(shared_from_this());
+    ship_comp->floater = floater;
 
     ship_comp->set_start_direction();
 
