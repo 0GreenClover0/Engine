@@ -24,6 +24,9 @@ void PhysicsEngine::update_physics() const
 
 void PhysicsEngine::on_collision_enter(std::shared_ptr<Collider2D> const& collider, std::shared_ptr<Collider2D> const& other)
 {
+    // Lock other entity until this method finishes
+    auto const other_entity = other->entity;
+
     for (auto const& component : collider->entity->components)
     {
         component->on_collision_enter(other);
@@ -32,6 +35,9 @@ void PhysicsEngine::on_collision_enter(std::shared_ptr<Collider2D> const& collid
 
 void PhysicsEngine::on_collision_exit(std::shared_ptr<Collider2D> const& collider, std::shared_ptr<Collider2D> const& other)
 {
+    // Lock other entity until this method finishes
+    auto const other_entity = other->entity;
+
     for (auto const& component : collider->entity->components)
     {
         component->on_collision_exit(other);
@@ -40,6 +46,9 @@ void PhysicsEngine::on_collision_exit(std::shared_ptr<Collider2D> const& collide
 
 void PhysicsEngine::on_trigger_enter(std::shared_ptr<Collider2D> const& collider, std::shared_ptr<Collider2D> const& other)
 {
+    // Lock other entity until this method finishes
+    auto const other_entity = other->entity;
+
     for (auto const& component : collider->entity->components)
     {
         component->on_trigger_enter(other);
@@ -48,6 +57,9 @@ void PhysicsEngine::on_trigger_enter(std::shared_ptr<Collider2D> const& collider
 
 void PhysicsEngine::on_trigger_exit(std::shared_ptr<Collider2D> const& collider, std::shared_ptr<Collider2D> const& other)
 {
+    // Lock other entity until this method finishes
+    auto const other_entity = other->entity;
+
     for (auto const& component : collider->entity->components)
     {
         component->on_trigger_exit(other);
