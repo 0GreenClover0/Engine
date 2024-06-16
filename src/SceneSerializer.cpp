@@ -444,6 +444,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "custom_name" << YAML::Value << lighthouse->custom_name;
         out << YAML::Key << "enterable_distance" << YAML::Value << lighthouse->enterable_distance;
         out << YAML::Key << "light" << YAML::Value << lighthouse->light;
+        out << YAML::Key << "water" << YAML::Value << lighthouse->water;
         out << YAML::Key << "spawn_position" << YAML::Value << lighthouse->spawn_position;
         out << YAML::EndMap;
     }
