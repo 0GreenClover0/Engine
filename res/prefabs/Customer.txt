@@ -1,0 +1,102 @@
+Scene: Untitled
+Entities:
+  - Entity: Customer
+    guid: 458a3f9bfc26c1dc1b03c8c5d0ac1c19d1232ed4d45961e24292298e2c671211
+    Name: Customer
+    TransformComponent:
+      Translation: [0, 0, 0.0820000023]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: ""
+    Components:
+      - ComponentName: CustomerComponent
+        guid: ac7e4e481e666d8b76b4740e434d2b461c3a24015a43007d992cb9d5c7e353db
+        custom_name: ""
+        collider:
+          guid: c60366ec851a1f35f862bbfa3126669d1014ba3c23702b52931a241bd1008285
+        left_hand:
+          guid: 73617450066b2c7006a8d7dbd9c69f93c059fba5a54bdb62de141538646748cc
+        right_hand:
+          guid: d58251923688eda078c78fcc21146ab162cfff60662501a1be563eb34c09ce99
+      - ComponentName: Collider2DComponent
+        guid: c60366ec851a1f35f862bbfa3126669d1014ba3c23702b52931a241bd1008285
+        custom_name: ""
+        offset: [0, 0]
+        is_trigger: false
+        is_static: false
+        collider_type: 1
+        width: 0.100000001
+        height: 0.100000001
+        radius: 0.100000001
+        drag: 0.00999999978
+        velocity: [0, 0]
+  - Entity: Child
+    guid: a74d47606beca6f504df38195d6fe0415acddb7ab403cefdbc8489fe31dad984
+    Name: Child
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: 458a3f9bfc26c1dc1b03c8c5d0ac1c19d1232ed4d45961e24292298e2c671211
+    Components:
+      - ComponentName: ModelComponent
+        guid: 44b06cf7baeab44c31964b40c4ca84665fdb7c207c8114b9d045698dbecf8a2d
+        custom_name: ""
+        model_path: ./res/models\penguin\body.gltf
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+          NeedsForward: false
+          CastsShadows: true
+  - Entity: Left
+    guid: 73617450066b2c7006a8d7dbd9c69f93c059fba5a54bdb62de141538646748cc
+    Name: Left
+    TransformComponent:
+      Translation: [0, 0.172000006, -0.0820000023]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: a74d47606beca6f504df38195d6fe0415acddb7ab403cefdbc8489fe31dad984
+    Components:
+      - ComponentName: ModelComponent
+        guid: ecb6b7b819cfbe8b578ad7904336c94711b2f8dcec0ccca6350fafd3f0f019ef
+        custom_name: ""
+        model_path: ./res/models\penguin\wing_left.gltf
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+          NeedsForward: false
+          CastsShadows: true
+  - Entity: Right
+    guid: d58251923688eda078c78fcc21146ab162cfff60662501a1be563eb34c09ce99
+    Name: Right
+    TransformComponent:
+      Translation: [0, 0.172000006, 0.0820000023]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: a74d47606beca6f504df38195d6fe0415acddb7ab403cefdbc8489fe31dad984
+    Components:
+      - ComponentName: ModelComponent
+        guid: 9968acab040d9a2a79d454239bf2ddb954b0c1bc70dd9b306d3ed65143bb746d
+        custom_name: ""
+        model_path: ./res/models\penguin\wing_right.gltf
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+          NeedsForward: false
+          CastsShadows: true

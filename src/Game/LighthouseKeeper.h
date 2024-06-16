@@ -21,6 +21,8 @@ public:
     bool is_inside_port() const;
     void set_is_inside_port(bool const value);
 
+    glm::vec2 get_speed() const;
+
     void add_package();
     void remove_package();
 

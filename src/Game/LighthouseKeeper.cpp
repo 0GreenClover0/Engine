@@ -156,6 +156,11 @@ void LighthouseKeeper::set_is_inside_port(bool const value)
     m_is_inside_port = value;
 }
 
+glm::vec2 LighthouseKeeper::get_speed() const
+{
+    return m_speed;
+}
+
 void LighthouseKeeper::handle_input()
 {
     auto const& factories = LevelController::get_instance()->factories;
