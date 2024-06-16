@@ -38,12 +38,15 @@ public:
         //       If the component is constructed during the gameplay, we call the Awake immediately here.
         if (MainScene::get_instance()->is_running)
         {
-            component->awake();
-            component->has_been_awaken = true;
-
-            if (component->enabled())
+            if (!m_is_being_deserialized)
             {
-                component->on_enabled();
+                component->awake();
+                component->has_been_awaken = true;
+
+                if (component->enabled())
+                {
+                    component->on_enabled();
+                }
             }
         }
         else
@@ -73,12 +76,15 @@ public:
         //       If the component is constructed during the gameplay, we call the Awake immediately here.
         if (MainScene::get_instance()->is_running)
         {
-            component->awake();
-            component->has_been_awaken = true;
-
-            if (component->enabled())
+            if (!m_is_being_deserialized)
             {
-                component->on_enabled();
+                component->awake();
+                component->has_been_awaken = true;
+
+                if (component->enabled())
+                {
+                    component->on_enabled();
+                }
             }
         }
         else
@@ -109,12 +115,15 @@ public:
         //       If the component is constructed during the gameplay, we call the Awake immediately here.
         if (MainScene::get_instance()->is_running)
         {
-            component->awake();
-            component->has_been_awaken = true;
-
-            if (component->enabled())
+            if (!m_is_being_deserialized)
             {
-                component->on_enabled();
+                component->awake();
+                component->has_been_awaken = true;
+
+                if (component->enabled())
+                {
+                    component->on_enabled();
+                }
             }
         }
         else
@@ -176,6 +185,7 @@ public:
 
 private:
     std::string m_parent_guid; // NOTE: Only for serialization
+    bool m_is_being_deserialized = false;
 
     friend class SceneSerializer;
 };

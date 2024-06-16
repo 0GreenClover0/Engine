@@ -1653,6 +1653,7 @@ std::shared_ptr<Entity> SceneSerializer::deserialize_entity_first_pass(YAML::Nod
     auto const name = name_node.as<std::string>();
 
     std::shared_ptr<Entity> deserialized_entity = Entity::create(guid, name);
+    deserialized_entity->m_is_being_deserialized = true;
 
     auto const transform = entity["TransformComponent"];
     if (!transform)
@@ -1675,6 +1676,8 @@ std::shared_ptr<Entity> SceneSerializer::deserialize_entity_first_pass(YAML::Nod
 void SceneSerializer::deserialize_entity_second_pass(YAML::Node const& entity, std::shared_ptr<Entity> const& deserialized_entity)
 {
     deserialize_components(entity, deserialized_entity, false);
+
+    deserialized_entity->m_is_being_deserialized = false;
 }
 
 // Serialize one entity (including its children) to a file.
@@ -1856,6 +1859,20 @@ std::shared_ptr<Entity> SceneSerializer::deserialize_this_entity(std::string con
                 }
             }
         }
+
+        if (MainScene::get_instance()->is_running)
+        {
+            for (auto const& component : deserialized_pool)
+            {
+                component->awake();
+                component->has_been_awaken = true;
+
+                if (component->enabled())
+                {
+                    component->on_enabled();
+                }
+            }
+        }
     }
 
     m_deserialization_mode = previous_mode;
@@ -1949,6 +1966,20 @@ bool SceneSerializer::deserialize(std::string const& file_path)
                 {
                     entity->transform->set_parent(other_entity->transform);
                     break;
+                }
+            }
+        }
+
+        if (MainScene::get_instance()->is_running)
+        {
+            for (auto const& component : deserialized_pool)
+            {
+                component->awake();
+                component->has_been_awaken = true;
+
+                if (component->enabled())
+                {
+                    component->on_enabled();
                 }
             }
         }
