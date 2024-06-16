@@ -10,6 +10,7 @@
 #include "Ship.h"
 
 #include "AK/AK.h"
+#include "Floater.h"
 #include "Globals.h"
 #include "IceBound.h"
 #include "LighthouseKeeper.h"
@@ -449,6 +450,12 @@ void Ship::destroy()
 
     is_destroyed = true;
     m_destroyed_counter = m_destroy_time;
+
+    if (!floater.expired())
+    {
+        // Disable floater, ship is now sinking.
+        floater.lock()->set_can_tick(false);
+    }
 }
 
 void Ship::on_destroyed()

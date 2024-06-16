@@ -518,6 +518,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "guid" << YAML::Value << shipspawner->guid;
         out << YAML::Key << "custom_name" << YAML::Value << shipspawner->custom_name;
         out << YAML::Key << "paths" << YAML::Value << shipspawner->paths;
+        out << YAML::Key << "floaters_manager" << YAML::Value << shipspawner->floaters_manager;
         out << YAML::Key << "light" << YAML::Value << shipspawner->light;
         out << YAML::Key << "last_chance_food_threshold" << YAML::Value << shipspawner->last_chance_food_threshold;
         out << YAML::Key << "last_chance_time_threshold" << YAML::Value << shipspawner->last_chance_time_threshold;
@@ -1567,6 +1568,10 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             {
                 deserialized_component->light = component["light"].as<std::weak_ptr<LighthouseLight>>();
             }
+            if (component["water"].IsDefined())
+            {
+                deserialized_component->water = component["water"].as<std::weak_ptr<Water>>();
+            }
             if (component["spawn_position"].IsDefined())
             {
                 deserialized_component->spawn_position = component["spawn_position"].as<std::weak_ptr<Entity>>();
@@ -1750,6 +1755,10 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             if (component["paths"].IsDefined())
             {
                 deserialized_component->paths = component["paths"].as<std::vector<std::weak_ptr<Path>>>();
+            }
+            if (component["floaters_manager"].IsDefined())
+            {
+                deserialized_component->floaters_manager = component["floaters_manager"].as<std::weak_ptr<FloatersManager>>();
             }
             if (component["light"].IsDefined())
             {

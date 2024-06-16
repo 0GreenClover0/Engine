@@ -5,6 +5,8 @@
 #include "LighthouseLight.h"
 #include "ShipEyes.h"
 
+class Floater;
+
 enum class ShipType
 {
     FoodSmall,
@@ -151,6 +153,9 @@ public:
 
     NON_SERIALIZED
     bool is_destroyed = false;
+
+    NON_SERIALIZED
+    std::weak_ptr<Floater> floater = {};
 
     Event<void(std::shared_ptr<Ship>)> on_ship_destroyed;
 
