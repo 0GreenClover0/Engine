@@ -1,17 +1,17 @@
 Scene: Untitled
 Entities:
   - Entity: Keeper
-    guid: 8aafa34b4e5199eeb04ad1fe4e5448b540fd029720ecf4194532188fd2caec5e
+    guid: 1046f636e9474f222aacace710bab3f95524a92ba7898880a9fc2a7bcceab123
     Name: Keeper
     TransformComponent:
-      Translation: [1.9251647, 0.0700712204, 2.15936828]
-      Rotation: [0, 0, 0]
+      Translation: [-0.748312414, 0.0700712204, 2.05948448]
+      Rotation: [0, 173.862732, 0]
       Scale: [1, 1, 1]
       Parent:
         guid: ""
     Components:
       - ComponentName: ModelComponent
-        guid: 9587c12910c6f8b786a343d5c6bca4167f8570f5f3470a7f4c1bfae698be0c0f
+        guid: f32f2554d7d03b2d761d313e47f7abd7cdd810ae1fde766fce6715ba58c1966c
         custom_name: ""
         model_path: ./res/models/keeperInHovercraft/keeper.gltf
         material:
@@ -24,7 +24,7 @@ Entities:
           NeedsForward: false
           CastsShadows: true
       - ComponentName: Collider2DComponent
-        guid: a19b246e640f25199a290f41cb9e881a43daede60625e6c607d02e4cd7180222
+        guid: 424c140c4d9842ff0b72bdc0114ca7053055d9be436c53b9af69799e1799620d
         custom_name: ""
         offset: [0, 0]
         is_trigger: false
@@ -34,7 +34,7 @@ Entities:
         height: 2.0
         radius: 0.100000001
       - ComponentName: LighthouseKeeperComponent
-        guid: b1cdb56eaaa8d1362e446bde64eeef1b60a6d459a839be3b56f263d6bd1544a1
+        guid: 1c28ccd7b201f44a44ceb9fdcf84caf451f5e671a49e1cfd343d1d2197a26d22
         custom_name: ""
         maximum_speed: 5
         acceleration: 0.200000003
@@ -45,4 +45,61 @@ Entities:
         port:
           guid: b0facf70c246fdf6f761c9a469a88bfa7955c70ac0d03584167cfd8b9de40101
         packages:
-          []
+          - guid: 62f1680bb255590951ac9afb94470045d7c1c4069047d2928c9650fca62dac75
+          - guid: 61a043e19ad92a7988d478fc1b5813dc1caefd33451a81b17f69f49989d3005d
+      - ComponentName: FloaterComponent
+        guid: d1120f44e9b142894c23c372edf46c048e1913d6ac9f7547f5162e19924cf1c3
+        custom_name: ""
+        sink: 0.00999999978
+        side_floaters_offset: 0.100000001
+        side_roation_strength: 5
+        forward_rotation_strength: 5
+        forward_floaters_offest: 0.100000001
+        water:
+          guid: nullptr
+  - Entity: Package
+    guid: 62f1680bb255590951ac9afb94470045d7c1c4069047d2928c9650fca62dac75
+    Name: Package
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [2.01861119, 0, 1.58723426]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: 1046f636e9474f222aacace710bab3f95524a92ba7898880a9fc2a7bcceab123
+    Components:
+      - ComponentName: ModelComponent
+        guid: dabc7aaa11d5eae4487c85db8255905d1f7b0fac1ab28ff23ff8fc1e65f2163d
+        custom_name: ""
+        model_path: ./res/models/package/package.gltf
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+          NeedsForward: false
+          CastsShadows: true
+  - Entity: Package
+    guid: 61a043e19ad92a7988d478fc1b5813dc1caefd33451a81b17f69f49989d3005d
+    Name: Package
+    TransformComponent:
+      Translation: [0.0075895777, 0.129999995, -0.00581161957]
+      Rotation: [2.01861119, 0, 1.58723426]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: 62f1680bb255590951ac9afb94470045d7c1c4069047d2928c9650fca62dac75
+    Components:
+      - ComponentName: ModelComponent
+        guid: 4055a32b7402d8a3b984b12b5a35dcd36b656e9ba15caa23c61d22a4a6f76e91
+        custom_name: ""
+        model_path: ./res/models/package/package.gltf
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+          NeedsForward: false
+          CastsShadows: true
