@@ -12,6 +12,7 @@
 #include <yaml-cpp/emitter.h>
 #include <yaml-cpp/node/node.h>
 
+#include "FloatersManager.h"
 #include "SceneSerializer.h"
 #include <Game/Factory.h>
 #include <Game/ShipSpawner.h>
@@ -414,6 +415,35 @@ struct convert<SpawnEvent>
     }
 };
 
+template<>
+struct convert<FloaterSettings>
+{
+    static Node encode(FloaterSettings const& rhs)
+    {
+        Node node;
+        node.push_back(rhs.sink_rate);
+        node.push_back(rhs.side_rotation_strength);
+        node.push_back(rhs.forward_rotation_strength);
+        node.push_back(rhs.side_floaters_offset);
+        node.push_back(rhs.forward_floaters_offset);
+        return node;
+    }
+
+    static bool decode(Node const& node, FloaterSettings& rhs)
+    {
+        if (!node.IsSequence())
+            return false;
+
+        rhs.sink_rate = node[0].as<float>();
+        rhs.side_rotation_strength = node[1].as<float>();
+        rhs.forward_rotation_strength = node[2].as<float>();
+        rhs.side_floaters_offset = node[3].as<float>();
+        rhs.forward_floaters_offset = node[4].as<float>();
+
+        return true;
+    }
+};
+
 template<class T>
 Emitter& operator<<(YAML::Emitter& out, std::shared_ptr<T> const& v)
 requires(std::is_base_of_v<Component, T>)
@@ -639,4 +669,13 @@ inline Emitter& operator<<(YAML::Emitter& out, SpawnEvent const& v)
     out << YAML::BeginSeq << v.spawn_list << v.spawn_type << YAML::EndSeq;
     return out;
 }
+
+inline Emitter& operator<<(YAML::Emitter& out, FloaterSettings const& v)
+{
+    out << YAML::Flow;
+    out << YAML::BeginSeq << v.sink_rate << v.side_rotation_strength << v.forward_rotation_strength << v.side_floaters_offset
+        << v.forward_floaters_offset << YAML::EndSeq;
+    return out;
+}
+
 }

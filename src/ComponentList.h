@@ -10,6 +10,7 @@
     ENUMERATE_COMPONENT(ExampleDynamicText, "Example Dynamic Text") \
     ENUMERATE_COMPONENT(ExampleUIBar, "Example UIBar")              \
     ENUMERATE_COMPONENT(Floater, "Floater")                         \
+    ENUMERATE_COMPONENT(FloatersManager, "Floaters Manager")        \
     ENUMERATE_COMPONENT(ParticleSystem, "Particle System")          \
     ENUMERATE_COMPONENT(Sound, "Sound")                             \
     ENUMERATE_COMPONENT(SoundListener, "Sound Listener")            \
