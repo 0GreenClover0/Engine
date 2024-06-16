@@ -33,6 +33,7 @@ public:
     FactoryType type = FactoryType::Generator;
 
     std::vector<std::weak_ptr<PointLight>> lights = {};
+    std::weak_ptr<PointLight> factory_light = {};
 
 private:
     std::weak_ptr<Model> model = {};

@@ -1,23 +1,25 @@
 Scene: Untitled
 Entities:
   - Entity: Workshop
-    guid: e04579ef379ef2454b912135ffca835a99298d918a5beb56434c23bf20abee04
+    guid: 4935f6c3c262da59914e1fd75e6a3277ea676f1cf0bf506701f88b5bc13bfd44
     Name: Workshop
     TransformComponent:
       Translation: [5.03000021, 0.0700000003, 2.78999996]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: ""
+        guid: 93abb47e413e8d4a9e1f9260aa546debf287fb636275bea30d33989388177a47
     Components:
       - ComponentName: FactoryComponent
-        guid: 0d743caf48a6f51c148adb2715127f3d2baff71af6a3a44924c56aa56214e92f
+        guid: 810a1df935c11d3f70b27f20c2b9a47951192970196a2df8805d134a9462bcc2
         custom_name: ""
         type: 1
         lights:
           []
+        factory_light:
+          guid: f3dd06bfadc5cdbf45fd29a3b9f12ddd841b71772a18c5dfc55d98beeb127933
       - ComponentName: ModelComponent
-        guid: ceaf48d039f44e3532b424194300e3c055668c3edba3c317fb610f7ac05279f1
+        guid: 0a6415c9cfab464be3bc8dd6ae8ff7fdc5f6ecf43b003b43162de2556aebac61
         custom_name: ""
         model_path: ./res/models\workshop\workshop.gltf
         material:
@@ -30,7 +32,7 @@ Entities:
           NeedsForward: false
           CastsShadows: true
       - ComponentName: Collider2DComponent
-        guid: 20f17e6d98509c6f37ee984187556eb0723a09928bc628e008fb2c8e2efc5841
+        guid: cf560306f825a77f0cd0366118af58911f2b55c024fabff3c52d3416d8cb389b
         custom_name: ""
         offset: [0, 0]
         is_trigger: false
@@ -39,3 +41,24 @@ Entities:
         width: 1
         height: 1
         radius: 0.300000012
+  - Entity: Light
+    guid: 0f3c1a5e7837719fd6ef588ea8b685a62f918552e062d65eb4f68c9a1f92d3b5
+    Name: Light
+    TransformComponent:
+      Translation: [-0.186295986, 0.526062191, -0.114551306]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: 4935f6c3c262da59914e1fd75e6a3277ea676f1cf0bf506701f88b5bc13bfd44
+    Components:
+      - ComponentName: PointLightComponent
+        guid: f3dd06bfadc5cdbf45fd29a3b9f12ddd841b71772a18c5dfc55d98beeb127933
+        custom_name: ""
+        constant: 1
+        linear: 10
+        quadratic: 10
+        ambient: [0.200000003, 0.200000003, 0.200000003]
+        diffuse: [1, 1, 1]
+        specular: [1, 1, 1]
+        m_near_plane: 0.5
+        m_far_plane: 25
