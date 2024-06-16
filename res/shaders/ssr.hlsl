@@ -5,16 +5,18 @@ Texture2D position_buffer : register(t10);
 
 SamplerState wrap_sampler : register(s2);
 
-#define num_binary_search_steps 30
+// This is pretty low, but since those effects are blurry because of the normal maps, it's acceptable
+#define num_binary_search_steps 5
 
 // REFRACTION
 #define refraction_ray_step 0.1f
-#define refraction_max_steps 50
+#define refraction_max_steps 20
 #define refraction_thickness 0.1f
 
 // REFLECTION
+// NOTE: reflection_max_steps at 40 produces best results, but 30 should be a bit more optimal
 #define reflection_ray_step 0.02f
-#define reflection_max_steps 40
+#define reflection_max_steps 30
 #define reflection_thickness 0.1f
 
 float3 fresnel_schlick(float cosTheta, float3 F0)
