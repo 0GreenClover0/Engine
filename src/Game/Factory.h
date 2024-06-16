@@ -26,6 +26,8 @@ public:
 
     void set_type(FactoryType const type);
 
+    void turn_off_lights() const;
+
     void update_lights() const;
 
     FactoryType type = FactoryType::Generator;
