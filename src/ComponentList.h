@@ -4,7 +4,6 @@
 
 // # Auto component list start
 #define ENUMERATE_COMPONENTS                                        \
-    ENUMERATE_COMPONENT(Button, "Button")                           \
     ENUMERATE_COMPONENT(Camera, "Camera")                           \
     ENUMERATE_COMPONENT(Collider2D, "Collider2D")                   \
     ENUMERATE_COMPONENT(Curve, "Curve")                             \
@@ -31,6 +30,7 @@
     ENUMERATE_COMPONENT(ShipSpawner, "Ship Spawner")                \
     ENUMERATE_COMPONENT(PlayerInput, "Player Input")                \
     ENUMERATE_COMPONENT(Path, "Path")                               \
+    ENUMERATE_COMPONENT(Button, "Button")                           \
     ENUMERATE_COMPONENT(Model, "Model")                             \
     ENUMERATE_COMPONENT(Particle, "Particle")                       \
     ENUMERATE_COMPONENT(ScreenText, "Screen Text")                  \

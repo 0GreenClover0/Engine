@@ -1175,6 +1175,11 @@ glm::vec2 Editor::get_game_size() const
     return m_game_size;
 }
 
+glm::vec2 Editor::get_game_position() const
+{
+    return m_game_position;
+}
+
 bool Editor::is_rendering_to_editor() const
 {
     return m_rendering_to_editor;
