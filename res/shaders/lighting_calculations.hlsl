@@ -134,7 +134,7 @@ float3 calculate_directional_light(DirectionalLight light, float3 normal, float3
     return ambient + (1.0f - shadow) * (diffuse + specular);
 }
 
-float3 calculate_point_light(PointLight light, float3 normal, float3 world_pos, float3 view_dir, float3 diffuse_texture, int index, bool calculate_shadows)
+float3 calculate_point_light(PointLight light, float3 normal, float3 world_pos, float3 view_dir, float3 diffuse_texture, int index, bool calculate_shadows, float ambient_occlusion = 1.0f)
 {
     float3 light_dir = normalize(light.position - world_pos);
 
@@ -150,7 +150,7 @@ float3 calculate_point_light(PointLight light, float3 normal, float3 world_pos, 
     float distance = length(light.position.xyz - world_pos);
     float attenuation = 1.0f / (light.constant + light.linear_ * distance + light.quadratic * (distance * distance));
 
-    float3 ambient = light.ambient * diffuse_texture;
+    float3 ambient = light.ambient * diffuse_texture * ambient_occlusion;
     float3 diffuse = light.diffuse * diff * diffuse_texture;
     float3 specular = light.specular * spec * diffuse_texture;
 
@@ -163,7 +163,7 @@ float3 calculate_point_light(PointLight light, float3 normal, float3 world_pos, 
     return attenuation * (ambient + (1.0f - shadow) * (diffuse + specular));
 }
 
-float3 calculate_spot_light(SpotLight light, float3 normal, float3 world_pos, float3 view_dir, float3 diffuse_texture, int index, bool calculate_shadows)
+float3 calculate_spot_light(SpotLight light, float3 normal, float3 world_pos, float3 view_dir, float3 diffuse_texture, int index, bool calculate_shadows, float ambient_occlusion = 1.0f)
 {
     float3 light_dir = normalize(light.position - world_pos.xyz);
 
@@ -184,7 +184,7 @@ float3 calculate_spot_light(SpotLight light, float3 normal, float3 world_pos, fl
     float epsilon = light.cut_off - light.outer_cut_off;
     float intensity = clamp((theta - light.outer_cut_off) / epsilon, 0.0f , 1.0f);
 
-    float3 ambient = light.ambient * diffuse_texture;
+    float3 ambient = light.ambient * diffuse_texture * ambient_occlusion;
     float3 diffuse = light.diffuse * diff * diffuse_texture;
     float3 specular = light.specular * spec * diffuse_texture;
 
