@@ -21,6 +21,7 @@
 #include "Entity.h"
 #include "ExampleDynamicText.h"
 #include "ExampleUIBar.h"
+#include "Floater.h"
 #include "Game/Customer.h"
 #include "Game/CustomerManager.h"
 #include "Game/Factory.h"
