@@ -42,7 +42,7 @@ public:
     std::weak_ptr<FloatersManager> floaters_manager = {};
     std::weak_ptr<LighthouseLight> light = {};
 
-    float const spawn_warning_time = 5.0f;
+    float const spawn_warning_time = 1.5f;
     float const spawn_rapid_time = 2.5f;
     float const minimum_spawn_distance = 2.25f;
 
