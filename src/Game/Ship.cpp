@@ -75,7 +75,8 @@ void Ship::update_position() const
 
 void Ship::update_rotation() const
 {
-    entity->transform->set_euler_angles(glm::vec3(0.0f, -m_direction - 90.0f, 0.0f));
+    glm::vec3 const current_rotation = entity->transform->get_euler_angles();
+    entity->transform->set_euler_angles(glm::vec3(current_rotation.x, -m_direction - 90.0f, current_rotation.z));
 }
 
 // --- State change
