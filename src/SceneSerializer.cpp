@@ -18,6 +18,7 @@
 #include "Entity.h"
 #include "ExampleDynamicText.h"
 #include "ExampleUIBar.h"
+#include "Floater.h"
 #include "Game/Customer.h"
 #include "Game/CustomerManager.h"
 #include "Game/Factory.h"
@@ -249,6 +250,20 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "guid" << YAML::Value << exampleuibar->guid;
         out << YAML::Key << "custom_name" << YAML::Value << exampleuibar->custom_name;
         out << YAML::Key << "value" << YAML::Value << exampleuibar->value;
+        out << YAML::EndMap;
+    }
+    else if (auto const floater = std::dynamic_pointer_cast<class Floater>(component); floater != nullptr)
+    {
+        out << YAML::BeginMap;
+        out << YAML::Key << "ComponentName" << YAML::Value << "FloaterComponent";
+        out << YAML::Key << "guid" << YAML::Value << floater->guid;
+        out << YAML::Key << "custom_name" << YAML::Value << floater->custom_name;
+        out << YAML::Key << "sink" << YAML::Value << floater->sink;
+        out << YAML::Key << "side_floaters_offset" << YAML::Value << floater->side_floaters_offset;
+        out << YAML::Key << "side_roation_strength" << YAML::Value << floater->side_roation_strength;
+        out << YAML::Key << "forward_rotation_strength" << YAML::Value << floater->forward_rotation_strength;
+        out << YAML::Key << "forward_floaters_offest" << YAML::Value << floater->forward_floaters_offest;
+        out << YAML::Key << "water" << YAML::Value << floater->water;
         out << YAML::EndMap;
     }
     else if (auto const light = std::dynamic_pointer_cast<class Light>(component); light != nullptr)
@@ -972,6 +987,47 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             if (component["value"].IsDefined())
             {
                 deserialized_component->value = component["value"].as<float>();
+            }
+            deserialized_entity->add_component(deserialized_component);
+            deserialized_component->reprepare();
+        }
+    }
+    else if (component_name == "FloaterComponent")
+    {
+        if (first_pass)
+        {
+            auto const deserialized_component = Floater::create();
+            deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_component->custom_name = component["custom_name"].as<std::string>();
+            deserialized_pool.emplace_back(deserialized_component);
+        }
+        else
+        {
+            auto const deserialized_component =
+                std::dynamic_pointer_cast<class Floater>(get_from_pool(component["guid"].as<std::string>()));
+            if (component["sink"].IsDefined())
+            {
+                deserialized_component->sink = component["sink"].as<float>();
+            }
+            if (component["side_floaters_offset"].IsDefined())
+            {
+                deserialized_component->side_floaters_offset = component["side_floaters_offset"].as<float>();
+            }
+            if (component["side_roation_strength"].IsDefined())
+            {
+                deserialized_component->side_roation_strength = component["side_roation_strength"].as<float>();
+            }
+            if (component["forward_rotation_strength"].IsDefined())
+            {
+                deserialized_component->forward_rotation_strength = component["forward_rotation_strength"].as<float>();
+            }
+            if (component["forward_floaters_offest"].IsDefined())
+            {
+                deserialized_component->forward_floaters_offest = component["forward_floaters_offest"].as<float>();
+            }
+            if (component["water"].IsDefined())
+            {
+                deserialized_component->water = component["water"].as<std::weak_ptr<Water>>();
             }
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
