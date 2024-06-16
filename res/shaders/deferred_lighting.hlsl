@@ -46,11 +46,7 @@ float4 ps_main(VS_Output input) : SV_Target
     float3 view_dir = normalize(camera_pos.xyz - pos.xyz);
 
     result.xyz += calculate_directional_light(directional_light, normal.xyz, view_dir, diffuse.xyz, pos.xyz, true, ambient_occlusion);
-    float fog_value = 1.0f; 
-    if (is_fog_rendered)
-    {
-        fog_value = fog_tex.Sample(repeat_sampler, input.UV + time_ps / 100.0f).r;
-    }
+    float fog_value = fog_tex.Sample(repeat_sampler, input.UV + time_ps / 100.0f).r;
 
     for (int point_light_index = 0; point_light_index < number_of_point_lights; point_light_index++)
     {
