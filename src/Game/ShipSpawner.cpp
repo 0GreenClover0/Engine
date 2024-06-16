@@ -495,6 +495,11 @@ void ShipSpawner::prepare_for_spawn()
             m_spawn_warning_counter = spawn_warning_time;
         }
         m_main_spawn.pop_back();
+
+        if (m_main_spawn.empty())
+        {
+            return;
+        }
     }
 
     if (paths.size() == 0)
@@ -503,9 +508,13 @@ void ShipSpawner::prepare_for_spawn()
         return;
     }
 
-    if (!m_is_last_chance_activated && is_time_for_last_chance())
+    if (!m_is_last_chance_activated)
     {
-        return;
+        bool const was_just_activated = is_time_for_last_chance();
+        if (was_just_activated)
+        {
+            return;
+        }
     }
 
     SpawnEvent* being_spawn = &m_main_spawn.back();
