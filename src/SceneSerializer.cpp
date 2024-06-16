@@ -335,6 +335,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "custom_name" << YAML::Value << factory->custom_name;
         out << YAML::Key << "type" << YAML::Value << factory->type;
         out << YAML::Key << "lights" << YAML::Value << factory->lights;
+        out << YAML::Key << "factory_light" << YAML::Value << factory->factory_light;
         out << YAML::EndMap;
     }
     else if (auto const gamecontroller = std::dynamic_pointer_cast<class GameController>(component); gamecontroller != nullptr)
@@ -1207,6 +1208,10 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             if (component["lights"].IsDefined())
             {
                 deserialized_component->lights = component["lights"].as<std::vector<std::weak_ptr<PointLight>>>();
+            }
+            if (component["factory_light"].IsDefined())
+            {
+                deserialized_component->factory_light = component["factory_light"].as<std::weak_ptr<PointLight>>();
             }
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
