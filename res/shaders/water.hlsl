@@ -191,11 +191,7 @@ float4 ps_main(VS_Output input) : SV_TARGET
 
     // Volumetric lighting variables
     float3 scatter = float3(0.0f.xxx);
-    float fog_value;
-    if (is_fog_rendered)
-    {
-        fog_value = fog_tex.Sample(wrap_sampler, UV + time_ps / 100.0f).r;
-    }
+    float fog_value = fog_tex.Sample(wrap_sampler, UV + time_ps / 100.0f).r;
 
     for (int i = 0; i < number_of_point_lights; i++)
     {
