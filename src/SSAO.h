@@ -10,6 +10,8 @@
 #include "AK/Badge.h"
 #include "RenderPassResourceContainer.h"
 
+#include <random>
+
 class SSAO final : public RenderPassResourceContainer
 {
 public:
@@ -36,4 +38,6 @@ private:
 
     ID3D11ShaderResourceView* m_ssao_srv = nullptr;
     ID3D11ShaderResourceView* m_ssao_kernel_rotations_srv = nullptr;
+
+    std::default_random_engine m_generator = {};
 };
