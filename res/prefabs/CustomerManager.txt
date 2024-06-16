@@ -1,0 +1,64 @@
+Scene: Untitled
+Entities:
+  - Entity: CustomerManager
+    guid: ebb862ec0296f2793cc0860e66d5488c679767cb90775e948bea5f473f5971e0
+    Name: CustomerManager
+    TransformComponent:
+      Translation: [1.92499995, 0.100000001, 1.75899994]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: 6134499691339a2767bf239f226efa099964b8e04f6b8fca07b27cfcc3d328fd
+    Components:
+      - ComponentName: CustomerManagerComponent
+        guid: c3628d07dff03a194138380ea566233a5061bd2adbdff1c0d6a011181e95e318
+        custom_name: ""
+        destinations_after_feeding:
+          - guid: 03c209fa0282b5c19de8cf5a1ad9ec811c3eedacf96417098fda8387eece2cb9
+          - guid: 16b8bee9c9b936cd51a6220ded8efa4276a30ee4a4e1ea5276ad186a650d0ece
+          - guid: 976c2873114e27a60bb39003fa17986401e746fd93dcb3a6bcbc06e27a55146b
+        destination_curve:
+          guid: 91d1382b9c709c0c9d4663915cdf02c60b8ef34b3d1e656e32bef0facfec2378
+        customer_prefab: Customer
+      - ComponentName: PathComponent
+        guid: 91d1382b9c709c0c9d4663915cdf02c60b8ef34b3d1e656e32bef0facfec2378
+        custom_name: ""
+        points:
+          - [0.0154705849, 0.0317622945]
+          - [0.511345506, 0.413652241]
+          - [-0.293810368, 0.539424837]
+          - [0.521285713, 1.10540175]
+          - [-0.303750545, 1.13684487]
+  - Entity: Destination
+    guid: 03c209fa0282b5c19de8cf5a1ad9ec811c3eedacf96417098fda8387eece2cb9
+    Name: Destination
+    TransformComponent:
+      Translation: [-0.68418026, 4.61935997e-07, -0.652619481]
+      Rotation: [0, -0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: ebb862ec0296f2793cc0860e66d5488c679767cb90775e948bea5f473f5971e0
+    Components:
+      []
+  - Entity: Destination2
+    guid: 16b8bee9c9b936cd51a6220ded8efa4276a30ee4a4e1ea5276ad186a650d0ece
+    Name: Destination2
+    TransformComponent:
+      Translation: [1.2076149, 2.55554914e-06, -0.674029112]
+      Rotation: [0, -0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: ebb862ec0296f2793cc0860e66d5488c679767cb90775e948bea5f473f5971e0
+    Components:
+      []
+  - Entity: Destination3
+    guid: 976c2873114e27a60bb39003fa17986401e746fd93dcb3a6bcbc06e27a55146b
+    Name: Destination3
+    TransformComponent:
+      Translation: [-1.37622094, -1.32620335e-06, 0.731948495]
+      Rotation: [0, -0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: ebb862ec0296f2793cc0860e66d5488c679767cb90775e948bea5f473f5971e0
+    Components:
+      []

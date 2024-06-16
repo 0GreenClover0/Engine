@@ -12,6 +12,8 @@
     ENUMERATE_COMPONENT(ParticleSystem, "Particle System")          \
     ENUMERATE_COMPONENT(Sound, "Sound")                             \
     ENUMERATE_COMPONENT(SoundListener, "Sound Listener")            \
+    ENUMERATE_COMPONENT(Customer, "Customer")                       \
+    ENUMERATE_COMPONENT(CustomerManager, "Customer Manager")        \
     ENUMERATE_COMPONENT(Factory, "Factory")                         \
     ENUMERATE_COMPONENT(GameController, "Game Controller")          \
     ENUMERATE_COMPONENT(IceBound, "Ice Bound")                      \

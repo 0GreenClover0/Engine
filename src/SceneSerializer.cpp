@@ -18,6 +18,8 @@
 #include "Entity.h"
 #include "ExampleDynamicText.h"
 #include "ExampleUIBar.h"
+#include "Game/Customer.h"
+#include "Game/CustomerManager.h"
 #include "Game/Factory.h"
 #include "Game/GameController.h"
 #include "Game/IceBound.h"
@@ -327,6 +329,28 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "ComponentName" << YAML::Value << "SoundListenerComponent";
         out << YAML::Key << "guid" << YAML::Value << soundlistener->guid;
         out << YAML::Key << "custom_name" << YAML::Value << soundlistener->custom_name;
+        out << YAML::EndMap;
+    }
+    else if (auto const customer = std::dynamic_pointer_cast<class Customer>(component); customer != nullptr)
+    {
+        out << YAML::BeginMap;
+        out << YAML::Key << "ComponentName" << YAML::Value << "CustomerComponent";
+        out << YAML::Key << "guid" << YAML::Value << customer->guid;
+        out << YAML::Key << "custom_name" << YAML::Value << customer->custom_name;
+        out << YAML::Key << "collider" << YAML::Value << customer->collider;
+        out << YAML::Key << "left_hand" << YAML::Value << customer->left_hand;
+        out << YAML::Key << "right_hand" << YAML::Value << customer->right_hand;
+        out << YAML::EndMap;
+    }
+    else if (auto const customermanager = std::dynamic_pointer_cast<class CustomerManager>(component); customermanager != nullptr)
+    {
+        out << YAML::BeginMap;
+        out << YAML::Key << "ComponentName" << YAML::Value << "CustomerManagerComponent";
+        out << YAML::Key << "guid" << YAML::Value << customermanager->guid;
+        out << YAML::Key << "custom_name" << YAML::Value << customermanager->custom_name;
+        out << YAML::Key << "destinations_after_feeding" << YAML::Value << customermanager->destinations_after_feeding;
+        out << YAML::Key << "destination_curve" << YAML::Value << customermanager->destination_curve;
+        out << YAML::Key << "customer_prefab" << YAML::Value << customermanager->customer_prefab;
         out << YAML::EndMap;
     }
     else if (auto const factory = std::dynamic_pointer_cast<class Factory>(component); factory != nullptr)
@@ -1194,6 +1218,65 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component =
                 std::dynamic_pointer_cast<class SoundListener>(get_from_pool(component["guid"].as<std::string>()));
+            deserialized_entity->add_component(deserialized_component);
+            deserialized_component->reprepare();
+        }
+    }
+    else if (component_name == "CustomerComponent")
+    {
+        if (first_pass)
+        {
+            auto const deserialized_component = Customer::create();
+            deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_component->custom_name = component["custom_name"].as<std::string>();
+            deserialized_pool.emplace_back(deserialized_component);
+        }
+        else
+        {
+            auto const deserialized_component =
+                std::dynamic_pointer_cast<class Customer>(get_from_pool(component["guid"].as<std::string>()));
+            if (component["collider"].IsDefined())
+            {
+                deserialized_component->collider = component["collider"].as<std::weak_ptr<Collider2D>>();
+            }
+            if (component["left_hand"].IsDefined())
+            {
+                deserialized_component->left_hand = component["left_hand"].as<std::weak_ptr<Entity>>();
+            }
+            if (component["right_hand"].IsDefined())
+            {
+                deserialized_component->right_hand = component["right_hand"].as<std::weak_ptr<Entity>>();
+            }
+            deserialized_entity->add_component(deserialized_component);
+            deserialized_component->reprepare();
+        }
+    }
+    else if (component_name == "CustomerManagerComponent")
+    {
+        if (first_pass)
+        {
+            auto const deserialized_component = CustomerManager::create();
+            deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_component->custom_name = component["custom_name"].as<std::string>();
+            deserialized_pool.emplace_back(deserialized_component);
+        }
+        else
+        {
+            auto const deserialized_component =
+                std::dynamic_pointer_cast<class CustomerManager>(get_from_pool(component["guid"].as<std::string>()));
+            if (component["destinations_after_feeding"].IsDefined())
+            {
+                deserialized_component->destinations_after_feeding =
+                    component["destinations_after_feeding"].as<std::vector<std::weak_ptr<Entity>>>();
+            }
+            if (component["destination_curve"].IsDefined())
+            {
+                deserialized_component->destination_curve = component["destination_curve"].as<std::weak_ptr<Curve>>();
+            }
+            if (component["customer_prefab"].IsDefined())
+            {
+                deserialized_component->customer_prefab = component["customer_prefab"].as<std::string>();
+            }
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
         }
