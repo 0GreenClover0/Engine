@@ -106,7 +106,6 @@ void Factory::update_lights() const
             }
             else
             {
-                // TODO: Make lights disabled at level start after scene change merge.
                 lights[i].lock()->set_burn_out(true);
             }
         }
