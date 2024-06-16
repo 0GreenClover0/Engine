@@ -82,6 +82,17 @@ void Factory::set_type(FactoryType const type)
     }
 }
 
+void Factory::turn_off_lights() const
+{
+    if (type == FactoryType::Generator)
+    {
+        for (size_t i = 0; i < lights.size(); i++)
+        {
+            lights[i].lock()->set_enabled(false);
+        }
+    }
+}
+
 void Factory::update_lights() const
 {
     if (type == FactoryType::Generator)
