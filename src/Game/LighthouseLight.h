@@ -7,6 +7,8 @@
 #include "SpotLight.h"
 #include "Window.h"
 
+class Ship;
+
 class LighthouseLight final : public Component
 {
 public:
@@ -23,6 +25,9 @@ public:
 
     void set_spot_light(std::shared_ptr<SpotLight> const& light);
     glm::vec2 get_position() const;
+
+    NON_SERIALIZED
+    std::weak_ptr<Ship> controlled_ship = {};
 
     std::weak_ptr<SpotLight> spotlight = {};
     float spotlight_beam_width = 0.15f;

@@ -115,6 +115,7 @@ bool Ship::control_state_change()
             if (nearest_ship.value().lock() == shared_from_this())
             {
                 behavioral_state = BehavioralState::Control;
+                light.lock()->controlled_ship = std::static_pointer_cast<Ship>(shared_from_this());
                 return true;
             }
         }
@@ -169,6 +170,11 @@ bool Ship::control_state_ended()
 
     if (!light.expired() && light.lock()->enabled())
     {
+        if (light.lock()->controlled_ship.lock() != shared_from_this())
+        {
+            result = true;
+        }
+
         glm::vec2 const ship_position = AK::convert_3d_to_2d(entity->transform->get_local_position());
 
         auto const light_locked = light.lock();
