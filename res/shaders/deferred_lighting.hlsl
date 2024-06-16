@@ -38,7 +38,6 @@ float4 ps_main(VS_Output input) : SV_Target
     float4 normal = normalize(normal_tex.Sample(obj_sampler_state, input.UV));
     float4 diffuse = diffuse_tex.Sample(obj_sampler_state, input.UV);
     float ambient_occlusion = ambient_occlusion_tex.Sample(obj_sampler_state, input.UV).r;
-
     if (diffuse.r == 0.0f && diffuse.g == 0.0f && diffuse.b == 0.0f)
     {
         discard;
@@ -51,7 +50,6 @@ float4 ps_main(VS_Output input) : SV_Target
     if (is_fog_rendered)
     {
         fog_value = fog_tex.Sample(repeat_sampler, input.UV + time_ps / 100.0f).r;
-        result += 0.2f * fog_value;
     }
 
     for (int point_light_index = 0; point_light_index < number_of_point_lights; point_light_index++)
