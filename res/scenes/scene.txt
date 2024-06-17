@@ -27,92 +27,6 @@ Entities:
           - [0, 0]
           - [18, 0]
           - [36, 18]
-  - Entity: Water
-    guid: 21bea70da7bdf8816fe0d11caf8c2004b58afcb20bb5922792ddcf8d49f7914f
-    Name: Water
-    TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-      Parent:
-        guid: 4a3d982586e6fd87ee59e5215e6cbb625e0c04eb1524db231ab994694815bde8
-    Components:
-      - ComponentName: WaterComponent
-        guid: 2e00df5c93d08750214e7657315ef9b31c25b2f45a40efe50d08498894ac4250
-        custom_name: ""
-        waves:
-          - [[1, 0.5], [0, 0], 116, 0.699999988, 115, 0.0399999991]
-          - [[-0.600000024, 0.100000001], [0, 0], 100, 0.899999976, 500, 0.0350000001]
-        m_ps_buffer: [[0.100000001, 0.100000001, 0.5, 1], [0, 0, 0.400000006, 1], 0.00200000009, 0.00260000001, 35, 10, 0.5, 0.980000019]
-        tesselation_level: 5
-        model_path: ""
-        material:
-          Shader:
-            VertexPath: ./res/shaders/water.hlsl
-            FragmentPath: ./res/shaders/water.hlsl
-            GeometryPath: ""
-          Color: [1, 1, 1, 1]
-          RenderOrder: 0
-          NeedsForward: true
-          CastsShadows: false
-  - Entity: Sea Floor
-    guid: 05ae771b8e0529c2aa7c6d2a86d014411fb63948ab78ea4f3673bbb56fce6a52
-    Name: Sea Floor
-    TransformComponent:
-      Translation: [0, -0.300000012, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-      Parent:
-        guid: 4a3d982586e6fd87ee59e5215e6cbb625e0c04eb1524db231ab994694815bde8
-    Components:
-      - ComponentName: ModelComponent
-        guid: 7061ecbc1d2399c56ce838bb765450ce6abaebb66585a72165929f9445d18893
-        custom_name: ""
-        model_path: ./res/models/water/water.gltf
-        material:
-          Shader:
-            VertexPath: ./res/shaders/lit.hlsl
-            FragmentPath: ./res/shaders/lit.hlsl
-            GeometryPath: ""
-          Color: [1, 1, 1, 1]
-          RenderOrder: 0
-          NeedsForward: false
-          CastsShadows: true
-  - Entity: Directional light
-    guid: 3a4f51f3e1d635b3909f93ee22c5c2c1c78cf5f433fbf573bc33cbac46028188
-    Name: Directional light
-    TransformComponent:
-      Translation: [0, 14, 0]
-      Rotation: [-90, 0, 0]
-      Scale: [0.100000001, 0.100000001, 0.100000001]
-      Parent:
-        guid: 4a3d982586e6fd87ee59e5215e6cbb625e0c04eb1524db231ab994694815bde8
-    Components:
-      - ComponentName: SphereComponent
-        guid: 6884b4a94b5b7bf5042c5ece1ad27bd8ef0901fc7cf748da5704935750db28a5
-        custom_name: ""
-        sector_count: 10
-        stack_count: 10
-        texture_path: ./res/textures/container.png
-        radius: 0.100000001
-        model_path: ""
-        material:
-          Shader:
-            VertexPath: ./res/shaders/light_source.hlsl
-            FragmentPath: ./res/shaders/light_source.hlsl
-            GeometryPath: ""
-          Color: [1, 1, 1, 1]
-          RenderOrder: 0
-          NeedsForward: false
-          CastsShadows: true
-      - ComponentName: DirectionalLightComponent
-        guid: 36380a6639551aede560b1ed26fe9fc66d0020f28c66e800c3ee132def1444d5
-        custom_name: ""
-        ambient: [1, 1, 1]
-        diffuse: [1, 1, 1]
-        specular: [1, 1, 1]
-        m_near_plane: 0.100000001
-        m_far_plane: 25
   - Entity: Player
     guid: f97e1bc5d9220b1d4349e2e928f77c78d8b13ed3bcdbd569aa1c899f3880311a
     Name: Player
@@ -188,9 +102,11 @@ Entities:
         is_trigger: false
         is_static: true
         collider_type: 0
-        width: 18.0
-        height: 2.0
+        width: 18
+        height: 2
         radius: 1
+        drag: 0.00999999978
+        velocity: [0, 0]
   - Entity: Wall
     guid: 4cc109f874de9cd9baa25b87e9a0cd25f7ca8dc24390e3767977a99e467b0a4a
     Name: Wall
@@ -208,9 +124,11 @@ Entities:
         is_trigger: false
         is_static: true
         collider_type: 0
-        width: 20.0
-        height: 2.0
+        width: 20
+        height: 2
         radius: 1
+        drag: 0.00999999978
+        velocity: [0, 0]
   - Entity: Wall
     guid: 61f79b76f2fb800c9b713b5dbe72e2924211dcc54749ab6d6bdf05411aeea6e2
     Name: Wall
@@ -228,9 +146,11 @@ Entities:
         is_trigger: false
         is_static: true
         collider_type: 0
-        width: 18.0
-        height: 2.0
+        width: 18
+        height: 2
         radius: 1
+        drag: 0.00999999978
+        velocity: [0, 0]
   - Entity: Wall
     guid: dca8b641f6d465cc15f3c5579785a6cb07a39b65e80f42925ff6de8538fd35c8
     Name: Wall
@@ -248,6 +168,26 @@ Entities:
         is_trigger: false
         is_static: true
         collider_type: 0
-        width: 18.0
-        height: 2.0
+        width: 18
+        height: 2
         radius: 1
+        drag: 0.00999999978
+        velocity: [0, 0]
+  - Entity: Directional light
+    guid: 24f75d08c9fc0725c34face81e4d6f7865d04fb5ce130cb485782b794ee95ad1
+    Name: Directional light
+    TransformComponent:
+      Translation: [0, 5, 0]
+      Rotation: [-70, 0, 30]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: 4a3d982586e6fd87ee59e5215e6cbb625e0c04eb1524db231ab994694815bde8
+    Components:
+      - ComponentName: DirectionalLightComponent
+        guid: 5d4c9de9542730a9a2c655154f28ca19daa5551952289a96c8c2fa458594b48f
+        custom_name: ""
+        ambient: [0.195996806, 0.189537033, 0.383333325]
+        diffuse: [0.674197555, 0.767983675, 0.955555558]
+        specular: [0.328781307, 0.138024718, 0.955555558]
+        m_near_plane: 0.5
+        m_far_plane: 25
