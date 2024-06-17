@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Button.h"
 #include "Drawable.h"
 #include "RendererDX11.h"
 
@@ -21,10 +22,24 @@ public:
     ~ScreenText() override;
 
     virtual void initialize() override;
+
+    virtual void awake() override;
+
+    virtual void on_enabled() override;
+    virtual void on_disabled() override;
+
     virtual void draw() const override;
+
 #if EDITOR
     virtual void draw_editor() override;
 #endif
+
+    virtual void update() override;
+
+    void hover();
+    void click();
+    void unclick();
+    void unhovered();
 
     // This can be updated.
     void set_text(std::string const& new_content);
@@ -38,6 +53,8 @@ public:
     u16 flags = 0; //  Stores flags such as FW1_CENTER | FW1_VCENTER. FW1_RESTORESTATE is set by default.
     std::string font_name = {};
     bool bold = false;
+
+    std::weak_ptr<Button> button_ref = {};
 
 private:
     static D3D11_VIEWPORT get_viewport();

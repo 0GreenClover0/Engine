@@ -1,0 +1,340 @@
+Scene: Untitled
+Entities:
+  - Entity: Game Controller
+    guid: 4a3d982586e6fd87ee59e5215e6cbb625e0c04eb1524db231ab994694815bde8
+    Name: Game Controller
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: ""
+    Components:
+      - ComponentName: GameControllerComponent
+        guid: a098e0fb07f6595e71b86cece4c9f74f06972da4611e04f03eea0e07b50fcd78
+        custom_name: ""
+        current_scene:
+          guid: nullptr
+        next_scene:
+          guid: nullptr
+      - ComponentName: PlayerComponent
+        guid: 93979adaf2a319915d123de5d2fd4569314fffe747ee4971ff5dbe81a84e5aa0
+        custom_name: ""
+      - ComponentName: PathComponent
+        guid: 1b2affe02f97cf723f53835b4d6b9998df992c54d249639ecc45df0f810a4471
+        custom_name: ""
+        points:
+          - [0, 0]
+          - [18, 0]
+          - [36, 18]
+  - Entity: Water
+    guid: 21bea70da7bdf8816fe0d11caf8c2004b58afcb20bb5922792ddcf8d49f7914f
+    Name: Water
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: 4a3d982586e6fd87ee59e5215e6cbb625e0c04eb1524db231ab994694815bde8
+    Components:
+      - ComponentName: WaterComponent
+        guid: 2e00df5c93d08750214e7657315ef9b31c25b2f45a40efe50d08498894ac4250
+        custom_name: ""
+        waves:
+          - [[1, 0.5], [0, 0], 116, 0.699999988, 115, 0.0399999991]
+          - [[-0.600000024, 0.100000001], [0, 0], 100, 0.899999976, 500, 0.0350000001]
+        m_ps_buffer: [[0.100000001, 0.100000001, 0.5, 1], [0, 0, 0.400000006, 1], 0.00200000009, 0.00260000001, 35, 10, 0.5, 0.980000019]
+        tesselation_level: 5
+        model_path: ""
+        material:
+          Shader:
+            VertexPath: ./res/shaders/water.hlsl
+            FragmentPath: ./res/shaders/water.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+          NeedsForward: true
+          CastsShadows: false
+          IsUI: false
+          IsBillboard: false
+  - Entity: Sea Floor
+    guid: 05ae771b8e0529c2aa7c6d2a86d014411fb63948ab78ea4f3673bbb56fce6a52
+    Name: Sea Floor
+    TransformComponent:
+      Translation: [0, -0.300000012, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: 4a3d982586e6fd87ee59e5215e6cbb625e0c04eb1524db231ab994694815bde8
+    Components:
+      - ComponentName: ModelComponent
+        guid: 7061ecbc1d2399c56ce838bb765450ce6abaebb66585a72165929f9445d18893
+        custom_name: ""
+        model_path: ./res/models/water/water.gltf
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+          NeedsForward: false
+          CastsShadows: true
+          IsUI: false
+          IsBillboard: false
+  - Entity: Directional light
+    guid: 3a4f51f3e1d635b3909f93ee22c5c2c1c78cf5f433fbf573bc33cbac46028188
+    Name: Directional light
+    TransformComponent:
+      Translation: [0, 14, 0]
+      Rotation: [-90, 0, 0]
+      Scale: [0.100000001, 0.100000001, 0.100000001]
+      Parent:
+        guid: 4a3d982586e6fd87ee59e5215e6cbb625e0c04eb1524db231ab994694815bde8
+    Components:
+      - ComponentName: SphereComponent
+        guid: 6884b4a94b5b7bf5042c5ece1ad27bd8ef0901fc7cf748da5704935750db28a5
+        custom_name: ""
+        sector_count: 10
+        stack_count: 10
+        texture_path: ./res/textures/container.png
+        radius: 0.100000001
+        model_path: ""
+        material:
+          Shader:
+            VertexPath: ./res/shaders/light_source.hlsl
+            FragmentPath: ./res/shaders/light_source.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+          NeedsForward: false
+          CastsShadows: true
+          IsUI: false
+          IsBillboard: false
+      - ComponentName: DirectionalLightComponent
+        guid: 36380a6639551aede560b1ed26fe9fc66d0020f28c66e800c3ee132def1444d5
+        custom_name: ""
+        ambient: [1, 1, 1]
+        diffuse: [1, 1, 1]
+        specular: [1, 1, 1]
+        m_near_plane: 0.100000001
+        m_far_plane: 25
+  - Entity: Player
+    guid: f97e1bc5d9220b1d4349e2e928f77c78d8b13ed3bcdbd569aa1c899f3880311a
+    Name: Player
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: 4a3d982586e6fd87ee59e5215e6cbb625e0c04eb1524db231ab994694815bde8
+    Components:
+      - ComponentName: PlayerInputComponent
+        guid: ef637381a4aa0a916dc0c333f42cfd4727713941b969cb7c8cf90129b3c57f3b
+        custom_name: ""
+        player_speed: 5
+        camera_speed: 12.5
+  - Entity: CameraParent
+    guid: 89b51131434610f4e56c00510b6a1c844a68c43c996abf2bd6218ea3f52fb6ee
+    Name: CameraParent
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: f97e1bc5d9220b1d4349e2e928f77c78d8b13ed3bcdbd569aa1c899f3880311a
+    Components:
+      []
+  - Entity: Camera
+    guid: 6b5cf8d86262a7ab6ff44df8eb4ffba7d5c97d9af1a4b25a8db70cf0a153d2cb
+    Name: Camera
+    TransformComponent:
+      Translation: [0, 17, 13]
+      Rotation: [-50, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: 89b51131434610f4e56c00510b6a1c844a68c43c996abf2bd6218ea3f52fb6ee
+    Components:
+      - ComponentName: SoundListenerComponent
+        guid: 0ee27babd043cde2d7635708cfaa39ad7736ef49faff1dd7b1b4a1e9f2eac5ba
+        custom_name: ""
+      - ComponentName: CameraComponent
+        guid: e92c5da4a82e2c56c1bfedb983e72750f7a6510981d07ee2b3c6e576c3b8eb29
+        custom_name: ""
+        width: 1920
+        height: 1001
+        fov: 0.383972436
+        near_plane: 0.100000001
+        far_plane: 1000
+  - Entity: Walls
+    guid: 212b6a80d8548c5e042a3d8af4810c182f3f74238f1cf5534bd5297c43169d26
+    Name: Walls
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: 4a3d982586e6fd87ee59e5215e6cbb625e0c04eb1524db231ab994694815bde8
+    Components:
+      []
+  - Entity: Wall
+    guid: 940d90f92280b51ed4fdf9111eb88ce695cbf6b667a69aa9b110457fc93792ff
+    Name: Wall
+    TransformComponent:
+      Translation: [0, 0, 4.61209011]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: 212b6a80d8548c5e042a3d8af4810c182f3f74238f1cf5534bd5297c43169d26
+    Components:
+      - ComponentName: Collider2DComponent
+        guid: 762ef6b22f8a0c6b375e5d1fd763f90b72b1d735f8f1f25f655313db6c5242bd
+        custom_name: ""
+        offset: [0, 0]
+        is_trigger: false
+        is_static: true
+        collider_type: 0
+        width: 18
+        height: 2
+        radius: 1
+        drag: 0.00999999978
+        velocity: [0, 0]
+  - Entity: Wall
+    guid: 4cc109f874de9cd9baa25b87e9a0cd25f7ca8dc24390e3767977a99e467b0a4a
+    Name: Wall
+    TransformComponent:
+      Translation: [0, 0, -8.79222012]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: 212b6a80d8548c5e042a3d8af4810c182f3f74238f1cf5534bd5297c43169d26
+    Components:
+      - ComponentName: Collider2DComponent
+        guid: e05ceb03d7829a0204e9feceb9a34ba9204ee39d4b66e86c77c92788d351d4ae
+        custom_name: ""
+        offset: [0, 0]
+        is_trigger: false
+        is_static: true
+        collider_type: 0
+        width: 20
+        height: 2
+        radius: 1
+        drag: 0.00999999978
+        velocity: [0, 0]
+  - Entity: Wall
+    guid: 61f79b76f2fb800c9b713b5dbe72e2924211dcc54749ab6d6bdf05411aeea6e2
+    Name: Wall
+    TransformComponent:
+      Translation: [-8.5, 0, -1.00241709]
+      Rotation: [0, -77.1839981, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: 212b6a80d8548c5e042a3d8af4810c182f3f74238f1cf5534bd5297c43169d26
+    Components:
+      - ComponentName: Collider2DComponent
+        guid: 2dddf08a656942b032515525650e85e78583745898e8fc16da740bf6c8a66556
+        custom_name: ""
+        offset: [0, 0]
+        is_trigger: false
+        is_static: true
+        collider_type: 0
+        width: 18
+        height: 2
+        radius: 1
+        drag: 0.00999999978
+        velocity: [0, 0]
+  - Entity: Wall
+    guid: dca8b641f6d465cc15f3c5579785a6cb07a39b65e80f42925ff6de8538fd35c8
+    Name: Wall
+    TransformComponent:
+      Translation: [8.5, 0, -1.00241709]
+      Rotation: [0, 77.1839981, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: 212b6a80d8548c5e042a3d8af4810c182f3f74238f1cf5534bd5297c43169d26
+    Components:
+      - ComponentName: Collider2DComponent
+        guid: fe0000a74c8d2a941aaa228f7fb6acc1afceee3e58005d860ddbabca37859d0b
+        custom_name: ""
+        offset: [0, 0]
+        is_trigger: false
+        is_static: true
+        collider_type: 0
+        width: 18
+        height: 2
+        radius: 1
+        drag: 0.00999999978
+        velocity: [0, 0]
+  - Entity: Button
+    guid: 4108be91428f9b70c78ffa9c0a18dacfef6d0ab1ff4753795a40ab4d7eaa37b0
+    Name: Button
+    TransformComponent:
+      Translation: [0.55926007, 0.394104332, 0]
+      Rotation: [0, 0, 0]
+      Scale: [0.200000048, 0.200000048, 0.200000048]
+      Parent:
+        guid: ""
+    Components:
+      - ComponentName: ButtonComponent
+        guid: 9b3faf38e062233164a47df4276806064628aeb6d803b06568162e05fc6ce9b9
+        custom_name: ""
+        path_default: ./res/textures/black.jpg
+        path_hovered: ./res/textures/light_gray.jpg
+        path_pressed: ./res/textures/dark_gray.jpg
+        m_ui_material:
+          Shader:
+            VertexPath: ./res/shaders/ui.hlsl
+            FragmentPath: ./res/shaders/ui.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 1
+          NeedsForward: false
+          CastsShadows: false
+          IsUI: true
+          IsBillboard: false
+        top_left_corner: [0, 0]
+        top_right_corner: [0, 0]
+        bottom_left_corner: [0, 0]
+        bottom_right_corner: [0, 0]
+        material:
+          Shader:
+            VertexPath: ./res/shaders/ui.hlsl
+            FragmentPath: ./res/shaders/ui.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 1
+          NeedsForward: false
+          CastsShadows: false
+          IsUI: true
+          IsBillboard: false
+  - Entity: ScreenText
+    guid: 28e32624d9d80b7770d45aa44b5c9f48a682b0ed6fbdd8554198a12ef95444dc
+    Name: ScreenText
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: 4108be91428f9b70c78ffa9c0a18dacfef6d0ab1ff4753795a40ab4d7eaa37b0
+    Components:
+      - ComponentName: ScreenTextComponent
+        guid: b322f64d6630862190f22c2f5927476b3f5fc6496498c6232ef25df86d803843
+        custom_name: ""
+        text: Example
+        position: [0, 0]
+        font_size: 40
+        color: 4278229503
+        flags: 2053
+        button_ref:
+          guid: 9b3faf38e062233164a47df4276806064628aeb6d803b06568162e05fc6ce9b9
+        material:
+          Shader:
+            VertexPath: ./res/shaders/ui.hlsl
+            FragmentPath: ./res/shaders/ui.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 2
+          NeedsForward: false
+          CastsShadows: true
+          IsUI: false
+          IsBillboard: false
