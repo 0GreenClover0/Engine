@@ -30,6 +30,7 @@ public:
     float acceleration = 0.2f;
     float deceleration = 0.1f;
 
+    NON_SERIALIZED
     float interact_with_factory_distance = 1.0f;
 
     std::weak_ptr<Lighthouse> lighthouse = {};

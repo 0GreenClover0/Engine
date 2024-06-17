@@ -22,7 +22,8 @@ public:
     void enter();
     void exit();
 
-    float enterable_distance = 0.6f;
+    NON_SERIALIZED
+    float enterable_distance = 1.0f;
 
     std::weak_ptr<LighthouseLight> light = {};
     std::weak_ptr<Water> water = {};
