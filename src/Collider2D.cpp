@@ -346,7 +346,10 @@ void Collider2D::add_force(glm::vec2 const force)
 void Collider2D::update_center_and_corners()
 {
     glm::vec2 const position = get_center_2d();
-    float const angle = glm::eulerAngles(entity->transform->get_rotation()).y;
+
+    // HACK: For some reason we need to negate the angle here. Not sure why, but this fixes most
+    //       of our collision problems.
+    float const angle = -glm::eulerAngles(entity->transform->get_rotation()).y;
     compute_axes(position, angle);
     m_debug_drawing_entity->transform->set_position(AK::convert_2d_to_3d(position));
 }
