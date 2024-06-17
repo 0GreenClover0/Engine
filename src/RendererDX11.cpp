@@ -375,6 +375,8 @@ void RendererDX11::render_shadow_maps() const
 {
     set_RS_for_shadow_mapping();
 
+    get_device_context()->OMSetDepthStencilState(m_depth_stencil_state, 0);
+
     // Directional light
     if (m_directional_light != nullptr)
     {
