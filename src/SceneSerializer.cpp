@@ -178,6 +178,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
             out << YAML::Key << "flags" << YAML::Value << screentext->flags;
             out << YAML::Key << "font_name" << YAML::Value << screentext->font_name;
             out << YAML::Key << "bold" << YAML::Value << screentext->bold;
+            out << YAML::Key << "button_ref" << YAML::Value << screentext->button_ref;
         }
         else if (auto const particle = std::dynamic_pointer_cast<class Particle>(component); particle != nullptr)
         {
@@ -235,6 +236,9 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
             out << YAML::Key << "ComponentName" << YAML::Value << "ButtonComponent";
             out << YAML::Key << "guid" << YAML::Value << button->guid;
             out << YAML::Key << "custom_name" << YAML::Value << button->custom_name;
+            out << YAML::Key << "path_default" << YAML::Value << button->path_default;
+            out << YAML::Key << "path_hovered" << YAML::Value << button->path_hovered;
+            out << YAML::Key << "path_pressed" << YAML::Value << button->path_pressed;
             out << YAML::Key << "top_left_corner" << YAML::Value << button->top_left_corner;
             out << YAML::Key << "top_right_corner" << YAML::Value << button->top_right_corner;
             out << YAML::Key << "bottom_left_corner" << YAML::Value << button->bottom_left_corner;
@@ -785,6 +789,18 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         else
         {
             auto const deserialized_component = std::dynamic_pointer_cast<class Button>(get_from_pool(component["guid"].as<std::string>()));
+            if (component["path_default"].IsDefined())
+            {
+                deserialized_component->path_default = component["path_default"].as<std::string>();
+            }
+            if (component["path_hovered"].IsDefined())
+            {
+                deserialized_component->path_hovered = component["path_hovered"].as<std::string>();
+            }
+            if (component["path_pressed"].IsDefined())
+            {
+                deserialized_component->path_pressed = component["path_pressed"].as<std::string>();
+            }
             if (component["top_left_corner"].IsDefined())
             {
                 deserialized_component->top_left_corner = component["top_left_corner"].as<glm::vec2>();
@@ -1030,6 +1046,10 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             if (component["bold"].IsDefined())
             {
                 deserialized_component->bold = component["bold"].as<bool>();
+            }
+            if (component["button_ref"].IsDefined())
+            {
+                deserialized_component->button_ref = component["button_ref"].as<std::weak_ptr<Button>>();
             }
             if (component["material"].IsDefined())
             {

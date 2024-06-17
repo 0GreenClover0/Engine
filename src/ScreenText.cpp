@@ -9,6 +9,7 @@
 #include "ShaderFactory.h"
 
 #if EDITOR
+#include "imgui_extensions.h"
 #include "imgui_stdlib.h"
 #endif
 
@@ -68,6 +69,33 @@ void ScreenText::initialize()
     }
 
     refresh_layout();
+}
+
+void ScreenText::awake()
+{
+    set_can_tick(true);
+}
+
+void ScreenText::on_enabled()
+{
+    if (!button_ref.expired())
+    {
+        button_ref.lock()->on_hovered.attach(&ScreenText::hover, shared_from_this());
+        button_ref.lock()->on_clicked.attach(&ScreenText::click, shared_from_this());
+        button_ref.lock()->on_unclicked.attach(&ScreenText::unclick, shared_from_this());
+        button_ref.lock()->on_unhovered.attach(&ScreenText::unhovered, shared_from_this());
+    }
+}
+
+void ScreenText::on_disabled()
+{
+    if (!button_ref.expired())
+    {
+        button_ref.lock()->on_hovered.detach(shared_from_this());
+        button_ref.lock()->on_clicked.detach(shared_from_this());
+        button_ref.lock()->on_unclicked.detach(shared_from_this());
+        button_ref.lock()->on_unhovered.detach(shared_from_this());
+    }
 }
 
 void ScreenText::draw() const
@@ -135,10 +163,37 @@ void ScreenText::draw_editor()
     set_text(text);
 
     ImGui::Checkbox("Align to Center", &m_align_to_center);
+    ImGuiEx::draw_ptr("Button ref", button_ref);
 
     realign_text(m_align_to_center);
 }
 #endif
+
+void ScreenText::update()
+{
+    set_text(text);
+    realign_text(m_align_to_center);
+}
+
+void ScreenText::hover()
+{
+    set_text("Hovered");
+}
+
+void ScreenText::click()
+{
+    set_text("Pressed");
+}
+
+void ScreenText::unclick()
+{
+    set_text("Released");
+}
+
+void ScreenText::unhovered()
+{
+    set_text("Example");
+}
 
 void ScreenText::set_text(std::string const& new_content)
 {
