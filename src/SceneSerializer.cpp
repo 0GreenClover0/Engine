@@ -442,7 +442,6 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "ComponentName" << YAML::Value << "LighthouseComponent";
         out << YAML::Key << "guid" << YAML::Value << lighthouse->guid;
         out << YAML::Key << "custom_name" << YAML::Value << lighthouse->custom_name;
-        out << YAML::Key << "enterable_distance" << YAML::Value << lighthouse->enterable_distance;
         out << YAML::Key << "light" << YAML::Value << lighthouse->light;
         out << YAML::Key << "water" << YAML::Value << lighthouse->water;
         out << YAML::Key << "spawn_position" << YAML::Value << lighthouse->spawn_position;
@@ -457,7 +456,6 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "maximum_speed" << YAML::Value << lighthousekeeper->maximum_speed;
         out << YAML::Key << "acceleration" << YAML::Value << lighthousekeeper->acceleration;
         out << YAML::Key << "deceleration" << YAML::Value << lighthousekeeper->deceleration;
-        out << YAML::Key << "interact_with_factory_distance" << YAML::Value << lighthousekeeper->interact_with_factory_distance;
         out << YAML::Key << "lighthouse" << YAML::Value << lighthousekeeper->lighthouse;
         out << YAML::Key << "port" << YAML::Value << lighthousekeeper->port;
         out << YAML::Key << "packages" << YAML::Value << lighthousekeeper->packages;
@@ -1560,10 +1558,6 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component =
                 std::dynamic_pointer_cast<class Lighthouse>(get_from_pool(component["guid"].as<std::string>()));
-            if (component["enterable_distance"].IsDefined())
-            {
-                deserialized_component->enterable_distance = component["enterable_distance"].as<float>();
-            }
             if (component["light"].IsDefined())
             {
                 deserialized_component->light = component["light"].as<std::weak_ptr<LighthouseLight>>();
@@ -1604,10 +1598,6 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             if (component["deceleration"].IsDefined())
             {
                 deserialized_component->deceleration = component["deceleration"].as<float>();
-            }
-            if (component["interact_with_factory_distance"].IsDefined())
-            {
-                deserialized_component->interact_with_factory_distance = component["interact_with_factory_distance"].as<float>();
             }
             if (component["lighthouse"].IsDefined())
             {
