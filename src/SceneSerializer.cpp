@@ -39,6 +39,7 @@
 #include "Game/ShipSpawner.h"
 #include "Light.h"
 #include "Model.h"
+#include "Panel.h"
 #include "Particle.h"
 #include "ParticleSystem.h"
 #include "PointLight.h"
@@ -185,6 +186,13 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
             out << YAML::Key << "ComponentName" << YAML::Value << "ParticleComponent";
             out << YAML::Key << "guid" << YAML::Value << particle->guid;
             out << YAML::Key << "custom_name" << YAML::Value << particle->custom_name;
+        }
+        else if (auto const panel = std::dynamic_pointer_cast<class Panel>(component); panel != nullptr)
+        {
+            out << YAML::Key << "ComponentName" << YAML::Value << "PanelComponent";
+            out << YAML::Key << "guid" << YAML::Value << panel->guid;
+            out << YAML::Key << "custom_name" << YAML::Value << panel->custom_name;
+            out << YAML::Key << "background_path" << YAML::Value << panel->background_path;
         }
         else if (auto const model = std::dynamic_pointer_cast<class Model>(component); model != nullptr)
         {
@@ -976,6 +984,30 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             if (component["model_path"].IsDefined())
             {
                 deserialized_component->model_path = component["model_path"].as<std::string>();
+            }
+            if (component["material"].IsDefined())
+            {
+                deserialized_component->material = component["material"].as<std::shared_ptr<Material>>();
+            }
+            deserialized_entity->add_component(deserialized_component);
+            deserialized_component->reprepare();
+        }
+    }
+    else if (component_name == "PanelComponent")
+    {
+        if (first_pass)
+        {
+            auto const deserialized_component = Panel::create();
+            deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_component->custom_name = component["custom_name"].as<std::string>();
+            deserialized_pool.emplace_back(deserialized_component);
+        }
+        else
+        {
+            auto const deserialized_component = std::dynamic_pointer_cast<class Panel>(get_from_pool(component["guid"].as<std::string>()));
+            if (component["background_path"].IsDefined())
+            {
+                deserialized_component->background_path = component["background_path"].as<std::string>();
             }
             if (component["material"].IsDefined())
             {
