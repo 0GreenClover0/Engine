@@ -1,0 +1,1492 @@
+Scene: Untitled
+Entities:
+  - Entity: Level_4
+    guid: e7c09ccc26af9a5baa60a54173e8a816cd2742d72c60dbecf61b9bf8f8b1d20d
+    Name: Level_4
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: ""
+    Components:
+      []
+  - Entity: Lighthouse
+    guid: d31a040d02bd9009f00a1688769ce59645c528112b0f4743eb9e34c628a42f40
+    Name: Lighthouse
+    TransformComponent:
+      Translation: [1.9251647, 0.0700712204, 1.75936818]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: e7c09ccc26af9a5baa60a54173e8a816cd2742d72c60dbecf61b9bf8f8b1d20d
+    Components:
+      - ComponentName: LighthouseComponent
+        guid: 3859443ad66793ae197fc08c363f614b189c96089a1b23303663e2c24b50ae52
+        custom_name: ""
+        light:
+          guid: 757e6110f28de099faa7e9f1423e0755dabead281d3c1069129e0c465b6be006
+        spawn_position:
+          guid: 0a17b3d8586aa654015ffe24af296adf24be6f37b6e88f0c5ef918ad477b30fe
+      - ComponentName: Collider2DComponent
+        guid: d55ebe06e746f8c2243152751118a36edbd5eb013a0e7adbe86daed488629134
+        custom_name: ""
+        offset: [0, 0]
+        is_trigger: false
+        is_static: true
+        collider_type: 1
+        width: 2
+        height: 2
+        radius: 0.25
+        drag: 0.00999999978
+        velocity: [0, 0]
+  - Entity: Spotlight
+    guid: e07574acd862fc4be9f7e1123466c3d78321e01e8806297062c7057b291011d0
+    Name: Spotlight
+    TransformComponent:
+      Translation: [0, 0.879999995, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: d31a040d02bd9009f00a1688769ce59645c528112b0f4743eb9e34c628a42f40
+    Components:
+      - ComponentName: SpotLightComponent
+        guid: 635905bd0f076edd89234bfafa355edefddfde9680ab14c35c49bdd8e7b51a92
+        custom_name: ""
+        constant: 1
+        linear: 0.0900000036
+        quadratic: 0.0320000015
+        cut_off: 0.843391418
+        outer_cut_off: 0.49999997
+        ambient: [0.200000003, 0.200000003, 0.200000003]
+        diffuse: [1, 1, 1]
+        specular: [1, 1, 1]
+        m_near_plane: 0.100000001
+        m_far_plane: 25
+  - Entity: Spawn
+    guid: 0a17b3d8586aa654015ffe24af296adf24be6f37b6e88f0c5ef918ad477b30fe
+    Name: Spawn
+    TransformComponent:
+      Translation: [0, 0, 0.400000006]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: d31a040d02bd9009f00a1688769ce59645c528112b0f4743eb9e34c628a42f40
+    Components:
+      []
+  - Entity: Model
+    guid: 0eed7e4d00fe705e39087e88ed30dd96e6a02a55e57c67438312826c644eb921
+    Name: Model
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, -90, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: d31a040d02bd9009f00a1688769ce59645c528112b0f4743eb9e34c628a42f40
+    Components:
+      - ComponentName: ModelComponent
+        guid: 400bdad1439927f83b3efc5350c3cd61a6247b846f4b1eb1ebc909de73ebbd7b
+        custom_name: ""
+        model_path: ./res/models\lighthouseNew\lighthouse.gltf
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+          NeedsForward: false
+          CastsShadows: true
+  - Entity: Controller
+    guid: f7120438ab4f99fbf530c636ccec8e4c1863feaa01623c19fa87da90f2884aed
+    Name: Controller
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: e7c09ccc26af9a5baa60a54173e8a816cd2742d72c60dbecf61b9bf8f8b1d20d
+    Components:
+      - ComponentName: LevelControllerComponent
+        guid: fbec9137dc8fbd5b6b0ca1a68d4737b969ed137aab6cbd1f95288251b7e0c18d
+        custom_name: ""
+        map_time: 180
+        map_food: 25
+        maximum_lighthouse_level: 10
+        factories:
+          - guid: 9f98319a1c4aeaf3b33d34d3b9d0240ad0e00c71fa2e9c4608a291b00571d0f5
+          - guid: 822bd7d1c6cedf3de8327578a80b21acfe19f9efa0192b641535cb38eaaa1195
+        port:
+          guid: e54ebc8a27104aacacabf170ec6e18e987d2db500111d1f2f6400dd90ccd29a5
+        playfield_width: 6
+        playfield_additional_width: 2
+        playfield_height: 5.19999981
+        ships_limit_curve:
+          guid: 19b9bffe3812224b60b4c3783df538cfe050959b7035cfcbd475e3465d94ffa8
+        ships_limit: 0
+        ships_speed_curve:
+          guid: 3d28b595e9887b6c19f9126c402c37b3933136770417fd32358c2e0a668e8557
+        ships_speed: 0
+        ships_range_curve:
+          guid: 459095cb2ee795a696554c11f19059e563100135c6d3e97cec82b5356d183e0c
+        ships_turn_curve:
+          guid: 7de1c2d76526464f2369ab5e87a91186dab7cf86c0290891646578b5fe63e70d
+        ships_additional_speed_curve:
+          guid: 038d6861bbfbae0387e49b1e3f7f9d861f96b9d603ccf14f9991964fc2394e16
+        pirates_in_control_curve:
+          guid: d93ec4e70b53a6d0c393a65d2ebc711a911f703c8054a219f808fd80a3f865f7
+      - ComponentName: ShipSpawnerComponent
+        guid: 88cd9b0f7c6d92b1876158a4efb73af60aa7f2420e8a67a909f3aedffee7a717
+        custom_name: ""
+        paths:
+          []
+        light:
+          guid: 757e6110f28de099faa7e9f1423e0755dabead281d3c1069129e0c465b6be006
+        last_chance_food_threshold: 3
+        last_chance_time_threshold: 40
+        main_event_spawn:
+          - [[0], 0]
+          - [[1], 0]
+          - [[0], 0]
+          - [[3], 0]
+        backup_spawn:
+          - [[4, 0, 4], 0]
+          - [[1, 3, 2, 3], 0]
+          - [[0, 1], 0]
+          - [[4, 4, 4], 0]
+      - ComponentName: PathComponent
+        guid: ea36dcb5d9b12b29ed1f928f1bd031871491bd5666e0cceb804efb96da8002a8
+        custom_name: ""
+        points:
+          - [7.69999981, 1]
+          - [8.69999981, -2.5]
+      - ComponentName: CurveComponent
+        guid: 19b9bffe3812224b60b4c3783df538cfe050959b7035cfcbd475e3465d94ffa8
+        custom_name: Ships limit
+        points:
+          - [0, 2]
+          - [0.200000003, 2]
+          - [0.600000024, 6]
+          - [1, 6]
+      - ComponentName: CurveComponent
+        guid: 3d28b595e9887b6c19f9126c402c37b3933136770417fd32358c2e0a668e8557
+        custom_name: Ships speed
+        points:
+          - [0, 0.560000002]
+          - [0.221183807, 0.560000002]
+          - [1, 0.639999986]
+      - ComponentName: CurveComponent
+        guid: 459095cb2ee795a696554c11f19059e563100135c6d3e97cec82b5356d183e0c
+        custom_name: Ships range
+        points:
+          - [0, 1.5]
+          - [0.600000024, 1.79999995]
+          - [1, 2.5]
+      - ComponentName: CurveComponent
+        guid: 7de1c2d76526464f2369ab5e87a91186dab7cf86c0290891646578b5fe63e70d
+        custom_name: Ships turn
+        points:
+          - [0, 10]
+          - [0.200000003, 15]
+          - [1, 30]
+      - ComponentName: CurveComponent
+        guid: 038d6861bbfbae0387e49b1e3f7f9d861f96b9d603ccf14f9991964fc2394e16
+        custom_name: Ships additional speed
+        points:
+          - [0, 0.00999999978]
+          - [0.200000003, 0.0199999996]
+          - [1, 0.100000001]
+      - ComponentName: CurveComponent
+        guid: d93ec4e70b53a6d0c393a65d2ebc711a911f703c8054a219f808fd80a3f865f7
+        custom_name: Pirates in control
+        points:
+          - [0, 0.360000014]
+          - [1, 1.65999997]
+      - ComponentName: PathComponent
+        guid: a3597a3bed6f7ce7ad1d471bcd732f2cfa237531cf2b5f57efb478db06919c05
+        custom_name: ""
+        points:
+          - [-7.69999981, 1]
+          - [-8.69999981, -2.5]
+  - Entity: Port
+    guid: a997899e12888131183bb09aabbe5d55d958cf4e1e39d805745dc645490813c2
+    Name: Port
+    TransformComponent:
+      Translation: [-2.48000002, 0, 2.53524446]
+      Rotation: [0, 0, 0]
+      Scale: [1, 0.774765253, 1]
+      Parent:
+        guid: e7c09ccc26af9a5baa60a54173e8a816cd2742d72c60dbecf61b9bf8f8b1d20d
+    Components:
+      - ComponentName: PortComponent
+        guid: e54ebc8a27104aacacabf170ec6e18e987d2db500111d1f2f6400dd90ccd29a5
+        custom_name: ""
+        lights:
+          - guid: 9ae334d24d975edcd06d4480dded0d85d3d90301ab254ee7ba1a70e4ff1a3ed1
+          - guid: 3b6be4bb6b6483274ede77575ef61ad9512a007f9d66c92eab18ad02d453b247
+          - guid: 8cb357e663d843197b46330013589a3daf2ac73f1a9bb42f376c51fefbf9a0de
+          - guid: 5d89f757f1cf83ed4fec07991146f8bc17bad958e1a97228377445adba8cc44a
+      - ComponentName: Collider2DComponent
+        guid: 3bbf46b2b85487a8e5b4f00c002fe8fc89380a9fb722a92cf5eb38e1817079ca
+        custom_name: ""
+        offset: [0, 0]
+        is_trigger: true
+        is_static: false
+        collider_type: 0
+        width: 3.4000001
+        height: 2
+        radius: 1
+        drag: 0.00999999978
+        velocity: [0, 0]
+  - Entity: LightUL
+    guid: 9ae334d24d975edcd06d4480dded0d85d3d90301ab254ee7ba1a70e4ff1a3ed1
+    Name: LightUL
+    TransformComponent:
+      Translation: [-1.70000005, 0.5, -1]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: a997899e12888131183bb09aabbe5d55d958cf4e1e39d805745dc645490813c2
+    Components:
+      - ComponentName: PointLightComponent
+        guid: c68e1930b7fe9b46cd0bd06e8709999582e23fe67808925ebc7c9625c6c1f995
+        custom_name: ""
+        constant: 1
+        linear: 10
+        quadratic: 10
+        ambient: [0.200000003, 0.200000003, 0.200000003]
+        diffuse: [0, 1, 0]
+        specular: [1, 1, 1]
+        m_near_plane: 0.5
+        m_far_plane: 25
+  - Entity: LightUR
+    guid: 3b6be4bb6b6483274ede77575ef61ad9512a007f9d66c92eab18ad02d453b247
+    Name: LightUR
+    TransformComponent:
+      Translation: [1.70000005, 0.5, -1]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: a997899e12888131183bb09aabbe5d55d958cf4e1e39d805745dc645490813c2
+    Components:
+      - ComponentName: PointLightComponent
+        guid: f8e631100fbd11604a3fbfa5ca7ac505ee6297cabebdaf5c865de7642ca41d99
+        custom_name: ""
+        constant: 1
+        linear: 10
+        quadratic: 10
+        ambient: [0.200000003, 0.200000003, 0.200000003]
+        diffuse: [0, 1, 0]
+        specular: [1, 1, 1]
+        m_near_plane: 0.5
+        m_far_plane: 25
+  - Entity: LightBL
+    guid: 8cb357e663d843197b46330013589a3daf2ac73f1a9bb42f376c51fefbf9a0de
+    Name: LightBL
+    TransformComponent:
+      Translation: [-1.70000005, 0.5, 1]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: a997899e12888131183bb09aabbe5d55d958cf4e1e39d805745dc645490813c2
+    Components:
+      - ComponentName: PointLightComponent
+        guid: f51893831343a40db7f2ae7dbbfc2515e96cd4800572a16c4602e2f20a72e1eb
+        custom_name: ""
+        constant: 1
+        linear: 10
+        quadratic: 10
+        ambient: [0.200000003, 0.200000003, 0.200000003]
+        diffuse: [0, 1, 0]
+        specular: [1, 1, 1]
+        m_near_plane: 0.5
+        m_far_plane: 25
+  - Entity: LightBR
+    guid: 5d89f757f1cf83ed4fec07991146f8bc17bad958e1a97228377445adba8cc44a
+    Name: LightBR
+    TransformComponent:
+      Translation: [1.70000005, 0.5, 1]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: a997899e12888131183bb09aabbe5d55d958cf4e1e39d805745dc645490813c2
+    Components:
+      - ComponentName: PointLightComponent
+        guid: 8657093944efdaf0319d02736b6bed5197f2533ceef7ae01576962060e5b15ba
+        custom_name: ""
+        constant: 1
+        linear: 10
+        quadratic: 10
+        ambient: [0.200000003, 0.200000003, 0.200000003]
+        diffuse: [0, 1, 0]
+        specular: [1, 1, 1]
+        m_near_plane: 0.5
+        m_far_plane: 25
+  - Entity: Ice
+    guid: a48e1d63c232c095aa7b8dca251c8a53ab23ad371033c34fd16365d29eef656e
+    Name: Ice
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: e7c09ccc26af9a5baa60a54173e8a816cd2742d72c60dbecf61b9bf8f8b1d20d
+    Components:
+      []
+  - Entity: Floe
+    guid: 262d911e048c7df5084ae7abeb80e95659efce547ecf9c561a129c38b4f966f5
+    Name: Floe
+    TransformComponent:
+      Translation: [7.08227253, -6.10351562e-05, 2.1267786]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: a48e1d63c232c095aa7b8dca251c8a53ab23ad371033c34fd16365d29eef656e
+    Components:
+      - ComponentName: IceBoundComponent
+        guid: 5ca3075c70cd128a27a7a9b8d47e71a29de4ed7d8412cfc5c1ed9264d09fe97a
+        custom_name: ""
+      - ComponentName: Collider2DComponent
+        guid: 4deade6d61a9ffacb7659b2a584738d4804bc9b042130b8d004a7c696dba159b
+        custom_name: ""
+        offset: [0, 0.100000001]
+        is_trigger: true
+        is_static: false
+        collider_type: 0
+        width: 1.20000005
+        height: 1.20000005
+        radius: 1
+        drag: 0.00999999978
+        velocity: [0, 0]
+      - ComponentName: ModelComponent
+        guid: 1f20a085b8ca1f681798f46ce64fc629ecc2500474077361ffe5f5bf23182d37
+        custom_name: ""
+        model_path: ./res/models/iceIslands/s_2.gltf
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+          NeedsForward: false
+          CastsShadows: true
+  - Entity: Floe
+    guid: 404cbf24b389cc334be5f777f31d41e943f2b596def2da0e41fb87320501addd
+    Name: Floe
+    TransformComponent:
+      Translation: [4.89170265, -6.10351562e-05, 2.82677865]
+      Rotation: [0, 36.0279922, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: a48e1d63c232c095aa7b8dca251c8a53ab23ad371033c34fd16365d29eef656e
+    Components:
+      - ComponentName: IceBoundComponent
+        guid: fab246c3eee3bf3f1285efac20019af0acf6935882cf269d766dbad2c4984caa
+        custom_name: ""
+      - ComponentName: Collider2DComponent
+        guid: 8ba9a4a3d4086252b707203f757099c100918ced1a1217175e9176e2e0f13794
+        custom_name: ""
+        offset: [-0.300000012, 0.200000003]
+        is_trigger: true
+        is_static: false
+        collider_type: 0
+        width: 2.79999995
+        height: 2.5999999
+        radius: 1
+        drag: 0.00999999978
+        velocity: [0, 0]
+      - ComponentName: ModelComponent
+        guid: 29dbcb065d26a13d05eea5054980141f5e4b40cb80f23b29f01ffb029a514a7a
+        custom_name: ""
+        model_path: ./res/models/iceIslands/s_3.gltf
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+          NeedsForward: false
+          CastsShadows: true
+  - Entity: Floe
+    guid: ce6349dc8f20739f5c45a2ac1c46ddc1c29a7dbe337a3756c9581b8e4c970f96
+    Name: Floe
+    TransformComponent:
+      Translation: [1.99170256, -6.10351562e-05, 2.22677851]
+      Rotation: [0, 36.0279999, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: a48e1d63c232c095aa7b8dca251c8a53ab23ad371033c34fd16365d29eef656e
+    Components:
+      - ComponentName: IceBoundComponent
+        guid: a5f08e3c1828971b4b1811441228d5965133e2cb76e41f8fef8ddff44dcd5007
+        custom_name: ""
+      - ComponentName: Collider2DComponent
+        guid: 828367b25269f793e537209e7f3833e34129ff3c0fbac2339fe3ccc3afe6e1e5
+        custom_name: ""
+        offset: [0, 0]
+        is_trigger: true
+        is_static: false
+        collider_type: 1
+        width: 2.79999995
+        height: 2.5999999
+        radius: 1
+        drag: 0.00999999978
+        velocity: [0, 0]
+      - ComponentName: ModelComponent
+        guid: 8055a27cbd230c1c5fb491f6dad9af76957a413e765f08b5eda7ae6f298b6564
+        custom_name: ""
+        model_path: ./res/models/iceIslands/c_5.gltf
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+          NeedsForward: false
+          CastsShadows: true
+  - Entity: Floe
+    guid: b0bfcd99fea0fe8b02a1516b1f4fd38ae6ac04fd59343a9a766f7872995c5d31
+    Name: Floe
+    TransformComponent:
+      Translation: [0.0917025805, -6.10351562e-05, 1.42677855]
+      Rotation: [0, 36.0279999, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: a48e1d63c232c095aa7b8dca251c8a53ab23ad371033c34fd16365d29eef656e
+    Components:
+      - ComponentName: IceBoundComponent
+        guid: a5789f19a1c43ca3ee7b95db4e25e5054b5f38ec4c53e164e803a652ecabb4b9
+        custom_name: ""
+      - ComponentName: Collider2DComponent
+        guid: 196049f2f137af7ce5bffcd17e4c50d9b90c2263cad825f6dd8c1dfcad871120
+        custom_name: ""
+        offset: [0, 0]
+        is_trigger: true
+        is_static: false
+        collider_type: 1
+        width: 2.79999995
+        height: 2.5999999
+        radius: 0.699999988
+        drag: 0.00999999978
+        velocity: [0, 0]
+      - ComponentName: ModelComponent
+        guid: d811fccd88744ff0b6d6de845fd5c49a019cf74ed9c2297c01b6f4e79772470c
+        custom_name: ""
+        model_path: ./res/models/iceIslands/c_3.gltf
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+          NeedsForward: false
+          CastsShadows: true
+  - Entity: Floe
+    guid: 11297ab0722d6583d30c048d0bc68b64ca8a0a1cc21893631b5c28fabb5c0dff
+    Name: Floe
+    TransformComponent:
+      Translation: [7.79170227, -6.10351562e-05, -5.57322168]
+      Rotation: [0, 81.0478821, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: a48e1d63c232c095aa7b8dca251c8a53ab23ad371033c34fd16365d29eef656e
+    Components:
+      - ComponentName: IceBoundComponent
+        guid: f94ec325c2d37836222b03abbd85b0f96d577cbfdc95a2dc1ef6f11bd2270a3f
+        custom_name: ""
+      - ComponentName: Collider2DComponent
+        guid: 4bbdc9fca2584caf131bf661cfe8151a5a8556e1ca99f97ea5e83f26c443aa9e
+        custom_name: ""
+        offset: [0, 0]
+        is_trigger: true
+        is_static: false
+        collider_type: 0
+        width: 4
+        height: 3.79999995
+        radius: 0.400000006
+        drag: 0.00999999978
+        velocity: [0, 0]
+      - ComponentName: ModelComponent
+        guid: ecc7f12146ef2412a2efd7b740b1905ce0348d48096a64ad79cbfc77257fcc77
+        custom_name: ""
+        model_path: ./res/models/iceIslands/s_4.gltf
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+          NeedsForward: false
+          CastsShadows: true
+  - Entity: Floe
+    guid: 29b1a43f8f4c7b5e9e31fce410f6c9585dcf319b2a6815eac52d51eb1da4eb1b
+    Name: Floe
+    TransformComponent:
+      Translation: [3.69170237, -6.10351562e-05, 1.52677834]
+      Rotation: [0, 27.0198021, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: a48e1d63c232c095aa7b8dca251c8a53ab23ad371033c34fd16365d29eef656e
+    Components:
+      - ComponentName: IceBoundComponent
+        guid: cb3e3242ef52ffdbf08ecac1a4cdc7374c0dbc49ded138ce6383be7ca9db6117
+        custom_name: ""
+      - ComponentName: Collider2DComponent
+        guid: fbf03d998bd8a441ca108228edff3a07a3cf0f4afeae81dbb5373a6bdbfae5e4
+        custom_name: ""
+        offset: [-0.100000001, 0.100000001]
+        is_trigger: true
+        is_static: false
+        collider_type: 0
+        width: 0.800000012
+        height: 0.800000012
+        radius: 0.400000006
+        drag: 0.00999999978
+        velocity: [0, 0]
+      - ComponentName: ModelComponent
+        guid: 8af430753accc8f12a08514e7659a08f23c226fc793f64de480d031ff7f3a8a8
+        custom_name: ""
+        model_path: ./res/models/iceIslands/s_1.gltf
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+          NeedsForward: false
+          CastsShadows: true
+  - Entity: Floe
+    guid: 2d1a3adc5a0460c3cb78f1bcc883bd39a982cd30908e518033f39e8dca0bb871
+    Name: Floe
+    TransformComponent:
+      Translation: [5.09170198, -6.10351562e-05, -3.9732213]
+      Rotation: [0, -18.9999943, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: a48e1d63c232c095aa7b8dca251c8a53ab23ad371033c34fd16365d29eef656e
+    Components:
+      - ComponentName: IceBoundComponent
+        guid: 75cb9f8d838458ee81285c1587802775997255dcc5be57a0708320a3c5bedf34
+        custom_name: ""
+      - ComponentName: Collider2DComponent
+        guid: cf937e41854661b9610aa79dfdbcce627e69647bd8667d9aa2ea8835bc306862
+        custom_name: ""
+        offset: [0, 0]
+        is_trigger: true
+        is_static: false
+        collider_type: 0
+        width: 0.800000012
+        height: 0.800000012
+        radius: 0.400000006
+        drag: 0.00999999978
+        velocity: [0, 0]
+      - ComponentName: ModelComponent
+        guid: 863d91499b3e48e684088f7883b9a127ff2d7ad351b80d575da8a602b041a8a0
+        custom_name: ""
+        model_path: ./res/models/iceIslands/s_1.gltf
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+          NeedsForward: false
+          CastsShadows: true
+  - Entity: Floe
+    guid: afcc6c4f73683ca0b36e967186c66c1a93ff7f95fbd204b341b171eb205ab835
+    Name: Floe
+    TransformComponent:
+      Translation: [4.89170265, -6.10351562e-05, -5.57322121]
+      Rotation: [0, 60.3860321, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: a48e1d63c232c095aa7b8dca251c8a53ab23ad371033c34fd16365d29eef656e
+    Components:
+      - ComponentName: IceBoundComponent
+        guid: 9ca2177d9806a1766ed5b9fb8c413f838351a18bb884be34c017c20a1b2ff6ca
+        custom_name: ""
+      - ComponentName: Collider2DComponent
+        guid: 40f0ce0ea20bd2434a6e857dbc7b913c3fe131cf3084d30c9eb157262610979a
+        custom_name: ""
+        offset: [0, 0]
+        is_trigger: true
+        is_static: false
+        collider_type: 0
+        width: 1.20000005
+        height: 1.20000005
+        radius: 0.400000006
+        drag: 0.00999999978
+        velocity: [0, 0]
+      - ComponentName: ModelComponent
+        guid: 48b86bd24980dfba8f07da8a24b0031aeaafc028650f087048c1575c21295911
+        custom_name: ""
+        model_path: ./res/models/iceIslands/s_2.gltf
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+          NeedsForward: false
+          CastsShadows: true
+  - Entity: Floe
+    guid: 247a74460897e00060824cec44f49a606c236300cf761f4789f70307c2f879fe
+    Name: Floe
+    TransformComponent:
+      Translation: [1.89170265, -6.10351562e-05, -5.47322083]
+      Rotation: [0, 69.3288727, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: a48e1d63c232c095aa7b8dca251c8a53ab23ad371033c34fd16365d29eef656e
+    Components:
+      - ComponentName: IceBoundComponent
+        guid: 557358db09c27f42e2b2e314b9a72aa3eeb2faafa10d385298444ac70f59f6ee
+        custom_name: ""
+      - ComponentName: Collider2DComponent
+        guid: e894079e13aa0da2f1c475c280eb7ae0b274dda0faaf8a1af6563c5801671a74
+        custom_name: ""
+        offset: [0, 0]
+        is_trigger: true
+        is_static: false
+        collider_type: 0
+        width: 2.79999995
+        height: 2.5999999
+        radius: 0.400000006
+        drag: 0.00999999978
+        velocity: [0, 0]
+      - ComponentName: ModelComponent
+        guid: b63b9998c061e6b42a242047910051f5b95452e59a121386a0ad07795a69b021
+        custom_name: ""
+        model_path: ./res/models/iceIslands/s_3.gltf
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+          NeedsForward: false
+          CastsShadows: true
+  - Entity: Floe
+    guid: a1982f0507591216abc8d2a1bd4c0ef8950bd1c77cf9a9a92198eb1c7df08702
+    Name: Floe
+    TransformComponent:
+      Translation: [3.89170265, -6.10351562e-05, -4.07322121]
+      Rotation: [0, 78.6710205, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: a48e1d63c232c095aa7b8dca251c8a53ab23ad371033c34fd16365d29eef656e
+    Components:
+      - ComponentName: IceBoundComponent
+        guid: 191b4af326ae0206056247c0899277372327819e694118401e5b13bc4c53a80d
+        custom_name: ""
+      - ComponentName: Collider2DComponent
+        guid: 6314c7edf359ce3e3db1cf97df4958ae4b0b39131f829ca0c450409b6641350e
+        custom_name: ""
+        offset: [0, 0]
+        is_trigger: true
+        is_static: false
+        collider_type: 1
+        width: 0.800000012
+        height: 0.800000012
+        radius: 0.800000012
+        drag: 0.00999999978
+        velocity: [0, 0]
+      - ComponentName: ModelComponent
+        guid: 1139f9447ee29699732812c915bf9dce1528891025990b6470128b00f6e91302
+        custom_name: ""
+        model_path: ./res/models/iceIslands/c_3.gltf
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+          NeedsForward: false
+          CastsShadows: true
+  - Entity: Floe
+    guid: f0fcec049989543825382ed17975879b92f9c90992255746f8007d73630722d3
+    Name: Floe
+    TransformComponent:
+      Translation: [-1.10829735, -6.10351562e-05, -4.87322092]
+      Rotation: [0, 69.3288727, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: a48e1d63c232c095aa7b8dca251c8a53ab23ad371033c34fd16365d29eef656e
+    Components:
+      - ComponentName: IceBoundComponent
+        guid: 4b9ff5b95ec3621b896c225bc0d24d19018c629299d634b6bb586f483c2ffa2b
+        custom_name: ""
+      - ComponentName: Collider2DComponent
+        guid: 76a167add1cc576f96d516b1e6eb7761d53ad313eb50585d5e391b540d76083e
+        custom_name: ""
+        offset: [0, 0]
+        is_trigger: true
+        is_static: false
+        collider_type: 1
+        width: 2.79999995
+        height: 2.5999999
+        radius: 1.39999998
+        drag: 0.00999999978
+        velocity: [0, 0]
+      - ComponentName: ModelComponent
+        guid: 9d41996e2b8320b5e5afb60378372687139058b3506cea5e18e2a389c9444f12
+        custom_name: ""
+        model_path: ./res/models/iceIslands/c_6.gltf
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+          NeedsForward: false
+          CastsShadows: true
+  - Entity: Floe
+    guid: 0fcb1946e5026e996d584984b5d1c183770c345b820d94ad53b3e7e2fd21198e
+    Name: Floe
+    TransformComponent:
+      Translation: [-0.208297253, -6.10351562e-05, -7.47322083]
+      Rotation: [0, 69.3288727, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: a48e1d63c232c095aa7b8dca251c8a53ab23ad371033c34fd16365d29eef656e
+    Components:
+      - ComponentName: IceBoundComponent
+        guid: 6119cb0305d2db9a80c7e1ad0fca8a648e988e3769d85ebf77d486eaf3f01542
+        custom_name: ""
+      - ComponentName: Collider2DComponent
+        guid: 3a24632dbbb396de0d789553cada0a702f473ae9a7ff463e6f39946c1bdd0a3f
+        custom_name: ""
+        offset: [0, 0]
+        is_trigger: true
+        is_static: false
+        collider_type: 1
+        width: 2.79999995
+        height: 2.5999999
+        radius: 1.25
+        drag: 0.00999999978
+        velocity: [0, 0]
+      - ComponentName: ModelComponent
+        guid: 8099b5ee3c855cf45de77b1ad8d217a903e2e3e1a0575026434fe47d68ed6f7b
+        custom_name: ""
+        model_path: ./res/models/iceIslands/c_5.gltf
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+          NeedsForward: false
+          CastsShadows: true
+  - Entity: Floe
+    guid: eeee3225cb8f5c32f7847069ed18491236df2dc6c8bed87051123bee7d646b7c
+    Name: Floe
+    TransformComponent:
+      Translation: [-4.80829716, -6.10351562e-05, -5.47322083]
+      Rotation: [0, 32.3288956, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: a48e1d63c232c095aa7b8dca251c8a53ab23ad371033c34fd16365d29eef656e
+    Components:
+      - ComponentName: IceBoundComponent
+        guid: f7771662e4ea53ee92e2a874ba87d295af5369d82eb0ebcbc5a6e228ff922f19
+        custom_name: ""
+      - ComponentName: Collider2DComponent
+        guid: 8d4d5cfce10f5ee60479949f4de4d49e3c951298ea998b5a29f1f2338ea75284
+        custom_name: ""
+        offset: [0, 0]
+        is_trigger: true
+        is_static: false
+        collider_type: 1
+        width: 2.79999995
+        height: 2.5999999
+        radius: 2
+        drag: 0.00999999978
+        velocity: [0, 0]
+      - ComponentName: ModelComponent
+        guid: c2a10e62727f8b64fd39de7a1c46fbc89b7b7bed61b735768f9601b6b8035db9
+        custom_name: ""
+        model_path: ./res/models/iceIslands/c_7.gltf
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+          NeedsForward: false
+          CastsShadows: true
+  - Entity: Floe
+    guid: 35b6d2511eb3b4125b2ea7c5d763083198363c4f005adcdf7770aea8e97c675e
+    Name: Floe
+    TransformComponent:
+      Translation: [-8.94999981, 0, -5.40999985]
+      Rotation: [0, 8.41541481, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: a48e1d63c232c095aa7b8dca251c8a53ab23ad371033c34fd16365d29eef656e
+    Components:
+      - ComponentName: IceBoundComponent
+        guid: 990f993eada823b41fbfdb2b34489a060a18cb07b66b15d55c5f202aa7445418
+        custom_name: ""
+      - ComponentName: Collider2DComponent
+        guid: a528238d6abe6cbe0d42515a595088b55b39ad0b380631b4cf3c17bc5c9d48cf
+        custom_name: ""
+        offset: [0, 0]
+        is_trigger: true
+        is_static: false
+        collider_type: 0
+        width: 4
+        height: 3.79999995
+        radius: 2
+        drag: 0.00999999978
+        velocity: [0, 0]
+      - ComponentName: ModelComponent
+        guid: fbf6031214b483cdf189ef5f0c4ea79ccdf967fd4a097496f9a2a096ddbfb8a2
+        custom_name: ""
+        model_path: ./res/models/iceIslands/s_4.gltf
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+          NeedsForward: false
+          CastsShadows: true
+  - Entity: Floe
+    guid: aefff153a8977bfb3c2cbf1913d37383ddf12e580485dd86c444100ddfbc9949
+    Name: Floe
+    TransformComponent:
+      Translation: [-7.5999999, -6.10351562e-05, 2.82677889]
+      Rotation: [0, 10.3289099, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: a48e1d63c232c095aa7b8dca251c8a53ab23ad371033c34fd16365d29eef656e
+    Components:
+      - ComponentName: IceBoundComponent
+        guid: 9fdb9242523919bdaac2eb079ef6d42bd621b42dd02cb83580c610bee50f381e
+        custom_name: ""
+      - ComponentName: Collider2DComponent
+        guid: 37fe650b019de65410ffdbf559a1c83e8e1f84a882f48fbfaffca41f784629ec
+        custom_name: ""
+        offset: [-0.200000003, 0.300000012]
+        is_trigger: true
+        is_static: false
+        collider_type: 0
+        width: 2.79999995
+        height: 2.5999999
+        radius: 0.800000012
+        drag: 0.00999999978
+        velocity: [0, 0]
+      - ComponentName: ModelComponent
+        guid: 2d55309ec30573fb2b5a165b3011c12a09d4a84b2fd13c2658f6033b0f4eb668
+        custom_name: ""
+        model_path: ./res/models/iceIslands/s_3.gltf
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+          NeedsForward: false
+          CastsShadows: true
+  - Entity: Floe
+    guid: 523d20ad1aa456a35fd8732e79d53ff3724608404e5566ddc0bade20f9a2f6ca
+    Name: Floe
+    TransformComponent:
+      Translation: [-5.79999971, -6.10351562e-05, 2.02677894]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: a48e1d63c232c095aa7b8dca251c8a53ab23ad371033c34fd16365d29eef656e
+    Components:
+      - ComponentName: IceBoundComponent
+        guid: a4a54bf81710fcbcf3e90857ec731e6b7cb412f396e0193f1d36d86d84f4bb56
+        custom_name: ""
+      - ComponentName: Collider2DComponent
+        guid: 11715a6899ec50c644b2b7301efbb7cf6bd17d148c4b03eb82b64927be7c499d
+        custom_name: ""
+        offset: [0, 0]
+        is_trigger: true
+        is_static: false
+        collider_type: 0
+        width: 0.800000012
+        height: 0.800000012
+        radius: 1
+        drag: 0.00999999978
+        velocity: [0, 0]
+      - ComponentName: ModelComponent
+        guid: 0a20a7c2b763636e0e86f3983768cd804f92a8bf4aa363ca0b6d5e768beafd5f
+        custom_name: ""
+        model_path: ./res/models/iceIslands/s_1.gltf
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+          NeedsForward: false
+          CastsShadows: true
+  - Entity: Floe
+    guid: 9797b3d668a482f4182aff325c5c4adef87640cd7e2d769248f6ecaa06ef8b9f
+    Name: Floe
+    TransformComponent:
+      Translation: [-5.5999999, -6.10351562e-05, 3.12677908]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: a48e1d63c232c095aa7b8dca251c8a53ab23ad371033c34fd16365d29eef656e
+    Components:
+      - ComponentName: IceBoundComponent
+        guid: 7fb27cbdde3ec3764a35a3162386c57677f7cecff1313283c5990141b7c254c1
+        custom_name: ""
+      - ComponentName: Collider2DComponent
+        guid: 14e758a8fab97e2509b2d0d1295fb5165723f6c48fdd9342b639a7d0953e5a87
+        custom_name: ""
+        offset: [0, 0]
+        is_trigger: true
+        is_static: false
+        collider_type: 1
+        width: 0.800000012
+        height: 0.800000012
+        radius: 0.400000006
+        drag: 0.00999999978
+        velocity: [0, 0]
+      - ComponentName: ModelComponent
+        guid: 286e7fc79fd3b9b95f5179df35fd6e16aa763766de254ddcae9f9a440882c83c
+        custom_name: ""
+        model_path: ./res/models/iceIslands/c_2.gltf
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+          NeedsForward: false
+          CastsShadows: true
+  - Entity: Floe
+    guid: 795116890ee51fe66b22b89dad5b11898cebeb136716b0ab181df9313c057c66
+    Name: Floe
+    TransformComponent:
+      Translation: [2.83219385, -6.10351562e-05, -1.57389736]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: a48e1d63c232c095aa7b8dca251c8a53ab23ad371033c34fd16365d29eef656e
+    Components:
+      - ComponentName: IceBoundComponent
+        guid: 0f1bb517b9f40e7c870dc246278ce09c622cf01f0472bdf73af85577b76f1e18
+        custom_name: ""
+      - ComponentName: Collider2DComponent
+        guid: 47dfce56d3c7871b08d66137dbe5870c4f2e94b49f0c8a30bfd1f945d64f0c60
+        custom_name: ""
+        offset: [0, 0]
+        is_trigger: true
+        is_static: false
+        collider_type: 1
+        width: 0.800000012
+        height: 0.800000012
+        radius: 0.300000012
+        drag: 0.00999999978
+        velocity: [0, 0]
+      - ComponentName: ModelComponent
+        guid: 09ef3844b4fe8b0d23767944edbe2e21dbc5904ca493f4933654e3604e81dc7a
+        custom_name: ""
+        model_path: ./res/models/iceIslands/c_2.gltf
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+          NeedsForward: false
+          CastsShadows: true
+  - Entity: HarborBig
+    guid: c00de470b073ff30a4ec65bc0bb78843608340517f9fbfd8e92ae43cf00ab630
+    Name: HarborBig
+    TransformComponent:
+      Translation: [-5.36929274, 0, 3.21839881]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: e7c09ccc26af9a5baa60a54173e8a816cd2742d72c60dbecf61b9bf8f8b1d20d
+    Components:
+      []
+  - Entity: Ice
+    guid: 374e277f8ed794a0df0294f7c39ddfa2dada2c1f23e95fed2a477530baa0dd9e
+    Name: Ice
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: c00de470b073ff30a4ec65bc0bb78843608340517f9fbfd8e92ae43cf00ab630
+    Components:
+      []
+  - Entity: cl
+    guid: 82115c70e4ffc16df889e555076cb4ac17a3cb76d8354fdee8c956c3a93512e9
+    Name: cl
+    TransformComponent:
+      Translation: [0.800000191, 0, 0.399999857]
+      Rotation: [0, 10.0000095, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: 374e277f8ed794a0df0294f7c39ddfa2dada2c1f23e95fed2a477530baa0dd9e
+    Components:
+      - ComponentName: ModelComponent
+        guid: 49c5639ae2db28ff358441ecacd85b78899b2f53a2ea4c8f76974d4dc1b9353b
+        custom_name: ""
+        model_path: ./res/models\harborIslands\corner_big_l.gltf
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+          NeedsForward: false
+          CastsShadows: true
+  - Entity: b
+    guid: 183236fe33be13352643ce3297620f91f0bb89f3192c41f1525b74ee10e737a7
+    Name: b
+    TransformComponent:
+      Translation: [2.79999995, 0, 0.0999999046]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: 374e277f8ed794a0df0294f7c39ddfa2dada2c1f23e95fed2a477530baa0dd9e
+    Components:
+      - ComponentName: ModelComponent
+        guid: ae35fb182ab861fb8a81c50894d1b7291de6d68d90f276bffd04b014877eda3f
+        custom_name: ""
+        model_path: ./res/models\harborIslands\bottom_big.gltf
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+          NeedsForward: false
+          CastsShadows: true
+  - Entity: rl
+    guid: a9b7b9bca8ba8a27045fcf2278229ea001af1da82a3f9a777ebae1305e8fa2df
+    Name: rl
+    TransformComponent:
+      Translation: [5.02031994, 0, 0.199999809]
+      Rotation: [0, -12.0000238, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: 374e277f8ed794a0df0294f7c39ddfa2dada2c1f23e95fed2a477530baa0dd9e
+    Components:
+      - ComponentName: ModelComponent
+        guid: 06e0eb910227f02229b181036dcd800d37a880605ed786eed1a72f17b6c0c548
+        custom_name: ""
+        model_path: ./res/models\harborIslands\corner_big_r.gltf
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+          NeedsForward: false
+          CastsShadows: true
+  - Entity: el
+    guid: 7abfdcc0405941131ba72546975304dab26ecfcce2aca905ddf3b3819ea1f749
+    Name: el
+    TransformComponent:
+      Translation: [0.600000381, 0, -1.30000007]
+      Rotation: [0, 5.00001812, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: 374e277f8ed794a0df0294f7c39ddfa2dada2c1f23e95fed2a477530baa0dd9e
+    Components:
+      - ComponentName: ModelComponent
+        guid: 9baf842d2b1a857846d419d92da5369ad009d821581c22440f1360f0e75a431e
+        custom_name: ""
+        model_path: ./res/models\harborIslands\end_big_l.gltf
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+          NeedsForward: false
+          CastsShadows: true
+  - Entity: er
+    guid: db0046e79a35028273c73d11f1121583b678846f1d67b10d2328bf69fab3095a
+    Name: er
+    TransformComponent:
+      Translation: [6, 0, 0.100000143]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: 374e277f8ed794a0df0294f7c39ddfa2dada2c1f23e95fed2a477530baa0dd9e
+    Components:
+      - ComponentName: ModelComponent
+        guid: 3c4e05e9e9b9ad2414fd7eb7e4ee43c8e56657cbd6818792382410d562e66f75
+        custom_name: ""
+        model_path: ./res/models\harborIslands\end_big_r.gltf
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+          NeedsForward: false
+          CastsShadows: true
+  - Entity: Bounds
+    guid: 419f1eeedce1d39f90c30d2893164d439b37c9b1d9bbdfcffb53b3ec977904ef
+    Name: Bounds
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: c00de470b073ff30a4ec65bc0bb78843608340517f9fbfd8e92ae43cf00ab630
+    Components:
+      []
+  - Entity: Bound
+    guid: 0d721478cfffc0f76c805f1cd3803e2cb360e37d8c156acbe85bb167e32edda1
+    Name: Bound
+    TransformComponent:
+      Translation: [0.593338013, 0, -0.652676105]
+      Rotation: [0, 5.6183548, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: 419f1eeedce1d39f90c30d2893164d439b37c9b1d9bbdfcffb53b3ec977904ef
+    Components:
+      - ComponentName: Collider2DComponent
+        guid: a37eef4a8795c4e0a43fb700e4a6dd6dd094000a550b229580e4de45332f992b
+        custom_name: ""
+        offset: [0, 0]
+        is_trigger: true
+        is_static: false
+        collider_type: 0
+        width: 0.800000012
+        height: 2
+        radius: 1
+        drag: 0.00999999978
+        velocity: [0, 0]
+      - ComponentName: IceBoundComponent
+        guid: ab39bb251878680d63baf475d8c8eeae6c6273ddf0132bcc751607c44d46adac
+        custom_name: ""
+  - Entity: Bound
+    guid: 368f413d300d77c6d38637bbcd9689b2dc52b4af22df0582635d508856ab7d77
+    Name: Bound
+    TransformComponent:
+      Translation: [5.55615568, 0, -0.389452696]
+      Rotation: [0, -2.10693717, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: 419f1eeedce1d39f90c30d2893164d439b37c9b1d9bbdfcffb53b3ec977904ef
+    Components:
+      - ComponentName: Collider2DComponent
+        guid: 739ffcda67d5f8bceff76fae05a22c5cda6438d4d34d84f9e4f7e4960684bd00
+        custom_name: ""
+        offset: [0, 0]
+        is_trigger: true
+        is_static: false
+        collider_type: 0
+        width: 1.79999995
+        height: 1.39999998
+        radius: 1
+        drag: 0.00999999978
+        velocity: [0, 0]
+      - ComponentName: IceBoundComponent
+        guid: 1e0ac8e4bf0d29bf5131b5e4d713cb3d45469ab25082437359de1894a0ac7c5b
+        custom_name: ""
+  - Entity: Bound
+    guid: 729906f738ddd7259f8baa698d6cb6e49c8d26c2a3ff11300d0fe5d71bc435f0
+    Name: Bound
+    TransformComponent:
+      Translation: [2.83874559, 0, 0.986551046]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: 419f1eeedce1d39f90c30d2893164d439b37c9b1d9bbdfcffb53b3ec977904ef
+    Components:
+      - ComponentName: Collider2DComponent
+        guid: 9901b6d721d7b2686494866c0cd068480d629718d15505660a85f94e0858a456
+        custom_name: ""
+        offset: [0, 0]
+        is_trigger: true
+        is_static: false
+        collider_type: 0
+        width: 4
+        height: 1.39999998
+        radius: 1
+        drag: 0.00999999978
+        velocity: [0, 0]
+      - ComponentName: IceBoundComponent
+        guid: 0cde9c9d4be0061fed7fcd3eca7146c4410ec3bf3faea5c0fe1b2187e0a47880
+        custom_name: ""
+  - Entity: Generator
+    guid: 206a8d68cf809ad0512d23b4f44956cd5c0abfc88b4cad854550a314eec7cf8d
+    Name: Generator
+    TransformComponent:
+      Translation: [-5.84570312, 0.100000001, 2.09735203]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: e7c09ccc26af9a5baa60a54173e8a816cd2742d72c60dbecf61b9bf8f8b1d20d
+    Components:
+      - ComponentName: FactoryComponent
+        guid: 822bd7d1c6cedf3de8327578a80b21acfe19f9efa0192b641535cb38eaaa1195
+        custom_name: ""
+        type: 0
+        lights:
+          - guid: e4e30f11b8f7e9c3ed79b1d9102a9d3b86bceb64d4853a0326159630cbc750f7
+          - guid: 15b6071ce48606dde89d5a9b0bec708be8fcb4c2bb6d68a7f77ddf9e02840fe0
+          - guid: 23a4ac7bd68708d58aec6ad034f5c2ce974067f0796cab703b4fae79667e081d
+        factory_light:
+          guid: nullptr
+      - ComponentName: ModelComponent
+        guid: 2f43a81f2a909ae33ec153b0ceb3384a896b7d6faa6ac3ea8b6c67cc5a08155c
+        custom_name: ""
+        model_path: ./res/models\generator\generator.gltf
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+          NeedsForward: false
+          CastsShadows: true
+      - ComponentName: Collider2DComponent
+        guid: fcd74ae025261083757faa038b1e9c010a4ee96ee63c893e4a16df2a9e7376b5
+        custom_name: ""
+        offset: [0, 0]
+        is_trigger: false
+        is_static: true
+        collider_type: 1
+        width: 2
+        height: 2
+        radius: 0.300000012
+        drag: 0.00999999978
+        velocity: [0, 0]
+  - Entity: Light1
+    guid: be1cf8b175ecfe2a0b6f2a676759ddedc0c7c043aa6cf1fd5693d6b169ff2acb
+    Name: Light1
+    TransformComponent:
+      Translation: [-0.0707216263, 0.428870887, -0.0539073944]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: 206a8d68cf809ad0512d23b4f44956cd5c0abfc88b4cad854550a314eec7cf8d
+    Components:
+      - ComponentName: PointLightComponent
+        guid: e4e30f11b8f7e9c3ed79b1d9102a9d3b86bceb64d4853a0326159630cbc750f7
+        custom_name: ""
+        constant: 1
+        linear: 10
+        quadratic: 10
+        ambient: [0.961111128, 0.917505205, 0.699475348]
+        diffuse: [1, 0.933333337, 0]
+        specular: [1, 0.900000036, 0]
+        m_near_plane: 0.5
+        m_far_plane: 25
+  - Entity: Light2
+    guid: 59fbe7efb3ee25469e03b3fc1c4799ad7a96fc15dbfba8598e66350d919c4c7a
+    Name: Light2
+    TransformComponent:
+      Translation: [0.053319931, 0.428870887, -0.0539073944]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: 206a8d68cf809ad0512d23b4f44956cd5c0abfc88b4cad854550a314eec7cf8d
+    Components:
+      - ComponentName: PointLightComponent
+        guid: 15b6071ce48606dde89d5a9b0bec708be8fcb4c2bb6d68a7f77ddf9e02840fe0
+        custom_name: ""
+        constant: 1
+        linear: 10
+        quadratic: 10
+        ambient: [0.961111128, 0.917505205, 0.699475348]
+        diffuse: [1, 0.933333337, 0]
+        specular: [1, 0.900000036, 0]
+        m_near_plane: 0.5
+        m_far_plane: 25
+  - Entity: Light3
+    guid: 9896b7f13c79c677fbd3f122b74899efa187db1d7c4fa7b69caf8106dfd30e65
+    Name: Light3
+    TransformComponent:
+      Translation: [0.178658962, 0.428870887, -0.0539073944]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: 206a8d68cf809ad0512d23b4f44956cd5c0abfc88b4cad854550a314eec7cf8d
+    Components:
+      - ComponentName: PointLightComponent
+        guid: 23a4ac7bd68708d58aec6ad034f5c2ce974067f0796cab703b4fae79667e081d
+        custom_name: ""
+        constant: 1
+        linear: 10
+        quadratic: 10
+        ambient: [0.961111128, 0.917505205, 0.699475348]
+        diffuse: [1, 0.933333337, 0]
+        specular: [1, 0.900000036, 0]
+        m_near_plane: 0.5
+        m_far_plane: 25
+  - Entity: Lighthouse Light
+    guid: 587c825606859bff076cdd0bb84a9b2a5c989271eae30fd3c3609e766e075ea9
+    Name: Lighthouse Light
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: e7c09ccc26af9a5baa60a54173e8a816cd2742d72c60dbecf61b9bf8f8b1d20d
+    Components:
+      - ComponentName: LighthouseLightComponent
+        guid: 757e6110f28de099faa7e9f1423e0755dabead281d3c1069129e0c465b6be006
+        custom_name: ""
+        spotlight:
+          guid: 635905bd0f076edd89234bfafa355edefddfde9680ab14c35c49bdd8e7b51a92
+        spotlight_beam_width: 0.150000006
+  - Entity: Workshop
+    guid: 004c395eeb70926ab6026c629827d92bdc48aab77b3fb7dafd832145dfaa337c
+    Name: Workshop
+    TransformComponent:
+      Translation: [5.03000021, 0.0700000003, 2.78999996]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: e7c09ccc26af9a5baa60a54173e8a816cd2742d72c60dbecf61b9bf8f8b1d20d
+    Components:
+      - ComponentName: FactoryComponent
+        guid: 9f98319a1c4aeaf3b33d34d3b9d0240ad0e00c71fa2e9c4608a291b00571d0f5
+        custom_name: ""
+        type: 1
+        lights:
+          []
+        factory_light:
+          guid: a4d5690973a244c01c92de2c259a204ae0392e5a7cd8d5995504d06de9995410
+      - ComponentName: ModelComponent
+        guid: d207d44717b02390d5b20fba72cad306a4178165a6f458329009452c6962d375
+        custom_name: ""
+        model_path: ./res/models\workshop\workshop.gltf
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+          NeedsForward: false
+          CastsShadows: true
+      - ComponentName: Collider2DComponent
+        guid: 9828e794bd378be2f84f8352bb14fff4142b323689b18df7af6330bd6c33f259
+        custom_name: ""
+        offset: [0, 0]
+        is_trigger: false
+        is_static: true
+        collider_type: 1
+        width: 2
+        height: 2
+        radius: 0.300000012
+        drag: 0.00999999978
+        velocity: [0, 0]
+  - Entity: Light
+    guid: adf4d61b2cdf2e8e67a3727e00749ed79253fad467817fd18915913fcb2be55a
+    Name: Light
+    TransformComponent:
+      Translation: [-0.186295986, 0.526062191, -0.114551306]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: 004c395eeb70926ab6026c629827d92bdc48aab77b3fb7dafd832145dfaa337c
+    Components:
+      - ComponentName: PointLightComponent
+        guid: a4d5690973a244c01c92de2c259a204ae0392e5a7cd8d5995504d06de9995410
+        custom_name: ""
+        constant: 1
+        linear: 10
+        quadratic: 10
+        ambient: [0.200000003, 0.200000003, 0.200000003]
+        diffuse: [1, 1, 1]
+        specular: [1, 1, 1]
+        m_near_plane: 0.5
+        m_far_plane: 25
+  - Entity: CustomerManager
+    guid: 02df0997646acff70127380340b720224fc86bee907153bd3283e0d65b686e20
+    Name: CustomerManager
+    TransformComponent:
+      Translation: [1.92499995, 0.100000001, 1.75899994]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: e7c09ccc26af9a5baa60a54173e8a816cd2742d72c60dbecf61b9bf8f8b1d20d
+    Components:
+      - ComponentName: CustomerManagerComponent
+        guid: c8a99679ab8fa0ee9cebf5146e54c02f29ef832b0f62fc402fa31d4b0af07abd
+        custom_name: ""
+        destinations_after_feeding:
+          - guid: c7ed05252cf036d4227da0bba927970ed29763d0d6bd7753464f09970604a092
+          - guid: 9d53bc864f2e0a9df6ca871069d286d5055e5cc83eb327c83a10773a8fd3456c
+          - guid: d36f41fe6e7b4799afa6c26d813c87f07b67b350e8178c57ca47c43d40b11e3f
+        destination_curve:
+          guid: 4d560941d20f9bc2e982526dd89e3f07edf070e9a8b8f4f7055980aa333a7d1d
+        customer_prefab: Customer
+      - ComponentName: PathComponent
+        guid: 4d560941d20f9bc2e982526dd89e3f07edf070e9a8b8f4f7055980aa333a7d1d
+        custom_name: ""
+        points:
+          - [0.0154705849, 0.0317622945]
+          - [0.511345506, 0.413652241]
+          - [-0.293810368, 0.539424837]
+          - [0.521285713, 1.10540175]
+          - [-0.303750545, 1.13684487]
+  - Entity: Destination
+    guid: c7ed05252cf036d4227da0bba927970ed29763d0d6bd7753464f09970604a092
+    Name: Destination
+    TransformComponent:
+      Translation: [-0.68418026, 4.61935997e-07, -0.652619481]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: 02df0997646acff70127380340b720224fc86bee907153bd3283e0d65b686e20
+    Components:
+      []
+  - Entity: Destination2
+    guid: 9d53bc864f2e0a9df6ca871069d286d5055e5cc83eb327c83a10773a8fd3456c
+    Name: Destination2
+    TransformComponent:
+      Translation: [1.2076149, 2.55554914e-06, -0.674029112]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: 02df0997646acff70127380340b720224fc86bee907153bd3283e0d65b686e20
+    Components:
+      []
+  - Entity: Destination3
+    guid: d36f41fe6e7b4799afa6c26d813c87f07b67b350e8178c57ca47c43d40b11e3f
+    Name: Destination3
+    TransformComponent:
+      Translation: [-1.37622094, -1.32620335e-06, 0.731948495]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: 02df0997646acff70127380340b720224fc86bee907153bd3283e0d65b686e20
+    Components:
+      []
