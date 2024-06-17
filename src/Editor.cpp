@@ -51,6 +51,7 @@
 #include "Input.h"
 #include "Light.h"
 #include "Model.h"
+#include "Panel.h"
 #include "Particle.h"
 #include "ParticleSystem.h"
 #include "PointLight.h"
