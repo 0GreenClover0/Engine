@@ -89,6 +89,30 @@ static std::string ship_type_to_string(ShipType const type)
     }
 }
 
+static float ship_type_to_range_factor(ShipType const type)
+{
+    switch (type)
+    {
+    case ShipType::FoodSmall:
+        return 0.55f;
+
+    case ShipType::FoodMedium:
+        return 0.75f;
+
+    case ShipType::FoodBig:
+        return 1.0f;
+
+    case ShipType::Pirates:
+        return 0.55f;
+
+    case ShipType::Tool:
+        return 0.55f;
+
+    default:
+        return 1.0f;
+    }
+}
+
 static std::string behaviour_state_to_string(BehavioralState const state)
 {
     switch (state)
@@ -189,6 +213,7 @@ private:
 
     float m_speed = 0.0f;
     float m_direction = 0.0f;
+    float m_range_factor = 1.0f;
 
     float const m_how_deep_sink_factor = 0.26f;
 

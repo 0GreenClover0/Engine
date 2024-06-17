@@ -41,6 +41,7 @@ Ship::Ship(AK::Badge<Ship>)
 void Ship::awake()
 {
     set_start_direction();
+    m_range_factor = ship_type_to_range_factor(type);
 
     set_can_tick(true);
 }
@@ -110,7 +111,7 @@ bool Ship::control_state_change()
 
         float const distance_to_light = glm::distance(ship_position, target_position);
 
-        if (distance_to_light < Player::get_instance()->range)
+        if (distance_to_light < Player::get_instance()->range * m_range_factor)
         {
             auto const nearest_ship = spawner.lock()->find_nearest_ship_object(light.lock()->get_position());
 
@@ -184,7 +185,7 @@ bool Ship::control_state_ended()
 
         float const distance_to_light = glm::distance(ship_position, target_position);
 
-        if (distance_to_light >= Player::get_instance()->range)
+        if (distance_to_light >= Player::get_instance()->range * m_range_factor)
         {
             result = true;
         }
@@ -254,7 +255,7 @@ void Ship::control_behavior()
     follow_point(ship_position, target_position);
     m_speed = minimum_speed
             + ((maximum_speed + Player::get_instance()->additional_ship_speed - minimum_speed)
-               * (distance_to_light / Player::get_instance()->range));
+               * (distance_to_light / (Player::get_instance()->range * m_range_factor)));
 }
 
 void Ship::avoid_behavior()
