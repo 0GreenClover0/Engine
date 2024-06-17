@@ -79,25 +79,32 @@ void IceBound::draw_editor()
                 switch (m_size)
                 {
                 case 1:
-                    entity->get_component<Collider2D>()->set_radius_2d(0.4f);
+                    entity->get_component<Collider2D>()->set_radius_2d(0.35f);
+                    entity->get_component<Collider2D>()->offset = {0.0f, 0.0f};
                     break;
                 case 2:
-                    entity->get_component<Collider2D>()->set_radius_2d(0.4f);
+                    entity->get_component<Collider2D>()->set_radius_2d(0.35f);
+                    entity->get_component<Collider2D>()->offset = {0.0f, 0.0f};
                     break;
                 case 3:
-                    entity->get_component<Collider2D>()->set_radius_2d(0.8f);
+                    entity->get_component<Collider2D>()->set_radius_2d(0.69f);
+                    entity->get_component<Collider2D>()->offset = {0.0f, 0.0f};
                     break;
                 case 4:
-                    entity->get_component<Collider2D>()->set_radius_2d(0.8f);
+                    entity->get_component<Collider2D>()->set_radius_2d(0.79f);
+                    entity->get_component<Collider2D>()->offset = {0.0f, 0.0f};
                     break;
                 case 5:
-                    entity->get_component<Collider2D>()->set_radius_2d(1.25f);
+                    entity->get_component<Collider2D>()->set_radius_2d(1.0f);
+                    entity->get_component<Collider2D>()->offset = {0.05f, 0.1f};
                     break;
                 case 6:
-                    entity->get_component<Collider2D>()->set_radius_2d(1.4f);
+                    entity->get_component<Collider2D>()->set_radius_2d(1.3f);
+                    entity->get_component<Collider2D>()->offset = {0.05f, 0.0f};
                     break;
                 case 7:
-                    entity->get_component<Collider2D>()->set_radius_2d(2.0f);
+                    entity->get_component<Collider2D>()->set_radius_2d(1.89f);
+                    entity->get_component<Collider2D>()->offset = {0.0f, 0.1f};
                     break;
                 default:
                     std::unreachable();
@@ -119,16 +126,20 @@ void IceBound::draw_editor()
                 switch (m_size)
                 {
                 case 1:
-                    entity->get_component<Collider2D>()->set_bounds_dimensions_2d(0.4f, 0.4f);
+                    entity->get_component<Collider2D>()->set_bounds_dimensions_2d(0.65f, 0.65f);
+                    entity->get_component<Collider2D>()->offset = {0.0f, 0.0f};
                     break;
                 case 2:
-                    entity->get_component<Collider2D>()->set_bounds_dimensions_2d(0.6f, 0.6f);
+                    entity->get_component<Collider2D>()->set_bounds_dimensions_2d(1.1f, 1.1f);
+                    entity->get_component<Collider2D>()->offset = {0.0f, 0.0f};
                     break;
                 case 3:
-                    entity->get_component<Collider2D>()->set_bounds_dimensions_2d(1.4f, 1.3f);
+                    entity->get_component<Collider2D>()->set_bounds_dimensions_2d(2.3f, 2.5f);
+                    entity->get_component<Collider2D>()->offset = {-0.1f, 0.14f};
                     break;
                 case 4:
-                    entity->get_component<Collider2D>()->set_bounds_dimensions_2d(2.0f, 1.9f);
+                    entity->get_component<Collider2D>()->set_bounds_dimensions_2d(3.4f, 3.5f);
+                    entity->get_component<Collider2D>()->offset = {-0.1f, 0.0f};
                     break;
                 default:
                     std::unreachable();
