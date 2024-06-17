@@ -234,6 +234,7 @@ void Renderer::render() const
         return;
 
     render_shadow_maps();
+
     // Premultiply projection and view matrices
     glm::mat4 const projection_view = Camera::get_main_camera()->get_projection() * Camera::get_main_camera()->get_view_matrix();
     glm::mat4 const projection_view_no_translation =
