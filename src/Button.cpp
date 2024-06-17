@@ -17,7 +17,7 @@
 std::shared_ptr<Button> Button::create()
 {
     auto const ui_shader = ResourceManager::get_instance().load_shader("./res/shaders/ui.hlsl", "./res/shaders/ui.hlsl");
-    auto const ui_material = Material::create(ui_shader, Renderer::ui_render_order);
+    auto const ui_material = Material::create(ui_shader, Renderer::ui_render_order + 1);
     ui_material->casts_shadows = false;
 
     auto button = std::make_shared<Button>(AK::Badge<Button> {}, ui_material);
