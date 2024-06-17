@@ -169,10 +169,10 @@ void Port::adjust_lights() const
 
     auto const collider = entity->get_component<Collider2D>();
 
-    glm::vec3 const upper_left = {-collider->width, 0.5f, -collider->height};
-    glm::vec3 const upper_right = {collider->width, 0.5f, -collider->height};
-    glm::vec3 const bottom_left = {-collider->width, 0.5f, collider->height};
-    glm::vec3 const bottom_right = {collider->width, 0.5f, collider->height};
+    glm::vec3 const upper_left = {-collider->width / 2.0f, 0.5f, -collider->height / 2.0f};
+    glm::vec3 const upper_right = {collider->width / 2.0f, 0.5f, -collider->height / 2.0f};
+    glm::vec3 const bottom_left = {-collider->width / 2.0f, 0.5f, collider->height / 2.0f};
+    glm::vec3 const bottom_right = {collider->width / 2.0f, 0.5f, collider->height / 2.0f};
 
     for (auto const& light : lights)
     {
