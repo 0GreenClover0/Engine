@@ -386,14 +386,12 @@ void ShipSpawner::add_warning()
 {
     auto const warning = Entity::create("Warning");
     warning->transform->set_parent(GameController::get_instance()->current_scene.lock()->transform);
-    auto const warning_light_component = warning->add_component(SpotLight::create());
 
-    warning_light_component->diffuse = glm::vec3(0.04f, 0.0f, 0.0f);
+    auto const warning_light_component = warning->add_component(PointLight::create());
+
+    warning_light_component->diffuse = glm::vec3(0.7f, 0.0f, 0.0f);
     warning_light_component->ambient = glm::vec3(0.0f);
-    warning_light_component->specular = glm::vec3(1.0f);
-
-    warning_light_component->cut_off = cos(glm::radians(29.0f));
-    warning_light_component->outer_cut_off = cos(glm::radians(30.0f));
+    warning_light_component->specular = glm::vec3(0.0f);
 
     //warning_light_component->linear = 10.0f;
     //warning_light_component->quadratic = 10.0f;
