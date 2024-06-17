@@ -703,6 +703,11 @@ void ShipSpawner::prepare_for_spawn()
                 }
             }
 
+            if (m_warning_lights.size() == 0)
+            {
+                Debug::log("There is no warning but one should be destroyed!", DebugType::Error);
+                return;
+            }
             m_warning_lights.back().lock()->destroy_immediate();
             m_warning_lights.pop_back();
 
@@ -731,6 +736,12 @@ void ShipSpawner::prepare_for_spawn()
             }
             else
             {
+                if (m_warning_lights.size() == 0)
+                {
+                    Debug::log("There is no warning but one should be destroyed!", DebugType::Error);
+                    return;
+                }
+
                 m_warning_lights.back().lock()->destroy_immediate();
                 m_warning_lights.pop_back();
 
