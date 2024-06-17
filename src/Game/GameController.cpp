@@ -118,7 +118,14 @@ void GameController::move_to_next_scene()
 {
     LevelController::get_instance()->destroy_immediate();
 
+    if (m_levels_order.empty())
+    {
+        Debug::log("All levels have been finished.");
+        return;
+    }
+
     next_scene = SceneSerializer::load_prefab(m_levels_order.back());
+    m_levels_order.pop_back();
 
     reset_level();
 
