@@ -4,6 +4,7 @@
 #include "AK/Math.h"
 #include "Collider2D.h"
 #include "Entity.h"
+#include "GameController.h"
 #include "Globals.h"
 #include "LighthouseKeeper.h"
 #include "imgui_extensions.h"
@@ -34,6 +35,16 @@ void Customer::update()
     if (entity == nullptr || entity->transform == nullptr || left_hand.expired() || right_hand.expired())
     {
         return;
+    }
+
+    if (GameController::get_instance()->is_moving_to_next_scene())
+    {
+        collider.lock()->set_enabled(false);
+        return;
+    }
+    else
+    {
+        collider.lock()->set_enabled(true);
     }
 
     float const y = entity->transform->get_position().y;
