@@ -71,9 +71,9 @@ void Particle::draw() const
     Renderer::get_instance()->set_rasterizer_draw_type(m_rasterizer_draw_type);
     entity->transform->parent.lock()->set_rotation(Camera::get_main_camera()->entity->transform->get_euler_angles());
 
-    if (mesh != nullptr)
+    if (m_mesh != nullptr)
     {
-        mesh->draw();
+        m_mesh->draw();
     }
 
     Renderer::get_instance()->restore_default_rasterizer_draw_type();
@@ -140,7 +140,7 @@ bool Particle::is_particle() const
 
 void Particle::prepare()
 {
-    mesh = create_sprite();
+    m_mesh = create_sprite();
 }
 
 void Particle::set_data(ParticleSpawnData const& data)
