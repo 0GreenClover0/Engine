@@ -8,6 +8,7 @@
 #include "Globals.h"
 #include "LighthouseKeeper.h"
 
+#include "GameController.h"
 #include <glm/gtc/random.hpp>
 
 #if EDITOR
