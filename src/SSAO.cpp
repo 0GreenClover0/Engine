@@ -50,7 +50,7 @@ void SSAO::update()
 
     for (u32 i = 0; i < kernel_size; ++i)
     {
-        glm::vec4 sample(random_floats(m_generator) * 2.0f - 1.0f, random_floats(m_generator) * 2.0f - 1.0f, random_floats(m_generator), 0.0f);
+        glm::vec3 sample(random_floats(m_generator) * 2.0f - 1.0f, random_floats(m_generator) * 2.0f - 1.0f, random_floats(m_generator));
 
         sample = glm::normalize(sample);
         sample *= random_floats(m_generator);
@@ -58,7 +58,7 @@ void SSAO::update()
         float scale = static_cast<float>(i) / static_cast<float>(kernel_size);
         scale = std::lerp(0.1f, 1.0f, scale * scale);
         sample *= scale;
-        m_ssao_kernel[i] = sample;
+        m_ssao_kernel[i] = glm::vec4(sample, 1.0f);
     }
 
     std::array<glm::vec4, noise_size> ssao_noise = {};
