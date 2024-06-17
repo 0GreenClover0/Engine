@@ -43,5 +43,5 @@ private:
     float m_rotation_direction = 1.0f;
     std::string m_path = "./res/textures/particle.png";
 
-    std::shared_ptr<Mesh> mesh = {};
+    std::shared_ptr<Mesh> m_mesh = {};
 };

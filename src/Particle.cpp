@@ -74,9 +74,9 @@ void Particle::draw() const
     // Either wireframe or solid for individual model
     Renderer::get_instance()->set_rasterizer_draw_type(m_rasterizer_draw_type);
 
-    if (mesh != nullptr)
+    if (m_mesh != nullptr)
     {
-        mesh->draw();
+        m_mesh->draw();
     }
 
     Renderer::get_instance()->restore_default_rasterizer_draw_type();
@@ -137,7 +137,7 @@ bool Particle::is_particle() const
 
 void Particle::prepare()
 {
-    mesh = create_sprite();
+    m_mesh = create_sprite();
 }
 
 std::shared_ptr<Mesh> Particle::create_sprite() const
