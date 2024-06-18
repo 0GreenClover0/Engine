@@ -104,6 +104,18 @@ void ShipSpawner::get_spawn_paths()
     }
 }
 
+bool ShipSpawner::is_any_ship_controlled() const
+{
+    for (auto const& ship : m_ships)
+    {
+        if (ship.lock()->behavioral_state == BehavioralState::Control)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 void ShipSpawner::update()
 {
     if (LevelController::get_instance()->is_started)
