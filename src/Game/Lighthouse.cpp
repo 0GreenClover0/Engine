@@ -58,6 +58,7 @@ void Lighthouse::enter()
     m_is_keeeper_inside = true;
     light.lock()->set_enabled(true);
     light.lock()->spotlight.lock()->set_enabled(true);
+    light.lock()->entity->get_component<Sphere>()->set_enabled(true);
 }
 
 void Lighthouse::exit()
@@ -71,6 +72,7 @@ void Lighthouse::exit()
     m_is_keeeper_inside = false;
     light.lock()->set_enabled(false);
     light.lock()->spotlight.lock()->set_enabled(false);
+    light.lock()->entity->get_component<Sphere>()->set_enabled(false);
 
     auto const keeper = SceneSerializer::load_prefab("Keeper");
 
