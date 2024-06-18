@@ -1,7 +1,9 @@
 #include "LevelController.h"
 
+#include "AK/AK.h"
 #include "AK/Math.h"
 #include "Entity.h"
+#include "GameController.h"
 #include "Globals.h"
 #include "Input.h"
 #include "Player.h"
@@ -11,8 +13,8 @@
 #include <GLFW/glfw3.h>
 
 #if EDITOR
-#include <imgui.h>
 #include "imgui_extensions.h"
+#include <imgui.h>
 #endif
 
 std::shared_ptr<LevelController> LevelController::create()
@@ -45,14 +47,39 @@ void LevelController::awake()
     Component::initialize();
 
     time = map_time;
+    player_ref = Player::get_instance();
+
+    if (!player_ref.expired())
+    {
+        clock_text_ref = player_ref.lock()->clock_text;
+    }
+    else
+    {
+        Debug::log("Invalid player reference. No valid instance of Player?", DebugType::Error);
+    }
 
     set_can_tick(true);
-
     on_lighthouse_upgraded();
 }
 
 void LevelController::update()
 {
+    if (!clock_text_ref.expired())
+    {
+        std::string min = "00";
+        std::string sec = "00";
+        AK::extract_time(time, min, sec);
+
+        auto const clock_locked = clock_text_ref.lock();
+        clock_locked->set_text(min + ":" + sec);
+        clock_locked->color = 0xFFD6856B;
+        clock_locked->font_size = 65;
+    }
+    else
+    {
+        Debug::log("CLOCK ScreenText is not attached. UI is not working properly.", DebugType::Error);
+    }
+
     if (is_started)
     {
         if (time > 0.0f)

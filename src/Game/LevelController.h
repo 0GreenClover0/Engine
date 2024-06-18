@@ -4,6 +4,7 @@
 #include "Curve.h"
 #include "Engine.h"
 #include "Factory.h"
+#include "Player.h"
 #include "Port.h"
 
 class ScreenText;
@@ -57,5 +58,7 @@ public:
 private:
     inline static std::shared_ptr<LevelController> m_instance;
 
+    std::weak_ptr<Player> player_ref = {};
+    std::weak_ptr<ScreenText> clock_text_ref = {};
     std::weak_ptr<ScreenText> m_text = {};
 };

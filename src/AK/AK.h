@@ -1,6 +1,7 @@
 #pragma once
 
 #include <codecvt>
+#include <iomanip>
 #include <locale>
 #include <memory>
 #include <random>
@@ -97,6 +98,20 @@ inline float random_float(float const min, float const max)
 inline bool random_bool()
 {
     return random_int(0, 1) == 1;
+}
+
+inline void extract_time(u32 const time, std::string& minutes, std::string& seconds)
+{
+    u32 const minutes_value = time / 60;
+    u32 const seconds_value = time % 60;
+
+    std::stringstream minutes_stream;
+    minutes_stream << std::setw(2) << std::setfill('0') << minutes_value;
+    minutes = minutes_stream.str();
+
+    std::stringstream seconds_stream;
+    seconds_stream << std::setw(2) << std::setfill('0') << seconds_value;
+    seconds = seconds_stream.str();
 }
 
 inline glm::vec2 move_towards(glm::vec2 const current, glm::vec2 const target, float const max_distance_delta)

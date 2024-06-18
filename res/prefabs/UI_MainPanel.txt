@@ -1,7 +1,7 @@
 Scene: Untitled
 Entities:
   - Entity: UI_MainPanel
-    guid: 5944044168854f8508d2c9127165816f5c6d904d040c71a34fddaf3ea898c7a5
+    guid: ac9a35e07ee232f586453a4f15f5bf7c91ce013f8dcd23720e6e933139ef7734
     Name: UI_MainPanel
     TransformComponent:
       Translation: [0, 0.850000024, 0]
@@ -11,7 +11,7 @@ Entities:
         guid: ""
     Components:
       - ComponentName: PanelComponent
-        guid: 2eaeb824dbaf7cf8062df157d44f698b5d12cf15838eb8a2de85c6f9c7898f37
+        guid: 075c625439b5285951bd0e663df061acb042f46fe1277dee628a0bacfe156a49
         custom_name: ""
         background_path: ./res/textures/UI/panel.png
         material:
@@ -25,17 +25,17 @@ Entities:
           CastsShadows: false
           IsBillboard: false
   - Entity: Glass
-    guid: 2711145c5e21584ecc132a3f10d697ba5a3b99db72e628a44dbdeb8614b5c3b6
+    guid: aec2e4e9dab8d3aac08ff324d09d3b61df9d5502d778a1560e450db8f5f7c9cf
     Name: Glass
     TransformComponent:
       Translation: [0, -0.100000381, 0]
-      Rotation: [0, -0, 0]
-      Scale: [1, 0.999999762, 0.999999881]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
       Parent:
-        guid: 5944044168854f8508d2c9127165816f5c6d904d040c71a34fddaf3ea898c7a5
+        guid: ac9a35e07ee232f586453a4f15f5bf7c91ce013f8dcd23720e6e933139ef7734
     Components:
       - ComponentName: PanelComponent
-        guid: 185904d6c39ce3490e42aa9cef9770d06e0752cdcf653531b007b4bbae4e287a
+        guid: e0c309a8e467012e791ed0960b2b75643896a0c763a8521311385a2bcf825d09
         custom_name: ""
         background_path: ./res/textures/UI/glass.png
         material:
@@ -47,4 +47,124 @@ Entities:
           RenderOrder: 1
           NeedsForward: false
           CastsShadows: false
+          IsBillboard: false
+  - Entity: Packages
+    guid: cf1dbeb2dfd8dedf9cc514fa4fb481101144bd73215bb0c1c32db9ff8ea947db
+    Name: Packages
+    TransformComponent:
+      Translation: [-0.545982361, -0.610000014, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: ac9a35e07ee232f586453a4f15f5bf7c91ce013f8dcd23720e6e933139ef7734
+    Components:
+      - ComponentName: ScreenTextComponent
+        guid: 159ba11aa4af5e9af80682f7d79d18f475ba7061d52d72632d8f632c0269cee2
+        custom_name: ""
+        text: 5
+        position: [0, 0]
+        font_size: 40
+        color: 4278229503
+        flags: 2053
+        button_ref:
+          guid: nullptr
+        material:
+          Shader:
+            VertexPath: ./res/shaders/ui.hlsl
+            FragmentPath: ./res/shaders/ui.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 3
+          NeedsForward: false
+          CastsShadows: true
+          IsBillboard: false
+  - Entity: Flashes
+    guid: 699f9f176a0748788fc24332aa45948d70885cba2c378ca04503e1963dbfc5af
+    Name: Flashes
+    TransformComponent:
+      Translation: [-0.0693742111, -0.610000014, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: ac9a35e07ee232f586453a4f15f5bf7c91ce013f8dcd23720e6e933139ef7734
+    Components:
+      - ComponentName: ScreenTextComponent
+        guid: b8b3a8e797870fa6fc33781b5d221b3f2dc0945a425c7122bcc04c13a7c83f26
+        custom_name: ""
+        text: 3
+        position: [0, 0]
+        font_size: 40
+        color: 4278229503
+        flags: 2053
+        button_ref:
+          guid: nullptr
+        material:
+          Shader:
+            VertexPath: ./res/shaders/ui.hlsl
+            FragmentPath: ./res/shaders/ui.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 3
+          NeedsForward: false
+          CastsShadows: true
+          IsBillboard: false
+  - Entity: Level
+    guid: 356fb188bef3aa5254e8864b0a134becef1b64ddcf29b0269c8a115753805318
+    Name: Level
+    TransformComponent:
+      Translation: [0.612962127, -0.609934807, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: ac9a35e07ee232f586453a4f15f5bf7c91ce013f8dcd23720e6e933139ef7734
+    Components:
+      - ComponentName: ScreenTextComponent
+        guid: c8b7845803370c39de5330c4c1c8dc4bb56f3c6b6345823033c491ac9c985c8d
+        custom_name: ""
+        text: 6/10
+        position: [0, 0]
+        font_size: 40
+        color: 4278229503
+        flags: 2053
+        button_ref:
+          guid: nullptr
+        material:
+          Shader:
+            VertexPath: ./res/shaders/ui.hlsl
+            FragmentPath: ./res/shaders/ui.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 3
+          NeedsForward: false
+          CastsShadows: true
+          IsBillboard: false
+  - Entity: Clock
+    guid: 079916818a61c3d31db0ae888a6297c436ed19c1a3373bbd9619e72f984a1cc8
+    Name: Clock
+    TransformComponent:
+      Translation: [0, 0.351999998, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: ac9a35e07ee232f586453a4f15f5bf7c91ce013f8dcd23720e6e933139ef7734
+    Components:
+      - ComponentName: ScreenTextComponent
+        guid: 7e68f78ecb9b52a9be7c76cddc1881f8ae90edd487bd93c2f1bc46a65e1e99ad
+        custom_name: ""
+        text: 21:38
+        position: [0, 0]
+        font_size: 40
+        color: 4278229503
+        flags: 2053
+        button_ref:
+          guid: nullptr
+        material:
+          Shader:
+            VertexPath: ./res/shaders/ui.hlsl
+            FragmentPath: ./res/shaders/ui.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 3
+          NeedsForward: false
+          CastsShadows: true
           IsBillboard: false
