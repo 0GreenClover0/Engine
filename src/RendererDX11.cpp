@@ -631,6 +631,7 @@ void RendererDX11::bind_universal_resources() const
     D3D11_MAPPED_SUBRESOURCE time_resource = {};
     HRESULT const hr = get_device_context()->Map(m_constant_buffer_psmisc, 0, D3D11_MAP_WRITE_DISCARD, 0, &time_resource);
     assert(SUCCEEDED(hr));
+
     g_pd3dDeviceContext->PSSetSamplers(2, 1, &m_repeat_sampler_state);
 
     CopyMemory(time_resource.pData, &misc_data, sizeof(ConstantBufferPSMisc));
