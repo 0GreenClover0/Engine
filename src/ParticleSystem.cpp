@@ -7,8 +7,11 @@
 #include "Particle.h"
 
 #include <glm/gtc/type_ptr.inl>
+
+#if EDITOR
 #include <imgui.h>
 #include <imgui_stdlib.h>
+#endif
 
 std::shared_ptr<ParticleSystem> ParticleSystem::create()
 {
@@ -25,6 +28,7 @@ void ParticleSystem::awake()
     set_can_tick(true);
 }
 
+#if EDITOR
 void ParticleSystem::draw_editor()
 {
     Component::draw_editor();
@@ -38,6 +42,7 @@ void ParticleSystem::draw_editor()
     ImGui::DragFloat("Emitter size", &emitter_bounds, 0.1f, 0.0f, FLT_MAX);
     ImGui::DragIntRange2("Spawn count", &min_spawn_count, &max_spawn_count, 1, 0, INT_MAX);
 }
+#endif
 
 void ParticleSystem::update()
 {

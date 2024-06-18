@@ -4,6 +4,7 @@
 #include <string>
 
 #include "Debug.h"
+#include "EngineDefines.h"
 #include "Serialization.h"
 
 class Collider2D;

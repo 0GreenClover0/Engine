@@ -10,7 +10,9 @@ public:
 
     explicit Path(AK::Badge<Path>);
 
+#if EDITOR
     virtual void draw_editor() override;
+#endif
 
 private:
     bool m_reverse_y = true;

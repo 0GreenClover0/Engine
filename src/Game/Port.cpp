@@ -108,6 +108,7 @@ float Port::get_interactable_distance() const
     return m_interactable_distance;
 }
 
+#if EDITOR
 void Port::draw_editor()
 {
     Component::draw_editor();
@@ -162,6 +163,7 @@ void Port::draw_editor()
         }
     }
 }
+#endif
 
 void Port::adjust_lights() const
 {

@@ -1,6 +1,10 @@
 #pragma once
 
+#include "AK/Badge.h"
+#include "AK/Types.h"
 #include "Component.h"
+
+#include <glm/vec2.hpp>
 
 class GameController final : public Component
 {
@@ -15,7 +19,9 @@ public:
 
     virtual void awake() override;
     virtual void update() override;
+#if EDITOR
     virtual void draw_editor() override;
+#endif
 
     bool is_moving_to_next_scene() const;
     void move_to_next_scene();

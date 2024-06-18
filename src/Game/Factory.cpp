@@ -5,7 +5,10 @@
 #include "Model.h"
 #include "Player.h"
 #include "ResourceManager.h"
+
+#if EDITOR
 #include "imgui_extensions.h"
+#endif
 
 std::shared_ptr<Factory> Factory::create()
 {
@@ -50,6 +53,7 @@ bool Factory::interact()
     return true;
 }
 
+#if EDITOR
 void Factory::draw_editor()
 {
     Component::draw_editor();
@@ -61,6 +65,7 @@ void Factory::draw_editor()
         type = static_cast<FactoryType>(current_item_index);
     }
 }
+#endif
 
 void Factory::set_type(FactoryType const type)
 {

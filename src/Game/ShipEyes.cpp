@@ -1,18 +1,22 @@
-#include <GLFW/glfw3.h>
-#include <glm/gtc/random.hpp>
-#include <glm/gtx/vector_angle.hpp>
-#include <glm/vec2.hpp>
-#include <imgui.h>
-
-#include "Collider2D.h"
-#include "Entity.h"
-#include "Input.h"
-#include "Ship.h"
 #include "ShipEyes.h"
 
 #include "AK/AK.h"
+#include "Collider2D.h"
+#include "Entity.h"
 #include "Globals.h"
 #include "IceBound.h"
+#include "Input.h"
+#include "Ship.h"
+
+#include <GLFW/glfw3.h>
+
+#include <glm/gtc/random.hpp>
+#include <glm/gtx/vector_angle.hpp>
+#include <glm/vec2.hpp>
+
+#if EDITOR
+#include <imgui.h>
+#endif
 
 std::shared_ptr<ShipEyes> ShipEyes::create()
 {

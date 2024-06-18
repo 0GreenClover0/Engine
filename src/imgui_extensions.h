@@ -1,11 +1,13 @@
 #pragma once
 
 #include "AK/Types.h"
+#include "EngineDefines.h"
 #include "MainScene.h"
 
 #include <memory>
 #include <string>
 
+#if EDITOR
 #include <imgui.h>
 
 namespace ImGuiEx
@@ -72,3 +74,5 @@ inline void InputFloat3(char const* label, float v[3])
 }
 
 }
+
+#endif

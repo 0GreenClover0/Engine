@@ -19,7 +19,9 @@ public:
 
     virtual void awake() override;
     virtual void update() override;
+#if EDITOR
     virtual void draw_editor() override;
+#endif
 
     void set_render_target_for_shadow_mapping(u32 const face_index) const;
     glm::mat4 get_projection_view_matrix(u32 const face_index);

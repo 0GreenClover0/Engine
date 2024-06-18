@@ -26,6 +26,7 @@ enum class BehavioralState
     InPort,
 };
 
+#if EDITOR
 static void ship_type_to_color(ShipType const type, ImVec4& bg_color, ImVec4& text_color)
 {
     auto constexpr light_green_color = ImVec4(0.0f, 0.91f, 0.118f, 1.0f);
@@ -64,6 +65,7 @@ static void ship_type_to_color(ShipType const type, ImVec4& bg_color, ImVec4& te
         break;
     }
 }
+#endif
 
 static std::string ship_type_to_string(ShipType const type)
 {
@@ -154,7 +156,9 @@ public:
     virtual void awake() override;
     virtual void update() override;
     virtual void on_destroyed() override;
+#if EDITOR
     virtual void draw_editor() override;
+#endif
 
     virtual void on_trigger_enter(std::shared_ptr<Collider2D> const& other) override;
 

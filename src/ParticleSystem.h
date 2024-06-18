@@ -20,7 +20,9 @@ public:
     explicit ParticleSystem(AK::Badge<ParticleSystem>);
 
     virtual void awake() override;
+#if EDITOR
     virtual void draw_editor() override;
+#endif
     virtual void update() override;
     void update_system();
 

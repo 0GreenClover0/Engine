@@ -17,7 +17,9 @@ public:
     virtual void update() override;
     virtual void on_collision_enter(std::shared_ptr<Collider2D> const& other) override;
 
+#if EDITOR
     virtual void draw_editor() override;
+#endif
 
     void feed(glm::vec3 const& destination);
 

@@ -74,6 +74,7 @@ void ScreenText::draw() const
                                    color, flags);
 }
 
+#if EDITOR
 void ScreenText::draw_editor()
 {
     Component::draw_editor();
@@ -114,6 +115,7 @@ void ScreenText::draw_editor()
         reprepare();
     }
 }
+#endif
 
 void ScreenText::set_text(std::wstring const& new_content)
 {

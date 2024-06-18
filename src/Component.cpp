@@ -4,7 +4,9 @@
 #include "Entity.h"
 #include "MainScene.h"
 
+#if EDITOR
 #include <imgui.h>
+#endif
 
 Component::Component()
 {
@@ -89,10 +91,12 @@ void Component::destroy_immediate()
 
 void Component::draw_editor()
 {
+#if EDITOR
     if (ImGui::Button("Remove component", ImVec2(-FLT_MIN, 20.0f)))
     {
         destroy_immediate();
     }
+#endif
 }
 
 void Component::set_can_tick(bool const value)

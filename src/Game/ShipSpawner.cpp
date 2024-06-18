@@ -1,10 +1,5 @@
 #include "ShipSpawner.h"
 
-#include <GLFW/glfw3.h>
-#include <glm/gtc/random.hpp>
-#include <imgui.h>
-#include <random>
-
 #include "AK/AK.h"
 #include "AK/Math.h"
 #include "Collider2D.h"
@@ -16,7 +11,17 @@
 #include "ResourceManager.h"
 #include "SceneSerializer.h"
 #include "ShipEyes.h"
+
+#include <GLFW/glfw3.h>
+
+#include <glm/gtc/random.hpp>
+
+#include <random>
+
+#if EDITOR
 #include "imgui_extensions.h"
+#include <imgui.h>
+#endif
 
 std::shared_ptr<ShipSpawner> ShipSpawner::create()
 {
@@ -107,6 +112,7 @@ void ShipSpawner::update()
     }
 }
 
+#if EDITOR
 void ShipSpawner::draw_editor()
 {
     Component::draw_editor();
@@ -381,6 +387,7 @@ void ShipSpawner::draw_editor()
         }
     }
 }
+#endif
 
 void ShipSpawner::add_warning()
 {

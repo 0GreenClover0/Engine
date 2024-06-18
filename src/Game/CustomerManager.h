@@ -19,7 +19,9 @@ public:
     virtual void awake() override;
     virtual void update() override;
 
+#if EDITOR
     virtual void draw_editor() override;
+#endif
 
     std::vector<std::weak_ptr<Entity>> destinations_after_feeding = {};
     std::weak_ptr<Curve> destination_curve = {};

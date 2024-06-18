@@ -7,7 +7,10 @@
 #include "Entity.h"
 #include "Globals.h"
 #include "PhysicsEngine.h"
+
+#if EDITOR
 #include "imgui_extensions.h"
+#endif
 
 #include <glm/gtc/type_ptr.inl>
 
@@ -65,6 +68,7 @@ Collider2D::Collider2D(AK::Badge<Collider2D>, float const width, float const hei
 {
 }
 
+#if EDITOR
 void Collider2D::draw_editor()
 {
     Component::draw_editor();
@@ -156,6 +160,7 @@ void Collider2D::draw_editor()
         update_center_and_corners();
     }
 }
+#endif
 
 void Collider2D::initialize()
 {

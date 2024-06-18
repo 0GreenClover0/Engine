@@ -29,7 +29,9 @@ public:
 
     virtual void awake() override;
     virtual void update() override;
+#if EDITOR
     virtual void draw_editor() override;
+#endif
 
     std::optional<glm::vec2> find_nearest_non_pirate_ship(std::shared_ptr<Ship> const& center_ship) const;
     std::optional<glm::vec2> find_nearest_ship_position(glm::vec2 center_position) const;

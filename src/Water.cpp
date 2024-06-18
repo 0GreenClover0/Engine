@@ -1,4 +1,5 @@
 #include "Water.h"
+
 #include "ConstantBufferTypes.h"
 #include "MeshFactory.h"
 #include "RendererDX11.h"
@@ -8,8 +9,11 @@
 #include "TextureLoader.h"
 
 #include <GLFW/glfw3.h>
+
+#if EDITOR
 #include <imgui.h>
 #include <imgui_stdlib.h>
+#endif
 
 std::shared_ptr<Water> Water::create()
 {
@@ -141,6 +145,7 @@ void Water::reprepare()
     prepare();
 }
 
+#if EDITOR
 void Water::draw_editor()
 {
     Drawable::draw_editor();
@@ -197,6 +202,7 @@ void Water::draw_editor()
         reprepare();
     }
 }
+#endif
 
 void Water::add_wave()
 {

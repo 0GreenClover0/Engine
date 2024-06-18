@@ -1,14 +1,16 @@
 #include "CustomerManager.h"
 
-#include "imgui_extensions.h"
-#include "imgui_stdlib.h"
-
 #include "AK/AK.h"
 #include "Customer.h"
 #include "Entity.h"
 #include "LevelController.h"
 #include "Player.h"
 #include "SceneSerializer.h"
+
+#if EDITOR
+#include "imgui_extensions.h"
+#include "imgui_stdlib.h"
+#endif
 
 std::shared_ptr<CustomerManager> CustomerManager::create()
 {
@@ -83,6 +85,7 @@ void CustomerManager::update()
     m_registered_food = Player::get_instance()->food;
 }
 
+#if EDITOR
 void CustomerManager::draw_editor()
 {
     Component::draw_editor();
@@ -100,6 +103,7 @@ void CustomerManager::draw_editor()
     ImGuiEx::draw_ptr("Destination Curve", destination_curve);
     ImGui::InputText("Customer Prefab", &customer_prefab);
 }
+#endif
 
 glm::vec2 CustomerManager::get_destination_from_curve(float const x) const
 {

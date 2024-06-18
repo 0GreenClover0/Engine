@@ -9,9 +9,13 @@
 
 #pragma once
 
-#include <imgui.h>
+#include "EngineDefines.h"
 
 #include <string>
+
+#if EDITOR
+
+#include <imgui.h>
 
 namespace ImGui
 {
@@ -24,3 +28,5 @@ IMGUI_API bool InputTextMultiline(char const* label, std::string* str, ImVec2 co
 IMGUI_API bool InputTextWithHint(char const* label, char const* hint, std::string* str, ImGuiInputTextFlags flags = 0,
                                  ImGuiInputTextCallback callback = nullptr, void* user_data = nullptr);
 }
+
+#endif

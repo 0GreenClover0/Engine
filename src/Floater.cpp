@@ -5,8 +5,11 @@
 
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtx/quaternion.hpp>
+
+#if EDITOR
 #include <imgui.h>
 #include <imgui_extensions.h>
+#endif
 
 Floater::Floater(AK::Badge<Floater>)
 {
@@ -31,6 +34,7 @@ std::shared_ptr<Floater> Floater::create(std::weak_ptr<Water> const& water, floa
     return floater;
 }
 
+#if EDITOR
 void Floater::draw_editor()
 {
     Component::draw_editor();
@@ -42,6 +46,7 @@ void Floater::draw_editor()
     ImGui::InputFloat("Forward floaters offset", &forward_floaters_offest);
     ImGuiEx::draw_ptr("Water", water);
 }
+#endif
 
 void Floater::awake()
 {

@@ -1,20 +1,23 @@
-#include "ExampleUIBar.h"
-
-#include <GLFW/glfw3.h>
-#include <glm/gtc/random.hpp>
-#include <imgui.h>
+#include "LighthouseKeeper.h"
 
 #include "AK/AK.h"
 #include "Entity.h"
+#include "ExampleUIBar.h"
 #include "Factory.h"
 #include "Globals.h"
 #include "LevelController.h"
 #include "Lighthouse.h"
-#include "LighthouseKeeper.h"
 #include "Player.h"
 #include "Port.h"
 #include "ResourceManager.h"
+
+#include <GLFW/glfw3.h>
+#include <glm/gtc/random.hpp>
+
+#if EDITOR
+#include <imgui.h>
 #include "imgui_extensions.h"
+#endif
 
 std::shared_ptr<LighthouseKeeper> LighthouseKeeper::create()
 {
@@ -135,6 +138,7 @@ void LighthouseKeeper::update()
     handle_input();
 }
 
+#if EDITOR
 void LighthouseKeeper::draw_editor()
 {
     Component::draw_editor();
@@ -145,6 +149,7 @@ void LighthouseKeeper::draw_editor()
 
     ImGuiEx::draw_ptr("Lighthouse", lighthouse);
 }
+#endif
 
 bool LighthouseKeeper::is_inside_port() const
 {

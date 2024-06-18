@@ -20,7 +20,9 @@ public:
 
     virtual void awake() override;
     virtual void update() override;
+#if EDITOR
     virtual void draw_editor() override;
+#endif
 
     void on_lighthouse_upgraded() const;
 

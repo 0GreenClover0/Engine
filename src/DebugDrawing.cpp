@@ -43,7 +43,9 @@ void DebugDrawing::initialize()
 {
     Component::initialize();
 
+#if EDITOR
     Editor::Editor::get_instance()->register_debug_drawing(static_pointer_cast<DebugDrawing>(shared_from_this()));
+#endif
 
     set_can_tick(true);
     m_light_source_shader =
@@ -64,7 +66,9 @@ void DebugDrawing::initialize()
         std::unreachable();
     }
 
+#if EDITOR
     set_drawing_enabled(Editor::Editor::get_instance()->are_debug_drawings_enabled());
+#endif
 }
 
 void DebugDrawing::update()
@@ -98,9 +102,12 @@ void DebugDrawing::uninitialize()
 {
     Component::uninitialize();
 
+#if EDITOR
     Editor::Editor::get_instance()->unregister_debug_drawing(static_pointer_cast<DebugDrawing>(shared_from_this()));
+#endif
 }
 
+#if EDITOR
 void DebugDrawing::draw_editor()
 {
     Component::draw_editor();
@@ -131,6 +138,7 @@ void DebugDrawing::draw_editor()
         set_extents({extents[0], extents[1], extents[2]});
     }
 }
+#endif
 
 void DebugDrawing::set_drawing_type(DrawingType const new_type)
 {
@@ -202,6 +210,20 @@ void DebugDrawing::set_extents(glm::vec3 const& extents)
 
 void DebugDrawing::enable_drawing() const
 {
+#if !EDITOR
+    if (m_box_component != nullptr)
+    {
+        m_box_component->set_rasterizer_draw_type(RasterizerDrawType::None);
+    }
+
+    if (m_sphere_component != nullptr)
+    {
+        m_sphere_component->set_rasterizer_draw_type(RasterizerDrawType::None);
+    }
+
+    return;
+#endif
+
     if (m_box_component != nullptr)
     {
         m_box_component->set_rasterizer_draw_type(RasterizerDrawType::Wireframe);

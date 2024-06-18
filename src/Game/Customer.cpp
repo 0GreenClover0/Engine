@@ -7,9 +7,12 @@
 #include "GameController.h"
 #include "Globals.h"
 #include "LighthouseKeeper.h"
-#include "imgui_extensions.h"
 
 #include <glm/gtc/random.hpp>
+
+#if EDITOR
+#include "imgui_extensions.h"
+#endif
 
 std::shared_ptr<Customer> Customer::create()
 {
@@ -186,6 +189,7 @@ void Customer::on_collision_enter(std::shared_ptr<Collider2D> const& other)
     collider_locked->velocity = glm::clamp(collider_locked->velocity, {-3.0f, -3.0f}, {3.0f, 3.0f});
 }
 
+#if EDITOR
 void Customer::draw_editor()
 {
     Component::draw_editor();
@@ -194,6 +198,7 @@ void Customer::draw_editor()
     ImGuiEx::draw_ptr("Left Hand", left_hand);
     ImGuiEx::draw_ptr("Right Hand", right_hand);
 }
+#endif
 
 void Customer::feed(glm::vec3 const& destination)
 {

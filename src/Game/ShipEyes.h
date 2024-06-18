@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Component.h"
+#include "AK/Badge.h"
 
 class ShipEyes final : public Component
 {

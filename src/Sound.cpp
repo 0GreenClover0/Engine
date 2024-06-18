@@ -3,7 +3,9 @@
 #include "Engine.h"
 #include "Entity.h"
 
+#if EDITOR
 #include <imgui_stdlib.h>
+#endif
 
 // TODO: Add an option to load sounds from files at the start of the game
 
@@ -83,6 +85,7 @@ void Sound::awake()
     }
 }
 
+#if EDITOR
 void Sound::draw_editor()
 {
     Component::draw_editor();
@@ -99,6 +102,7 @@ void Sound::draw_editor()
 
     ImGui::Checkbox("Play on Awake", &play_on_awake);
 }
+#endif
 
 void Sound::reprepare()
 {

@@ -1,15 +1,19 @@
-#include <GLFW/glfw3.h>
-#include <imgui.h>
+#include "LevelController.h"
 
 #include "AK/Math.h"
 #include "Entity.h"
 #include "Globals.h"
 #include "Input.h"
-#include "LevelController.h"
 #include "Player.h"
 #include "ScreenText.h"
 #include "Ship.h"
+
+#include <GLFW/glfw3.h>
+
+#if EDITOR
+#include <imgui.h>
 #include "imgui_extensions.h"
+#endif
 
 std::shared_ptr<LevelController> LevelController::create()
 {
@@ -80,6 +84,7 @@ void LevelController::update()
     }
 }
 
+#if EDITOR
 void LevelController::draw_editor()
 {
     Component::draw_editor();
@@ -123,6 +128,7 @@ void LevelController::draw_editor()
     ImGui::InputFloat("Playfield height: ", &playfield_height);
     ImGui::InputFloat("Playfield Y shift: ", &playfield_y_shift);
 }
+#endif
 
 void LevelController::on_lighthouse_upgraded() const
 {

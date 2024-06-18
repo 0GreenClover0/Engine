@@ -12,7 +12,9 @@ public:
 
     explicit Curve(AK::Badge<Curve>);
 
+#if EDITOR
     virtual void draw_editor() override;
+#endif
 
     std::vector<glm::vec2> points = {};
     glm::vec2 get_point_at(float x) const;
