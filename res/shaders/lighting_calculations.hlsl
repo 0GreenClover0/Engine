@@ -298,8 +298,8 @@ float3 calculate_spot_light(SpotLight light, float3 normal, float3 world_pos, fl
     {
         shadow = spot_shadow_calculation(light, world_pos, index, normal, true);
     }
-
-    return attenuation * intensity * (ambient + (1.0f - shadow) * (diffuse + specular));
+    // Ambient has to be affected by shadow, so we do not have a resulting "decal" not connected to the cone
+    return attenuation * intensity *  ((1.0f - shadow) * (diffuse + specular + ambient));
 }
 
 float2 intersect_light_cone(SpotLight light, float3 ray_origin, float3 ray_direction, out float shadow, float light_index)
