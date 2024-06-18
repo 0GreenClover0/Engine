@@ -3,6 +3,8 @@
 #include "Engine.h"
 #include "Entity.h"
 
+#include <imgui_stdlib.h>
+
 // TODO: Add an option to load sounds from files at the start of the game
 
 std::shared_ptr<Sound> Sound::create()
@@ -85,12 +87,38 @@ void Sound::draw_editor()
 {
     Component::draw_editor();
 
+    if (ImGui::InputText("Sound path", &path))
+    {
+        reprepare();
+    }
+
     if (ImGui::SliderFloat("Volume", &volume, 0.0f, 100.0f, "%.2f"))
     {
         set_volume(volume);
     }
 
     ImGui::Checkbox("Play on Awake", &play_on_awake);
+}
+
+void Sound::reprepare()
+{
+    Component::reprepare();
+
+    if (!is_positional)
+    {
+        ma_sound_uninit(&m_internal_sound);
+
+        auto const result = ma_sound_init_from_file(&Engine::audio_engine, path.c_str(), 0, nullptr, nullptr, &m_internal_sound);
+
+        if (result != MA_SUCCESS)
+        {
+            return;
+        }
+
+        // NOTE: Setting attenuation model to none makes the ma_sound_set_volume() not work at all, for some reason.
+        // ma_sound_set_attenuation_model(&m_internal_sound, ma_attenuation_model_none);
+        ma_sound_set_volume(&m_internal_sound, volume);
+    }
 }
 
 void Sound::play()
