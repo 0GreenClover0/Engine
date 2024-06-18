@@ -1,2 +1,3 @@
 #define RENDER_POINT_SHADOW_MAPS false
 #define SHADOWS_BRIGHTNESS 2.143f
+#define BELOW_WATER_HACK true
