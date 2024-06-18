@@ -28,8 +28,8 @@ public:
     void stop_with_fade(u64 const milliseconds);
     virtual void update() override;
 
+    bool is_positional = false;
+
 private:
     ma_sound m_internal_sound = {};
-
-    bool m_is_positional = false;
 };

@@ -37,7 +37,7 @@ std::shared_ptr<Sound> Sound::create(std::string const& path, glm::vec3 const di
     ma_sound_set_rolloff(&sound->m_internal_sound, rolloff);
 
     sound->set_can_tick(true);
-    sound->m_is_positional = true;
+    sound->is_positional = true;
 
     return sound;
 }
@@ -85,7 +85,7 @@ void Sound::stop_with_fade(u64 const milliseconds)
 
 void Sound::update()
 {
-    if (m_is_positional)
+    if (is_positional)
     {
         auto const position = entity->transform->get_position();
         ma_sound_set_position(&m_internal_sound, position.x, position.y, position.z);
