@@ -1,0 +1,50 @@
+Scene: Untitled
+Entities:
+  - Entity: UI_MainPanel
+    guid: 5944044168854f8508d2c9127165816f5c6d904d040c71a34fddaf3ea898c7a5
+    Name: UI_MainPanel
+    TransformComponent:
+      Translation: [0, 0.850000024, 0]
+      Rotation: [0, 0, 0]
+      Scale: [0.197734162, 0.153902978, 0.172426298]
+      Parent:
+        guid: ""
+    Components:
+      - ComponentName: PanelComponent
+        guid: 2eaeb824dbaf7cf8062df157d44f698b5d12cf15838eb8a2de85c6f9c7898f37
+        custom_name: ""
+        background_path: ./res/textures/UI/panel.png
+        material:
+          Shader:
+            VertexPath: ./res/shaders/ui.hlsl
+            FragmentPath: ./res/shaders/ui.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 1
+          NeedsForward: false
+          CastsShadows: false
+          IsBillboard: false
+  - Entity: Glass
+    guid: 2711145c5e21584ecc132a3f10d697ba5a3b99db72e628a44dbdeb8614b5c3b6
+    Name: Glass
+    TransformComponent:
+      Translation: [0, -0.100000381, 0]
+      Rotation: [0, -0, 0]
+      Scale: [1, 0.999999762, 0.999999881]
+      Parent:
+        guid: 5944044168854f8508d2c9127165816f5c6d904d040c71a34fddaf3ea898c7a5
+    Components:
+      - ComponentName: PanelComponent
+        guid: 185904d6c39ce3490e42aa9cef9770d06e0752cdcf653531b007b4bbae4e287a
+        custom_name: ""
+        background_path: ./res/textures/UI/glass.png
+        material:
+          Shader:
+            VertexPath: ./res/shaders/ui.hlsl
+            FragmentPath: ./res/shaders/ui.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 1
+          NeedsForward: false
+          CastsShadows: false
+          IsBillboard: false
