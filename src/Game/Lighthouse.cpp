@@ -5,6 +5,7 @@
 #include "Floater.h"
 #include "Game/LighthouseKeeper.h"
 #include "Game/LighthouseLight.h"
+#include "GameController.h"
 #include "LevelController.h"
 #include "Model.h"
 #include "ResourceManager.h"
@@ -76,6 +77,7 @@ void Lighthouse::exit()
 
     auto const keeper = SceneSerializer::load_prefab("Keeper");
 
+    keeper->transform->set_parent(GameController::get_instance()->current_scene.lock()->transform);
     keeper->transform->set_local_position(spawn_position.lock()->transform->get_position());
     keeper->get_component<LighthouseKeeper>()->port = LevelController::get_instance()->port;
     keeper->get_component<LighthouseKeeper>()->lighthouse = std::static_pointer_cast<Lighthouse>(shared_from_this());
