@@ -426,7 +426,7 @@ float3 calculate_scatter(PointLight light, float4 world_position)
     float light_to_pixel = length(light.position - world_position.xyz);
     float3 scattering_constants = float3(0.2f, 0.4f, 0.8f);
     // This is arbitrary, however connected with light's attenuation
-    float scattering_coefficient = 0.3f / (light.constant + light.linear_ * light_to_pixel + light.quadratic * light_to_pixel * light_to_pixel);
+    float scattering_coefficient = 0.4f / (light.constant + light.linear_ * light_to_pixel + light.quadratic * light_to_pixel * light_to_pixel);
     float3 scatter = light.diffuse * scattering_constants * in_scatter(camera_pos, surface_to_camera_direction, light.position, ray_length) * scattering_coefficient;
     return scatter;
 }
