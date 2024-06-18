@@ -353,6 +353,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "ComponentName" << YAML::Value << "SoundComponent";
         out << YAML::Key << "guid" << YAML::Value << sound->guid;
         out << YAML::Key << "custom_name" << YAML::Value << sound->custom_name;
+        out << YAML::Key << "is_positional" << YAML::Value << sound->is_positional;
         out << YAML::EndMap;
     }
     else if (auto const soundlistener = std::dynamic_pointer_cast<class SoundListener>(component); soundlistener != nullptr)
@@ -1323,6 +1324,10 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         else
         {
             auto const deserialized_component = std::dynamic_pointer_cast<class Sound>(get_from_pool(component["guid"].as<std::string>()));
+            if (component["is_positional"].IsDefined())
+            {
+                deserialized_component->is_positional = component["is_positional"].as<bool>();
+            }
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
         }
