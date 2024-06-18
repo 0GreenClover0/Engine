@@ -144,6 +144,7 @@ float4 halo(float3 halo_center, float3 world_pos, float radius)
         time += PI / 2.0f - time;
     }
 
+    radius *= 0.55f;
     float _border = radius * tan(time_ps) * tan(time_ps);
     _border = clamp(_border, 0.0f, radius);
     if (distance < _border)
@@ -202,6 +203,11 @@ float4 ps_main(VS_Output input) : SV_TARGET
     else
     {
         ssr_refraction = rendered_scene.Sample(clamp_border_sampler, refraction_coords.xy);
+    }
+
+    if (ssr_refraction.w == 0.0f)
+    {
+        ssr_refraction = rendered_scene.Sample(clamp_border_sampler, UV);
     }
 
     // REFLECTION
