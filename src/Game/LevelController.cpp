@@ -91,6 +91,14 @@ void LevelController::update()
 
     if (is_started)
     {
+        if (is_tutorial)
+        {
+            if (Player::get_instance()->food >= map_food)
+            {
+                GameController::get_instance()->move_to_next_scene();
+            }
+        }
+
         if (time > 0.0f)
         {
             if (AK::Math::are_nearly_equal(Player::get_instance()->flash_counter, 0.0f))
@@ -163,6 +171,10 @@ void LevelController::draw_editor()
     ImGui::InputFloat("Playfield additional width: ", &playfield_additional_width);
     ImGui::InputFloat("Playfield height: ", &playfield_height);
     ImGui::InputFloat("Playfield Y shift: ", &playfield_y_shift);
+
+    ImGui::Separator();
+
+    ImGui::Checkbox("Turoial", &is_tutorial);
 }
 #endif
 
