@@ -300,6 +300,14 @@ float3 calculate_spot_light(SpotLight light, float3 normal, float3 world_pos, fl
     {
         shadow = spot_shadow_calculation(light, world_pos, index, normal, true);
     }
+
+#ifdef BELOW_WATER_HACK
+    if (world_pos.y < -0.1f)
+    {
+        return 0.0f;
+    }
+#endif
+
     // Ambient has to be affected by shadow, so we do not have a resulting "decal" not connected to the cone
     return attenuation * intensity *  ((1.0f - shadow) * (diffuse + specular + ambient));
 }
