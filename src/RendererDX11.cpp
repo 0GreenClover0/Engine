@@ -8,6 +8,9 @@
 #include "Entity.h"
 #include "FullscreenQuad.h"
 #include "GBuffer.h"
+#include "Game/LevelController.h"
+#include "Game/Player.h"
+#include "Input.h"
 #include "Model.h"
 #include "ResourceManager.h"
 #include "ShaderFactory.h"
@@ -383,6 +386,16 @@ D3D11_VIEWPORT RendererDX11::get_main_view_port() const
     return m_viewport;
 }
 
+void RendererDX11::inject_mouse_position(glm::vec2 const mouse_position)
+{
+    m_mouse_position = mouse_position;
+}
+
+void RendererDX11::inject_light_range(float const range)
+{
+    m_light_range = range;
+}
+
 void RendererDX11::render_shadow_maps() const
 {
     set_RS_for_shadow_mapping();
@@ -612,8 +625,11 @@ void RendererDX11::bind_universal_resources() const
     misc_data.is_fog_rendered = Engine::is_game_running();
     misc_data.projection = Camera::get_main_camera()->get_projection();
     misc_data.view = Camera::get_main_camera()->get_view_matrix();
-    D3D11_MAPPED_SUBRESOURCE time_resource;
-    HRESULT hr = get_device_context()->Map(m_constant_buffer_psmisc, 0, D3D11_MAP_WRITE_DISCARD, 0, &time_resource);
+    misc_data.mouse_pos = m_mouse_position;
+    misc_data.light_range = m_light_range;
+
+    D3D11_MAPPED_SUBRESOURCE time_resource = {};
+    HRESULT const hr = get_device_context()->Map(m_constant_buffer_psmisc, 0, D3D11_MAP_WRITE_DISCARD, 0, &time_resource);
     assert(SUCCEEDED(hr));
     g_pd3dDeviceContext->PSSetSamplers(2, 1, &m_repeat_sampler_state);
 

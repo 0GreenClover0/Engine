@@ -16,6 +16,8 @@ cbuffer ps_misc_buffer : register(b3)
 {
     float4x4 projection;
     float4x4 view;
+    float2 mouse_pos;
+    float light_range;
     float time_ps;
     bool is_fog_rendered;
 }

@@ -143,6 +143,8 @@ struct ConstantBufferPSMisc : public ConstantBuffer
 {
     glm::mat4 projection;
     glm::mat4 view;
+    glm::vec2 mouse_pos;
+    float light_range;
     float time;
     bool is_fog_rendered;
 };
