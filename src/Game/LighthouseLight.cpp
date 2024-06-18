@@ -38,9 +38,11 @@ void LighthouseLight::awake()
 {
     set_can_tick(true);
 
-    auto const standard_shader = ResourceManager::get_instance().load_shader("./res/shaders/lit.hlsl", "./res/shaders/lit.hlsl");
+    auto const standard_shader = ResourceManager::get_instance().load_shader("./res/shaders/halo.hlsl", "./res/shaders/halo.hlsl");
     auto const standard_material = Material::create(standard_shader);
-    m_sphere = entity->add_component(Sphere::create(0.25f, 12, 12, "./res/textures/stone.jpg", standard_material));
+    standard_material->needs_forward_rendering = true;
+    standard_material->casts_shadows = false;
+    m_sphere = entity->add_component(Sphere::create(0.25f, 50, 50, "./res/textures/stone.jpg", standard_material));
 }
 
 void LighthouseLight::update()
