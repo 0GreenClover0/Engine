@@ -70,7 +70,14 @@ void Player::awake()
 
 void Player::update()
 {
-    RendererDX11::get_instance_dx11()->inject_light_range(range);
+    if (LevelController::get_instance() != nullptr && !LevelController::get_instance()->entity->get_component<ShipSpawner>()->is_any_ship_controlled())
+    {
+        RendererDX11::get_instance_dx11()->inject_light_range(range);
+    }
+    else
+    {
+        RendererDX11::get_instance_dx11()->inject_light_range(0.0f);
+    }
 
     if (!packages_text.expired())
     {
