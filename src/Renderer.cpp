@@ -588,6 +588,6 @@ void Renderer::load_fonts()
 
     if (changed)
     {
-        SendMessage(HWND_BROADCAST, WM_FONTCHANGE, 0, 0);
+        PostMessage(HWND_BROADCAST, WM_FONTCHANGE, 0, 0);
     }
 }
