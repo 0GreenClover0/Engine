@@ -74,11 +74,21 @@ void Sound::awake()
     {
         play();
     }
+
+    if (m_internal_sound.pDataSource != nullptr)
+    {
+        ma_sound_set_volume(&m_internal_sound, volume);
+    }
 }
 
 void Sound::draw_editor()
 {
     Component::draw_editor();
+
+    if (ImGui::SliderFloat("Volume", &volume, 0.0f, 100.0f, "%.2f"))
+    {
+        set_volume(volume);
+    }
 
     ImGui::Checkbox("Play on Awake", &play_on_awake);
 }
@@ -96,6 +106,12 @@ void Sound::stop()
 void Sound::stop_with_fade(u64 const milliseconds)
 {
     ma_sound_stop_with_fade_in_milliseconds(&m_internal_sound, milliseconds);
+}
+
+void Sound::set_volume(float const new_volume)
+{
+    ma_sound_set_volume(&m_internal_sound, new_volume);
+    volume = new_volume;
 }
 
 void Sound::update()
