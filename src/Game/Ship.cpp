@@ -123,6 +123,7 @@ bool Ship::control_state_change()
             {
                 behavioral_state = BehavioralState::Control;
                 light.lock()->controlled_ship = std::static_pointer_cast<Ship>(shared_from_this());
+                my_light.lock()->diffuse = glm::vec3(1.0f, 0.8f, 1.0f);
                 return true;
             }
         }
@@ -201,7 +202,13 @@ bool Ship::control_state_ended()
 
     if (type == ShipType::Pirates && result)
     {
+        my_light.lock()->diffuse = glm::vec3(1.0f, 0.0f, 0.0f);
         m_pirates_in_control_counter = Player::get_instance()->pirates_in_control;
+    }
+
+    if (result && type != ShipType::Pirates)
+    {
+        my_light.lock()->diffuse = glm::vec3(0.0f, 1.0f, 0.0f);
     }
 
     return result;
