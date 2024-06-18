@@ -47,19 +47,29 @@ float4 ps_main(VS_Output input) : SV_Target
 
     result.xyz += calculate_directional_light(directional_light, normal.xyz, view_dir, diffuse.xyz, pos.xyz, true, ambient_occlusion);
     float fog_value = fog_tex.Sample(repeat_sampler, input.UV + time_ps / 100.0f).r;
+    float3 scatter = 0.0f.xxx;
 
     for (int point_light_index = 0; point_light_index < number_of_point_lights; point_light_index++)
     {
-        result.xyz += calculate_scatter(point_lights[point_light_index], pos) * fog_value;
+        if (!BELOW_WATER_HACK || pos.y > -0.1f)
+        {
+            scatter.xyz += calculate_scatter(point_lights[point_light_index], pos) * fog_value;
+        }
+
         result.xyz += calculate_point_light(point_lights[point_light_index],normal.xyz, pos.xyz, view_dir, diffuse.xyz, point_light_index, RENDER_POINT_SHADOW_MAPS, ambient_occlusion);
     }
 
     for (int spot_light_index = 0; spot_light_index < number_of_spot_lights; spot_light_index++)
     {
+        if (!BELOW_WATER_HACK || pos.y > -0.1f)
+        {
+            scatter.xyz += calculate_scatter(spot_lights[spot_light_index], pos, spot_light_index) * fog_value;
+        }
+
         result.xyz += calculate_spot_light(spot_lights[spot_light_index], normal.xyz, pos.xyz, view_dir, diffuse.xyz, spot_light_index, true, ambient_occlusion);
-        result.xyz += calculate_scatter(spot_lights[spot_light_index], pos, spot_light_index) * fog_value;
     }
 
+    result.xyz += scatter;
     result.xyz = exposure_tonemapping(result.xyz);
     return gamma_correction(result.xyz);
 }
