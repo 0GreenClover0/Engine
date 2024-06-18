@@ -64,6 +64,15 @@ void LevelController::awake()
 
 void LevelController::update()
 {
+    {
+        float const y = Input::input->get_mouse_position().y * playfield_height + playfield_y_shift;
+        float const x =
+            Input::input->get_mouse_position().x
+            * (playfield_width - (playfield_additional_width * (Input::input->get_mouse_position().y + playfield_y_shift + 1.0f) / 2.0f));
+
+        RendererDX11::get_instance_dx11()->inject_mouse_position({x, y});
+    }
+
     if (!clock_text_ref.expired())
     {
         std::string min = "00";

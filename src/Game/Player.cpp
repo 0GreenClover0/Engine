@@ -70,6 +70,8 @@ void Player::awake()
 
 void Player::update()
 {
+    RendererDX11::get_instance_dx11()->inject_light_range(range);
+
     if (!packages_text.expired())
     {
         std::string const content = std::to_string(packages);

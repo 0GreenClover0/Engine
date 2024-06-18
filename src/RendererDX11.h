@@ -33,6 +33,9 @@ public:
     [[nodiscard]] ID3D11DepthStencilView* get_depth_stencil_view() const;
     [[nodiscard]] D3D11_VIEWPORT get_main_view_port() const;
 
+    void inject_mouse_position(glm::vec2 const mouse_position);
+    void inject_light_range(float const range);
+
     ID3D11RenderTargetView* g_emptyRenderTargetView = nullptr;
     inline static float constexpr SHADOW_MAP_SIZE = 4096.0f;
 
@@ -142,4 +145,7 @@ private:
     inline static u32 constexpr point_light_shadow_register_offset = 40;
 
     inline static DXGI_FORMAT m_render_target_format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+
+    glm::vec2 m_mouse_position = {};
+    float m_light_range = 0.0f;
 };

@@ -133,8 +133,45 @@ VS_Output vs_main(VS_Input input)
     return output;
 }
 
+float4 halo(float3 halo_center, float3 world_pos, float radius)
+{
+    // This function makes a 2D halo on water
+    float distance = length(world_pos - halo_center);
+
+    float time = time_ps;
+    if (time > PI / 2.0f)
+    {
+        time += PI / 2.0f - time;
+    }
+
+    float _border = radius * tan(time_ps) * tan(time_ps);
+    _border = clamp(_border, 0.0f, radius);
+    if (distance < _border)
+    {
+        float strength = -log10(-(distance) / (_border) + 1.0f);
+        return float4(0.5f, 0.5f, 1.0f, 1.0f) * strength;
+    }
+    else if (distance < radius)
+    {
+        float strength = 1.0f + log10(-(radius - distance) / (radius) + 1.0f);
+        return float4(0.5f, 0.5f, 1.0f, 1.0f) * strength;
+    }
+    else
+    {
+        return float4(0.0f, 0.0f, 0.0f, 0.0f);
+    }
+}
+
 float4 ps_main(VS_Output input) : SV_TARGET
 {
+    // Calculate mouse_pos halo
+    float4 halo_value = 0.0f.xxxx;
+    if (light_range > 0.0f)
+    {
+        halo_value = halo(float3(mouse_pos.x, 0.0f, mouse_pos.y), input.world_pos.xyz, light_range);
+        halo_value /= 10.0f;
+    }
+
     // FALLOFF CALCULATION
     float2 UV = float2(input.ndc.x, (-input.ndc.y + 1.0f));
     float3 deferred_world_pos = position_buffer.Sample(clamp_border_sampler, UV).xyz;
@@ -213,6 +250,10 @@ float4 ps_main(VS_Output input) : SV_TARGET
     float4 final;
     final.xyz = falloff_value * float3(0.1f, 0.1f, 0.6f) + (1.0f - falloff_value) * result;
     final.xyz = gamma_correction(exposure_tonemapping(final.xyz));
+    if (halo_value.a > 0.0f)
+    {
+        final.xyz += abs(halo_value.xyz);
+    }
     final.a = 1.0f;
     return final;
 }
