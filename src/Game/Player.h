@@ -24,6 +24,11 @@ public:
 
     void upgrade_lighthouse();
 
+    std::weak_ptr<ScreenText> packages_text = {};
+    std::weak_ptr<ScreenText> flashes_text = {};
+    std::weak_ptr<ScreenText> level_text = {};
+    std::weak_ptr<ScreenText> clock_text = {};
+
     NON_SERIALIZED
     i32 food = 0;
     NON_SERIALIZED
@@ -48,6 +53,4 @@ private:
     inline static std::shared_ptr<Player> m_instance;
 
     float const m_flash_time = 8.3f;
-
-    std::weak_ptr<ScreenText> m_text = {};
 };

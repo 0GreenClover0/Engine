@@ -510,6 +510,10 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "ComponentName" << YAML::Value << "PlayerComponent";
         out << YAML::Key << "guid" << YAML::Value << player->guid;
         out << YAML::Key << "custom_name" << YAML::Value << player->custom_name;
+        out << YAML::Key << "packages_text" << YAML::Value << player->packages_text;
+        out << YAML::Key << "flashes_text" << YAML::Value << player->flashes_text;
+        out << YAML::Key << "level_text" << YAML::Value << player->level_text;
+        out << YAML::Key << "clock_text" << YAML::Value << player->clock_text;
         out << YAML::EndMap;
     }
     else if (auto const port = std::dynamic_pointer_cast<class Port>(component); port != nullptr)
@@ -1833,6 +1837,22 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         else
         {
             auto const deserialized_component = std::dynamic_pointer_cast<class Player>(get_from_pool(component["guid"].as<std::string>()));
+            if (component["packages_text"].IsDefined())
+            {
+                deserialized_component->packages_text = component["packages_text"].as<std::weak_ptr<ScreenText>>();
+            }
+            if (component["flashes_text"].IsDefined())
+            {
+                deserialized_component->flashes_text = component["flashes_text"].as<std::weak_ptr<ScreenText>>();
+            }
+            if (component["level_text"].IsDefined())
+            {
+                deserialized_component->level_text = component["level_text"].as<std::weak_ptr<ScreenText>>();
+            }
+            if (component["clock_text"].IsDefined())
+            {
+                deserialized_component->clock_text = component["clock_text"].as<std::weak_ptr<ScreenText>>();
+            }
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
         }
