@@ -175,6 +175,8 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
             out << YAML::Key << "font_size" << YAML::Value << screentext->font_size;
             out << YAML::Key << "color" << YAML::Value << screentext->color;
             out << YAML::Key << "flags" << YAML::Value << screentext->flags;
+            out << YAML::Key << "font_name" << YAML::Value << screentext->font_name;
+            out << YAML::Key << "bold" << YAML::Value << screentext->bold;
         }
         else if (auto const particle = std::dynamic_pointer_cast<class Particle>(component); particle != nullptr)
         {
@@ -960,6 +962,14 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             if (component["flags"].IsDefined())
             {
                 deserialized_component->flags = component["flags"].as<u16>();
+            }
+            if (component["font_name"].IsDefined())
+            {
+                deserialized_component->font_name = component["font_name"].as<std::string>();
+            }
+            if (component["bold"].IsDefined())
+            {
+                deserialized_component->bold = component["bold"].as<bool>();
             }
             if (component["material"].IsDefined())
             {

@@ -15,6 +15,7 @@
 #include "ShaderFactory.h"
 #include "Skybox.h"
 
+#include <filesystem>
 #include <glm/gtx/norm.hpp>
 
 void Renderer::initialize()
@@ -33,6 +34,8 @@ void Renderer::initialize()
     }
 
     initialize_buffers(max_size);
+
+    load_fonts();
 }
 
 void Renderer::register_shader(std::shared_ptr<Shader> const& shader)
@@ -520,5 +523,71 @@ void Renderer::draw_transparent(glm::mat4 const& projection_view, glm::mat4 cons
         drawable->draw();
 
         unbind_material(drawable->material);
+    }
+}
+
+void Renderer::load_fonts()
+{
+    bool changed = false;
+
+    for (auto const& path : std::filesystem::recursive_directory_iterator(m_font_path))
+    {
+        if (path.is_directory())
+            continue;
+
+        std::string const path_str = path.path().string();
+        LPCSTR const wide_path = path_str.c_str();
+        i32 const loaded_fonts_count = AddFontResource(wide_path);
+
+        std::string family_name = path.path().stem().string();
+
+        std::array<std::string, 2> stripped_words = {" Bold", " Light"};
+
+        Font new_font = {};
+
+        for (auto const& word : stripped_words)
+        {
+            if (auto const position = family_name.find(word); position != std::string::npos)
+            {
+                if (word == " Bold")
+                {
+                    new_font.bold = true;
+                }
+
+                family_name.erase(position, word.size());
+            }
+        }
+
+        new_font.family_name = family_name;
+
+        bool is_new = true;
+        for (auto const& font : loaded_fonts)
+        {
+            if (font.family_name == family_name)
+            {
+                is_new = false;
+                break;
+            }
+        }
+
+        if (is_new)
+        {
+            loaded_fonts.emplace_back(new_font);
+        }
+
+        // This might not return more than 0 if the font was already loaded or if it was loaded unsuccessfully, we can't tell for sure.
+        if (loaded_fonts_count > 0)
+        {
+            changed = true;
+
+#if _DEBUG
+            Debug::log("Loaded font: " + path.path().string());
+#endif
+        }
+    }
+
+    if (changed)
+    {
+        SendMessage(HWND_BROADCAST, WM_FONTCHANGE, 0, 0);
     }
 }

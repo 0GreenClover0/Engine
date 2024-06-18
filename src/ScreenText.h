@@ -22,6 +22,8 @@ public:
     virtual void draw() const override;
     virtual void draw_editor() override;
 
+    virtual void reprepare() override;
+
     // Only content of the text component is now dynamically updated.
     void set_text(std::wstring const& new_content);
 
@@ -31,6 +33,8 @@ public:
     float font_size = 40;
     u32 color = 0;
     u16 flags = 0; //  Stores flags such as FW1_CENTER | FW1_VCENTER. FW1_RESTORESTATE is set by default.
+    std::string font_name = {};
+    bool bold = false;
 
 private:
     static D3D11_VIEWPORT get_viewport();
