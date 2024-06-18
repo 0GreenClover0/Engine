@@ -10,6 +10,7 @@
 #include <GLFW/glfw3.h>
 
 #if EDITOR
+#include "imgui_extensions.h"
 #include <imgui.h>
 #endif
 
@@ -64,22 +65,44 @@ Player::Player(AK::Badge<Player>)
 
 void Player::awake()
 {
-    m_text = entity->add_component<ScreenText>(ScreenText::create());
-    m_text.lock()->color = 0xffffffff;
-    std::string const content =
-        "Packages: " + std::to_string(packages) + " Level: " + std::to_string(lighthouse_level) + "\n" + "Flash: " + std::to_string(flash);
-    m_text.lock()->set_text(content);
-
     set_can_tick(true);
 }
 
 void Player::update()
 {
-    if (!m_text.expired())
+    if (!packages_text.expired())
     {
-        std::string const content = "Packages: " + std::to_string(packages) + " Level: " + std::to_string(lighthouse_level) + "\n"
-                                  + "Flash: " + std::to_string(flash);
-        m_text.lock()->set_text(content);
+        std::string const content = std::to_string(packages);
+        packages_text.lock()->color = 0xfff4ecf8;
+        packages_text.lock()->set_text(content);
+    }
+    else
+    {
+        Debug::log("PACKAGES ScreenText is not attached. UI is not working properly.", DebugType::Error);
+    }
+
+    if (!flashes_text.expired())
+    {
+        std::string const content = std::to_string(flash);
+        flashes_text.lock()->set_text(content);
+        flashes_text.lock()->color = 0xfff4ecf8;
+    }
+    else
+    {
+        Debug::log("FLASHES ScreenText is not attached. UI is not working properly.", DebugType::Error);
+    }
+
+    if (!level_text.expired() && LevelController::get_instance() != nullptr)
+    {
+        std::string const content =
+            std::to_string(lighthouse_level) + "/" + std::to_string(LevelController::get_instance()->maximum_lighthouse_level);
+
+        level_text.lock()->color = 0xfff4ecf8;
+        level_text.lock()->set_text(content);
+    }
+    else
+    {
+        Debug::log("LEVELS ScreenText is not attached. UI is not working properly.", DebugType::Error);
     }
 
     if (Input::input->get_key_down(GLFW_MOUSE_BUTTON_RIGHT))
@@ -117,9 +140,16 @@ void Player::draw_editor()
 {
     Component::draw_editor();
 
+    ImGuiEx::draw_ptr("Packages UI Text", packages_text);
+    ImGuiEx::draw_ptr("Flashes UI Text", flashes_text);
+    ImGuiEx::draw_ptr("Level UI Text", level_text);
+    ImGuiEx::draw_ptr("Clock UI Text", clock_text);
+
     if (Engine::is_game_running())
     {
-        if (ImGui::SliderInt("Lighthouse Level", &lighthouse_level, 0, LevelController::get_instance()->maximum_lighthouse_level))
+
+        if (LevelController::get_instance() != nullptr
+            && ImGui::SliderInt("Lighthouse Level", &lighthouse_level, 0, LevelController::get_instance()->maximum_lighthouse_level))
         {
             LevelController::get_instance()->on_lighthouse_upgraded();
         }

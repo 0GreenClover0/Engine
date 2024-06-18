@@ -301,8 +301,6 @@ void ScreenText::refresh_layout()
     tr.length = 256;
     tr.startPosition = 0;
 
-    realign_text(m_align_to_center);
-
     hr = m_d_write_text_layout->SetFontSize(font_size, tr);
     assert(SUCCEEDED(hr));
 }
