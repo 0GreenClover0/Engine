@@ -8,6 +8,7 @@
 #include "ConstantBufferTypes.h"
 #include "DirectionalLight.h"
 #include "Drawable.h"
+#include "Font.h"
 #include "Light.h"
 #include "Mesh.h"
 #include "PointLight.h"
@@ -80,6 +81,8 @@ public:
     inline static constexpr i32 transparent_render_order = 1000;
     inline static constexpr i32 aa_render_order = 2000;
 
+    inline static std::vector<Font> loaded_fonts = {};
+
 protected:
     Renderer() = default;
     virtual ~Renderer() = default;
@@ -145,6 +148,7 @@ protected:
 
 private:
     void draw_transparent(glm::mat4 const& projection_view, glm::mat4 const& projection_view_no_translation) const;
+    static void load_fonts();
 
     struct MaterialWithOrder
     {
@@ -162,4 +166,6 @@ private:
     std::vector<std::shared_ptr<Material>> m_transparent_materials = {};
 
     std::vector<std::shared_ptr<Camera>> m_cameras = {};
+
+    inline static std::string m_font_path = "./res/fonts/";
 };
