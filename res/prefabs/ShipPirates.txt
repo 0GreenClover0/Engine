@@ -1,7 +1,7 @@
 Scene: Untitled
 Entities:
   - Entity: ShipPirates
-    guid: eb5f433e7358b9d21d427389bb21c6eecf1c4bf85fdf7ef1896ae34f73139f6f
+    guid: 3db46bddf9dffd435ae310eef0c3935c0cebfcc602a1aaf2f31c8c9a47a67ed4
     Name: ShipPirates
     TransformComponent:
       Translation: [0, 0, 0]
@@ -11,19 +11,19 @@ Entities:
         guid: ""
     Components:
       - ComponentName: ShipComponent
-        guid: 151bea7a6ca09d9b509cfc5193cf20a743638c37edc1c244376088979314f4f6
+        guid: 6146fb82225805b15627873a91ee566d373dcf3816dd719f8ae333cd5644195e
         custom_name: ""
         type: 3
         light:
-          guid: 0e964ba3e74511090908757bf419ecb097f62be97380e16af66721be6a41e118
+          guid: nullptr
         spawner:
-          guid: feea9f188b095ed1723fb09cc01eddb681afb2313e02ab80d9ae233ee7222c34
+          guid: nullptr
         eyes:
-          guid: a8592832711486c1befe46fcea85512605cee7570608ad4d04535cfa75e60c6e
+          guid: 04b78c96c36df0b109bb05b44ce93ff63b438b65e52420dbf296eead4ffbfacb
         my_light:
-          guid: 1234b072734d17fc915d4bf124738a8cf2c7bf2e53a14599325d156e1e2b740a
+          guid: 0e3aa2c136e381512564d09bfabd853f620921b5b7fa492eb5c0814d15a66da5
       - ComponentName: Collider2DComponent
-        guid: 4df5c4557fec5e6c62939600b145994d4cbbeb833e838b4ffbc2a8432be78967
+        guid: 84ced93ad683481c310b8df72dda7ad4bc26bfed8168946c9495d0d6b8c8c8a6
         custom_name: ""
         offset: [0, 0.0350000001]
         is_trigger: true
@@ -32,8 +32,10 @@ Entities:
         width: 0.25
         height: 0.649999976
         radius: 1
+        drag: 0.00999999978
+        velocity: [0, 0]
       - ComponentName: ModelComponent
-        guid: 2ebb28b807d5f6b4bcdd444897afd2fad479afc9bd22e91e11fe0798fe200383
+        guid: 021b08211101ec8ca69ae88d13a6e999cccbcac5f2df5ec82ed6b5566fd18d01
         custom_name: ""
         model_path: ./res/models/shipPirates/shipPirates.gltf
         material:
@@ -46,44 +48,46 @@ Entities:
           NeedsForward: false
           CastsShadows: true
   - Entity: Eyes
-    guid: e2553eba8b15b6edbe2f989538d5665a6f285add7b2f0c6a1edd60ca5afc0ade
+    guid: 8db0607aa3db1a6157d16c9012940244d5544c1463d595591cfc7ac0c2caf43a
     Name: Eyes
     TransformComponent:
       Translation: [0, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: eb5f433e7358b9d21d427389bb21c6eecf1c4bf85fdf7ef1896ae34f73139f6f
+        guid: 3db46bddf9dffd435ae310eef0c3935c0cebfcc602a1aaf2f31c8c9a47a67ed4
     Components:
       - ComponentName: ShipEyesComponent
-        guid: a8592832711486c1befe46fcea85512605cee7570608ad4d04535cfa75e60c6e
+        guid: 04b78c96c36df0b109bb05b44ce93ff63b438b65e52420dbf296eead4ffbfacb
         custom_name: ""
       - ComponentName: Collider2DComponent
-        guid: d0cb3f97e9b6cdae084c3c9ac7d482f047b9151a8a0dae856857d12c6f38c0c5
+        guid: 76b22ca4c964ed5c2cfacb8ca619b0cbb151d61ed966479714e5df7bad92dc9f
         custom_name: ""
         offset: [0, -0.5]
         is_trigger: true
         is_static: false
         collider_type: 0
-        width: 0.200000002
+        width: 0.200000003
         height: 0.400000006
         radius: 1
+        drag: 0.00999999978
+        velocity: [0, 0]
   - Entity: Light
-    guid: 80304c7325bedc67e0c76301c6bb3fddecad0300c44688c65da5780c465ee153
+    guid: 7433620993aabbdfa9c23aee9a4046de2e4d5c6bd1e420984300f59cab401c75
     Name: Light
     TransformComponent:
       Translation: [0, 0.409877598, 0.211868599]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: eb5f433e7358b9d21d427389bb21c6eecf1c4bf85fdf7ef1896ae34f73139f6f
+        guid: 3db46bddf9dffd435ae310eef0c3935c0cebfcc602a1aaf2f31c8c9a47a67ed4
     Components:
       - ComponentName: PointLightComponent
-        guid: 1234b072734d17fc915d4bf124738a8cf2c7bf2e53a14599325d156e1e2b740a
+        guid: 0e3aa2c136e381512564d09bfabd853f620921b5b7fa492eb5c0814d15a66da5
         custom_name: ""
         constant: 1
         linear: 10
-        quadratic: 10
+        quadratic: 2.5539999
         ambient: [0, 0, 0]
         diffuse: [1, 0, 0]
         specular: [1, 0, 0]
