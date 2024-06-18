@@ -45,6 +45,9 @@ public:
     virtual void initialize() override;
     virtual void uninitialize() override;
 
+    virtual void on_enabled() override;
+    virtual void on_disabled() override;
+
     virtual void awake() override;
     void physics_update();
 

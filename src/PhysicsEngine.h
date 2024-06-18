@@ -39,6 +39,7 @@ public:
     static void on_trigger_enter(std::shared_ptr<Collider2D> const& collider, std::shared_ptr<Collider2D> const& other);
     static void on_trigger_exit(std::shared_ptr<Collider2D> const& collider, std::shared_ptr<Collider2D> const& other);
 
+    bool is_collider_registered(std::shared_ptr<Collider2D> const& collider) const;
     void emplace_collider(std::shared_ptr<Collider2D> const& collider);
     void remove_collider(std::shared_ptr<Collider2D> const& collider);
 
