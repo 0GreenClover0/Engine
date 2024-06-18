@@ -160,7 +160,7 @@ void Collider2D::draw_editor()
 void Collider2D::initialize()
 {
     Component::initialize();
-    PhysicsEngine::get_instance()->emplace_collider(std::dynamic_pointer_cast<Collider2D>(shared_from_this()));
+    PhysicsEngine::get_instance()->emplace_collider(std::static_pointer_cast<Collider2D>(shared_from_this()));
 
     switch (collider_type)
     {
@@ -187,7 +187,7 @@ void Collider2D::initialize()
 void Collider2D::uninitialize()
 {
     Component::uninitialize();
-    PhysicsEngine::get_instance()->remove_collider(std::dynamic_pointer_cast<Collider2D>(shared_from_this()));
+    PhysicsEngine::get_instance()->remove_collider(std::static_pointer_cast<Collider2D>(shared_from_this()));
 }
 
 void Collider2D::on_enabled()
