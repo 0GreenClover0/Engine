@@ -1,10 +1,13 @@
 #include "ExampleUIBar.h"
 
-#include <GLFW/glfw3.h>
-#include <imgui.h>
-
 #include "Entity.h"
 #include "ResourceManager.h"
+
+#include <GLFW/glfw3.h>
+
+#if EDITOR
+#include <imgui.h>
+#endif
 
 std::shared_ptr<ExampleUIBar> ExampleUIBar::create()
 {
@@ -37,9 +40,11 @@ void ExampleUIBar::update()
     m_sprite_value->transform->set_local_scale({value * 0.98f, 0.9f, 1.0f});
 }
 
+#if EDITOR
 void ExampleUIBar::draw_editor()
 {
     Component::draw_editor();
 
     ImGui::SliderFloat("Value", &value, 0.0f, 1.0f);
 }
+#endif

@@ -16,7 +16,9 @@ public:
 
     virtual void awake() override;
     virtual void update() override;
+#if EDITOR
     virtual void draw_editor() override;
+#endif
 
     bool is_inside_port() const;
     void set_is_inside_port(bool const value);

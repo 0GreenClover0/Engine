@@ -19,7 +19,9 @@ public:
     static std::shared_ptr<FloatersManager> create();
     explicit FloatersManager(AK::Badge<FloatersManager>);
 
+#if EDITOR
     virtual void draw_editor() override;
+#endif
 
     FloaterSettings big_boat_settings = {};
     FloaterSettings small_boat_settings = {};

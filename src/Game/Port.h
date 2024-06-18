@@ -13,7 +13,9 @@ public:
 
     explicit Port(AK::Badge<Port>);
 
+#if EDITOR
     virtual void draw_editor() override;
+#endif
 
     virtual void on_trigger_enter(std::shared_ptr<Collider2D> const& other) override;
     virtual void on_trigger_exit(std::shared_ptr<Collider2D> const& other) override;

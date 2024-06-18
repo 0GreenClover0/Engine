@@ -140,6 +140,7 @@ public:
 
 class Editor
 {
+#if EDITOR
 public:
     static std::shared_ptr<Editor> create();
 
@@ -271,6 +272,8 @@ private:
     bool m_append_scene = false;
 
     inline static std::shared_ptr<Editor> m_instance = nullptr;
+
+#endif
 };
 
 }

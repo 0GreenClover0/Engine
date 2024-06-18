@@ -9,7 +9,10 @@
 #include "Model.h"
 #include "ResourceManager.h"
 #include "SceneSerializer.h"
+
+#if EDITOR
 #include "imgui_extensions.h"
+#endif
 
 std::shared_ptr<Lighthouse> Lighthouse::create()
 {
@@ -33,6 +36,7 @@ void Lighthouse::update()
     }
 }
 
+#if EDITOR
 void Lighthouse::draw_editor()
 {
     Component::draw_editor();
@@ -41,6 +45,7 @@ void Lighthouse::draw_editor()
     ImGuiEx::draw_ptr("Spawn", spawn_position);
     ImGuiEx::draw_ptr("Water", water);
 }
+#endif
 
 void Lighthouse::enter()
 {

@@ -1,14 +1,17 @@
-#include <imgui.h>
-
-#include "Entity.h"
 #include "Path.h"
 
-#include "imgui_extensions.h"
-
+#include "Entity.h"
 #include "Game/LevelController.h"
+
 #include <glm/gtc/type_ptr.inl>
-#include <implot.h>
+
 #include <iostream>
+
+#if EDITOR
+#include "imgui_extensions.h"
+#include <imgui.h>
+#include <implot.h>
+#endif
 
 std::shared_ptr<Path> Path::create()
 {
@@ -19,6 +22,7 @@ Path::Path(AK::Badge<Path>)
 {
 }
 
+#if EDITOR
 void Path::draw_editor()
 {
     Component::draw_editor();
@@ -80,3 +84,4 @@ void Path::draw_editor()
         }
     }
 }
+#endif

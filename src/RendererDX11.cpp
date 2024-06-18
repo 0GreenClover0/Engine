@@ -205,8 +205,8 @@ void RendererDX11::begin_frame() const
 
     Renderer::begin_frame();
 
-    float const clear_color_with_alpha[4] = {clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w,
-                                             clear_color.w};
+    float const clear_color_with_alpha[4] = {clear_color_glm.x * clear_color_glm.w, clear_color_glm.y * clear_color_glm.w,
+                                             clear_color_glm.z * clear_color_glm.w, clear_color_glm.w};
 
     g_pd3dDeviceContext->ClearRenderTargetView(g_mainRenderTargetView, clear_color_with_alpha);
     g_pd3dDeviceContext->ClearRenderTargetView(g_textureRenderTargetView, clear_color_with_alpha);

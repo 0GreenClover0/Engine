@@ -45,7 +45,7 @@ void RendererGL::begin_frame() const
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
 
-    glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+    glClearColor(clear_color_glm.g, clear_color_glm.g, clear_color_glm.b, clear_color_glm.w);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 

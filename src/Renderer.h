@@ -1,13 +1,9 @@
 #pragma once
 
-#include <imgui.h>
-#include <set>
-
-#include <glm/mat4x4.hpp>
-
 #include "ConstantBufferTypes.h"
 #include "DirectionalLight.h"
 #include "Drawable.h"
+#include "EngineDefines.h"
 #include "Font.h"
 #include "Light.h"
 #include "Mesh.h"
@@ -15,6 +11,14 @@
 #include "SpotLight.h"
 #include "Texture.h"
 #include "Vertex.h"
+
+#include <set>
+
+#include <glm/mat4x4.hpp>
+
+#if EDITOR
+#include <imgui.h>
+#endif
 
 class Camera;
 
@@ -73,7 +77,11 @@ public:
 
     bool wireframe_mode_active = false;
 
+#if EDITOR
     inline static ImVec4 clear_color = ImVec4(0.2f, 0.2f, 0.2f, 1.00f);
+#endif
+
+    inline static glm::vec4 clear_color_glm = {0.2f, 0.2f, 0.2f, 1.0f};
 
     inline static i32 screen_width = 1280;
     inline static i32 screen_height = 720;

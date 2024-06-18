@@ -19,7 +19,9 @@ public:
     static std::shared_ptr<Factory> create();
 
     explicit Factory(AK::Badge<Factory>);
+#if EDITOR
     virtual void draw_editor() override;
+#endif
 
     virtual void awake() override;
     bool interact();

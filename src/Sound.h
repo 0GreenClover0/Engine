@@ -25,7 +25,9 @@ public:
 
     virtual void awake() override;
 
+#if EDITOR
     virtual void draw_editor() override;
+#endif
 
     virtual void reprepare() override;
 

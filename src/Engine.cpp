@@ -2,11 +2,6 @@
 
 #include <utility>
 
-#include <ImGuizmo.h>
-#include <imgui_impl_dx11.h>
-#include <imgui_impl_glfw.h>
-#include <imgui_impl_opengl3.h>
-
 #include <spdlog/spdlog.h>
 
 #define STB_IMAGE_IMPLEMENTATION
@@ -23,8 +18,16 @@
 #include "Renderer.h"
 #include "RendererDX11.h"
 #include "RendererGL.h"
+#include "SceneSerializer.h"
 #include "Window.h"
+
+#if EDITOR
+#include <ImGuizmo.h>
+#include <imgui_impl_dx11.h>
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_opengl3.h>
 #include <implot.h>
+#endif
 
 i32 Engine::initialize()
 {
@@ -63,7 +66,9 @@ i32 Engine::initialize()
     // and not eg. in Window class right after glfw window creation.
     window->maximize_glfw_window();
 
+#if EDITOR
     m_editor = Editor::Editor::create();
+#endif
 
     return 0;
 }
@@ -73,13 +78,16 @@ void Engine::create_game()
     auto const main_scene = std::make_shared<Scene>();
     MainScene::set_instance(main_scene);
 
+#if EDITOR
     m_editor->set_scene(main_scene);
+#endif
 
     // Custom initialization code
     auto const game = std::make_shared<Game>(window);
 
     //game->initialize();
 
+#if EDITOR
     bool const loaded = m_editor->load_scene();
 
     if (!loaded)
@@ -87,6 +95,27 @@ void Engine::create_game()
         std::cout << "Scene could not be loaded.\n";
         return;
     }
+#endif
+
+#if !EDITOR
+    auto const scene_serializer = std::make_shared<SceneSerializer>(main_scene);
+    scene_serializer->set_instance(scene_serializer);
+
+    std::string const scene = "./res/scenes/MainScene.txt";
+    if (!scene_serializer->deserialize(scene))
+    {
+        std::cout << "Scene could not be loaded.\n";
+        return;
+    }
+
+    Renderer::get_instance()->switch_rendering_to_texture();
+
+    glfwSetInputMode(Engine::window->get_glfw_window(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    GLFWvidmode const* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+    glfwSetWindowMonitor(Engine::window->get_glfw_window(), glfwGetPrimaryMonitor(), 0, 0, mode->width, mode->height, mode->refreshRate);
+
+    Engine::set_game_running(true);
+#endif
 }
 
 void Engine::run()
@@ -105,6 +134,7 @@ void Engine::run()
         glfwPollEvents();
         Input::input->update_keys();
 
+#if EDITOR
         // Start the Dear ImGui frame
         switch (Renderer::renderer_api)
         {
@@ -125,6 +155,7 @@ void Engine::run()
 
         m_editor->handle_input();
         m_editor->draw();
+#endif
 
         Renderer::get_instance()->begin_frame();
 
@@ -138,17 +169,27 @@ void Engine::run()
 
         Renderer::get_instance()->end_frame();
 
+#if EDITOR
         ImGui::Render();
+#endif
 
         switch (Renderer::renderer_api)
         {
         case Renderer::RendererApi::OpenGL:
+
+#if EDITOR
             ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+#endif
+
             glfwMakeContextCurrent(window->get_glfw_window());
             glfwSwapBuffers(window->get_glfw_window());
             break;
         case Renderer::RendererApi::DirectX11:
+
+#if EDITOR
             ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+#endif
+
             break;
         default:
             std::unreachable();
@@ -163,18 +204,24 @@ void Engine::clean_up()
     switch (Renderer::renderer_api)
     {
     case Renderer::RendererApi::OpenGL:
+#if EDITOR
         ImGui_ImplOpenGL3_Shutdown();
+#endif
         break;
     case Renderer::RendererApi::DirectX11:
+#if EDITOR
         ImGui_ImplDX11_Shutdown();
+#endif
         break;
     default:
         std::unreachable();
     }
 
+#if EDITOR
     ImGui_ImplGlfw_Shutdown();
     ImPlot::DestroyContext();
     ImGui::DestroyContext();
+#endif
 
     glfwDestroyWindow(window->get_glfw_window());
     glfwTerminate();
@@ -291,6 +338,7 @@ i32 Engine::setup_glad()
 
 void Engine::setup_imgui(GLFWwindow* glfw_window)
 {
+#if EDITOR
     // Setup Dear ImGui binding
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -321,6 +369,7 @@ void Engine::setup_imgui(GLFWwindow* glfw_window)
 
     // Setup style
     ImGui::StyleColorsDark();
+#endif
 }
 
 i32 Engine::setup_miniaudio()

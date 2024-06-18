@@ -1,13 +1,16 @@
-#include <GLFW/glfw3.h>
-#include <imgui.h>
+#include "LighthouseLight.h"
 
 #include "Entity.h"
 #include "Input.h"
-#include "LighthouseLight.h"
-
 #include "LevelController.h"
 #include "ResourceManager.h"
+
+#include <GLFW/glfw3.h>
+
+#if EDITOR
 #include "imgui_extensions.h"
+#include <imgui.h>
+#endif
 
 std::shared_ptr<LighthouseLight> LighthouseLight::create()
 {
@@ -57,11 +60,13 @@ void LighthouseLight::update()
     light_locked->entity->transform->orient_towards(glm::vec3(position.x, 0.0f, position.y));
 }
 
+#if EDITOR
 void LighthouseLight::draw_editor()
 {
     ImGuiEx::draw_ptr("Spotlight", spotlight);
     ImGui::InputFloat("Beam width", &spotlight_beam_width);
 }
+#endif
 
 void LighthouseLight::set_spot_light(std::shared_ptr<SpotLight> const& spot_light)
 {

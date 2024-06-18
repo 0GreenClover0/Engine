@@ -13,7 +13,9 @@ public:
                                            float const forward_floaters_offset);
     explicit Floater(AK::Badge<Floater>);
 
+#if EDITOR
     virtual void draw_editor() override;
+#endif
     virtual void awake() override;
     virtual void update() override;
 

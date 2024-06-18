@@ -1,17 +1,21 @@
-#include <GLFW/glfw3.h>
-#include <glm/gtc/random.hpp>
-#include <glm/gtx/vector_angle.hpp>
-#include <glm/vec2.hpp>
-#include <imgui.h>
+#include "IceBound.h"
 
 #include "AK/AK.h"
 #include "Collider2D.h"
 #include "Entity.h"
 #include "Globals.h"
-#include "IceBound.h"
 #include "Input.h"
 #include "Model.h"
 #include "ResourceManager.h"
+
+#include <GLFW/glfw3.h>
+#include <glm/gtc/random.hpp>
+#include <glm/gtx/vector_angle.hpp>
+#include <glm/vec2.hpp>
+
+#if EDITOR
+#include <imgui.h>
+#endif
 
 std::shared_ptr<IceBound> IceBound::create()
 {
@@ -31,6 +35,7 @@ void IceBound::update()
 {
 }
 
+#if EDITOR
 void IceBound::draw_editor()
 {
     Component::draw_editor();
@@ -165,3 +170,4 @@ void IceBound::draw_editor()
         }
     }
 }
+#endif

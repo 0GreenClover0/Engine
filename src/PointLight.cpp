@@ -38,6 +38,7 @@ void PointLight::update()
     }
 }
 
+#if EDITOR
 void PointLight::draw_editor()
 {
     Light::draw_editor();
@@ -47,6 +48,7 @@ void PointLight::draw_editor()
 
     ImGui::Text(("Action timer:" + std::to_string(m_action_timer)).c_str());
 }
+#endif
 
 void PointLight::set_up_shadow_mapping()
 {

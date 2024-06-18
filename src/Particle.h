@@ -20,7 +20,9 @@ public:
     virtual bool is_particle() const override;
 
     virtual void draw() const override;
+#if EDITOR
     virtual void draw_editor() override;
+#endif
 
     void prepare();
 

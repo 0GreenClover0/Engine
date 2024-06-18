@@ -12,6 +12,7 @@
 #include <memory>
 
 #include "AK/Types.h"
+#include "EngineDefines.h"
 #include "Window.h"
 
 namespace Editor

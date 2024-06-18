@@ -1,20 +1,21 @@
 #include "ShaderDX11.h"
 
-#include <array>
-#include <d3d11.h>
-#include <d3dcommon.h>
-#include <d3dcompiler.h>
-#include <fstream>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.inl>
-#include <iostream>
-
 #include "AK/AK.h"
 #include "Renderer.h"
 #include "RendererDX11.h"
 
+#include <d3dcommon.h>
+#include <d3dcompiler.h>
+#pragma comment(lib, "d3dcompiler")
+
+#include <array>
 #include <filesystem>
+#include <fstream>
+#include <iostream>
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.inl>
 
 ShaderDX11::ShaderDX11(AK::Badge<ShaderFactory>, std::string const& compute_path) : Shader(compute_path)
 {

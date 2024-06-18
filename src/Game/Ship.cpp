@@ -1,22 +1,26 @@
-#include <GLFW/glfw3.h>
-#include <glm/gtc/random.hpp>
-#include <glm/gtx/vector_angle.hpp>
-#include <glm/vec2.hpp>
-#include <imgui.h>
-
-#include "Collider2D.h"
-#include "Entity.h"
-#include "Input.h"
 #include "Ship.h"
 
 #include "AK/AK.h"
+#include "Collider2D.h"
+#include "Entity.h"
 #include "Floater.h"
 #include "Globals.h"
 #include "IceBound.h"
+#include "Input.h"
 #include "LighthouseKeeper.h"
 #include "Player.h"
 #include "ShipSpawner.h"
+
+#include <GLFW/glfw3.h>
+
+#include <glm/gtc/random.hpp>
+#include <glm/gtx/vector_angle.hpp>
+#include <glm/vec2.hpp>
+
+#if EDITOR
 #include "imgui_extensions.h"
+#include <imgui.h>
+#endif
 
 std::shared_ptr<Ship> Ship::create()
 {
@@ -464,6 +468,7 @@ void Ship::on_destroyed()
     on_ship_destroyed(static_pointer_cast<Ship>(shared_from_this()));
 }
 
+#if EDITOR
 void Ship::draw_editor()
 {
     Component::draw_editor();
@@ -472,6 +477,7 @@ void Ship::draw_editor()
 
     ImGuiEx::draw_ptr("Light", light);
 }
+#endif
 
 void Ship::on_trigger_enter(std::shared_ptr<Collider2D> const& other)
 {

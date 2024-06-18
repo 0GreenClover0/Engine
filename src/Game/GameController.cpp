@@ -1,10 +1,7 @@
-#include <GLFW/glfw3.h>
-#include <imgui.h>
-#include <imgui_extensions.h>
+#include "GameController.h"
 
 #include "AK/Math.h"
 #include "Entity.h"
-#include "GameController.h"
 #include "Globals.h"
 #include "Input.h"
 #include "LevelController.h"
@@ -12,6 +9,13 @@
 #include "Player.h"
 #include "SceneSerializer.h"
 #include "ShipSpawner.h"
+
+#include <GLFW/glfw3.h>
+
+#if EDITOR
+#include <imgui.h>
+#include <imgui_extensions.h>
+#endif
 
 std::shared_ptr<GameController> GameController::create()
 {
@@ -84,6 +88,7 @@ void GameController::update()
     }
 }
 
+#if EDITOR
 void GameController::draw_editor()
 {
     Component::draw_editor();
@@ -93,6 +98,7 @@ void GameController::draw_editor()
         move_to_next_scene();
     }
 }
+#endif
 
 bool GameController::is_moving_to_next_scene() const
 {

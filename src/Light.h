@@ -10,7 +10,9 @@ class Light : public Component
 public:
     ~Light() override = 0;
 
+#if EDITOR
     virtual void draw_editor() override;
+#endif
 
     virtual void initialize() override;
     virtual void uninitialize() override;

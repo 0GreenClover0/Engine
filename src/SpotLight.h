@@ -14,7 +14,9 @@ public:
     {
     }
 
+#if EDITOR
     virtual void draw_editor() override;
+#endif
 
     void set_render_target_for_shadow_mapping() const;
     glm::mat4 get_projection_view_matrix();

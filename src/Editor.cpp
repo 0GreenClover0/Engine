@@ -1,12 +1,18 @@
 #include "Editor.h"
 
+#include "EngineDefines.h"
+
+#if EDITOR
 #include "imgui_extensions.h"
 #include "imgui_stdlib.h"
 #include <ImGuizmo.h>
+#include <imgui.h>
+#include <imgui_internal.h>
+#endif
+
 #include <filesystem>
 #include <glm/gtc/type_ptr.inl>
 #include <glm/gtx/string_cast.hpp>
-#include <imgui.h>
 
 #include "Camera.h"
 #include "Collider2D.h"
@@ -56,12 +62,12 @@
 #include "SpotLight.h"
 #include "Sprite.h"
 #include "Water.h"
-#include <imgui_internal.h>
 // # Put new header here
 
 namespace Editor
 {
 
+#if EDITOR
 Editor::Editor(AK::Badge<Editor>)
 {
     set_style();
@@ -1621,5 +1627,7 @@ bool Editor::are_debug_drawings_enabled() const
 {
     return m_debug_drawings_enabled;
 }
+
+#endif
 
 }

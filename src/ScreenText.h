@@ -20,7 +20,9 @@ public:
 
     virtual void initialize() override;
     virtual void draw() const override;
+#if EDITOR
     virtual void draw_editor() override;
+#endif
 
     virtual void reprepare() override;
 

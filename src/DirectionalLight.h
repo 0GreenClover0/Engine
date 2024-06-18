@@ -10,7 +10,9 @@ class DirectionalLight final : public Light
 public:
     static std::shared_ptr<DirectionalLight> create();
 
+#if EDITOR
     virtual void draw_editor() override;
+#endif
 
     explicit DirectionalLight(AK::Badge<DirectionalLight> badge) : Light()
     {

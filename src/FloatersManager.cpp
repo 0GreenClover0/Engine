@@ -1,8 +1,9 @@
 #include "FloatersManager.h"
 
+#if EDITOR
 #include "imgui_extensions.h"
-
 #include <imgui.h>
+#endif
 
 FloatersManager::FloatersManager(AK::Badge<FloatersManager>)
 {
@@ -13,6 +14,7 @@ std::shared_ptr<FloatersManager> FloatersManager::create()
     return std::make_shared<FloatersManager>(AK::Badge<FloatersManager> {});
 }
 
+#if EDITOR
 void FloatersManager::draw_editor()
 {
     Component::draw_editor();
@@ -58,3 +60,4 @@ void FloatersManager::draw_editor()
     ImGui::InputFloat("Side floater offset", &pirate_boat_settings.side_floaters_offset);
     ImGui::PopID();
 }
+#endif

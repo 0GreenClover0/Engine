@@ -15,7 +15,9 @@ public:
 
     virtual void awake() override;
     virtual void update() override;
+#if EDITOR
     virtual void draw_editor() override;
+#endif
     virtual void uninitialize() override;
 
     void reset_player();

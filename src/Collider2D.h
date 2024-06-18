@@ -40,7 +40,9 @@ public:
     explicit Collider2D(AK::Badge<Collider2D>, glm::vec2 const bounds_dimensions, bool const is_static);
     explicit Collider2D(AK::Badge<Collider2D>, float const width, float const height, bool const is_static);
 
+#if EDITOR
     virtual void draw_editor() override;
+#endif
 
     virtual void initialize() override;
     virtual void uninitialize() override;

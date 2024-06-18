@@ -82,6 +82,7 @@ void Particle::draw() const
     Renderer::get_instance()->restore_default_rasterizer_draw_type();
 }
 
+#if EDITOR
 void Particle::draw_editor()
 {
     Drawable::draw_editor();
@@ -89,6 +90,7 @@ void Particle::draw_editor()
     ImGui::ColorEdit4("Color", glm::value_ptr(m_color));
     update_particle();
 }
+#endif
 
 void Particle::update_particle() const
 {

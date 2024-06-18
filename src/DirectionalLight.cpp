@@ -11,10 +11,12 @@ std::shared_ptr<DirectionalLight> DirectionalLight::create()
     return directional_light;
 }
 
+#if EDITOR
 void DirectionalLight::draw_editor()
 {
     Light::draw_editor();
 }
+#endif
 
 void DirectionalLight::set_up_shadow_mapping()
 {

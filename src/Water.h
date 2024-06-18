@@ -18,7 +18,9 @@ public:
     virtual void prepare() override;
     virtual void reprepare() override;
 
+#if EDITOR
     virtual void draw_editor() override;
+#endif
 
     void add_wave();
     void remove_wave(u32 const index);

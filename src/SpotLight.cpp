@@ -1,11 +1,14 @@
 #include "SpotLight.h"
 
-#include <glm/glm.hpp>
-#include <imgui.h>
-
 #include "Entity.h"
 #include "Renderer.h"
 #include "RendererDX11.h"
+
+#include <glm/glm.hpp>
+
+#if EDITOR
+#include <imgui.h>
+#endif
 
 std::shared_ptr<SpotLight> SpotLight::create()
 {
@@ -14,6 +17,7 @@ std::shared_ptr<SpotLight> SpotLight::create()
     return spot_light;
 }
 
+#if EDITOR
 void SpotLight::draw_editor()
 {
     Light::draw_editor();
@@ -27,6 +31,7 @@ void SpotLight::draw_editor()
     ImGui::SliderFloat("Outer cut off", &m_outer_cut_off_degrees, 0.0f, 90.0f);
     outer_cut_off = glm::cos(glm::radians(m_outer_cut_off_degrees));
 }
+#endif
 
 void SpotLight::set_render_target_for_shadow_mapping() const
 {

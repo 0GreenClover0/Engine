@@ -1,15 +1,5 @@
 #include "Model.h"
 
-#include <filesystem>
-#include <iostream>
-
-#include <assimp/Importer.hpp>
-#include <assimp/postprocess.h>
-#include <assimp/scene.h>
-
-#include <imgui.h>
-#include <imgui_stdlib.h>
-
 #include "AK/Types.h"
 #include "Entity.h"
 #include "Globals.h"
@@ -19,6 +9,18 @@
 #include "ResourceManager.h"
 #include "Texture.h"
 #include "Vertex.h"
+
+#include <filesystem>
+#include <iostream>
+
+#include <assimp/Importer.hpp>
+#include <assimp/postprocess.h>
+#include <assimp/scene.h>
+
+#if EDITOR
+#include <imgui.h>
+#include <imgui_stdlib.h>
+#endif
 
 std::shared_ptr<Model> Model::create()
 {
@@ -60,6 +62,7 @@ Model::Model(AK::Badge<Model>, std::shared_ptr<Material> const& material) : Draw
 {
 }
 
+#if EDITOR
 void Model::draw_editor()
 {
     Drawable::draw_editor();
@@ -80,6 +83,7 @@ void Model::draw_editor()
         m_rasterizer_draw_type = static_cast<RasterizerDrawType>(current_item_index);
     }
 }
+#endif
 
 void Model::calculate_bounding_box()
 {

@@ -205,6 +205,7 @@ void Camera::update_internals()
     }
 }
 
+#if EDITOR
 void Camera::draw_editor()
 {
     Component::draw_editor();
@@ -213,3 +214,4 @@ void Camera::draw_editor()
     ImGui::InputFloat("Camera FoV", &fov_angle, 1.0f, 90.0f);
     fov = glm::radians(fov_angle);
 }
+#endif

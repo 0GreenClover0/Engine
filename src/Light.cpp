@@ -1,13 +1,16 @@
 #include "Light.h"
 
-#include <imgui.h>
-
 #include "Renderer.h"
+
+#if EDITOR
+#include <imgui.h>
+#endif
 
 Light::~Light()
 {
 }
 
+#if EDITOR
 void Light::draw_editor()
 {
     Component::draw_editor();
@@ -24,6 +27,7 @@ void Light::draw_editor()
     ImGui::ColorEdit3("Specular color", specular_color);
     specular = glm::vec3(specular_color[0], specular_color[1], specular_color[2]);
 }
+#endif
 
 void Light::initialize()
 {

@@ -8,6 +8,9 @@
 //   https://github.com/ocornut/imgui/wiki/Useful-Extensions#cness
 
 #include "imgui_stdlib.h"
+
+#if EDITOR
+
 #include "imgui.h"
 
 #include <string>
@@ -86,4 +89,6 @@ bool ImGui::InputTextWithHint(char const* label, char const* hint, std::string* 
 
 #if defined(__clang__)
 #pragma clang diagnostic pop
+#endif
+
 #endif

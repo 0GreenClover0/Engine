@@ -1,13 +1,17 @@
-#include <GLFW/glfw3.h>
-#include <imgui.h>
+#include "Player.h"
 
 #include "Entity.h"
 #include "Globals.h"
 #include "Input.h"
 #include "LevelController.h"
-#include "Player.h"
 #include "ScreenText.h"
 #include "ShipSpawner.h"
+
+#include <GLFW/glfw3.h>
+
+#if EDITOR
+#include <imgui.h>
+#endif
 
 std::shared_ptr<Player> Player::create()
 {
@@ -108,6 +112,7 @@ void Player::update()
     }
 }
 
+#if EDITOR
 void Player::draw_editor()
 {
     Component::draw_editor();
@@ -125,3 +130,4 @@ void Player::draw_editor()
         ImGui::Text(("Pirates In Control: " + std::to_string(Player::get_instance()->pirates_in_control)).c_str());
     }
 }
+#endif

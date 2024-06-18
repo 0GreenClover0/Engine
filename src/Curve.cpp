@@ -1,14 +1,17 @@
-#include <imgui.h>
-
 #include "Curve.h"
+
 #include "Entity.h"
-
-#include "imgui_extensions.h"
-
 #include "Game/LevelController.h"
+
 #include <glm/gtc/type_ptr.inl>
-#include <implot.h>
+
 #include <iostream>
+
+#if EDITOR
+#include "imgui_extensions.h"
+#include <imgui.h>
+#include <implot.h>
+#endif
 
 std::shared_ptr<Curve> Curve::create()
 {
@@ -21,6 +24,7 @@ Curve::Curve(AK::Badge<Curve>)
 
 Curve::Curve() = default;
 
+#if EDITOR
 void Curve::draw_editor()
 {
     Component::draw_editor();
@@ -93,6 +97,7 @@ void Curve::draw_editor()
         }
     }
 }
+#endif
 
 float Curve::length() const
 {

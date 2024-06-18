@@ -17,7 +17,10 @@ public:
 
     virtual void initialize() override;
     virtual void uninitialize() override;
+
+#if EDITOR
     virtual void draw_editor() override;
+#endif
 
     glm::vec3 get_position() const;
     glm::mat4 get_projection();
