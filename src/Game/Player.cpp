@@ -70,7 +70,8 @@ void Player::awake()
 
 void Player::update()
 {
-    if (LevelController::get_instance() != nullptr && !LevelController::get_instance()->entity->get_component<ShipSpawner>()->is_any_ship_controlled())
+    if (LevelController::get_instance() != nullptr
+        && LevelController::get_instance()->entity->get_component<ShipSpawner>()->should_decal_be_drawn())
     {
         RendererDX11::get_instance_dx11()->inject_light_range(range);
     }

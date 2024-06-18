@@ -104,16 +104,23 @@ void ShipSpawner::get_spawn_paths()
     }
 }
 
-bool ShipSpawner::is_any_ship_controlled() const
+bool ShipSpawner::should_decal_be_drawn() const
 {
-    for (auto const& ship : m_ships)
+    if (light.lock()->enabled())
     {
-        if (ship.lock()->behavioral_state == BehavioralState::Control)
+        for (auto const& ship : m_ships)
         {
-            return true;
+            if (ship.lock()->behavioral_state == BehavioralState::Control)
+            {
+                return false;
+            }
         }
+        return true;
     }
-    return false;
+    else
+    {
+        return false;
+    }
 }
 
 void ShipSpawner::update()
