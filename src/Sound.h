@@ -30,8 +30,10 @@ public:
     void play();
     void stop();
     void stop_with_fade(u64 const milliseconds);
+    void set_volume(float const new_volume);
     virtual void update() override;
 
+    float volume = 10.0f;
     bool play_on_awake = false;
     bool is_positional = false;
 
