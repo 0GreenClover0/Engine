@@ -175,6 +175,7 @@ void LevelController::draw_editor()
     ImGui::Separator();
 
     ImGui::Checkbox("Turoial", &is_tutorial);
+    ImGui::InputScalar("Starting package", ImGuiDataType_U32, &starting_packages);
 }
 #endif
 

@@ -56,6 +56,7 @@ public:
     std::weak_ptr<Curve> pirates_in_control_curve = {};
 
     bool is_tutorial = false;
+    u32 starting_packages = 2;
 
 private:
     inline static std::shared_ptr<LevelController> m_instance;
