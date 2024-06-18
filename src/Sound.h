@@ -23,11 +23,16 @@ public:
     {
     }
 
+    virtual void awake() override;
+
+    virtual void draw_editor() override;
+
     void play();
     void stop();
     void stop_with_fade(u64 const milliseconds);
     virtual void update() override;
 
+    bool play_on_awake = false;
     bool is_positional = false;
 
 private:
