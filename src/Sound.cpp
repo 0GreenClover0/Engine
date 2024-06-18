@@ -68,6 +68,21 @@ std::shared_ptr<Sound> Sound::play_sound_at_location(std::string const& path, gl
     return sound;
 }
 
+void Sound::awake()
+{
+    if (play_on_awake)
+    {
+        play();
+    }
+}
+
+void Sound::draw_editor()
+{
+    Component::draw_editor();
+
+    ImGui::Checkbox("Play on Awake", &play_on_awake);
+}
+
 void Sound::play()
 {
     ma_sound_start(&m_internal_sound);
