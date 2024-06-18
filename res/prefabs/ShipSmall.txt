@@ -1,7 +1,7 @@
 Scene: Untitled
 Entities:
   - Entity: ShipSmall
-    guid: c219d25b3cd890d8330d7e8221f425bd129eed6deb5b6c2b95adf7a153c661d1
+    guid: b74129b55828a8f541d5e223066e8fbde95fe4d217c2dab1a29b0ed60829bc3e
     Name: ShipSmall
     TransformComponent:
       Translation: [0, 0, 0]
@@ -11,19 +11,19 @@ Entities:
         guid: ""
     Components:
       - ComponentName: ShipComponent
-        guid: 304d207e911110fcd921d425990eb2746dd2f4c452e39b7d96ee8a71967e48ff
+        guid: 5dd6800a79b91541bca6573e55d21053a88b30bf860ad7ca03d076c572369de5
         custom_name: ""
         type: 0
         light:
-          guid: 0e964ba3e74511090908757bf419ecb097f62be97380e16af66721be6a41e118
+          guid: nullptr
         spawner:
-          guid: feea9f188b095ed1723fb09cc01eddb681afb2313e02ab80d9ae233ee7222c34
+          guid: nullptr
         eyes:
-          guid: 33872f23b72d1f518d2167b5fe989d9c2a7a49b1f6eb3b7ccc99be02a6c442a6
+          guid: 69d0e49aaf423052f6ad616aa4a5c145870d06287ba2b8850cf711440a93db37
         my_light:
-          guid: af4afd0d87e17c93d107cf2a1f7a5b27084148bc0e1fb088b346a0df24c0d2dd
+          guid: b2dd0b14375123475bdb244df457767dd5c7cc59e5d0f846e78b34c35113f19f
       - ComponentName: Collider2DComponent
-        guid: 3e1e63db2b72f2c841ee9d232fcce18dade905c4e2ff0d7462b4fd5eae2255a6
+        guid: 5b9df255c459977cb24930d55a6810b9808535390d5347417129b90e429f5494
         custom_name: ""
         offset: [0, 0.0350000001]
         is_trigger: true
@@ -32,8 +32,10 @@ Entities:
         width: 0.25
         height: 0.649999976
         radius: 1
+        drag: 0.00999999978
+        velocity: [0, 0]
       - ComponentName: ModelComponent
-        guid: e80ed03f02fb95a14e0d3f1154ede14a1c1c288337a5454d805d41b90b5c774f
+        guid: 9ba11cac2f496453ddb5b270f95feda1e47ea36fad959a2b1f83103ff94d269b
         custom_name: ""
         model_path: ./res/models/shipSmall/shipSmall.gltf
         material:
@@ -46,46 +48,48 @@ Entities:
           NeedsForward: false
           CastsShadows: true
   - Entity: Eyes
-    guid: ff1e2e49fbf367900bd72f43d80a05648419f14e401c9e2ebd592a090e27057c
+    guid: e366ce837f13a2f794198ef682f4c3d855f8457938d1dbcc8c26009ec4227794
     Name: Eyes
     TransformComponent:
       Translation: [0, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: c219d25b3cd890d8330d7e8221f425bd129eed6deb5b6c2b95adf7a153c661d1
+        guid: b74129b55828a8f541d5e223066e8fbde95fe4d217c2dab1a29b0ed60829bc3e
     Components:
       - ComponentName: ShipEyesComponent
-        guid: 33872f23b72d1f518d2167b5fe989d9c2a7a49b1f6eb3b7ccc99be02a6c442a6
+        guid: 69d0e49aaf423052f6ad616aa4a5c145870d06287ba2b8850cf711440a93db37
         custom_name: ""
       - ComponentName: Collider2DComponent
-        guid: 55f194e96dd3fc675d307a2168bc8769c14ddd54bccad74c3ded920dc7ab0810
+        guid: 8ceebcceb650d15131b7ce5e936b3476f089f369c588756ba8d3eb8ee16e9966
         custom_name: ""
         offset: [0, -0.5]
         is_trigger: true
         is_static: false
         collider_type: 0
-        width: 0.200000002
+        width: 0.200000003
         height: 0.400000006
         radius: 1
+        drag: 0.00999999978
+        velocity: [0, 0]
   - Entity: Light
-    guid: c6b55177499f0b3ce7c088b045040b316f1c21bd3b93d730e552d272f3d6fd97
+    guid: 8da8ba7bcd4e3e8d3a40a1cf21de649f21d181dc58184904f3344600280dbd6d
     Name: Light
     TransformComponent:
       Translation: [0, 0.409877598, 0.211868599]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: c219d25b3cd890d8330d7e8221f425bd129eed6deb5b6c2b95adf7a153c661d1
+        guid: b74129b55828a8f541d5e223066e8fbde95fe4d217c2dab1a29b0ed60829bc3e
     Components:
       - ComponentName: PointLightComponent
-        guid: af4afd0d87e17c93d107cf2a1f7a5b27084148bc0e1fb088b346a0df24c0d2dd
+        guid: b2dd0b14375123475bdb244df457767dd5c7cc59e5d0f846e78b34c35113f19f
         custom_name: ""
         constant: 1
         linear: 10
-        quadratic: 10
+        quadratic: 2.5
         ambient: [0.200000003, 0.200000003, 0.200000003]
-        diffuse: [1, 1, 1]
+        diffuse: [0, 1, 0]
         specular: [1, 1, 1]
         m_near_plane: 0.5
         m_far_plane: 25
