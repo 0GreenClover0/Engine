@@ -38,7 +38,7 @@ public:
     std::optional<std::weak_ptr<Ship>> find_nearest_ship_object(glm::vec2 center_position) const;
 
     void get_spawn_paths();
-    bool is_any_ship_controlled() const;
+    bool should_decal_be_drawn() const;
 
     std::vector<std::weak_ptr<Path>> paths = {};
 
