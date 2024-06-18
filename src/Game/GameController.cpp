@@ -201,6 +201,7 @@ void GameController::move_to_next_scene()
 void GameController::reset_level()
 {
     Player::get_instance()->reset_player();
+    Player::get_instance()->packages = LevelController::get_instance()->starting_packages;
 
     LevelController::get_instance()->entity->get_component<ShipSpawner>()->get_spawn_paths();
     LevelController::get_instance()->on_lighthouse_upgraded();
