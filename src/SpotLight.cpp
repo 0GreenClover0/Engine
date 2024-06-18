@@ -24,6 +24,7 @@ void SpotLight::draw_editor()
     ImGui::Text("Attenuation:");
     ImGui::SliderFloat("Linear", &linear, 0.0f, 1.0f);
     ImGui::SliderFloat("Quadratic", &quadratic, 0.0f, 1.0f);
+    ImGui::SliderFloat("Scattering factor", &scattering_factor, 0.0f, 20.0f);
 
     ImGui::Text("Cut off:");
     ImGui::SliderFloat("Cut off", &m_cut_off_degrees, 0.0f, 90.0f);

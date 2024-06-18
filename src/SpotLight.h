@@ -30,6 +30,8 @@ public:
     float linear = 0.09f;
     float quadratic = 0.032f;
 
+    float scattering_factor = 1.0f;
+
     float cut_off = glm::cos(glm::radians(32.5f));
     float outer_cut_off = glm::cos(glm::radians(60.0f));
 

@@ -37,6 +37,7 @@ struct DirectionalLight
 struct SpotLight
 {
     float3 position;
+    float scattering_factor;
     float3 direction;
     float cut_off;
     float outer_cut_off;
