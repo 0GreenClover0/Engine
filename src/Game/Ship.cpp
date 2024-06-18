@@ -522,7 +522,8 @@ bool Ship::is_out_of_room() const
     float const x = entity->transform->get_local_position().x;
     float const y = entity->transform->get_local_position().z;
 
-    if (y < -LevelController::get_instance()->playfield_height || y > LevelController::get_instance()->playfield_height)
+    if (y < -LevelController::get_instance()->playfield_height + LevelController::get_instance()->playfield_y_shift
+        || y > LevelController::get_instance()->playfield_height + LevelController::get_instance()->playfield_y_shift)
     {
         return true;
     }
