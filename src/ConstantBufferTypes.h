@@ -50,7 +50,7 @@ struct DXPointLight
 struct DXSpotLight
 {
     glm::vec3 position;
-    float padding1;
+    float scattering_factor;
     glm::vec3 direction;
 
     float cut_off;
