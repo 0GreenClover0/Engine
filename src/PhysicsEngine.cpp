@@ -66,6 +66,11 @@ void PhysicsEngine::on_trigger_exit(std::shared_ptr<Collider2D> const& collider,
     }
 }
 
+bool PhysicsEngine::is_collider_registered(std::shared_ptr<Collider2D> const& collider) const
+{
+    return std::ranges::find(colliders.begin(), colliders.end(), collider) != colliders.end();
+}
+
 void PhysicsEngine::emplace_collider(std::shared_ptr<Collider2D> const& collider)
 {
     colliders.emplace_back(collider);

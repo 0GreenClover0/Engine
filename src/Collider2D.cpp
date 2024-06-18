@@ -190,6 +190,22 @@ void Collider2D::uninitialize()
     PhysicsEngine::get_instance()->remove_collider(std::dynamic_pointer_cast<Collider2D>(shared_from_this()));
 }
 
+void Collider2D::on_enabled()
+{
+    auto const collider = std::static_pointer_cast<Collider2D>(shared_from_this());
+
+    // Collider might already be registered in initialize() method
+    if (!PhysicsEngine::get_instance()->is_collider_registered(collider))
+    {
+        PhysicsEngine::get_instance()->emplace_collider(collider);
+    }
+}
+
+void Collider2D::on_disabled()
+{
+    PhysicsEngine::get_instance()->remove_collider(std::static_pointer_cast<Collider2D>(shared_from_this()));
+}
+
 void Collider2D::awake()
 {
     set_can_tick(true);
