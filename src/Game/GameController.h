@@ -39,5 +39,5 @@ private:
     glm::vec2 m_next_position = {};
     u32 m_level_number = 0;
 
-    std::vector<std::string> m_levels_order = {"Level_1", "Level_2", "Level_3", "Level_4", "Level_5", "Level_4"};
+    std::vector<std::string> m_levels_order = {"Level_1", "Level_2", "Level_3", "Level_4", "Level_5", "Level_6"};
 };
