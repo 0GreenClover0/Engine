@@ -3,6 +3,7 @@
 #include "Entity.h"
 #include "Input.h"
 #include "LevelController.h"
+#include "Player.h"
 #include "ResourceManager.h"
 
 #include <GLFW/glfw3.h>
@@ -52,6 +53,10 @@ void LighthouseLight::update()
         return;
 
     auto const light_locked = spotlight.lock();
+
+    i32 const lighthouse_level = Player::get_instance()->lighthouse_level;
+    light_locked->scattering_factor = 1.0f + static_cast<float>(lighthouse_level) * 2.0f;
+    spotlight_beam_width = 0.09f + 0.01f * static_cast<float>(lighthouse_level);
 
     float const light_beam_length = glm::length(entity->transform->get_position() - light_locked->entity->transform->get_position());
     float const aperture = glm::atan(spotlight_beam_width / light_beam_length);

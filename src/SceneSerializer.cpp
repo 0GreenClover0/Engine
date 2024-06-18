@@ -318,6 +318,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
             out << YAML::Key << "constant" << YAML::Value << spotlight->constant;
             out << YAML::Key << "linear" << YAML::Value << spotlight->linear;
             out << YAML::Key << "quadratic" << YAML::Value << spotlight->quadratic;
+            out << YAML::Key << "scattering_factor" << YAML::Value << spotlight->scattering_factor;
             out << YAML::Key << "cut_off" << YAML::Value << spotlight->cut_off;
             out << YAML::Key << "outer_cut_off" << YAML::Value << spotlight->outer_cut_off;
         }
@@ -1357,6 +1358,10 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             if (component["quadratic"].IsDefined())
             {
                 deserialized_component->quadratic = component["quadratic"].as<float>();
+            }
+            if (component["scattering_factor"].IsDefined())
+            {
+                deserialized_component->scattering_factor = component["scattering_factor"].as<float>();
             }
             if (component["cut_off"].IsDefined())
             {

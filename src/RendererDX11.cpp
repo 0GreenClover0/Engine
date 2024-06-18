@@ -700,6 +700,7 @@ void RendererDX11::set_light_buffer() const
     for (i32 i = 0; i < m_spot_lights.size(); i++)
     {
         light_data.spot_lights[i].position = m_spot_lights[i]->entity->transform->get_position();
+        light_data.spot_lights[i].scattering_factor = m_spot_lights[i]->scattering_factor;
         light_data.spot_lights[i].direction = m_spot_lights[i]->entity->transform->get_forward();
         light_data.spot_lights[i].cut_off = m_spot_lights[i]->cut_off;
         light_data.spot_lights[i].outer_cut_off = m_spot_lights[i]->outer_cut_off;
