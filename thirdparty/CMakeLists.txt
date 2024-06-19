@@ -114,7 +114,7 @@ SET (ASSIMP_BUILD_STEP_EXPORTER OFF)
 
 # other
 CPMAddPackage("gh:assimp/assimp@5.2.5")
-CPMAddPackage("gh:glfw/glfw#3.3.8")
+CPMAddPackage("gh:glfw/glfw#3.4")
 CPMAddPackage("gh:g-truc/glm#0.9.9.8")
 CPMAddPackage("gh:ocornut/imgui#v1.90.4-docking")
 CPMAddPackage("gh:gabime/spdlog@1.10.0")
