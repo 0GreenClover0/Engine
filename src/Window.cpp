@@ -21,15 +21,15 @@ Window::Window(Renderer::RendererApi const renderer_api, i32 const screen_width,
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // 3.2+ only
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // 3.0+ only
+        glfwWindowHint(GLFW_SAMPLES, subsamples);
         break;
     case Renderer::RendererApi::DirectX11:
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+        glfwWindowHint(GLFW_SAMPLES, GLFW_DONT_CARE);
         break;
     default:
         std::unreachable();
     }
-
-    glfwWindowHint(GLFW_SAMPLES, subsamples);
 
     m_window = glfwCreateWindow(screen_width, screen_height, "Engine", nullptr, nullptr);
 
