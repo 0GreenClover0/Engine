@@ -57,6 +57,9 @@ public:
 
     bool is_tutorial = false;
     u32 starting_packages = 2;
+    NON_SERIALIZED
+    u32 tutorial_progress = 0;
+    u32 tutorial_level = 1;
 
 private:
     inline static std::shared_ptr<LevelController> m_instance;
