@@ -38,6 +38,7 @@ bool Factory::interact()
 
         Player::get_instance()->flash += 1;
         update_lights();
+        LevelController::get_instance()->check_tutorial_progress(TutorialProgressAction::GeneratorFueled);
     }
     else if (type == FactoryType::Workshop)
     {
@@ -46,6 +47,7 @@ bool Factory::interact()
             factory_light.lock()->set_flash(true);
             Player::get_instance()->upgrade_lighthouse();
         }
+        LevelController::get_instance()->check_tutorial_progress(TutorialProgressAction::WorkshopUpgraded);
     }
 
     Player::get_instance()->packages -= 1;
