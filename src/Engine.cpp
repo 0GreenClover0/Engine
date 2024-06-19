@@ -201,6 +201,8 @@ void Engine::run()
 
 void Engine::clean_up()
 {
+    Renderer::get_instance()->uninitialize();
+
     switch (Renderer::renderer_api)
     {
     case Renderer::RendererApi::OpenGL:
