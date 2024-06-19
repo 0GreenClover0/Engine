@@ -88,8 +88,11 @@ void ShipSpawner::awake()
 
     m_main_spawn = backup_spawn;
 
-    auto const seed = std::chrono::system_clock::now().time_since_epoch().count();
-    std::ranges::shuffle(m_main_spawn, std::default_random_engine(seed));
+    if (LevelController::get_instance()->is_started)
+    {
+        auto const seed = std::chrono::system_clock::now().time_since_epoch().count();
+        std::ranges::shuffle(m_main_spawn, std::default_random_engine(seed));
+    }
 
     get_spawn_paths();
 
@@ -653,7 +656,10 @@ void ShipSpawner::prepare_for_spawn()
 
             m_spawn_position.pop_back();
 
-            being_spawn->spawn_list.pop_back();
+            if (!LevelController::get_instance()->is_tutorial)
+            {
+                being_spawn->spawn_list.pop_back();
+            }
 
             return;
         }
