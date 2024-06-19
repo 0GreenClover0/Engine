@@ -1,5 +1,6 @@
 #include "structs.hlsl"
 #include "common_functions.hlsl"
+#include "ShadingDefines.h"
 
 cbuffer light_buffer : register(b0)
 {
@@ -123,7 +124,7 @@ float PCSS(Texture2D shadow_map_tex, float4 coords, float bias, PCSSSettingsPerL
     float filter_radius_uv = penumbra_ratio * light_size_uv * near_plane / z_receiver;
 
     // STEP 3: Filtering
-    return PCF_Filter(uv, z_receiver, filter_radius_uv, shadow_map_tex, bias, pcss_settings.pcf_num_samples);
+    return PCF_Filter(uv, z_receiver, filter_radius_uv, shadow_map_tex, bias, pcss_settings.pcf_num_samples) / SHADOWS_BRIGHTNESS;
 }
 
 float point_shadow_calculation(PointLight light, float3 world_pos, int index)
