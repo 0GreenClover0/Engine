@@ -91,14 +91,6 @@ void LevelController::update()
 
     if (is_started)
     {
-        if (is_tutorial)
-        {
-            if (Player::get_instance()->food >= map_food)
-            {
-                GameController::get_instance()->move_to_next_scene();
-            }
-        }
-
         if (time > 0.0f)
         {
             if (AK::Math::are_nearly_equal(Player::get_instance()->flash_counter, 0.0f))
@@ -124,6 +116,7 @@ void LevelController::update()
         if (Input::input->get_key_down(GLFW_MOUSE_BUTTON_RIGHT))
         {
             check_tutorial_progress(TutorialProgressAction::LighthouseEnabled);
+            lighthouse.lock()->turn_light(true);
             is_started = true;
         }
     }
