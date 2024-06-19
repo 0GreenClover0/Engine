@@ -32,6 +32,7 @@ void Port::on_trigger_enter(std::shared_ptr<Collider2D> const& other)
     if (auto const keeper = other->entity->get_component<LighthouseKeeper>(); keeper != nullptr)
     {
         keeper->set_is_inside_port(true);
+        LevelController::get_instance()->check_tutorial_progress(TutorialProgressAction::KeeperEnteredPort);
     }
 }
 
@@ -101,6 +102,7 @@ bool Port::interact()
 
     AK::erase(ships_inside, ship);
     ship->entity->destroy_immediate();
+    LevelController::get_instance()->check_tutorial_progress(TutorialProgressAction::PackageCollected);
     return true;
 }
 
