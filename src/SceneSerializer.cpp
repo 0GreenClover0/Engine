@@ -500,6 +500,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "pirates_in_control_curve" << YAML::Value << levelcontroller->pirates_in_control_curve;
         out << YAML::Key << "is_tutorial" << YAML::Value << levelcontroller->is_tutorial;
         out << YAML::Key << "starting_packages" << YAML::Value << levelcontroller->starting_packages;
+        out << YAML::Key << "tutorial_level" << YAML::Value << levelcontroller->tutorial_level;
         out << YAML::EndMap;
     }
     else if (auto const lighthouse = std::dynamic_pointer_cast<class Lighthouse>(component); lighthouse != nullptr)
@@ -1848,6 +1849,10 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             if (component["starting_packages"].IsDefined())
             {
                 deserialized_component->starting_packages = component["starting_packages"].as<u32>();
+            }
+            if (component["tutorial_level"].IsDefined())
+            {
+                deserialized_component->tutorial_level = component["tutorial_level"].as<u32>();
             }
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();

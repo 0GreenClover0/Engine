@@ -174,8 +174,19 @@ void LevelController::draw_editor()
 
     ImGui::Separator();
 
-    ImGui::Checkbox("Turoial", &is_tutorial);
     ImGui::InputScalar("Starting package", ImGuiDataType_U32, &starting_packages);
+
+    ImGui::Separator();
+
+    ImGui::Checkbox("Tutorial", &is_tutorial);
+
+    if (is_tutorial)
+    {
+        u32 constexpr min_level = 1;
+        u32 constexpr max_level = 3;
+
+        ImGui::SliderScalar("Tutorial Level", ImGuiDataType_U32, &tutorial_level, &min_level, &max_level);
+    }
 }
 #endif
 
