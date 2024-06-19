@@ -29,6 +29,7 @@ public:
     void operator=(Renderer const&) = delete;
 
     void initialize();
+    void uninitialize();
 
     void register_shader(std::shared_ptr<Shader> const& shader);
     void unregister_shader(std::shared_ptr<Shader> const& shader);
@@ -158,6 +159,7 @@ protected:
 private:
     void draw_transparent(glm::mat4 const& projection_view, glm::mat4 const& projection_view_no_translation) const;
     static void load_fonts();
+    static void unload_fonts();
 
     struct MaterialWithOrder
     {

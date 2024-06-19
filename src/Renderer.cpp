@@ -38,6 +38,11 @@ void Renderer::initialize()
     load_fonts();
 }
 
+void Renderer::uninitialize()
+{
+    unload_fonts();
+}
+
 void Renderer::register_shader(std::shared_ptr<Shader> const& shader)
 {
     m_shaders.emplace_back(shader);
@@ -544,6 +549,7 @@ void Renderer::load_fonts()
         std::array<std::string, 2> stripped_words = {" Bold", " Light"};
 
         Font new_font = {};
+        new_font.paths.emplace_back(path_str);
 
         for (auto const& word : stripped_words)
         {
@@ -561,11 +567,12 @@ void Renderer::load_fonts()
         new_font.family_name = family_name;
 
         bool is_new = true;
-        for (auto const& font : loaded_fonts)
+        for (auto& font : loaded_fonts)
         {
             if (font.family_name == family_name)
             {
                 is_new = false;
+                font.paths.emplace_back(path_str);
                 break;
             }
         }
@@ -590,4 +597,25 @@ void Renderer::load_fonts()
     {
         PostMessage(HWND_BROADCAST, WM_FONTCHANGE, 0, 0);
     }
+}
+
+void Renderer::unload_fonts()
+{
+    for (auto const& font : loaded_fonts)
+    {
+        for (auto const& path : font.paths)
+        {
+            std::string const path_str = path;
+            LPCSTR const wide_path = path_str.c_str();
+            i32 const return_value = RemoveFontResource(wide_path);
+
+            if (return_value == 0)
+            {
+                // Failed to unload a font
+                std::cout << "Failed to unload font: " << path_str;
+            }
+        }
+    }
+
+    PostMessage(HWND_BROADCAST, WM_FONTCHANGE, 0, 0);
 }
