@@ -185,7 +185,8 @@ void LevelController::draw_editor()
         u32 constexpr min_level = 1;
         u32 constexpr max_level = 3;
 
-        ImGui::SliderScalar("Tutorial Level", ImGuiDataType_U32, &tutorial_level, &min_level, &max_level);
+        ImGui::SliderScalar("Tutorial Level: ", ImGuiDataType_U32, &tutorial_level, &min_level, &max_level);
+        ImGui::Text(("Tutorial Progress: " + std::to_string(tutorial_progress)).c_str());
     }
 }
 #endif
