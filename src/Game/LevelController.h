@@ -10,6 +10,15 @@
 class ScreenText;
 class Factory;
 
+enum class TutorialProgressAction
+{
+    PackageCollected,
+    ShipEnteredPort,
+    ShipEnteredControl,
+    KeeperLeftLighthouse,
+    KeeperEnteredPort,
+};
+
 class LevelController final : public Component
 {
 public:
@@ -27,7 +36,7 @@ public:
 
     void on_lighthouse_upgraded() const;
 
-    void check_tutorial_progress();
+    void check_tutorial_progress(TutorialProgressAction action);
 
     void progress_tutorial(u32 step = 1);
 
