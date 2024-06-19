@@ -13,6 +13,11 @@ std::shared_ptr<Material> Material::create(std::shared_ptr<Shader> const& shader
         material->m_render_order = Renderer::transparent_render_order;
     }
 
+    if (render_order > 0)
+    {
+        material->needs_forward_rendering = true;
+    }
+
     Renderer::get_instance()->register_material(material);
     shader->materials.emplace_back(material);
 
