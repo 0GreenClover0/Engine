@@ -199,3 +199,92 @@ void LevelController::on_lighthouse_upgraded() const
     Player::get_instance()->additional_ship_speed = ships_additional_speed_curve.lock()->get_y_at(lighthouse_level_ratio);
     Player::get_instance()->pirates_in_control = pirates_in_control_curve.lock()->get_y_at(lighthouse_level_ratio);
 }
+
+void LevelController::check_tutorial_progress()
+{
+    switch (tutorial_level)
+    {
+    case 1:
+        switch (tutorial_progress)
+        {
+        case 0:
+            //TODO Move to next progress if ship is controlled
+            progress_tutorial();
+            break;
+        case 1:
+            //TODO Move to next progress if ship is in port
+            progress_tutorial();
+            break;
+        case 2:
+            //TODO Move to next progress if keeper leave lighthouse
+            progress_tutorial();
+            break;
+        case 3:
+            //TODO Move to next progress if keeper enter port
+            progress_tutorial();
+            break;
+        case 4:
+            //TODO Move to next progress if keeper collect package
+            progress_tutorial();
+            break;
+        }
+    case 2:
+        switch (tutorial_progress)
+        {
+        case 0:
+            //TODO Move to next progress if ship is in port
+            progress_tutorial();
+            break;
+        case 1:
+            //TODO Move to next progress if keeper collect package
+            progress_tutorial();
+            break;
+        case 2:
+            //TODO Move to next progress if keeper enter generator range
+            progress_tutorial();
+            break;
+        case 3:
+            //TODO Move to next progress if keeper enter lighthouse
+            progress_tutorial();
+            break;
+        case 4:
+            //TODO Move to next progress if ship enter flash collider
+            //TODO Move to other state if player waste flash
+            progress_tutorial();
+            break;
+        case 5:
+            //TODO Move to next progress if player use flash
+            progress_tutorial();
+            break;
+        case 6:
+            //TODO Move to next progress if keeper collect package
+            progress_tutorial();
+            break;
+        }
+    case 3:
+        switch (tutorial_progress)
+        {
+        case 0:
+            //TODO Move to next progress if keeper collect package
+            progress_tutorial();
+            break;
+        case 1:
+            //TODO Move to next progress if player upgrade lighthouse
+            progress_tutorial();
+            break;
+        case 2:
+            //TODO Move to next progress if keeper collect package
+            progress_tutorial();
+            break;
+        case 3:
+            //TODO Move to next progress if keeper collect package
+            progress_tutorial();
+            break;
+        }
+    }
+}
+
+void LevelController::progress_tutorial(u32 step)
+{
+    tutorial_progress += step;
+}
