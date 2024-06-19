@@ -18,7 +18,8 @@
 std::shared_ptr<ScreenText> ScreenText::create()
 {
     auto const ui_shader = ResourceManager::get_instance().load_shader("./res/shaders/ui.hlsl", "./res/shaders/ui.hlsl");
-    auto const ui_material = Material::create(ui_shader, Renderer::ui_render_order + 2);
+    auto const ui_material = Material::create(ui_shader, Renderer::ui_render_order + 3);
+    ui_material->casts_shadows = false;
 
     auto text = std::make_shared<ScreenText>(AK::Badge<ScreenText> {}, ui_material, "Example text", glm::vec2(0, 0), 40, 0xff0099ff,
                                              FW1_RESTORESTATE | FW1_CENTER | FW1_VCENTER);
