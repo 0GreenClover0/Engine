@@ -44,6 +44,7 @@ public:
     // This can be updated.
     void set_text(std::string const& new_content);
     void realign_text(bool const center) const;
+    void refresh_font_settings();
 
     // Text properties
     std::string text = "Example text";
