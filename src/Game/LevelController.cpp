@@ -219,33 +219,65 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
         switch (tutorial_progress)
         {
         case 0:
-            if (action == TutorialProgressAction::ShipEnteredControl)
+            //TODO: Dialog
+            if (action == TutorialProgressAction::LighthouseEnabled)
             {
                 progress_tutorial();
             }
             break;
         case 1:
-            if (action == TutorialProgressAction::ShipEnteredPort)
+            if (action == TutorialProgressAction::ShipEnteredControl)
             {
                 progress_tutorial();
             }
             break;
         case 2:
+            if (action == TutorialProgressAction::ShipDestroyed)
+            {
+                progress_tutorial();
+            }
+            if (action == TutorialProgressAction::ShipEnteredPort)
+            {
+                set_exiting_lighthouse(true);
+                progress_tutorial(2);
+            }
+            break;
+        case 3:
+            //TODO: Dialog*
+            if (action == TutorialProgressAction::ShipEnteredPort)
+            {
+                set_exiting_lighthouse(true);
+                progress_tutorial();
+            }
+            break;
+        case 4:
+            //TODO: Dialog
+            //TODO: PROMPT [SPACE] Leave lighthouse
             if (action == TutorialProgressAction::KeeperLeftLighthouse)
             {
                 progress_tutorial();
             }
             break;
-        case 3:
+        case 5:
+            //TODO: PROMPT [WSAD] Move
             if (action == TutorialProgressAction::KeeperEnteredPort)
             {
                 progress_tutorial();
             }
             break;
-        case 4:
+        case 6:
+            //TODO: PROMPT [SPACE] Take the package
             if (action == TutorialProgressAction::PackageCollected)
             {
                 progress_tutorial();
+            }
+        case 7:
+            //TODO: Dialog
+            //TODO: End dialog and all penguins in water
+            if (true)
+            {
+                lighthouse.lock()->turn_light(false);
+                GameController::get_instance()->move_to_next_scene();
             }
             break;
         }
@@ -253,59 +285,167 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
         switch (tutorial_progress)
         {
         case 0:
-            //TODO Move to next progress if ship is in port
-            progress_tutorial();
+            //TODO: Dialog
+            if (action == TutorialProgressAction::LighthouseEnabled)
+            {
+                set_exiting_lighthouse(true);
+                progress_tutorial();
+            }
             break;
         case 1:
-            //TODO Move to next progress if keeper collect package
-            progress_tutorial();
+            if (action == TutorialProgressAction::ShipEnteredControl)
+            {
+                progress_tutorial();
+            }
             break;
         case 2:
-            //TODO Move to next progress if keeper enter generator range
-            progress_tutorial();
+            if (action == TutorialProgressAction::ShipEnteredPort)
+            {
+                progress_tutorial();
+            }
             break;
         case 3:
-            //TODO Move to next progress if keeper enter lighthouse
-            progress_tutorial();
+            //TODO: Dialog*
+            //TODO: PROMPT [SPACE] Leave lighthouse
+            if (action == TutorialProgressAction::PackageCollected)
+            {
+                progress_tutorial();
+            }
             break;
         case 4:
-            //TODO Move to next progress if ship enter flash collider
-            //TODO Move to other state if player waste flash
-            progress_tutorial();
+            //TODO: [FOCUS ON GENERATOR]
+            //TODO: Dialog
+            //TODO: PROMPT [SPACE] Fuel The generator
+            //TODO: Move to next progress if generator is fueled
+            if (false)
+            {
+                progress_tutorial();
+            }
             break;
         case 5:
-            //TODO Move to next progress if player use flash
-            progress_tutorial();
+            //TODO: Ship spawn
+            //TODO: Move to next progress if keeper enter lighthouse
+            if (false)
+            {
+                progress_tutorial();
+            }
             break;
         case 6:
-            //TODO Move to next progress if keeper collect package
-            progress_tutorial();
+            //TODO: Dialog
+            //TODO: PROMPT [RMB] Flash!
+            //TODO: Move to other state if player use flash and crush ship
+            if (false)
+            {
+                progress_tutorial();
+            }
+            //TODO: Move to other state if player use flash in flush collider
+            if (false)
+            {
+                progress_tutorial(2);
+            }
+            break;
+        case 7:
+            //TODO: Dialog*
+            //TODO: Disable dialogs until [8]
+            //TODO: Move to other state if dialog ended
+            if (false)
+            {
+                progress_tutorial(-5);
+            }
+            break;
+        case 8:
+            //TODO: Dialog
+            //TODO: Move to next progress if player crush ship
+            if (false)
+            {
+                progress_tutorial(-1);
+            }
+            if (action == TutorialProgressAction::PackageCollected)
+            {
+                progress_tutorial();
+            }
+            break;
+        case 9:
+            //TODO: Dialog
+            //TODO: End dialog and all penguins in water
+            if (true)
+            {
+                lighthouse.lock()->turn_light(false);
+                GameController::get_instance()->move_to_next_scene();
+            }
             break;
         }
     case 3:
         switch (tutorial_progress)
         {
         case 0:
-            //TODO Move to next progress if keeper collect package
-            progress_tutorial();
+            //TODO: Dialog
+            if (action == TutorialProgressAction::LighthouseEnabled)
+            {
+                progress_tutorial();
+            }
             break;
         case 1:
-            //TODO Move to next progress if player upgrade lighthouse
-            progress_tutorial();
+            if (action == TutorialProgressAction::ShipEnteredControl)
+            {
+                progress_tutorial();
+            }
             break;
         case 2:
-            //TODO Move to next progress if keeper collect package
-            progress_tutorial();
+            if (action == TutorialProgressAction::PackageCollected)
+            {
+                progress_tutorial();
+            }
             break;
         case 3:
-            //TODO Move to next progress if keeper collect package
-            progress_tutorial();
+            //TODO: Dialog
+            //TODO: [FOCUS ON WORKSHOP]
+            //TODO: PROMPT [SPACE] Upgrade lighthouse
+            //TODO: Move to next progress if player upgrade lighthouse
+            if (false)
+            {
+                progress_tutorial();
+            }
+            break;
+        case 4:
+            //TODO: Spawn Ship
+            //TODO: Move to next progress if keeper return lighthouse
+            if (false)
+            {
+                progress_tutorial();
+            }
+            break;
+        case 5:
+            //TODO: Dialog
+            //TODO: Move to next progress if keeper collect package
+            if (action == TutorialProgressAction::PackageCollected)
+            {
+                progress_tutorial();
+            }
+            break;
+        case 6:
+            //TODO: Spawn food and 2 pirates
+            //TODO: If food was crushed spawn another one + one pirate
+            //TODO: Dialog*
+            if (action == TutorialProgressAction::PackageCollected)
+            {
+                progress_tutorial();
+            }
+            break;
+        case 7:
+            //TODO: Dialog
+            //TODO: End dialog and all penguins in water
+            if (true)
+            {
+                lighthouse.lock()->turn_light(false);
+                GameController::get_instance()->move_to_next_scene();
+            }
             break;
         }
     }
 }
 
-void LevelController::progress_tutorial(u32 step)
+void LevelController::progress_tutorial(i32 step)
 {
     tutorial_progress += step;
 }
