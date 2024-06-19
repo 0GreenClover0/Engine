@@ -35,8 +35,8 @@ void Light::draw_editor()
     ImGui::SliderScalar("Blocker Search Num Samples", ImGuiDataType_U32, &m_blocker_search_num_samples, &min, &max, "%u");
     ImGui::SliderScalar("PCF Num Samples", ImGuiDataType_U32, &m_pcf_num_samples, &min, &max, "%u");
 
-    ImGui::SliderFloat("Light World Size", &m_light_world_size, 0.01f, 10.0f, "%.2f");
-    ImGui::SliderFloat("Light Frustum Width", &m_light_frustum_width, 0.01f, 100.0f, "%.2f");
+    ImGui::InputFloat("Light World Size", &m_light_world_size, 0.001f, 0.1f, "%.4f");
+    ImGui::InputFloat("Light Frustum Width", &m_light_frustum_width, 0.001f, 0.1f, "%.4f");
 }
 #endif
 
