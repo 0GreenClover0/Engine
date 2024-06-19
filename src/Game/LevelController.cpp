@@ -123,6 +123,7 @@ void LevelController::update()
         // TODO: Change RMB to LMB in final game
         if (Input::input->get_key_down(GLFW_MOUSE_BUTTON_RIGHT))
         {
+            check_tutorial_progress(TutorialProgressAction::LighthouseEnabled);
             is_started = true;
         }
     }
