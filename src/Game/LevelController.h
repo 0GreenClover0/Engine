@@ -15,6 +15,7 @@ enum class TutorialProgressAction
     PackageCollected,
     ShipEnteredPort,
     ShipEnteredControl,
+    ShipDestroyed,
     KeeperLeftLighthouse,
     KeeperEnteredPort,
 };
