@@ -152,6 +152,9 @@ bool Ship::destroyed_state_change()
     if (is_destroyed)
     {
         behavioral_state = BehavioralState::Destroyed;
+
+        LevelController::get_instance()->check_tutorial_progress(TutorialProgressAction::ShipDestroyed);
+
         return true;
     }
 
