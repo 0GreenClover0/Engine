@@ -52,8 +52,7 @@ Window::Window(Renderer::RendererApi const renderer_api, i32 const screen_width,
     case Renderer::RendererApi::DirectX11:
         if (enable_mouse_capture)
         {
-            std::cout << "TODO: Enable mouse capture is currently not supported in DirectX11 backend."
-                      << "\n";
+            glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         }
 
         break;
