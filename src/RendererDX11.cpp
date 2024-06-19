@@ -156,6 +156,18 @@ std::shared_ptr<RendererDX11> RendererDX11::create()
     hr = renderer->get_device()->CreateSamplerState(&clamp_sampler_desc, &renderer->m_clamp_border_sampler_state);
     assert(SUCCEEDED(hr));
 
+    D3D11_SAMPLER_DESC anisotropic_sampler_desc = {};
+    anisotropic_sampler_desc.Filter = D3D11_FILTER_ANISOTROPIC;
+    anisotropic_sampler_desc.AddressU = D3D11_TEXTURE_ADDRESS_BORDER;
+    anisotropic_sampler_desc.AddressV = D3D11_TEXTURE_ADDRESS_BORDER;
+    anisotropic_sampler_desc.AddressW = D3D11_TEXTURE_ADDRESS_BORDER;
+    anisotropic_sampler_desc.MipLODBias = 0.0f;
+    anisotropic_sampler_desc.MaxAnisotropy = 4;
+    anisotropic_sampler_desc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+
+    hr = renderer->get_device()->CreateSamplerState(&anisotropic_sampler_desc, &renderer->m_anisotropic_sampler_state);
+    assert(SUCCEEDED(hr));
+
     renderer->m_shadow_texture = ResourceManager::get_instance().load_texture("./res/textures/noise.jpg", TextureType::Diffuse);
 
     renderer->m_skybox_entity = Entity::create_internal("Skybox");
@@ -423,6 +435,8 @@ void RendererDX11::render_shadow_maps() const
 void RendererDX11::render_aa() const
 {
     m_fxaa_shader->use();
+
+    g_pd3dDeviceContext->PSSetSamplers(0, 1, &m_anisotropic_sampler_state);
 
     if (m_render_to_texture)
     {

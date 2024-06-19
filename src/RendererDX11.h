@@ -130,6 +130,7 @@ private:
     ID3D11SamplerState* m_shadow_sampler_state = nullptr;
     ID3D11SamplerState* m_clamp_border_sampler_state = nullptr;
     ID3D11SamplerState* m_repeat_sampler_state = nullptr;
+    ID3D11SamplerState* m_anisotropic_sampler_state = nullptr;
 
     ID3D11BlendState* m_deferred_blend_state = nullptr;
     ID3D11BlendState* m_forward_blend_state = nullptr;
