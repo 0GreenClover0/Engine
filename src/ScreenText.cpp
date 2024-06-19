@@ -68,6 +68,9 @@ void ScreenText::initialize()
         }
     }
 
+    m_viewport = get_viewport();
+
+    refresh_font_settings();
     refresh_layout();
 }
 
@@ -146,7 +149,7 @@ void ScreenText::draw_editor()
             if (ImGui::Selectable(font.family_name.c_str(), is_selected))
             {
                 font_name = font.family_name;
-                refresh_layout();
+                refresh_font_settings();
             }
         }
 
@@ -155,7 +158,7 @@ void ScreenText::draw_editor()
 
     if (ImGui::Checkbox("Bold", &bold))
     {
-        refresh_layout();
+        refresh_font_settings();
     }
 
     ImGui::InputText("Text", &text);
@@ -221,15 +224,8 @@ void ScreenText::realign_text(bool const center) const
     }
 }
 
-D3D11_VIEWPORT ScreenText::get_viewport()
-{
-    UINT num_viewports = 1;
-    D3D11_VIEWPORT viewports[D3D11_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE];
-    RendererDX11::get_instance_dx11()->get_device_context()->RSGetViewports(&num_viewports, viewports);
-    return viewports[0];
-}
-
-void ScreenText::refresh_layout()
+// This function is expensive
+void ScreenText::refresh_font_settings()
 {
     if (m_d_write_factory != nullptr)
     {
@@ -242,14 +238,6 @@ void ScreenText::refresh_layout()
         m_d_write_text_format->Release();
         m_d_write_text_format = nullptr;
     }
-
-    if (m_d_write_text_layout != nullptr)
-    {
-        m_d_write_text_layout->Release();
-        m_d_write_text_layout = nullptr;
-    }
-
-    m_viewport = get_viewport();
 
     HRESULT hr = FW1CreateFactory(FW1_VERSION, &m_FW1_factory);
     assert(SUCCEEDED(hr));
@@ -266,34 +254,32 @@ void ScreenText::refresh_layout()
                                         &m_d_write_text_format);
     assert(SUCCEEDED(hr));
 
-    std::wstring const content = AK::string_to_wstring(text);
-
-    hr = m_d_write_factory->CreateTextLayout(content.data(), text.size(), m_d_write_text_format, 2048, 2048, &m_d_write_text_layout);
-    assert(SUCCEEDED(hr));
-
-    DWRITE_TEXT_METRICS text_metrics = {};
-
-    hr = m_d_write_text_layout->GetMetrics(&text_metrics);
-    assert(SUCCEEDED(hr));
-
-    hr = m_d_write_factory->CreateTextLayout(content.data(), // Text to be laid out
-                                             text.size(), // Length of the text
-                                             m_d_write_text_format, // Text format
-                                             text_metrics.width, // Use measured text width
-                                             text_metrics.height, // Use measured text height
-                                             &m_d_write_text_layout // Output text layout object
-    );
-    assert(SUCCEEDED(hr));
-
     hr = m_FW1_factory->CreateFontWrapper(RendererDX11::get_instance_dx11()->get_device(), AK::string_to_wstring(font_name).c_str(),
                                           &m_font_wrapper);
     assert(SUCCEEDED(hr));
 
     m_FW1_factory->Release();
+}
+
+D3D11_VIEWPORT ScreenText::get_viewport()
+{
+    UINT num_viewports = 1;
+    D3D11_VIEWPORT viewports[D3D11_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE];
+    RendererDX11::get_instance_dx11()->get_device_context()->RSGetViewports(&num_viewports, viewports);
+    return viewports[0];
+}
+
+void ScreenText::refresh_layout()
+{
+    if (m_d_write_text_layout != nullptr)
+    {
+        m_d_write_text_layout->Release();
+        m_d_write_text_layout = nullptr;
+    }
 
     // Create a new text layout with the updated content
-    hr = m_d_write_factory->CreateTextLayout(content.data(), text.size(), m_d_write_text_format, m_layout_width, m_layout_height,
-                                             &m_d_write_text_layout);
+    HRESULT hr = m_d_write_factory->CreateTextLayout(AK::string_to_wstring(text).data(), text.size(), m_d_write_text_format, m_layout_width,
+                                                     m_layout_height, &m_d_write_text_layout);
     assert(SUCCEEDED(hr));
 
     realign_text(m_align_to_center);
@@ -303,4 +289,6 @@ void ScreenText::refresh_layout()
 
     hr = m_d_write_text_layout->SetFontSize(font_size, tr);
     assert(SUCCEEDED(hr));
+
+    realign_text(m_align_to_center);
 }
