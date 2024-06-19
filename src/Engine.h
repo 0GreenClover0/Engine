@@ -35,7 +35,7 @@ public:
     static void set_game_paused(bool const is_paused);
 
     inline static bool enable_vsync = false;
-    inline static bool enable_mouse_capture = true;
+    inline static bool enable_mouse_capture = false;
 
     inline static ma_engine audio_engine;
 
