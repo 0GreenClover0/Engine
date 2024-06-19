@@ -27,6 +27,10 @@ public:
 
     void on_lighthouse_upgraded() const;
 
+    void check_tutorial_progress();
+
+    void progress_tutorial(u32 step = 1);
+
     NON_SERIALIZED
     bool is_started = false;
 
