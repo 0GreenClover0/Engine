@@ -4,11 +4,13 @@
 #include "Curve.h"
 #include "Engine.h"
 #include "Factory.h"
+#include "Lighthouse.h"
 #include "Player.h"
 #include "Port.h"
 
 class ScreenText;
 class Factory;
+class Lighthouse;
 
 enum class TutorialProgressAction
 {
@@ -56,6 +58,7 @@ public:
 
     std::vector<std::weak_ptr<Factory>> factories = {};
     std::weak_ptr<Port> port = {};
+    std::weak_ptr<Lighthouse> lighthouse = {};
 
     float playfield_width = 6.5f;
     float playfield_additional_width = 2.0f;
