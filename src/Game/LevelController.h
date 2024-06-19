@@ -18,6 +18,7 @@ enum class TutorialProgressAction
     ShipDestroyed,
     KeeperLeftLighthouse,
     KeeperEnteredPort,
+    LighthouseEnabled,
 };
 
 class LevelController final : public Component
