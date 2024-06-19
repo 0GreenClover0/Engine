@@ -202,6 +202,16 @@ void LevelController::on_lighthouse_upgraded() const
     Player::get_instance()->pirates_in_control = pirates_in_control_curve.lock()->get_y_at(lighthouse_level_ratio);
 }
 
+void LevelController::set_exiting_lighthouse(bool value)
+{
+    m_is_exiting_lighthouse_enabled = value;
+}
+
+bool LevelController::get_exiting_lighthouse()
+{
+    return m_is_exiting_lighthouse_enabled;
+}
+
 void LevelController::check_tutorial_progress(TutorialProgressAction action)
 {
     if (!is_tutorial)
