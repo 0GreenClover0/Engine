@@ -82,4 +82,6 @@ void Lighthouse::exit()
     keeper->get_component<LighthouseKeeper>()->port = LevelController::get_instance()->port;
     keeper->get_component<LighthouseKeeper>()->lighthouse = std::static_pointer_cast<Lighthouse>(shared_from_this());
     keeper->get_component<Floater>()->water = water;
+
+    LevelController::get_instance()->check_tutorial_progress(TutorialProgressAction::KeeperLeftLighthouse);
 }
