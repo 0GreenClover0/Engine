@@ -124,6 +124,9 @@ bool Ship::control_state_change()
                 behavioral_state = BehavioralState::Control;
                 light.lock()->controlled_ship = std::static_pointer_cast<Ship>(shared_from_this());
                 my_light.lock()->diffuse = glm::vec3(1.0f, 0.8f, 1.0f);
+
+                LevelController::get_instance()->check_tutorial_progress(TutorialProgressAction::ShipEnteredControl);
+
                 return true;
             }
         }
@@ -163,6 +166,8 @@ bool Ship::in_port_state_change()
 
         my_light.lock()->diffuse = glm::vec3(1.0f, 1.0f, 0.0f);
         my_light.lock()->set_pulsate(true);
+
+        LevelController::get_instance()->check_tutorial_progress(TutorialProgressAction::ShipEnteredPort);
 
         return true;
     }
