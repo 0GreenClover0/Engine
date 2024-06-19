@@ -4,14 +4,21 @@
 #include "Globals.h"
 #include "Renderer.h"
 #include "RendererDX11.h"
+#include "ShadingDefines.h"
 
 #include <d3d11.h>
+
 #include <glm/glm.hpp>
 
 std::shared_ptr<PointLight> PointLight::create()
 {
     auto point_light = std::make_shared<PointLight>(AK::Badge<PointLight> {});
-    point_light->set_up_shadow_mapping();
+
+    if (RENDER_POINT_SHADOW_MAPS)
+    {
+        point_light->set_up_shadow_mapping();
+    }
+
     return point_light;
 }
 
@@ -36,6 +43,18 @@ void PointLight::update()
     {
         flash();
     }
+}
+
+void PointLight::on_destroyed()
+{
+    Light::on_destroyed();
+
+    for (auto const& shadow_depth_stencil_view : m_shadow_depth_stencil_views)
+    {
+        shadow_depth_stencil_view->Release();
+    }
+
+    m_shadow_depth_stencil_views.clear();
 }
 
 #if EDITOR

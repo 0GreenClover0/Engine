@@ -66,6 +66,21 @@ void Light::on_disabled()
     Renderer::get_instance()->unregister_light(std::dynamic_pointer_cast<Light>(shared_from_this()));
 }
 
+void Light::on_destroyed()
+{
+    if (m_shadow_shader_resource_view != nullptr)
+    {
+        m_shadow_shader_resource_view->Release();
+        m_shadow_shader_resource_view = nullptr;
+    }
+
+    if (m_shadow_texture != nullptr)
+    {
+        m_shadow_texture->Release();
+        m_shadow_texture = nullptr;
+    }
+}
+
 ID3D11ShaderResourceView* const* Light::get_shadow_shader_resource_view_address() const
 {
     return &m_shadow_shader_resource_view;
