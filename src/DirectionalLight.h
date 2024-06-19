@@ -10,6 +10,8 @@ class DirectionalLight final : public Light
 public:
     static std::shared_ptr<DirectionalLight> create();
 
+    virtual void on_destroyed() override;
+
 #if EDITOR
     virtual void draw_editor() override;
 #endif

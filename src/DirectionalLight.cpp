@@ -13,6 +13,16 @@ std::shared_ptr<DirectionalLight> DirectionalLight::create()
     return directional_light;
 }
 
+void DirectionalLight::on_destroyed()
+{
+    Light::on_destroyed();
+    if (m_shadow_depth_stencil_view != nullptr)
+    {
+        m_shadow_depth_stencil_view->Release();
+        m_shadow_depth_stencil_view = nullptr;
+    }
+}
+
 #if EDITOR
 void DirectionalLight::draw_editor()
 {
