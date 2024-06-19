@@ -133,7 +133,7 @@ VS_Output vs_main(VS_Input input)
     return output;
 }
 
-float4 halo(float3 halo_center, float3 world_pos, float radius)
+float4 halo(float3 halo_center, float3 world_pos, float diameter)
 {
     // This function makes a 2D halo on water
     float distance = length(world_pos - halo_center);
@@ -144,7 +144,9 @@ float4 halo(float3 halo_center, float3 world_pos, float radius)
         time += PI / 2.0f - time;
     }
 
+    float radius = diameter / 2.0f;
     radius *= 0.55f;
+
     float _border = radius * tan(time_ps) * tan(time_ps);
     _border = clamp(_border, 0.0f, radius);
     if (distance < _border)
