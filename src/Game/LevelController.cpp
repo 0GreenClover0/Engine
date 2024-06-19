@@ -214,24 +214,34 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
         switch (tutorial_progress)
         {
         case 0:
-            //TODO Move to next progress if ship is controlled
-            progress_tutorial();
+            if (action == TutorialProgressAction::ShipEnteredControl)
+            {
+                progress_tutorial();
+            }
             break;
         case 1:
-            //TODO Move to next progress if ship is in port
-            progress_tutorial();
+            if (action == TutorialProgressAction::ShipEnteredPort)
+            {
+                progress_tutorial();
+            }
             break;
         case 2:
-            //TODO Move to next progress if keeper leave lighthouse
-            progress_tutorial();
+            if (action == TutorialProgressAction::KeeperLeavedLighthouse)
+            {
+                progress_tutorial();
+            }
             break;
         case 3:
-            //TODO Move to next progress if keeper enter port
-            progress_tutorial();
+            if (action == TutorialProgressAction::KeeperEnteredPort)
+            {
+                progress_tutorial();
+            }
             break;
         case 4:
-            //TODO Move to next progress if keeper collect package
-            progress_tutorial();
+            if (action == TutorialProgressAction::PackageCollected)
+            {
+                progress_tutorial();
+            }
             break;
         }
     case 2:
