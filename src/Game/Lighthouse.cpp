@@ -48,6 +48,13 @@ void Lighthouse::draw_editor()
 }
 #endif
 
+void Lighthouse::turn_light(bool const value) const
+{
+    light.lock()->set_enabled(value);
+    light.lock()->spotlight.lock()->set_enabled(value);
+    light.lock()->entity->get_component<Sphere>()->set_enabled(value);
+}
+
 void Lighthouse::enter()
 {
     if (m_is_keeeper_inside)
@@ -64,6 +71,11 @@ void Lighthouse::enter()
 
 void Lighthouse::exit()
 {
+    if (!LevelController::get_instance()->get_exiting_lighthouse())
+    {
+        return;
+    }
+
     if (!m_is_keeeper_inside)
     {
         Debug::log("We are already outside a lighthouse, why is this being called?", DebugType::Error);

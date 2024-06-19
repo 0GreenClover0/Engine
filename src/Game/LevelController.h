@@ -38,6 +38,9 @@ public:
 
     void on_lighthouse_upgraded() const;
 
+    void set_exiting_lighthouse(bool value);
+    bool get_exiting_lighthouse();
+
     void check_tutorial_progress(TutorialProgressAction action);
 
     void progress_tutorial(u32 step = 1);
@@ -82,4 +85,6 @@ private:
     std::weak_ptr<Player> player_ref = {};
     std::weak_ptr<ScreenText> clock_text_ref = {};
     std::weak_ptr<ScreenText> m_text = {};
+
+    bool m_is_exiting_lighthouse_enabled = true;
 };
