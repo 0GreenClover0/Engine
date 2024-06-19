@@ -200,8 +200,13 @@ void LevelController::on_lighthouse_upgraded() const
     Player::get_instance()->pirates_in_control = pirates_in_control_curve.lock()->get_y_at(lighthouse_level_ratio);
 }
 
-void LevelController::check_tutorial_progress()
+void LevelController::check_tutorial_progress(TutorialProgressAction action)
 {
+    if (!is_tutorial)
+    {
+        return;
+    }
+
     switch (tutorial_level)
     {
     case 1:
