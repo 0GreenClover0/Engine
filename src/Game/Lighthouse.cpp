@@ -66,6 +66,8 @@ void Lighthouse::enter()
     light.lock()->set_enabled(true);
     light.lock()->spotlight.lock()->set_enabled(true);
     light.lock()->entity->get_component<Sphere>()->set_enabled(true);
+
+    LevelController::get_instance()->check_tutorial_progress(TutorialProgressAction::KeeperEnteredLighthouse);
 }
 
 void Lighthouse::exit()
