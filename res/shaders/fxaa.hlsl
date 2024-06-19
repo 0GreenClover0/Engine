@@ -1,10 +1,5 @@
 Texture2D screen_view : register(t0);
-SamplerState quad_sampler
-{
-    Filter = MIN_MAG_MIP_LINEAR;
-    AddressU = Wrap;
-    AddressV = Wrap;
-};
+SamplerState anisotropic_sampler : register(s0);
 
 // These values are taken from:
 // https://developer.download.nvidia.com/assets/gamedev/files/sdk/11/FXAA_WhitePaper.pdf
@@ -32,13 +27,13 @@ float rgb_2_luma(float3 rgb)
 // rewritten in HLSL.
 float3 FXAA(Texture2D tex, float2 UV)
 {
-    float3 color_in_center = tex.Sample(quad_sampler, UV).xyz;
+    float3 color_in_center = tex.Sample(anisotropic_sampler, UV).xyz;
     float luma_center = rgb_2_luma(color_in_center);
 
-    float luma_down = rgb_2_luma(tex.Sample(quad_sampler, UV, float2(0.0f, -1.0f)).rgb);
-    float luma_up = rgb_2_luma(tex.Sample(quad_sampler, UV, float2(0.0f, 1.0f)).rgb);
-    float luma_left = rgb_2_luma(tex.Sample(quad_sampler, UV, float2(-1.0f, 0.0f)).rgb);
-    float luma_right = rgb_2_luma(tex.Sample(quad_sampler, UV, float2(1.0f, 0.0f)).rgb);
+    float luma_down = rgb_2_luma(tex.Sample(anisotropic_sampler, UV, float2(0.0f, -1.0f)).rgb);
+    float luma_up = rgb_2_luma(tex.Sample(anisotropic_sampler, UV, float2(0.0f, 1.0f)).rgb);
+    float luma_left = rgb_2_luma(tex.Sample(anisotropic_sampler, UV, float2(-1.0f, 0.0f)).rgb);
+    float luma_right = rgb_2_luma(tex.Sample(anisotropic_sampler, UV, float2(1.0f, 0.0f)).rgb);
 
     float luma_min = min(luma_center, min(min(luma_down, luma_up), min(luma_left, luma_right)));
     float luma_max = max(luma_center, max(max(luma_down, luma_up), max(luma_left, luma_right)));
@@ -52,10 +47,10 @@ float3 FXAA(Texture2D tex, float2 UV)
     }
 
     // Compute luma's for 3x3 field's corners.
-    float luma_down_left = rgb_2_luma(tex.Sample(quad_sampler, UV, float2(-1.0f, -1.0f)).rgb);
-    float luma_up_right = rgb_2_luma(tex.Sample(quad_sampler, UV, float2(1.0f, 1.0f)).rgb);
-    float luma_up_left = rgb_2_luma(tex.Sample(quad_sampler, UV, float2(-1.0f, 1.0f)).rgb);
-    float luma_down_right = rgb_2_luma(tex.Sample(quad_sampler, UV, float2(1.0f, -1.0f)).rgb);
+    float luma_down_left = rgb_2_luma(tex.Sample(anisotropic_sampler, UV, float2(-1.0f, -1.0f)).rgb);
+    float luma_up_right = rgb_2_luma(tex.Sample(anisotropic_sampler, UV, float2(1.0f, 1.0f)).rgb);
+    float luma_up_left = rgb_2_luma(tex.Sample(anisotropic_sampler, UV, float2(-1.0f, 1.0f)).rgb);
+    float luma_down_right = rgb_2_luma(tex.Sample(anisotropic_sampler, UV, float2(1.0f, -1.0f)).rgb);
 
     float luma_down_up = luma_down + luma_up;
     float luma_left_right = luma_left + luma_right;
@@ -122,8 +117,8 @@ float3 FXAA(Texture2D tex, float2 UV)
     float2 uv_2 = current_UV + offset;
 
     // Read the lumas at both current extremities of the exploration segment.
-    float luma_end_1 = rgb_2_luma(tex.Sample(quad_sampler, uv_1).rgb);
-    float luma_end_2 = rgb_2_luma(tex.Sample(quad_sampler, uv_2).rgb);
+    float luma_end_1 = rgb_2_luma(tex.Sample(anisotropic_sampler, uv_1).rgb);
+    float luma_end_2 = rgb_2_luma(tex.Sample(anisotropic_sampler, uv_2).rgb);
     
     luma_end_1 -= luma_local_average;
     luma_end_2 -= luma_local_average;
@@ -149,12 +144,12 @@ float3 FXAA(Texture2D tex, float2 UV)
         {
             if (!reached1)
             {
-                luma_end_1 = rgb_2_luma(tex.Sample(quad_sampler, uv_1).rgb);
+                luma_end_1 = rgb_2_luma(tex.Sample(anisotropic_sampler, uv_1).rgb);
                 luma_end_1 = luma_end_1 - luma_local_average;
             }
             if (!reached2)
             {
-                luma_end_2 = rgb_2_luma(tex.Sample(quad_sampler, uv_2).rgb);
+                luma_end_2 = rgb_2_luma(tex.Sample(anisotropic_sampler, uv_2).rgb);
                 luma_end_2 = luma_end_2 - luma_local_average;
             }
 
@@ -211,7 +206,7 @@ float3 FXAA(Texture2D tex, float2 UV)
         finalUV.x += final_ofset * step_length;
     }
 
-    float3 final_color = tex.Sample(quad_sampler, finalUV).rgb;
+    float3 final_color = tex.Sample(anisotropic_sampler, finalUV).rgb;
 
     return final_color;
 }
