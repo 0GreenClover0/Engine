@@ -45,7 +45,7 @@ public:
 
     void check_tutorial_progress(TutorialProgressAction action);
 
-    void progress_tutorial(u32 step = 1);
+    void progress_tutorial(i32 step = 1);
 
     NON_SERIALIZED
     bool is_started = false;
