@@ -316,16 +316,14 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
             //TODO: [FOCUS ON GENERATOR]
             //TODO: Dialog
             //TODO: PROMPT [SPACE] Fuel The generator
-            //TODO: Move to next progress if generator is fueled
-            if (false)
+            if (action == TutorialProgressAction::GeneratorFueled)
             {
                 progress_tutorial();
             }
             break;
         case 5:
             //TODO: Ship spawn
-            //TODO: Move to next progress if keeper enter lighthouse
-            if (false)
+            if (action == TutorialProgressAction::KeeperEnteredLighthouse)
             {
                 progress_tutorial();
             }
@@ -348,7 +346,7 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
             //TODO: Dialog*
             //TODO: Disable dialogs until [8]
             //TODO: Move to other state if dialog ended
-            if (false)
+            if (true)
             {
                 progress_tutorial(-5);
             }
@@ -401,23 +399,20 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
             //TODO: Dialog
             //TODO: [FOCUS ON WORKSHOP]
             //TODO: PROMPT [SPACE] Upgrade lighthouse
-            //TODO: Move to next progress if player upgrade lighthouse
-            if (false)
+            if (action == TutorialProgressAction::WorkshopUpgraded)
             {
                 progress_tutorial();
             }
             break;
         case 4:
             //TODO: Spawn Ship
-            //TODO: Move to next progress if keeper return lighthouse
-            if (false)
+            if (action == TutorialProgressAction::KeeperEnteredLighthouse)
             {
                 progress_tutorial();
             }
             break;
         case 5:
             //TODO: Dialog
-            //TODO: Move to next progress if keeper collect package
             if (action == TutorialProgressAction::PackageCollected)
             {
                 progress_tutorial();
