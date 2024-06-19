@@ -1,7 +1,7 @@
 Scene: Untitled
 Entities:
   - Entity: Game Controller
-    guid: dbacdd6b48665243e2f90f7dea7298de945bf38a1a9331f9f0afcb61b5006d00
+    guid: 4a3d982586e6fd87ee59e5215e6cbb625e0c04eb1524db231ab994694815bde8
     Name: Game Controller
     TransformComponent:
       Translation: [0, 0, 0]
@@ -11,95 +11,92 @@ Entities:
         guid: ""
     Components:
       - ComponentName: GameControllerComponent
-        guid: 782a6f25fef8f4b36f4b3ddea54b11b50cd1218a2f0aabe4577ecabcd4ec914a
+        guid: a098e0fb07f6595e71b86cece4c9f74f06972da4611e04f03eea0e07b50fcd78
         custom_name: ""
         current_scene:
           guid: nullptr
         next_scene:
           guid: nullptr
       - ComponentName: PlayerComponent
-        guid: 08103e8102ed192608af34eb670b53c496888e5216e32577fa2299265deba883
+        guid: 93979adaf2a319915d123de5d2fd4569314fffe747ee4971ff5dbe81a84e5aa0
         custom_name: ""
       - ComponentName: PathComponent
-        guid: 335d43ffcb74f7e5448d4d26212ee0d167f1dd6a494b6722618f6767f958a415
+        guid: 1b2affe02f97cf723f53835b4d6b9998df992c54d249639ecc45df0f810a4471
         custom_name: ""
         points:
           - [0, 0]
-          - [0, -12]
-          - [18, -12]
-          - [36, -12]
-          - [54, -12]
-          - [66, -22.5]
+          - [18, 0]
+          - [36, 18]
   - Entity: Player
-    guid: 64fbd527f4ff04f2b1ca06f5cd89ea984de8df37d32d64c937aac6bc7a2e51e6
+    guid: f97e1bc5d9220b1d4349e2e928f77c78d8b13ed3bcdbd569aa1c899f3880311a
     Name: Player
     TransformComponent:
       Translation: [0, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: dbacdd6b48665243e2f90f7dea7298de945bf38a1a9331f9f0afcb61b5006d00
+        guid: 4a3d982586e6fd87ee59e5215e6cbb625e0c04eb1524db231ab994694815bde8
     Components:
       - ComponentName: PlayerInputComponent
-        guid: 29ecc6e0b0f6e5f6c96a6ec2d2b852db8ead4d5e2abb1ba1c169d7f4aaf0a960
+        guid: ef637381a4aa0a916dc0c333f42cfd4727713941b969cb7c8cf90129b3c57f3b
         custom_name: ""
         player_speed: 5
         camera_speed: 12.5
   - Entity: CameraParent
-    guid: 934b55dab59e4d908272360dd96128d484b447740f72a24e43fc3a52911f1f04
+    guid: 89b51131434610f4e56c00510b6a1c844a68c43c996abf2bd6218ea3f52fb6ee
     Name: CameraParent
     TransformComponent:
       Translation: [0, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: 64fbd527f4ff04f2b1ca06f5cd89ea984de8df37d32d64c937aac6bc7a2e51e6
+        guid: f97e1bc5d9220b1d4349e2e928f77c78d8b13ed3bcdbd569aa1c899f3880311a
     Components:
       []
   - Entity: Camera
-    guid: 9f329639a0d98c06b5ac16486f63a164906d838a2c8b9d7fcc14db95b5ad691f
+    guid: 6b5cf8d86262a7ab6ff44df8eb4ffba7d5c97d9af1a4b25a8db70cf0a153d2cb
     Name: Camera
     TransformComponent:
       Translation: [0, 17, 13]
       Rotation: [-50, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: 934b55dab59e4d908272360dd96128d484b447740f72a24e43fc3a52911f1f04
+        guid: 89b51131434610f4e56c00510b6a1c844a68c43c996abf2bd6218ea3f52fb6ee
     Components:
       - ComponentName: SoundListenerComponent
-        guid: b5157eb4a74d4432cfdc4d86774ab185f372bd6602cedb0080902bf9092b2301
+        guid: 0ee27babd043cde2d7635708cfaa39ad7736ef49faff1dd7b1b4a1e9f2eac5ba
         custom_name: ""
       - ComponentName: CameraComponent
-        guid: 71bd6971665f8870d4349eef96777cdc8fd7e365b6e64c0fced10c9fb84cd256
+        guid: e92c5da4a82e2c56c1bfedb983e72750f7a6510981d07ee2b3c6e576c3b8eb29
         custom_name: ""
         width: 1920
-        height: 1017
+        height: 1001
         fov: 0.383972436
         near_plane: 0.100000001
         far_plane: 1000
   - Entity: Walls
-    guid: 1d42d0c267d9c64b3dc3224615adab8894a4d10761d1b14271d870ba99c3d97e
+    guid: 212b6a80d8548c5e042a3d8af4810c182f3f74238f1cf5534bd5297c43169d26
     Name: Walls
     TransformComponent:
       Translation: [0, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: dbacdd6b48665243e2f90f7dea7298de945bf38a1a9331f9f0afcb61b5006d00
+        guid: 4a3d982586e6fd87ee59e5215e6cbb625e0c04eb1524db231ab994694815bde8
     Components:
       []
   - Entity: Wall
-    guid: bf1a339cdbc8573fcbc29a6779908813ec79538e2a4515989be98163bf34a5e4
+    guid: 940d90f92280b51ed4fdf9111eb88ce695cbf6b667a69aa9b110457fc93792ff
     Name: Wall
     TransformComponent:
       Translation: [0, 0, 4.61209011]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: 1d42d0c267d9c64b3dc3224615adab8894a4d10761d1b14271d870ba99c3d97e
+        guid: 212b6a80d8548c5e042a3d8af4810c182f3f74238f1cf5534bd5297c43169d26
     Components:
       - ComponentName: Collider2DComponent
-        guid: 630f651b86deb87c670874cf7ec280463e68cfc44be66df3a641f92eb29bfb28
+        guid: 762ef6b22f8a0c6b375e5d1fd763f90b72b1d735f8f1f25f655313db6c5242bd
         custom_name: ""
         offset: [0, 0]
         is_trigger: false
@@ -111,17 +108,17 @@ Entities:
         drag: 0.00999999978
         velocity: [0, 0]
   - Entity: Wall
-    guid: 610d9c40411f327197f861e7bf037ec8236149700d6654d381d4b9931e550601
+    guid: 4cc109f874de9cd9baa25b87e9a0cd25f7ca8dc24390e3767977a99e467b0a4a
     Name: Wall
     TransformComponent:
       Translation: [0, 0, -8.79222012]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: 1d42d0c267d9c64b3dc3224615adab8894a4d10761d1b14271d870ba99c3d97e
+        guid: 212b6a80d8548c5e042a3d8af4810c182f3f74238f1cf5534bd5297c43169d26
     Components:
       - ComponentName: Collider2DComponent
-        guid: 1501647b85429c8d6723662c1cfee4c8e20d8ae5a9dc8f3ebc53ce3402ce22a0
+        guid: e05ceb03d7829a0204e9feceb9a34ba9204ee39d4b66e86c77c92788d351d4ae
         custom_name: ""
         offset: [0, 0]
         is_trigger: false
@@ -133,17 +130,17 @@ Entities:
         drag: 0.00999999978
         velocity: [0, 0]
   - Entity: Wall
-    guid: 56a6892890432c2cf2341693f9aebb0710dd78d05d10d6a40d9f11527d06a18e
+    guid: 61f79b76f2fb800c9b713b5dbe72e2924211dcc54749ab6d6bdf05411aeea6e2
     Name: Wall
     TransformComponent:
       Translation: [-8.5, 0, -1.00241709]
       Rotation: [0, -77.1839981, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: 1d42d0c267d9c64b3dc3224615adab8894a4d10761d1b14271d870ba99c3d97e
+        guid: 212b6a80d8548c5e042a3d8af4810c182f3f74238f1cf5534bd5297c43169d26
     Components:
       - ComponentName: Collider2DComponent
-        guid: 9b5250f298ef7d8b9fcbba462cd6341a4bbbeda21cf13bc728db36d67c75c5ef
+        guid: 2dddf08a656942b032515525650e85e78583745898e8fc16da740bf6c8a66556
         custom_name: ""
         offset: [0, 0]
         is_trigger: false
@@ -155,17 +152,17 @@ Entities:
         drag: 0.00999999978
         velocity: [0, 0]
   - Entity: Wall
-    guid: 64ee7e7b78d2ec4a612be523203dde2e9f7392cc14740057d343c40078d767d0
+    guid: dca8b641f6d465cc15f3c5579785a6cb07a39b65e80f42925ff6de8538fd35c8
     Name: Wall
     TransformComponent:
       Translation: [8.5, 0, -1.00241709]
       Rotation: [0, 77.1839981, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: 1d42d0c267d9c64b3dc3224615adab8894a4d10761d1b14271d870ba99c3d97e
+        guid: 212b6a80d8548c5e042a3d8af4810c182f3f74238f1cf5534bd5297c43169d26
     Components:
       - ComponentName: Collider2DComponent
-        guid: 6e49e17c59be93f9c1d63ba5a5c1368e72edcfe5a16408141a537ed174502382
+        guid: fe0000a74c8d2a941aaa228f7fb6acc1afceee3e58005d860ddbabca37859d0b
         custom_name: ""
         offset: [0, 0]
         is_trigger: false
@@ -177,20 +174,24 @@ Entities:
         drag: 0.00999999978
         velocity: [0, 0]
   - Entity: Directional light
-    guid: d161a1f444dd240f804f87e351f0096f620828b0abe15b782ac981b021be1253
+    guid: 9ec20562afd5428033eb21781734cb1da981e4285f3107872107912fd721175d
     Name: Directional light
     TransformComponent:
-      Translation: [0, 5, 0]
+      Translation: [-5, 15, 0]
       Rotation: [-70, 0, 30]
       Scale: [1, 1, 1]
       Parent:
-        guid: dbacdd6b48665243e2f90f7dea7298de945bf38a1a9331f9f0afcb61b5006d00
+        guid: 4a3d982586e6fd87ee59e5215e6cbb625e0c04eb1524db231ab994694815bde8
     Components:
       - ComponentName: DirectionalLightComponent
-        guid: 81ac22aae5211426527512b11a3130b6f16aa30a5ee9d06c227ff33963990f8e
+        guid: 459570101a39ea5e252bd844ee33c3670ff9bb63f40fe9e3720c37f821e0b4bc
         custom_name: ""
         ambient: [0.195996806, 0.189537033, 0.383333325]
         diffuse: [0.674197555, 0.767983675, 0.955555558]
         specular: [0.328781307, 0.138024718, 0.955555558]
-        m_near_plane: 0.5
+        m_near_plane: -25
         m_far_plane: 25
+        m_blocker_search_num_samples: 16
+        m_pcf_num_samples: 16
+        m_light_world_size: 0.0310000461
+        m_light_frustum_width: 50
