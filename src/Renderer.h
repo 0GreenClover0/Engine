@@ -88,6 +88,7 @@ public:
 
     inline static constexpr i32 transparent_render_order = 1000;
     inline static constexpr i32 aa_render_order = 2000;
+    inline static constexpr i32 ui_render_order = 3000;
 
     inline static std::vector<Font> loaded_fonts = {};
 
