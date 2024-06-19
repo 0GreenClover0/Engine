@@ -137,6 +137,7 @@ void LevelController::draw_editor()
     ImGuiEx::draw_ptr("Workshop", factories[0]);
     ImGuiEx::draw_ptr("Generator", factories[1]);
     ImGuiEx::draw_ptr("Port", port);
+    ImGuiEx::draw_ptr("Lighthouse", lighthouse);
 
     ImGui::Separator();
 
