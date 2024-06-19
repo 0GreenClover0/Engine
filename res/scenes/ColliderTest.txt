@@ -1,0 +1,92 @@
+Scene: Untitled
+Entities:
+  - Entity: ShipSmall
+    guid: f80080c6afb23855e0c4c96decedca8604b2c252ed2199edeb1820ea92171c57
+    Name: ShipSmall
+    TransformComponent:
+      Translation: [5.05499983, -0.0769999996, -1.15100002]
+      Rotation: [0, -219.434006, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: ""
+    Components:
+      - ComponentName: ShipComponent
+        guid: 20b20c783ccb88244ec15dcdcfd0e08569aad5e40efd6a857456a1ed30a1feda
+        custom_name: ""
+        type: 0
+        light:
+          guid: nullptr
+        spawner:
+          guid: nullptr
+        eyes:
+          guid: nullptr
+        my_light:
+          guid: nullptr
+      - ComponentName: Collider2DComponent
+        guid: 640933488923ad2b1999123807d6e2139f53f2333f6db52ee3c24894f58e4f87
+        custom_name: ""
+        offset: [0, 0.0350000001]
+        is_trigger: true
+        is_static: false
+        collider_type: 0
+        width: 0.25
+        height: 0.649999976
+        radius: 1
+        drag: 0.00999999978
+        velocity: [0, 0]
+  - Entity: Light
+    guid: 7fe2a808c859986e4507b4b42757aa3003a3fdd98288f343d746753a2a023e23
+    Name: Light
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: ""
+    Components:
+      - ComponentName: DirectionalLightComponent
+        guid: 259b3085f48902d521964b2e24e03bf559e875a3f2e83a8f2246d7565b6178be
+        custom_name: ""
+        ambient: [0.200000003, 0.200000003, 0.200000003]
+        diffuse: [1, 1, 1]
+        specular: [1, 1, 1]
+        m_near_plane: 0.5
+        m_far_plane: 25
+  - Entity: Ice
+    guid: 66bfef6bd4ce80f2b078b128c3b2c920740e4312d5b9e9bf6764d5f531ee8bcf
+    Name: Ice
+    TransformComponent:
+      Translation: [5.27099991, 0, -0.50999999]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: ""
+    Components:
+      - ComponentName: IceBoundComponent
+        guid: 754b6b33c2164b53803be1db2ce46723bc955262b0ee7d0fdc850edbd6290521
+        custom_name: ""
+      - ComponentName: Collider2DComponent
+        guid: 10e05c8e9fa907e6885985f768787694ad80433b6b731c3a6bad567f52ba5384
+        custom_name: ""
+        offset: [0, 0]
+        is_trigger: true
+        is_static: false
+        collider_type: 1
+        width: 0.649999976
+        height: 0.649999976
+        radius: 0.349999994
+        drag: 0.00999999978
+        velocity: [0, 0]
+      - ComponentName: ModelComponent
+        guid: 9fcd19d62f8639615e2b95926c1273b8a36e5c99c5e1cd9ad0cd6b6b08b6991a
+        custom_name: ""
+        model_path: ./res/models/iceIslands/c_1.gltf
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+          NeedsForward: false
+          CastsShadows: true
