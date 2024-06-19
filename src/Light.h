@@ -22,6 +22,8 @@ public:
     virtual void on_enabled() override;
     virtual void on_disabled() override;
 
+    virtual void on_destroyed() override;
+
     virtual void set_up_shadow_mapping() = 0;
 
     ID3D11ShaderResourceView* const* get_shadow_shader_resource_view_address() const;

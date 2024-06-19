@@ -23,6 +23,8 @@ public:
     glm::mat4 get_rotated_inverse_model_matrix() const;
     glm::mat4 get_rotated_model_matrix() const;
 
+    virtual void on_destroyed() override;
+
     // Default values for an around 50m distance of cover
     float constant = 1.0f; // Should not be changed
     float linear = 0.09f;

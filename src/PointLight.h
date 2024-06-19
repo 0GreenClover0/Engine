@@ -19,6 +19,8 @@ public:
 
     virtual void awake() override;
     virtual void update() override;
+    virtual void on_destroyed() override;
+
 #if EDITOR
     virtual void draw_editor() override;
 #endif

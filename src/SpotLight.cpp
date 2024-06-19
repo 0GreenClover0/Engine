@@ -84,6 +84,17 @@ glm::mat4 SpotLight::get_rotated_model_matrix() const
     return rotated_model_matrix;
 }
 
+void SpotLight::on_destroyed()
+{
+    Light::on_destroyed();
+
+    if (m_shadow_depth_stencil_view != nullptr)
+    {
+        m_shadow_depth_stencil_view->Release();
+        m_shadow_depth_stencil_view = nullptr;
+    }
+}
+
 void SpotLight::set_up_shadow_mapping()
 {
     auto renderer = RendererDX11::get_instance_dx11();
