@@ -21,6 +21,8 @@ public:
     virtual void draw_editor() override;
 #endif
 
+    void turn_light(bool value);
+
     void enter();
     void exit();
 
