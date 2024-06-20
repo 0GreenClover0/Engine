@@ -61,6 +61,14 @@ void GameController::awake()
 
 void GameController::update()
 {
+    if (Input::input->get_key_down(GLFW_KEY_F3))
+    {
+        if (!m_move_to_next_scene)
+        {
+            move_to_next_scene();
+        }
+    }
+
     if (!m_move_to_next_scene)
     {
         return;
