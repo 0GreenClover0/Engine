@@ -1532,14 +1532,6 @@ void Editor::handle_input()
         }
     }
 
-    if (input->get_key_down(GLFW_KEY_F3))
-    {
-        if (GameController::get_instance() == nullptr)
-            return;
-
-        GameController::get_instance()->move_to_next_scene();
-    }
-
     if (ImGui::BeginPopup("RenamePopup"))
     {
         if (ImGui::InputText("##empty", &m_selected_entity.lock()->name, ImGuiInputTextFlags_EnterReturnsTrue))
