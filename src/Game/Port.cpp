@@ -8,6 +8,7 @@
 #include "LighthouseKeeper.h"
 #include "Player.h"
 #include "ResourceManager.h"
+#include "SceneSerializer.h"
 #include "Ship.h"
 
 std::shared_ptr<Port> Port::create()
@@ -136,10 +137,16 @@ void Port::draw_editor()
 
             lights.clear();
 
-            auto const& light_ul = Entity::create("LightUL");
-            auto const& light_ur = Entity::create("LightUR");
-            auto const& light_bl = Entity::create("LightBL");
-            auto const& light_br = Entity::create("LightBR");
+            // I guess reading from file 4 times is a no-no, but it happens only in editor.
+            // I would have to make a copy contructor for Entity if I wanted to avoid this (I think).
+            auto const& light_ul = SceneSerializer::load_prefab("Buoy");
+            light_ul->name = "LightUL";
+            auto const& light_ur = SceneSerializer::load_prefab("Buoy");
+            light_ur->name = "LightUR";
+            auto const& light_bl = SceneSerializer::load_prefab("Buoy");
+            light_bl->name = "LightBL";
+            auto const& light_br = SceneSerializer::load_prefab("Buoy");
+            light_br->name = "LightBR";
 
             lights.emplace_back(light_ul);
             lights.emplace_back(light_ur);
