@@ -324,12 +324,6 @@ void Ship::update()
         return;
     }
 
-    // TODO: Add correct conditions for destroying ships
-    if (Input::input->get_key_down(GLFW_KEY_F3))
-    {
-        destroy();
-    }
-
     switch (behavioral_state)
     {
     case BehavioralState::Normal:
