@@ -50,6 +50,18 @@ void GameController::awake()
 {
     std::ranges::reverse(m_levels_order);
 
+    m_levels_backup = m_levels_order;
+
+    auto const path = entity->get_component<Path>();
+
+    if (path != nullptr)
+    {
+        m_points_backup = path->points;
+    }
+    {
+        Debug::log("No Path component present on GameController entity.", DebugType::Error);
+    }
+
     std::string const level = m_levels_order.back();
     m_levels_order.pop_back();
     current_scene = SceneSerializer::load_prefab(level);
@@ -113,6 +125,33 @@ bool GameController::is_moving_to_next_scene() const
     return m_move_to_next_scene;
 }
 
+void GameController::reset_scene()
+{
+    m_levels_order = m_levels_backup;
+
+    m_level_number = 0;
+
+    next_scene = SceneSerializer::load_prefab(m_levels_order.back());
+    m_levels_order.pop_back();
+
+    reset_level();
+
+    auto const path = entity->get_component<Path>();
+    m_current_position = path->points[path->points.size() - 1];
+    m_next_position = path->points[0];
+
+    glm::vec2 const delta = path->points[path->points.size() - 1] - path->points[0];
+
+    for (auto& point : path->points)
+    {
+        point -= delta;
+    }
+
+    path->points = m_points_backup;
+
+    m_move_to_next_scene = true;
+}
+
 float GameController::ease_in_out_cubic(float const x) const
 {
     return x < 0.5f ? 4.0f * x * x * x : 1.0f - std::pow(-2.0f * x + 2.0f, 3.0f) / 2.0f;
@@ -134,7 +173,7 @@ void GameController::move_to_next_scene()
 
     if (m_levels_order.empty())
     {
-        Debug::log("All levels have been finished.");
+        reset_scene();
         return;
     }
 

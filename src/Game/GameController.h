@@ -32,6 +32,7 @@ public:
     std::weak_ptr<Entity> next_scene = {};
 
 private:
+    void reset_scene();
     float ease_in_out_cubic(float const x) const;
 
     void update_scenes_position() const;
@@ -46,4 +47,6 @@ private:
     u32 m_level_number = 0;
 
     std::vector<std::string> m_levels_order = {"Level_1", "Level_2", "Level_3", "Level_4", "Level_5", "Level_6"};
+    std::vector<std::string> m_levels_backup = {};
+    std::vector<glm::vec2> m_points_backup = {};
 };
