@@ -40,10 +40,12 @@ void Floater::draw_editor()
     Component::draw_editor();
 
     ImGui::InputFloat("Sink", &sink);
-    ImGui::InputFloat("Side floaters offset", &side_floaters_offset);
-    ImGui::InputFloat("Side rotation strength", &side_roation_strength);
+    ImGui::Text("Forward floaters");
     ImGui::InputFloat("Forward rotation strength", &forward_rotation_strength);
     ImGui::InputFloat("Forward floaters offset", &forward_floaters_offest);
+    ImGui::Text("Side floaters");
+    ImGui::InputFloat("Side rotation strength", &side_roation_strength);
+    ImGui::InputFloat("Side floaters offset", &side_floaters_offset);
     ImGuiEx::draw_ptr("Water", water);
 }
 #endif
