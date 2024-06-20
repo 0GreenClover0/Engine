@@ -37,7 +37,7 @@ void Drawable::set_rasterizer_draw_type(RasterizerDrawType const new_draw_mode)
 
 void Drawable::initialize()
 {
-    Renderer::get_instance()->register_drawable(std::dynamic_pointer_cast<Drawable>(shared_from_this()));
+    Renderer::get_instance()->register_drawable(std::static_pointer_cast<Drawable>(shared_from_this()));
 
     calculate_bounding_box();
     adjust_bounding_box();
@@ -45,12 +45,17 @@ void Drawable::initialize()
 
 void Drawable::uninitialize()
 {
-    Renderer::get_instance()->unregister_drawable(std::dynamic_pointer_cast<Drawable>(shared_from_this()));
+    auto const drawable = std::static_pointer_cast<Drawable>(shared_from_this());
+
+    if (Renderer::get_instance()->is_drawable_registered(drawable))
+    {
+        Renderer::get_instance()->unregister_drawable(drawable);
+    }
 }
 
 void Drawable::on_enabled()
 {
-    auto const drawable = std::dynamic_pointer_cast<Drawable>(shared_from_this());
+    auto const drawable = std::static_pointer_cast<Drawable>(shared_from_this());
 
     // Drawable might have already been registered in initialize() method
     if (!Renderer::get_instance()->is_drawable_registered(drawable))
@@ -61,12 +66,12 @@ void Drawable::on_enabled()
 
 void Drawable::on_disabled()
 {
-    auto const drawable = std::dynamic_pointer_cast<Drawable>(shared_from_this());
+    auto const drawable = std::static_pointer_cast<Drawable>(shared_from_this());
 
     // Drawable might have already been unregistered in uninitialize() method
-    if (!Renderer::get_instance()->is_drawable_registered(drawable))
+    if (Renderer::get_instance()->is_drawable_registered(drawable))
     {
-        Renderer::get_instance()->unregister_drawable(std::dynamic_pointer_cast<Drawable>(shared_from_this()));
+        Renderer::get_instance()->unregister_drawable(drawable);
     }
 }
 
