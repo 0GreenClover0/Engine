@@ -26,6 +26,8 @@ void LighthouseLight::on_enabled()
 {
     if (!m_sphere.expired())
         m_sphere.lock()->set_enabled(true);
+
+    update_position();
 }
 
 void LighthouseLight::on_disabled()
@@ -47,24 +49,7 @@ void LighthouseLight::awake()
 
 void LighthouseLight::update()
 {
-    glm::vec2 const position = get_position();
-
-    entity->transform->set_local_position(glm::vec3(position.x, 0.0f, position.y));
-
-    if (spotlight.expired())
-        return;
-
-    auto const light_locked = spotlight.lock();
-
-    i32 const lighthouse_level = Player::get_instance()->lighthouse_level;
-    light_locked->scattering_factor = 1.0f + static_cast<float>(lighthouse_level) * 2.0f;
-    spotlight_beam_width = 0.09f + 0.01f * static_cast<float>(lighthouse_level);
-
-    float const light_beam_length = glm::length(entity->transform->get_position() - light_locked->entity->transform->get_position());
-    float const aperture = glm::atan(spotlight_beam_width / light_beam_length);
-    light_locked->cut_off = cos(aperture);
-    light_locked->outer_cut_off = cos(aperture);
-    light_locked->entity->transform->orient_towards(glm::vec3(position.x, 0.0f, position.y));
+    update_position();
 }
 
 #if EDITOR
@@ -90,4 +75,26 @@ glm::vec2 LighthouseLight::get_position() const
                         * ((Input::input->get_mouse_position().y + LevelController::get_instance()->playfield_y_shift) + 1.0f) / 2.0f));
 
     return glm::vec2(x, y);
+}
+
+void LighthouseLight::update_position()
+{
+    glm::vec2 const position = get_position();
+
+    entity->transform->set_local_position(glm::vec3(position.x, 0.0f, position.y));
+
+    if (spotlight.expired())
+        return;
+
+    auto const light_locked = spotlight.lock();
+
+    i32 const lighthouse_level = Player::get_instance()->lighthouse_level;
+    light_locked->scattering_factor = 1.0f + static_cast<float>(lighthouse_level) * 2.0f;
+    spotlight_beam_width = 0.09f + 0.01f * static_cast<float>(lighthouse_level);
+
+    float const light_beam_length = glm::length(entity->transform->get_position() - light_locked->entity->transform->get_position());
+    float const aperture = glm::atan(spotlight_beam_width / light_beam_length);
+    light_locked->cut_off = cos(aperture);
+    light_locked->outer_cut_off = cos(aperture);
+    light_locked->entity->transform->orient_towards(glm::vec3(position.x, 0.0f, position.y));
 }

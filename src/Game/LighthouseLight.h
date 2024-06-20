@@ -35,5 +35,7 @@ public:
     float spotlight_beam_width = 0.15f;
 
 private:
+    void update_position();
+
     std::weak_ptr<Sphere> m_sphere = {};
 };
