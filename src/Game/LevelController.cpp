@@ -271,6 +271,7 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
             {
                 progress_tutorial();
             }
+            break;
         case 7:
             //TODO: Dialog
             //TODO: End dialog and all penguins in water
