@@ -125,7 +125,7 @@ void Port::draw_editor()
         return;
     }
 
-    if (lights.size() != 4)
+    if (lights.size() < 4)
     {
         if (ImGui::Button("Add lights"))
         {
@@ -155,8 +155,19 @@ void Port::draw_editor()
             adjust_lights();
         }
     }
-    else
+
+    if (lights.size() != 0)
     {
+        if (ImGui::Button("Remove lights"))
+        {
+            for (auto const& light : lights)
+            {
+                light.lock()->destroy_immediate();
+            }
+
+            lights.clear();
+        }
+
         if (ImGui::Button("Adjust lights"))
         {
             adjust_lights();
