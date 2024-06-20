@@ -311,6 +311,11 @@ void Ship::in_port_behavior()
         m_speed = 0.0f;
 }
 
+void Ship::stop_behavior()
+{
+    m_speed = 0.0f;
+}
+
 void Ship::update()
 {
     if (is_out_of_room())
@@ -422,6 +427,15 @@ void Ship::update()
             break;
         }
         break;
+
+    case BehavioralState::Stop:
+
+        if (control_state_change())
+        {
+            maximum_speed = LevelController::get_instance()->ships_speed;
+            break;
+        }
+        break;
     }
 
     switch (behavioral_state)
@@ -460,6 +474,9 @@ void Ship::update()
         update_position();
         update_rotation();
         break;
+
+    case BehavioralState::Stop:
+        break;
     }
 }
 
@@ -491,6 +508,13 @@ void Ship::draw_editor()
     ImGui::DragFloat("Speed", &maximum_speed, 0.001f, 0.0f, 0.5f);
 
     ImGuiEx::draw_ptr("Light", light);
+
+    if (ImGui::Button("Stop"))
+    {
+        behavioral_state = BehavioralState::Stop;
+    }
+
+    ImGui::Text(behaviour_state_to_string(behavioral_state).c_str());
 }
 #endif
 

@@ -24,6 +24,7 @@ enum class BehavioralState
     Avoid,
     Destroyed,
     InPort,
+    Stop,
 };
 
 #if EDITOR
@@ -137,6 +138,9 @@ static std::string behaviour_state_to_string(BehavioralState const state)
     case BehavioralState::InPort:
         return "InPort";
 
+    case BehavioralState::Stop:
+        return "Stop";
+
     default:
         return "Undefined state";
     }
@@ -212,6 +216,7 @@ private:
     void avoid_behavior();
     void destroyed_behavior();
     void in_port_behavior();
+    void stop_behavior();
 
     bool is_out_of_room() const;
 
