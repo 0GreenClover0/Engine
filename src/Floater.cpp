@@ -63,11 +63,11 @@ void Floater::update()
     glm::vec2 const position_2d = AK::convert_3d_to_2d(position);
     glm::vec2 const movement_direction = AK::convert_3d_to_2d(glm::normalize(entity->transform->get_forward()));
     glm::vec2 perpendicular_to_movement_direction = {movement_direction.y, -movement_direction.x};
-    float const height_to_the_left = water_ptr->get_wave_height(perpendicular_to_movement_direction * side_floaters_offset);
-    float const height_to_the_right = water_ptr->get_wave_height(perpendicular_to_movement_direction * -side_floaters_offset);
+    float const height_to_the_left = water_ptr->get_wave_height(position_2d + perpendicular_to_movement_direction * side_floaters_offset);
+    float const height_to_the_right = water_ptr->get_wave_height(position_2d + perpendicular_to_movement_direction * -side_floaters_offset);
     float const height = water_ptr->get_wave_height(position_2d) - sink;
-    float const height_at_front = water_ptr->get_wave_height(position_2d + movement_direction * -forward_floaters_offest);
-    float const height_at_back = water_ptr->get_wave_height(position_2d - movement_direction * forward_floaters_offest);
+    float const height_at_front = water_ptr->get_wave_height(position_2d + movement_direction * forward_floaters_offest);
+    float const height_at_back = water_ptr->get_wave_height(position_2d + movement_direction * -forward_floaters_offest);
 
     entity->transform->set_position(glm::vec3(position_2d.x, height, position_2d.y));
 
