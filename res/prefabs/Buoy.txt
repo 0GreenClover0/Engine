@@ -1,0 +1,61 @@
+Scene: Untitled
+Entities:
+  - Entity: Buoy
+    guid: 0ef7d3f19427761a799dcda19bca32da86c45f921027831ea869787128a1950e
+    Name: Buoy
+    TransformComponent:
+      Translation: [0, -0.0284464657, 0]
+      Rotation: [1.33734989, 0, 13.2793512]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: 479e773a64cd13e8caf7050901a771975dd40c0aa166bc875a4d84f88e32e3b1
+    Components:
+      - ComponentName: ModelComponent
+        guid: cf7208cf385f182adb5c96bfb2b2d17cab4fd819ab06eb20b05c3bb040aaa49c
+        custom_name: ""
+        model_path: ./res/models\buoy\light_buoy.gltf
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+          NeedsForward: false
+          CastsShadows: true
+          IsBillboard: false
+      - ComponentName: FloaterComponent
+        guid: 05cf789667fc6cb471e0bc7275891ed7d6b61083aa9411379b316cf8f791c3b4
+        custom_name: ""
+        sink: 0.00999999978
+        side_floaters_offset: 0.100000001
+        side_roation_strength: 10
+        forward_rotation_strength: 15
+        forward_floaters_offest: 0.100000001
+        water:
+          guid: 2b8a5a6fc294491bd14ae18d4716e0f0ddb2616fc6ad7c0323f6743d8ee9eb34
+  - Entity: Child
+    guid: eef9434f4226bf5cd4ef5dccaa171db3d48daeb424e4a0b1e4a4dcd49a731328
+    Name: Child
+    TransformComponent:
+      Translation: [0, 0.487125933, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: 0ef7d3f19427761a799dcda19bca32da86c45f921027831ea869787128a1950e
+    Components:
+      - ComponentName: PointLightComponent
+        guid: 957a7c6c42d74650107bab375274dd708837ace791c22f5e638ea1b6ecc263b1
+        custom_name: ""
+        constant: 1
+        linear: 1.77499998
+        quadratic: 0
+        ambient: [0.294666648, 0.850000024, 0.155833334]
+        diffuse: [0.0548148751, 1, 0.0222222209]
+        specular: [0, 1, 0.299999952]
+        m_near_plane: 0.5
+        m_far_plane: 25
+        m_blocker_search_num_samples: 16
+        m_pcf_num_samples: 16
+        m_light_world_size: 0.5
+        m_light_frustum_width: 30
