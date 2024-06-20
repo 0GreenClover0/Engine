@@ -251,12 +251,12 @@ float4 ps_main(VS_Output input) : SV_TARGET
     }
 
     result = ((ssr_refraction.xyz) * 0.3f + result + ssr_reflection.xyz) / 3.0f;
-    result += scatter;
 
     falloff_value = clamp(falloff_value, 0.0f, 1.0f);
     
     float4 final;
     final.xyz = falloff_value * float3(0.1f, 0.1f, 0.6f) + (1.0f - falloff_value) * result;
+    final.xyz += scatter;
     final.xyz = gamma_correction(exposure_tonemapping(final.xyz));
     if (halo_value.a > 0.0f)
     {
