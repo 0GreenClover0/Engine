@@ -47,7 +47,6 @@ void Particle::awake()
 {
     set_can_tick(true);
 
-    entity->transform->set_scale({0.1f, 0.1f, 0.1f});
     entity->transform->set_local_position({AK::random_float(-m_spawn_bounds, m_spawn_bounds),
                                            AK::random_float(-m_spawn_bounds, m_spawn_bounds),
                                            AK::random_float(-m_spawn_bounds, m_spawn_bounds)});
