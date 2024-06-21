@@ -57,6 +57,7 @@ public:
 
     void burn_out_all_ships(bool const value) const;
     void spawn_ship_at_position(ShipType const type, glm::vec2 position, float const direction);
+    void pop_event();
 
 private:
     void spawn_ship(SpawnEvent const* being_spawn);
