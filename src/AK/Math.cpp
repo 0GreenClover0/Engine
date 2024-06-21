@@ -1,5 +1,6 @@
 #include "Math.h"
 
+#include <corecrt_math_defines.h>
 #include <glm/ext/quaternion_geometric.hpp>
 #include <glm/gtc/epsilon.hpp>
 
@@ -95,6 +96,17 @@ float Math::get_ranges_overlap_length(glm::vec2 const& a, glm::vec2 const& b)
 bool Math::are_nearly_equal(float const x, float const y, float const epsilon)
 {
     return glm::epsilonEqual(x, y, epsilon);
+}
+
+float Math::ease_in_out_elastic(float x)
+{
+    float const c5 = (2.0f * M_PI) / 4.5f;
+
+    //
+    return are_nearly_equal(x, 0.0f) ? 0.0f
+         : are_nearly_equal(x, 1.0f) ? 1.0f
+         : x < 0.5f                  ? -(pow(2.0f, 20.0f * x - 10.0f) * sin((20.0f * x - 11.125f) * c5)) / 2.0f
+                                     : (pow(2.0f, -20.0f * x + 10.0f) * sin((20.0f * x - 11.125f) * c5)) / 2.0f + 1.0f;
 }
 
 glm::vec2 Math::line_intersection(glm::vec2 const& point1, glm::vec2 const& point2, glm::vec2 const& point3, glm::vec2 const& point4)
