@@ -101,6 +101,8 @@ void ShipSpawner::awake()
 
 void ShipSpawner::get_spawn_paths()
 {
+    paths.clear();
+
     for (auto const& path : entity->get_components<Path>())
     {
         paths.emplace_back(path);
