@@ -12,6 +12,7 @@
 #include <yaml-cpp/emitter.h>
 #include <yaml-cpp/node/node.h>
 
+#include "DialogueObject.h"
 #include "FloatersManager.h"
 #include "SceneSerializer.h"
 #include <Game/Factory.h>
@@ -572,6 +573,35 @@ requires(std::is_base_of_v<Entity, T>)
     return out;
 }
 
+template<>
+struct convert<DialogueObject>
+{
+    static Node encode(DialogueObject const& rhs)
+    {
+        Node node;
+        node.push_back(rhs.auto_end);
+        node.push_back(rhs.upper_line);
+        node.push_back(rhs.middle_line);
+        node.push_back(rhs.lower_line);
+        node.push_back(rhs.sound_path);
+        return node;
+    }
+
+    static bool decode(Node const& node, DialogueObject& rhs)
+    {
+        if (!node.IsSequence())
+            return false;
+
+        rhs.auto_end = node[0].as<bool>();
+        rhs.upper_line = node[1].as<std::string>();
+        rhs.middle_line = node[2].as<std::string>();
+        rhs.lower_line = node[3].as<std::string>();
+        rhs.sound_path = node[4].as<std::string>();
+
+        return true;
+    }
+};
+
 inline Emitter& operator<<(YAML::Emitter& out, glm::vec2 const& v)
 {
     out << YAML::Flow;
@@ -685,6 +715,13 @@ inline Emitter& operator<<(YAML::Emitter& out, FloaterSettings const& v)
     out << YAML::Flow;
     out << YAML::BeginSeq << v.sink_rate << v.side_rotation_strength << v.forward_rotation_strength << v.side_floaters_offset
         << v.forward_floaters_offset << YAML::EndSeq;
+    return out;
+}
+
+inline Emitter& operator<<(YAML::Emitter& out, DialogueObject const& v)
+{
+    out << YAML::Flow;
+    out << YAML::BeginSeq << v.auto_end << v.upper_line << v.middle_line << v.lower_line << v.sound_path << YAML::EndSeq;
     return out;
 }
 
