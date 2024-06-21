@@ -343,8 +343,8 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "start_velocity_2" << YAML::Value << particlesystem->start_velocity_2;
         out << YAML::Key << "min_spawn_alpha" << YAML::Value << particlesystem->min_spawn_alpha;
         out << YAML::Key << "max_spawn_alpha" << YAML::Value << particlesystem->max_spawn_alpha;
-        out << YAML::Key << "min_particle_size" << YAML::Value << particlesystem->min_particle_size;
-        out << YAML::Key << "max_particle_size" << YAML::Value << particlesystem->max_particle_size;
+        out << YAML::Key << "start_min_particle_size" << YAML::Value << particlesystem->start_min_particle_size;
+        out << YAML::Key << "start_max_particle_size" << YAML::Value << particlesystem->start_max_particle_size;
         out << YAML::Key << "emitter_bounds" << YAML::Value << particlesystem->emitter_bounds;
         out << YAML::Key << "min_spawn_count" << YAML::Value << particlesystem->min_spawn_count;
         out << YAML::Key << "max_spawn_count" << YAML::Value << particlesystem->max_spawn_count;
@@ -1344,13 +1344,13 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             {
                 deserialized_component->max_spawn_alpha = component["max_spawn_alpha"].as<float>();
             }
-            if (component["min_particle_size"].IsDefined())
+            if (component["start_min_particle_size"].IsDefined())
             {
-                deserialized_component->min_particle_size = component["min_particle_size"].as<float>();
+                deserialized_component->start_min_particle_size = component["start_min_particle_size"].as<glm::vec3>();
             }
-            if (component["max_particle_size"].IsDefined())
+            if (component["start_max_particle_size"].IsDefined())
             {
-                deserialized_component->max_particle_size = component["max_particle_size"].as<float>();
+                deserialized_component->start_max_particle_size = component["start_max_particle_size"].as<glm::vec3>();
             }
             if (component["emitter_bounds"].IsDefined())
             {
