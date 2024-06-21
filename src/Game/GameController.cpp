@@ -208,4 +208,5 @@ void GameController::reset_level()
     LevelController::get_instance()->factories[1].lock()->turn_off_lights();
     LevelController::get_instance()->set_exiting_lighthouse(false);
     LevelController::get_instance()->lighthouse.lock()->turn_light(false);
+    LevelController::get_instance()->check_tutorial_progress(TutorialProgressAction::LevelStarted);
 }
