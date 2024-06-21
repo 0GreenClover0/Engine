@@ -13,6 +13,7 @@
 #endif
 
 #include <glm/gtc/type_ptr.inl>
+#include <glm/gtx/quaternion.hpp>
 
 std::shared_ptr<Collider2D> Collider2D::create()
 {
@@ -366,42 +367,49 @@ void Collider2D::add_force(glm::vec2 const force)
 
 void Collider2D::update_center_and_corners()
 {
-    glm::vec2 const position = get_center_2d();
+    glm::vec2 const position_2d = get_center_2d();
 
-    // HACK: For some reason we need to negate the angle here. Not sure why, but this fixes most
-    //       of our collision problems.
-    float const angle = -glm::eulerAngles(entity->transform->get_rotation()).y;
-    compute_axes(position, angle);
-    m_debug_drawing_entity->transform->set_position(AK::convert_2d_to_3d(position));
+    glm::quat const rotation = entity->transform->get_rotation();
+
+    compute_axes(position_2d, rotation);
 }
 
 // NOTE: Should be called everytime the position has changed.
 //       Currently we just update it every frame.
-void Collider2D::compute_axes(glm::vec2 const& center, float const angle)
+void Collider2D::compute_axes(glm::vec2 const& center, glm::quat const& rotation)
 {
-    // Create a 2D rotation matrix
-    glm::mat2 const rotation_matrix = glm::mat2(glm::vec2(cos(angle), sin(angle)), glm::vec2(-sin(angle), cos(angle)));
+    glm::vec2 const half_extents = {width * 0.5f, height * 0.5f};
 
-    // Define the half-dimensions of the collider
-    glm::vec2 const half_extents = glm::vec2(width, height) * 0.5f;
-
-    // Calculate the rotated corners
-    std::array const corners_local = {
-        glm::vec2(-half_extents.x, -half_extents.y),
-        glm::vec2(half_extents.x, -half_extents.y),
-        glm::vec2(half_extents.x, half_extents.y),
-        glm::vec2(-half_extents.x, half_extents.y),
+    // Define the local corners of the rectangle
+    std::array const local_corners = {
+        glm::vec3(-half_extents.x, 0.0f, -half_extents.y),
+        glm::vec3(half_extents.x, 0.0f, -half_extents.y),
+        glm::vec3(half_extents.x, 0.0f, half_extents.y),
+        glm::vec3(-half_extents.x, 0.0f, half_extents.y),
     };
 
-    for (u32 i = 0; i < 4; ++i)
+    // Rotate the local corners using the quaternion
+    std::array<glm::vec2, 4> rotated_corners = {};
+    for (i32 i = 0; i < 4; ++i)
     {
-        m_corners[i] = center + rotation_matrix * corners_local[i];
+        glm::vec3 rotated_corner = rotation * local_corners[i];
+        rotated_corners[i] = {rotated_corner.x, rotated_corner.z};
+    }
+
+    // Translate the rotated corners to the center position
+    for (i32 i = 0; i < 4; ++i)
+    {
+        rotated_corners[i] += center;
     }
 
     // Compute the axes for the SAT (Separating Axis Theorem) test
-    m_axes[0] = glm::normalize(m_corners[1] - m_corners[0]);
-    m_axes[1] = glm::normalize(m_corners[3] - m_corners[0]);
+    m_axes[0] = glm::normalize(rotated_corners[1] - rotated_corners[0]);
+    m_axes[1] = glm::normalize(rotated_corners[3] - rotated_corners[0]);
 
-    m_debug_drawing->set_radius(radius);
+    // Update the corners in 2D for collision detection purposes
+    m_corners = rotated_corners;
+
+    // Debug drawing
+    m_debug_drawing_entity->transform->set_position(AK::convert_2d_to_3d(center));
     m_debug_drawing->set_extents({width, 0.25f, height});
 }
