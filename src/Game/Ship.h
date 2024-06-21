@@ -170,6 +170,7 @@ public:
     void destroy();
     void stop();
     bool is_in_port() const;
+    void set_direction(float direction);
 
     NON_SERIALIZED
     float minimum_speed = 0.11f;
