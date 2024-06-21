@@ -43,6 +43,31 @@ glm::vec3 Transform::get_position()
     return m_position;
 }
 
+void Transform::set_rotation(glm::vec3 const& euler_angles)
+{
+    if (parent.expired())
+    {
+        m_local_rotation = glm::quat(glm::radians(euler_angles));
+        m_euler_angles = euler_angles;
+    }
+    else
+    {
+        // Calculate the global rotation quaternion from the given euler angles
+        glm::quat const global_rotation = glm::quat(glm::radians(euler_angles));
+
+        // Get the parent's global rotation
+        glm::quat const parent_global_rotation = parent.lock()->get_rotation();
+
+        // Calculate the new local rotation by inverse of parent's rotation
+        m_local_rotation = glm::inverse(parent_global_rotation) * global_rotation;
+
+        // Convert the local rotation quaternion back to Euler angles for storage
+        m_euler_angles = glm::degrees(glm::eulerAngles(m_local_rotation));
+    }
+
+    set_dirty();
+}
+
 glm::quat Transform::get_rotation()
 {
     recompute_model_matrix_if_needed();
