@@ -44,8 +44,8 @@ public:
     float min_spawn_alpha = 0.5f;
     float max_spawn_alpha = 0.8f;
 
-    float min_particle_size = 1.0f;
-    float max_particle_size = 2.0f;
+    glm::vec3 start_min_particle_size = {0.1f, 0.1f, 0.1f};
+    glm::vec3 start_max_particle_size = {0.2f, 0.2f, 0.2f};
 
     float emitter_bounds = 0.1f;
 

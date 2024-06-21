@@ -43,7 +43,8 @@ void ParticleSystem::draw_editor()
     ImGui::DragFloatRange2("Spawn interval", &min_spawn_interval, &max_spawn_interval, 0.1f, 0.0f, FLT_MAX);
     ImGui::InputFloat3("Start velocity 1", glm::value_ptr(start_velocity_1));
     ImGui::InputFloat3("Start velocity 2", glm::value_ptr(start_velocity_2));
-    ImGui::DragFloatRange2("Size", &min_particle_size, &max_particle_size, 0.1f, 0.0f, FLT_MAX);
+    ImGuiEx::InputFloat3("Start minimum size", glm::value_ptr(start_min_particle_size));
+    ImGuiEx::InputFloat3("Start maximum size", glm::value_ptr(start_max_particle_size));
     ImGui::DragFloat("Emitter size", &emitter_bounds, 0.1f, 0.0f, FLT_MAX);
     ImGui::DragIntRange2("Spawn count", &min_spawn_count, &max_spawn_count, 1, 0, INT_MAX);
     ImGui::Checkbox("Simulate in world space", &m_simulate_in_world_space);
@@ -89,8 +90,8 @@ void ParticleSystem::update_system()
             auto const particle_comp = particle->add_component(Particle::create(m_spawn_data_vector[i], emitter_bounds, sprite_path));
 
             // Adjust scale
-            float const scale_factor = AK::random_float(min_particle_size, max_particle_size);
-            particle->transform->set_local_scale({scale_factor, scale_factor, scale_factor});
+            glm::vec3 const scale_factor = glm::linearRand(start_min_particle_size, start_max_particle_size);
+            particle->transform->set_local_scale(scale_factor);
 
             m_spawn_data_vector.erase(m_spawn_data_vector.begin() + i);
             m_random_spawn_count -= 1;
