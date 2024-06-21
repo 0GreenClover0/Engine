@@ -29,11 +29,21 @@
 				"metallicFactor":0,
 				"roughnessFactor":0.5
 			}
+		},
+		{
+			"doubleSided":true,
+			"name":"flagmat",
+			"pbrMetallicRoughness":{
+				"baseColorTexture":{
+					"index":1
+				},
+				"metallicFactor":0
+			}
 		}
 	],
 	"meshes":[
 		{
-			"name":"Cube.002",
+			"name":"Cube.003",
 			"primitives":[
 				{
 					"attributes":{
@@ -43,6 +53,15 @@
 					},
 					"indices":3,
 					"material":0
+				},
+				{
+					"attributes":{
+						"POSITION":4,
+						"NORMAL":5,
+						"TEXCOORD_0":6
+					},
+					"indices":7,
+					"material":1
 				}
 			]
 		}
@@ -51,6 +70,10 @@
 		{
 			"sampler":0,
 			"source":0
+		},
+		{
+			"sampler":0,
+			"source":1
 		}
 	],
 	"images":[
@@ -58,67 +81,130 @@
 			"mimeType":"image/png",
 			"name":"ships_and_wares_palette",
 			"uri":"textures/ships_and_wares_palette.png"
+		},
+		{
+			"mimeType":"image/png",
+			"name":"flag_texture",
+			"uri":"textures/flag_texture.png"
 		}
 	],
 	"accessors":[
 		{
 			"bufferView":0,
 			"componentType":5126,
-			"count":735,
+			"count":961,
 			"max":[
-				0.1557513326406479,
-				0.3778482675552368,
-				0.4220676124095917
+				0.16149093210697174,
+				0.277752161026001,
+				0.45464399456977844
 			],
 			"min":[
-				-0.15992958843708038,
+				-0.16149093210697174,
 				0.0022419944871217012,
-				-0.391020804643631
+				-0.4668588936328888
 			],
 			"type":"VEC3"
 		},
 		{
 			"bufferView":1,
 			"componentType":5126,
-			"count":735,
+			"count":961,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":2,
 			"componentType":5126,
-			"count":735,
+			"count":961,
 			"type":"VEC2"
 		},
 		{
 			"bufferView":3,
 			"componentType":5123,
-			"count":2181,
+			"count":3129,
+			"type":"SCALAR"
+		},
+		{
+			"bufferView":4,
+			"componentType":5126,
+			"count":24,
+			"max":[
+				0.007532259915024042,
+				0.41590720415115356,
+				0.4782782196998596
+			],
+			"min":[
+				-0.007532259915024042,
+				0.26473191380500793,
+				0.25500208139419556
+			],
+			"type":"VEC3"
+		},
+		{
+			"bufferView":5,
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"bufferView":6,
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
+		},
+		{
+			"bufferView":7,
+			"componentType":5123,
+			"count":36,
 			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
 		{
 			"buffer":0,
-			"byteLength":8820,
+			"byteLength":11532,
 			"byteOffset":0,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":8820,
-			"byteOffset":8820,
+			"byteLength":11532,
+			"byteOffset":11532,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":5880,
-			"byteOffset":17640,
+			"byteLength":7688,
+			"byteOffset":23064,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":4362,
-			"byteOffset":23520,
+			"byteLength":6258,
+			"byteOffset":30752,
+			"target":34963
+		},
+		{
+			"buffer":0,
+			"byteLength":288,
+			"byteOffset":37012,
+			"target":34962
+		},
+		{
+			"buffer":0,
+			"byteLength":288,
+			"byteOffset":37300,
+			"target":34962
+		},
+		{
+			"buffer":0,
+			"byteLength":192,
+			"byteOffset":37588,
+			"target":34962
+		},
+		{
+			"buffer":0,
+			"byteLength":72,
+			"byteOffset":37780,
 			"target":34963
 		}
 	],
@@ -130,7 +216,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":27884,
+			"byteLength":37852,
 			"uri":"shipPirates.bin"
 		}
 	]
