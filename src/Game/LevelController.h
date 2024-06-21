@@ -88,7 +88,10 @@ public:
     NON_SERIALIZED
     u32 tutorial_progress = 0;
     u32 tutorial_level = 1;
+    NON_SERIALIZED
     u32 tutorial_spawn_path = 0;
+    NON_SERIALIZED
+    bool is_tutorial_dialogs_enabled = true;
 
 private:
     inline static std::shared_ptr<LevelController> m_instance;
