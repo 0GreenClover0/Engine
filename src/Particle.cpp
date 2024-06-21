@@ -146,18 +146,9 @@ void Particle::update()
 
 void Particle::move() const
 {
-    if (entity == nullptr)
-    {
-        return;
-    }
-
-    // Move up
     glm::vec3 const p = entity->transform->get_position();
-    entity->transform->set_position({p.x, p.y + static_cast<float>(delta_time) * m_speed, p.z});
-
-    // Rotate
-    glm::vec3 const rot = entity->transform->get_euler_angles();
-    entity->transform->set_euler_angles({rot.x, rot.y, rot.z + m_speed * 0.4f * m_rotation_direction});
+    glm::vec3 const change = m_velocity * static_cast<float>(delta_time);
+    entity->transform->set_position(p + change);
 }
 
 void Particle::interpolate_color()
@@ -178,7 +169,7 @@ void Particle::prepare()
 void Particle::set_data(ParticleSpawnData const& data)
 {
     m_lifetime = data.lifetime;
-    m_speed = data.particle_speed;
+    m_velocity = data.start_velocity;
     m_color = data.start_color_1;
     m_start_color_1 = data.start_color_1;
     m_end_color_1 = data.end_color_1;

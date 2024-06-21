@@ -6,6 +6,7 @@
 #include "Globals.h"
 #include "Particle.h"
 
+#include <glm/gtc/random.hpp>
 #include <glm/gtc/type_ptr.inl>
 
 #if EDITOR
@@ -40,7 +41,8 @@ void ParticleSystem::draw_editor()
     ImGuiEx::InputFloat("Lifetime 1", &lifetime_1);
     ImGuiEx::InputFloat("Lifetime 2", &lifetime_2);
     ImGui::DragFloatRange2("Spawn interval", &min_spawn_interval, &max_spawn_interval, 0.1f, 0.0f, FLT_MAX);
-    ImGui::DragFloatRange2("Speed", &min_particle_speed, &max_particle_speed, 0.1f, 0.0f, FLT_MAX);
+    ImGui::InputFloat3("Start velocity 1", glm::value_ptr(start_velocity_1));
+    ImGui::InputFloat3("Start velocity 2", glm::value_ptr(start_velocity_2));
     ImGui::DragFloatRange2("Size", &min_particle_size, &max_particle_size, 0.1f, 0.0f, FLT_MAX);
     ImGui::DragFloat("Emitter size", &emitter_bounds, 0.1f, 0.0f, FLT_MAX);
     ImGui::DragIntRange2("Spawn count", &min_spawn_count, &max_spawn_count, 1, 0, INT_MAX);
@@ -110,7 +112,7 @@ void ParticleSystem::spawn_calculations()
 
         data.spawn_time = AK::random_float(min_spawn_interval, max_spawn_interval);
         data.spawn_alpha = AK::random_float(min_spawn_alpha, max_spawn_alpha);
-        data.particle_speed = AK::random_float(min_particle_speed, max_particle_speed);
+        data.start_velocity = glm::linearRand(start_velocity_1, start_velocity_2);
         data.lifetime = AK::random_float(lifetime_1, lifetime_2);
         data.start_color_1 = start_color_1;
         data.end_color_1 = end_color_1;
