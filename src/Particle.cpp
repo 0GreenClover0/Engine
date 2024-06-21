@@ -62,7 +62,6 @@ void Particle::awake()
 
 void Particle::draw() const
 {
-    entity->transform->parent.lock()->set_euler_angles(Camera::get_main_camera()->entity->transform->get_euler_angles());
 
     if (m_rasterizer_draw_type == RasterizerDrawType::None)
     {
@@ -71,6 +70,7 @@ void Particle::draw() const
 
     // Either wireframe or solid for individual model
     Renderer::get_instance()->set_rasterizer_draw_type(m_rasterizer_draw_type);
+    entity->transform->parent.lock()->set_rotation(Camera::get_main_camera()->entity->transform->get_euler_angles());
 
     if (mesh != nullptr)
     {
