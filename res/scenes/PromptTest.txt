@@ -1,0 +1,146 @@
+Scene: Untitled
+Entities:
+  - Entity: PromptController
+    guid: 12de67c40b6918b34d3ccb84705b9c428c5c63f295bdeff03764b7294c70feba
+    Name: PromptController
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: ""
+    Components:
+      - ComponentName: DialoguePromptControllerComponent
+        guid: 757bc9c9e2fb2d65faa74001c0e4708265cef1a86409945cd9bc84422bd1cda7
+        custom_name: ""
+        interp_speed: 0.100000001
+        dialogue_panel:
+          guid: 23b2cec791af735372fb3fcd6d2c1365494db10d8e630450c02bcd94f93d73e7
+        upper_text:
+          guid: 2d13ae34e931fd7c5fe85be4b25b1257d5785d119179dd8562227808a3de13c2
+        middle_text:
+          guid: 8c5bd597595e6e3d9252e992679c59cac8c7684c40e010252dac5e11c81c5a6b
+        lower_text:
+          guid: 337157132ae173d511cc68c915733eaf8b948500be5528ea404dd4d281126ce0
+        dialogue_objects:
+          []
+  - Entity: Panel
+    guid: 06e0e808e30eff9bf29c0bf8f553cc95aebd1fbac7a494f9488382f94077a351
+    Name: Panel
+    TransformComponent:
+      Translation: [-0.270000011, -1.75, 0]
+      Rotation: [0, 0, 0]
+      Scale: [0.699999988, 0.200000003, 0.290000021]
+      Parent:
+        guid: 12de67c40b6918b34d3ccb84705b9c428c5c63f295bdeff03764b7294c70feba
+    Components:
+      - ComponentName: PanelComponent
+        guid: 23b2cec791af735372fb3fcd6d2c1365494db10d8e630450c02bcd94f93d73e7
+        custom_name: ""
+        background_path: ./res/textures/black.jpg
+        material:
+          Shader:
+            VertexPath: ./res/shaders/ui.hlsl
+            FragmentPath: ./res/shaders/ui.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 3001
+          NeedsForward: true
+          CastsShadows: false
+          IsBillboard: false
+  - Entity: Middle text
+    guid: 88b5ca8c58d0371e5a0de335f18dc373a313a93f7508c3beae1afcc4e811ca6a
+    Name: Middle text
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: 06e0e808e30eff9bf29c0bf8f553cc95aebd1fbac7a494f9488382f94077a351
+    Components:
+      - ComponentName: ScreenTextComponent
+        guid: 8c5bd597595e6e3d9252e992679c59cac8c7684c40e010252dac5e11c81c5a6b
+        custom_name: ""
+        text: Use the flash, upgrade the lighthouse, defeat the pirates.
+        position: [0, 0]
+        font_size: 40
+        color: 4278229503
+        flags: 2053
+        font_name: Kurri Island PERSONAL
+        bold: false
+        button_ref:
+          guid: nullptr
+        material:
+          Shader:
+            VertexPath: ./res/shaders/ui.hlsl
+            FragmentPath: ./res/shaders/ui.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 3003
+          NeedsForward: true
+          CastsShadows: false
+          IsBillboard: false
+  - Entity: Upper text
+    guid: 054d78fccd9e1006a78f6c102518ed61f65eb74368912f2bed59406ca4de85da
+    Name: Upper text
+    TransformComponent:
+      Translation: [-2.98023224e-08, 0.5, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: 06e0e808e30eff9bf29c0bf8f553cc95aebd1fbac7a494f9488382f94077a351
+    Components:
+      - ComponentName: ScreenTextComponent
+        guid: 2d13ae34e931fd7c5fe85be4b25b1257d5785d119179dd8562227808a3de13c2
+        custom_name: ""
+        text: "Now you're on your own. Remember what I've taught you:"
+        position: [0, 0]
+        font_size: 40
+        color: 4278229503
+        flags: 2053
+        font_name: Kurri Island PERSONAL
+        bold: false
+        button_ref:
+          guid: nullptr
+        material:
+          Shader:
+            VertexPath: ./res/shaders/ui.hlsl
+            FragmentPath: ./res/shaders/ui.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 3003
+          NeedsForward: true
+          CastsShadows: false
+          IsBillboard: false
+  - Entity: Lower text
+    guid: 5e863f3882b2f8ee94933157e10b9b2167674d8d23f0ab1d6870dab37f5770a3
+    Name: Lower text
+    TransformComponent:
+      Translation: [-2.98023224e-08, -0.5, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: 06e0e808e30eff9bf29c0bf8f553cc95aebd1fbac7a494f9488382f94077a351
+    Components:
+      - ComponentName: ScreenTextComponent
+        guid: 337157132ae173d511cc68c915733eaf8b948500be5528ea404dd4d281126ce0
+        custom_name: ""
+        text: And most importantly, feed all the penguins before the storm comes!
+        position: [0, 0]
+        font_size: 40
+        color: 4278229503
+        flags: 2053
+        font_name: Kurri Island PERSONAL
+        bold: false
+        button_ref:
+          guid: nullptr
+        material:
+          Shader:
+            VertexPath: ./res/shaders/ui.hlsl
+            FragmentPath: ./res/shaders/ui.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 3003
+          NeedsForward: true
+          CastsShadows: false
+          IsBillboard: false
