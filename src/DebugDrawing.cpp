@@ -51,6 +51,7 @@ void DebugDrawing::initialize()
     m_light_source_shader =
         ResourceManager::get_instance().load_shader("./res/shaders/light_source.hlsl", "./res/shaders/light_source.hlsl");
     m_plain_material = Material::create(m_light_source_shader);
+    m_plain_material->casts_shadows = false;
 
     switch (m_type)
     {
