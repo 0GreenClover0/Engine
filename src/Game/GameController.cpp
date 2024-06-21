@@ -88,7 +88,7 @@ void GameController::update()
 
     if (m_move_to_next_scene_counter < 1.0f)
     {
-        m_move_to_next_scene_counter += 0.01f;
+        m_move_to_next_scene_counter += delta_time * 0.75f;
 
         update_scenes_position();
     }
