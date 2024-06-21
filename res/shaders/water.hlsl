@@ -59,6 +59,7 @@ TextureCube skybox : register(t15);
 Texture2D fog_tex : register(t16);
 Texture2D water_normal0 : register(t18);
 Texture2D water_normal1 : register(t19);
+Texture2D foam_texture : register(t69);
 
 SamplerState clamp_border_sampler : register(s3);
 
@@ -164,9 +165,75 @@ float4 halo(float3 halo_center, float3 world_pos, float diameter)
         return float4(0.0f, 0.0f, 0.0f, 0.0f);
     }
 }
+// kurwa to jest chyba lepsze niz ten decal
+float4 decal2(float3 wake_center, float3 world_pos, float diameter)
+{
+    // This function makes a 2D wake on water
+    float distance = length(world_pos - wake_center);
+
+    float time = time_ps;
+    if (time > PI / 2.0f)
+    {
+        time += PI / 2.0f - time;
+    }
+
+    float radius = diameter / 2.0f;
+    radius *= 0.55f;
+
+    float _border = radius * tan(time_ps) * tan(time_ps);
+    _border = clamp(_border, 0.0f, radius);
+    if (distance < _border)
+    {
+        float strength = -log10(-(distance) / (_border) + 1.0f);
+        return float4(0.5f, 0.5f, 1.0f, 1.0f) * strength;
+    }
+    else if (distance < radius)
+    {
+        float strength = 1.0f + log10(-(radius - distance) / (radius) + 1.0f);
+        return float4(0.5f, 0.5f, 1.0f, 1.0f) * strength;
+    }
+    else
+    {
+        return float4(0.0f, 0.0f, 0.0f, 0.0f);
+    }
+}
+
+float nrand(float2 uv)
+{
+    return frac(sin(dot(uv, float2(12.9898, 78.233))) * 43758.5453);
+}
+
+float3 wake(float3 world_pos, float3 wake_source_pos, float2 wake_direction, float wake_radius, float spread_angle)
+{
+    // WAKE RADIUS SHOULD BE BASED UPON SHIPS SPEED SO THAT IT WILL MINIMIZE ITSELF WHEN SHIP STOPS
+    // THE SHAPE OF THE WAKE SHOULD BE DIFFERENT, CONE LOOKS LIKE DOG SHIT
+    // TODO: PIN THE FUNCTION TO EVERY SHIP AND SEE HOW IT LOOKS LIKE
+    // MIGHT BE GOOD TO USE NRAND FOR SOME NOISE, SO THAT IT LOOKS LIKE TINY PARTICLES ON WATER SURFACEs
+    // MAKE A FUNCTION THAT MAKES THE CONE MORE VISIBLE WHEN IT'S CLOSER TO THE CENTER OF THE "WAKE" < -- LOOK AT YOUR NOTES
+
+    float3 noise_rgb = foam_texture.Sample(wrap_sampler, (world_pos.xz - wake_direction * time_ps/ 10.0f) * 5.0f + sin(nrand(world_pos.xz)) / 4.0f);
+    float weird_noise = fog_tex.Sample(wrap_sampler, (world_pos.xz - wake_direction * time_ps/ 10.0f) * 15.0f).r;
+    float noise = (noise_rgb.r + noise_rgb.g + noise_rgb.b + weird_noise) / 2.0f;
+
+    float distance_from_center = length(wake_source_pos.xz - world_pos.xz);
+    if(distance_from_center < wake_radius)
+    {
+        float cos_theta = dot(normalize(wake_direction), normalize(world_pos.xz - wake_source_pos.xz));
+        float theta = acos(cos_theta);
+        if(theta < spread_angle)
+        {
+            return float3(1.0f, 1.0f, 1.0f) * ((wake_radius - distance_from_center)
+            / wake_radius) * noise * ((spread_angle - theta)
+            / spread_angle);
+        }
+    }
+    
+    return float3(0.0f.xxx);
+}
 
 float4 ps_main(VS_Output input) : SV_TARGET
 {
+    float3 wake_value =  wake(input.world_pos, float3(0.0f, 0.0f, 0.0f), float2(1.0f, 0.0f), 1.75f, 3.14/10.0f).xxxx;
     // Calculate mouse_pos halo
     float4 halo_value = 0.0f.xxxx;
     if (light_range > 0.0f)
@@ -237,7 +304,6 @@ float4 ps_main(VS_Output input) : SV_TARGET
     // Volumetric lighting variables
     float3 scatter = float3(0.0f.xxx);
     float fog_value = fog_tex.Sample(wrap_sampler, UV + time_ps / 100.0f).r;
-
     for (int i = 0; i < number_of_point_lights; i++)
     {
         scatter += calculate_scatter(point_lights[i], float4(input.world_pos, 1.0f)) * fog_value;
@@ -262,6 +328,7 @@ float4 ps_main(VS_Output input) : SV_TARGET
     {
         final.xyz += abs(halo_value.xyz);
     }
+    final.xyz += wake_value;
     final.a = 1.0f;
     return final;
 }

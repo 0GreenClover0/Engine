@@ -54,6 +54,7 @@ Water::Water(AK::Badge<Water>, std::shared_ptr<Material> const& material) : Mode
     create_constant_buffer_wave();
     m_normal_map0 = ResourceManager::get_instance().load_texture("./res/textures/water/water_normal1.png", TextureType::Diffuse);
     m_normal_map1 = ResourceManager::get_instance().load_texture("./res/textures/water/water_normal2.png", TextureType::Diffuse);
+    m_foam_texture = ResourceManager::get_instance().load_texture("./res/textures/water/water_foam.png", TextureType::Diffuse);
     Water::prepare();
 }
 
@@ -70,6 +71,7 @@ void Water::draw() const
     auto const renderer = RendererDX11::get_instance_dx11();
     renderer->get_device_context()->PSSetShaderResources(18, 1, &m_normal_map0->shader_resource_view);
     renderer->get_device_context()->PSSetShaderResources(19, 1, &m_normal_map1->shader_resource_view);
+    renderer->get_device_context()->PSSetShaderResources(69, 1, &m_foam_texture->shader_resource_view);
     set_constant_buffer();
 
     Skybox::get_instance()->bind();
@@ -79,6 +81,7 @@ void Water::draw() const
     Skybox::get_instance()->unbind();
     ID3D11ShaderResourceView* null_shader_resource_view = nullptr;
     renderer->get_device_context()->PSSetShaderResources(18, 1, &null_shader_resource_view);
+    renderer->get_device_context()->PSSetShaderResources(19, 1, &null_shader_resource_view);
     renderer->get_device_context()->PSSetShaderResources(19, 1, &null_shader_resource_view);
 }
 

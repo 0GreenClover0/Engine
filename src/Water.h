@@ -39,4 +39,5 @@ private:
 
     std::shared_ptr<Texture> m_normal_map0;
     std::shared_ptr<Texture> m_normal_map1;
+    std::shared_ptr<Texture> m_foam_texture;
 };
