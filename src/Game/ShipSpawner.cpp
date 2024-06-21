@@ -950,6 +950,20 @@ bool ShipSpawner::is_spawn_possible()
 
     if (number_of_ships < LevelController::get_instance()->ships_limit)
     {
+        if (LevelController::get_instance()->is_tutorial && LevelController::get_instance()->tutorial_level == 2
+            && (LevelController::get_instance()->tutorial_progress == 6 || LevelController::get_instance()->tutorial_progress == 7))
+        {
+            if (m_one_tick_skip)
+            {
+                m_one_tick_skip = !m_one_tick_skip;
+                return false;
+            }
+            else
+            {
+                m_one_tick_skip = !m_one_tick_skip;
+            }
+        }
+
         return true;
     }
 
