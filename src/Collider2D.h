@@ -104,7 +104,7 @@ public:
     glm::vec2 velocity = {};
 
 private:
-    void compute_axes(glm::vec2 const& center, float const angle);
+    void compute_axes(glm::vec2 const& center, glm::quat const& rotation);
 
     std::array<glm::vec2, 4> m_corners = {}; // For rectangle, calculated each frame
     std::array<glm::vec2, 2> m_axes = {}; // For rectangle, calculated each frame
