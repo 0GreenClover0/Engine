@@ -170,3 +170,16 @@ struct ConstantBufferWater
     float combined_amplitude;
     float phong_contribution;
 };
+
+struct Wake
+{
+    glm::vec3 source_pos;
+    float radius;
+    glm::vec2 direction;
+    float spread_angle;
+};
+
+struct ConstantBufferWakes
+{
+    Wake wakes[30];
+};

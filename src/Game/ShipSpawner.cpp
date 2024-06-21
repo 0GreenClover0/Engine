@@ -129,6 +129,7 @@ void ShipSpawner::update()
     {
         prepare_for_spawn();
     }
+    update_wake_bufffer();
 }
 
 #if EDITOR
@@ -784,7 +785,26 @@ void ShipSpawner::prepare_for_spawn()
         m_spawn_warning_counter = spawn_warning_time;
     }
 }
+void ShipSpawner::update_wake_bufffer() const
+{
+    ConstantBufferWakes data = {};
+    for (int i = 0; i < m_ships.size(); i++)
+    {
+        Wake wake = {};
+        auto ship_ptr = m_ships[i].lock();
+        float direction_angle = glm::radians(ship_ptr->get_direction());
+        float x = -glm::cos(direction_angle);
+        float y = -glm::sin(direction_angle);
+        wake.direction = glm::vec2(x, y);
+        wake.radius = 1.5f;
+        wake.source_pos = ship_ptr->entity->transform->get_position();
+        wake.spread_angle = 3.14f / 12.0f;
+        data.wakes[i] = wake;
+    }
+    auto renderer = RendererDX11::get_instance_dx11();
+    renderer->set_constant_buffer_wakes(data);
 
+}
 void ShipSpawner::burn_out_all_ships(bool const value) const
 {
     if (value)

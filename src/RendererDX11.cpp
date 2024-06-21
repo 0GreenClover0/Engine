@@ -72,6 +72,18 @@ std::shared_ptr<RendererDX11> RendererDX11::create()
 
     assert(SUCCEEDED(hr));
 
+    D3D11_BUFFER_DESC wakes_desc = {};
+    wakes_desc.Usage = D3D11_USAGE_DYNAMIC;
+    wakes_desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    wakes_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    wakes_desc.MiscFlags = 0;
+    wakes_desc.ByteWidth = static_cast<UINT>(sizeof(ConstantBufferWakes) + (16 - (sizeof(ConstantBufferWakes) % 16)));
+    wakes_desc.StructureByteStride = 0;
+    
+    hr = renderer->get_device()->CreateBuffer(&wakes_desc, nullptr, &renderer->m_constant_buffer_wakes); 
+
+    assert(SUCCEEDED(hr));
+
     glfwSetWindowSizeCallback(Engine::window->get_glfw_window(), on_window_resize);
 
     D3D11_BUFFER_DESC light_buffer_desc = {};
@@ -369,6 +381,19 @@ void RendererDX11::set_rasterizer_draw_type(RasterizerDrawType const rasterizer_
 void RendererDX11::restore_default_rasterizer_draw_type()
 {
     g_pd3dDeviceContext->RSSetState(g_rasterizer_state);
+}
+
+void RendererDX11::set_constant_buffer_wakes(ConstantBufferWakes wakes) const
+{
+
+    D3D11_MAPPED_SUBRESOURCE mapped_resource = {};
+    HRESULT const hr = g_pd3dDeviceContext->Map(m_constant_buffer_wakes, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped_resource);
+    assert(SUCCEEDED(hr));
+
+    CopyMemory(mapped_resource.pData, &wakes, sizeof(ConstantBufferWakes));
+
+    g_pd3dDeviceContext->Unmap(m_constant_buffer_wakes, 0);
+    g_pd3dDeviceContext->PSSetConstantBuffers(5, 1, &m_constant_buffer_wakes);
 }
 
 ID3D11DepthStencilState* RendererDX11::get_depth_stencil_state() const

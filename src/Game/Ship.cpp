@@ -50,6 +50,11 @@ void Ship::awake()
     set_can_tick(true);
 }
 
+float Ship::get_direction() const
+{
+    return m_direction;
+}
+
 void Ship::set_start_direction()
 {
     glm::vec2 const ship_position = AK::convert_3d_to_2d(entity->transform->get_local_position());

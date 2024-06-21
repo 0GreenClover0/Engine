@@ -56,6 +56,7 @@ public:
     std::vector<SpawnEvent> backup_spawn = {};
 
     void burn_out_all_ships(bool const value) const;
+    void update_wake_bufffer() const;
 
 private:
     void spawn_ship(SpawnEvent const* being_spawn);

@@ -162,6 +162,7 @@ public:
 
     virtual void on_trigger_enter(std::shared_ptr<Collider2D> const& other) override;
 
+    float get_direction() const; 
     void set_start_direction();
     void destroy();
     void stop();

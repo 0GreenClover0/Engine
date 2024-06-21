@@ -19,6 +19,21 @@ cbuffer water_buffer : register(b4)
     float phong_contribution; // Value between 0.0f and 1.0f
 }
 
+struct Wake
+{
+    //float3 wake(float3 world_pos, float3 wake_source_pos, float2 wake_direction, float wake_radius, float spread_angle)
+    float3 source_pos;
+    float radius;
+    float2 direction;
+    float spread_angle;
+};
+
+cbuffer ships_wake_buffer : register(b5)
+{
+    Wake wakes[30];
+};
+
+
 cbuffer object_buffer : register(b0)
 {
     float4x4 projection_view_model;
@@ -233,7 +248,11 @@ float3 wake(float3 world_pos, float3 wake_source_pos, float2 wake_direction, flo
 
 float4 ps_main(VS_Output input) : SV_TARGET
 {
-    float3 wake_value =  wake(input.world_pos, float3(0.0f, 0.0f, 0.0f), float2(1.0f, 0.0f), 1.75f, 3.14/10.0f).xxxx;
+    float3 wake_value = 0.0f;
+    for(int i = 0; i < 30; i++)
+    {
+        wake_value += wake(input.world_pos, wakes[i].source_pos, wakes[i].direction, wakes[i].radius, wakes[i].spread_angle).xxxx;
+    }
     // Calculate mouse_pos halo
     float4 halo_value = 0.0f.xxxx;
     if (light_range > 0.0f)
