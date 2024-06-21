@@ -222,7 +222,7 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
         case 0:
             if (action == TutorialProgressAction::LevelStarted)
             {
-                entity->get_component<ShipSpawner>()->spawn_ship_at_position(ShipType::FoodSmall, {0.0f, 0.0f}, 0.0f);
+                entity->get_component<ShipSpawner>()->spawn_ship_at_position(ShipType::FoodSmall, {-6.2f, 2.5f}, 0.0f);
                 progress_tutorial();
             }
             break;
