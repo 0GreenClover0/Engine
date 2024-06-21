@@ -921,6 +921,12 @@ void ShipSpawner::spawn_ship_at_position(ShipType type, glm::vec2 position, floa
     m_ships.emplace_back(ship->get_component<Ship>());
 }
 
+void ShipSpawner::pop_event()
+{
+    SpawnEvent* being_spawn = &m_main_spawn.back();
+    being_spawn->spawn_list.pop_back();
+}
+
 bool ShipSpawner::is_spawn_possible() const
 {
     i32 number_of_ships = 0;
