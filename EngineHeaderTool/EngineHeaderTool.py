@@ -26,7 +26,7 @@ def find_serializable_variables(header_file_path, all_public):
 
     serializable_vars = []
 
-    variable_pattern = re.compile(r'^\s*([\w\:\<\>]+)\s+(\w+)\s*=\s*(([a-zA-Z0-9 \.\,\{\}\"\:\_])*([\"].*[\"])*(\(([a-zA-Z0-9 \.\,\{\}\"\:\_]*([\"].*[\"])*|(?6))*\))*)+\s*;')
+    variable_pattern = re.compile(r'^\s*([\w\:\<\>]+)\s+(\w+)\s*=\s*(([a-zA-Z0-9 \.\,\{\}\"\'\:\_\-])*([\"\'].*[\"\'])*(\(([a-zA-Z0-9 \.\,\{\}\"\'\:\_\-]*([\"\'].*[\"\'])*|(?6))*\))*)+\s*;')
 
     with open(header_file_path, 'r') as file:
         lines = file.readlines()
