@@ -541,6 +541,12 @@ bool Ship::is_in_port() const
     return m_is_in_port;
 }
 
+void Ship::set_direction(float direction)
+{
+    m_direction = direction;
+    update_rotation();
+}
+
 void Ship::follow_point(glm::vec2 ship_position, glm::vec2 target_position)
 {
     glm::vec2 const ship_direction = glm::normalize(glm::vec2(cos(glm::radians(m_direction)), sin(glm::radians(m_direction))));
