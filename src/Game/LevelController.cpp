@@ -283,8 +283,9 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
             break;
         case 8:
             //TODO: Dialog
-            //TODO: End dialog and all penguins in water
-            if (true)
+            //TODO: End dialog
+            //TODO: Call method when dialog ended
+            if (true && customer_manager.lock()->get_number_of_customers() == 0)
             {
                 lighthouse.lock()->turn_light(false);
                 GameController::get_instance()->move_to_next_scene();
