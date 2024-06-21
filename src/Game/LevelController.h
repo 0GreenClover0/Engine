@@ -24,6 +24,7 @@ enum class TutorialProgressAction
     LighthouseEnabled,
     GeneratorFueled,
     WorkshopUpgraded,
+    LevelStarted,
 };
 
 class LevelController final : public Component
