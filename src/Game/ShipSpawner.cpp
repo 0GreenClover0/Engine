@@ -893,7 +893,16 @@ void ShipSpawner::spawn_ship_at_position(ShipType type, glm::vec2 position, floa
                         spawning_boat_settings.side_rotation_strength, spawning_boat_settings.forward_rotation_strength,
                         spawning_boat_settings.forward_floaters_offset));
     ship->transform->set_local_position({position.x, 0.0f, position.y});
-    ship->transform->set_parent(GameController::get_instance()->current_scene.lock()->transform);
+
+    //TODO: Remove it after addition of Main Menu
+    if (LevelController::get_instance()->tutorial_level == 1)
+    {
+        ship->transform->set_parent(GameController::get_instance()->current_scene.lock()->transform);
+    }
+    else
+    {
+        ship->transform->set_parent(GameController::get_instance()->next_scene.lock()->transform);
+    }
 
     auto const& ship_comp = ship->get_component<Ship>();
     ship_comp->on_ship_destroyed.attach(&ShipSpawner::remove_ship, shared_from_this());
