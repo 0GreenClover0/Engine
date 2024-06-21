@@ -199,6 +199,14 @@ void swap_and_erase(std::vector<std::weak_ptr<T>>& vector, std::shared_ptr<T> el
 }
 
 template<typename T>
+void swap_and_erase(std::vector<T>& vector, size_t index)
+{
+    // NOTE: Swap with last and pop to avoid shifting other elements.
+    std::swap(vector.at(index), vector.at(vector.size() - 1));
+    vector.pop_back();
+}
+
+template<typename T>
 void erase(std::vector<T>& vector, T element)
 {
     if (auto const it = std::ranges::find(vector, element); it != vector.end())
