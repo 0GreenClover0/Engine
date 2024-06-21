@@ -329,6 +329,7 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
             //TODO: PROMPT [SPACE] Leave lighthouse
             if (action == TutorialProgressAction::PackageCollected)
             {
+                entity->get_component<ShipSpawner>()->set_enabled(false);
                 progress_tutorial();
             }
             break;
@@ -338,62 +339,68 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
             //TODO: PROMPT [SPACE] Fuel The generator
             if (action == TutorialProgressAction::GeneratorFueled)
             {
+                entity->get_component<ShipSpawner>()->set_enabled(true);
+                entity->get_component<ShipSpawner>()->pop_event();
+                tutorial_spawn_path = 1;
+                is_tutorial_dialogs_enabled = true;
                 progress_tutorial();
             }
             break;
         case 6:
-            //TODO: Ship spawn
-            if (action == TutorialProgressAction::KeeperEnteredLighthouse)
-            {
-                progress_tutorial();
-            }
-            break;
-        case 7:
             //TODO: Dialog
             //TODO: PROMPT [RMB] Flash!
-            //TODO: Move to other state if player use flash and crush ship
-            if (false)
+            if (action == TutorialProgressAction::PackageCollected)
             {
-                progress_tutorial();
+                progress_tutorial(9);
+                break;
             }
-            //TODO: Move to other state if player use flash in flush collider
-            if (false)
+            if (Player::get_instance()->flash == 0 && action == TutorialProgressAction::ShipDestroyed)
+            {
+                tutorial_spawn_path = 0;
+                entity->get_component<ShipSpawner>()->reset_event();
+                progress_tutorial();
+                break;
+            }
+            if (Player::get_instance()->flash == 0 && action == TutorialProgressAction::ShipInFlashCollider)
             {
                 progress_tutorial(2);
             }
             break;
-        case 8:
+        case 7:
             //TODO: Dialog*
-            //TODO: Disable dialogs until [8]
             //TODO: Move to other state if dialog ended
             if (true)
             {
+                is_tutorial_dialogs_enabled = false;
                 progress_tutorial(-5);
             }
             break;
-        case 9:
+        case 8:
             //TODO: Dialog
-            //TODO: Move to next progress if player crush ship
-            if (false)
+            if (Player::get_instance()->flash == 0 && action == TutorialProgressAction::ShipDestroyed)
             {
+                tutorial_spawn_path = 0;
+                entity->get_component<ShipSpawner>()->reset_event();
                 progress_tutorial(-1);
+                break;
             }
             if (action == TutorialProgressAction::PackageCollected)
             {
                 progress_tutorial();
             }
             break;
-        case 10:
+        case 9:
             //TODO: Dialog
-            //TODO: End dialog and all penguins in water
-            if (true)
+            //TODO: End dialog
+            //TODO: Call method when dialog ended
+            if (true && customer_manager.lock()->get_number_of_customers() == 0)
             {
                 lighthouse.lock()->turn_light(false);
                 GameController::get_instance()->move_to_next_scene();
             }
             break;
         }
-        break; // Missing break statement added
+        break;
     case 3:
         switch (tutorial_progress)
         {
