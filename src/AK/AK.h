@@ -25,6 +25,15 @@ inline unsigned char random_char()
     return static_cast<unsigned char>(dis(gen));
 }
 
+inline glm::vec4 interpolate_color(glm::vec4 const& start, glm::vec4 const& end, float const factor)
+{
+    float r = start.r + factor * (end.r - start.r);
+    float g = start.g + factor * (end.g - start.g);
+    float b = start.b + factor * (end.b - start.b);
+    float a = start.a + factor * (end.a - start.a);
+    return {r, g, b, a};
+}
+
 inline std::string generate_hex(u32 const length)
 {
     std::stringstream ss;
