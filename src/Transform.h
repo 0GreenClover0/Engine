@@ -18,6 +18,7 @@ public:
     void set_position(glm::vec3 const& position);
     [[nodiscard]] glm::vec3 get_position();
 
+    void set_rotation(glm::vec3 const& euler_angles);
     [[nodiscard]] glm::quat get_rotation();
 
     void set_scale(glm::vec3 const& scale);
