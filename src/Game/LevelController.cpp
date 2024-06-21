@@ -9,6 +9,7 @@
 #include "Player.h"
 #include "ScreenText.h"
 #include "Ship.h"
+#include "ShipSpawner.h"
 
 #include <GLFW/glfw3.h>
 
@@ -219,6 +220,13 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
         switch (tutorial_progress)
         {
         case 0:
+            if (action == TutorialProgressAction::LevelStarted)
+            {
+                entity->get_component<ShipSpawner>()->spawn_ship_at_position(ShipType::FoodSmall, {0.0f, 0.0f}, 0.0f);
+                progress_tutorial();
+            }
+            break;
+        case 1:
             //TODO: Dialog
             if (action == TutorialProgressAction::LighthouseEnabled)
             {
