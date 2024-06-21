@@ -292,10 +292,17 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
             }
             break;
         }
-        break; // Missing break statement added
+        break;
     case 2:
         switch (tutorial_progress)
         {
+        case 0:
+            if (action == TutorialProgressAction::LevelStarted)
+            {
+                entity->get_component<ShipSpawner>()->spawn_ship_at_position(ShipType::Tool, {1.7f, 3.2f}, 270.0f);
+                progress_tutorial();
+            }
+            break;
         case 1:
             //TODO: Dialog
             if (action == TutorialProgressAction::LighthouseEnabled)
