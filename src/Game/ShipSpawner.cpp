@@ -931,7 +931,12 @@ void ShipSpawner::pop_event()
     being_spawn->spawn_list.pop_back();
 }
 
-bool ShipSpawner::is_spawn_possible() const
+void ShipSpawner::reset_event()
+{
+    m_main_spawn = backup_spawn;
+}
+
+bool ShipSpawner::is_spawn_possible()
 {
     i32 number_of_ships = 0;
 
