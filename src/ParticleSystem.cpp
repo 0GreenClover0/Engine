@@ -44,6 +44,7 @@ void ParticleSystem::draw_editor()
     ImGui::DragFloatRange2("Size", &min_particle_size, &max_particle_size, 0.1f, 0.0f, FLT_MAX);
     ImGui::DragFloat("Emitter size", &emitter_bounds, 0.1f, 0.0f, FLT_MAX);
     ImGui::DragIntRange2("Spawn count", &min_spawn_count, &max_spawn_count, 1, 0, INT_MAX);
+    ImGui::Checkbox("Simulate in world space", &m_simulate_in_world_space);
 }
 #endif
 
@@ -72,7 +73,15 @@ void ParticleSystem::update_system()
             auto const particle_parent = Entity::create("PARTICLE_PARENT");
             auto const particle = Entity::create("PARTICLE_");
 
-            particle_parent->transform->set_parent(entity->transform);
+            if (m_simulate_in_world_space)
+            {
+                particle_parent->transform->set_parent(entity->transform);
+            }
+            else
+            {
+                particle_parent->transform->set_position(entity->transform->get_position());
+            }
+
             particle->transform->set_parent(particle_parent->transform);
 
             auto const particle_comp = particle->add_component(Particle::create(m_spawn_data_vector[i], emitter_bounds, sprite_path));
