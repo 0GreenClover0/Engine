@@ -667,7 +667,11 @@ void ShipSpawner::prepare_for_spawn()
             return;
         }
 
-        std::weak_ptr<Path> const path = paths[std::rand() % paths.size()];
+        std::weak_ptr<Path> path = paths[std::rand() % paths.size()];
+        if (LevelController::get_instance()->is_tutorial)
+        {
+            path = paths[LevelController::get_instance()->tutorial_spawn_path];
+        }
         m_spawn_position.emplace_back(path.lock()->get_point_at(glm::linearRand(0.0f, 1.0f)));
 
         add_warning();

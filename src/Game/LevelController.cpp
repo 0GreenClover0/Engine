@@ -184,6 +184,7 @@ void LevelController::draw_editor()
 
         ImGui::SliderScalar("Tutorial Level: ", ImGuiDataType_U32, &tutorial_level, &min_level, &max_level);
         ImGui::Text(("Tutorial Progress: " + std::to_string(tutorial_progress)).c_str());
+        ImGui::Text(("Tutorial Spawn Path: " + std::to_string(tutorial_spawn_path)).c_str());
     }
 }
 #endif
