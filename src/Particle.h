@@ -45,7 +45,7 @@ private:
 
     glm::vec4 m_start_color_1 = {};
     glm::vec4 m_end_color_1 = {};
-    float m_speed = 1.0f;
+    glm::vec3 m_velocity = {};
     float m_spawn_bounds = 1.0f;
     float m_rotation_direction = 1.0f;
     float m_lifetime = 5.0f;
