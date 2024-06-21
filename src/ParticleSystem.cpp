@@ -9,6 +9,7 @@
 #include <glm/gtc/type_ptr.inl>
 
 #if EDITOR
+#include "imgui_extensions.h"
 #include <imgui.h>
 #include <imgui_stdlib.h>
 #endif
@@ -33,12 +34,14 @@ void ParticleSystem::draw_editor()
 {
     Component::draw_editor();
 
-    ImGui::InputText("Particle sprite", &sprite_path);
-    ImGui::ColorEdit4("Particle color", value_ptr(color));
+    ImGui::InputText("Sprite", &sprite_path);
+    ImGui::ColorEdit4("Start color 1", value_ptr(start_color_1));
+    ImGui::ColorEdit4("End color 1", value_ptr(end_color_1));
+    ImGuiEx::InputFloat("Lifetime 1", &lifetime_1);
+    ImGuiEx::InputFloat("Lifetime 2", &lifetime_2);
     ImGui::DragFloatRange2("Spawn interval", &min_spawn_interval, &max_spawn_interval, 0.1f, 0.0f, FLT_MAX);
-    ImGui::DragFloatRange2("Particle speed", &min_particle_speed, &max_particle_speed, 0.1f, 0.0f, FLT_MAX);
-    ImGui::DragFloatRange2("Particle size", &min_particle_size, &max_particle_size, 0.1f, 0.0f, FLT_MAX);
-    ImGui::DragFloatRange2("Spawn alpha", &min_spawn_alpha, &max_spawn_alpha, 0.1f, 0.0f, 1.0f);
+    ImGui::DragFloatRange2("Speed", &min_particle_speed, &max_particle_speed, 0.1f, 0.0f, FLT_MAX);
+    ImGui::DragFloatRange2("Size", &min_particle_size, &max_particle_size, 0.1f, 0.0f, FLT_MAX);
     ImGui::DragFloat("Emitter size", &emitter_bounds, 0.1f, 0.0f, FLT_MAX);
     ImGui::DragIntRange2("Spawn count", &min_spawn_count, &max_spawn_count, 1, 0, INT_MAX);
 }
@@ -72,9 +75,7 @@ void ParticleSystem::update_system()
             particle_parent->transform->set_parent(entity->transform);
             particle->transform->set_parent(particle_parent->transform);
 
-            particle->add_component(Particle::create(m_spawn_data_vector[i].particle_speed,
-                                                     {color.r, color.g, color.b, m_spawn_data_vector[i].spawn_alpha}, emitter_bounds,
-                                                     sprite_path));
+            auto const particle_comp = particle->add_component(Particle::create(m_spawn_data_vector[i], emitter_bounds, sprite_path));
 
             // Adjust scale
             float const scale_factor = AK::random_float(min_particle_size, max_particle_size);
@@ -101,6 +102,9 @@ void ParticleSystem::spawn_calculations()
         data.spawn_time = AK::random_float(min_spawn_interval, max_spawn_interval);
         data.spawn_alpha = AK::random_float(min_spawn_alpha, max_spawn_alpha);
         data.particle_speed = AK::random_float(min_particle_speed, max_particle_speed);
+        data.lifetime = AK::random_float(lifetime_1, lifetime_2);
+        data.start_color_1 = start_color_1;
+        data.end_color_1 = end_color_1;
 
         m_spawn_data_vector.emplace_back(data);
     }

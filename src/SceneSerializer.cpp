@@ -348,7 +348,10 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "emitter_bounds" << YAML::Value << particlesystem->emitter_bounds;
         out << YAML::Key << "min_spawn_count" << YAML::Value << particlesystem->min_spawn_count;
         out << YAML::Key << "max_spawn_count" << YAML::Value << particlesystem->max_spawn_count;
-        out << YAML::Key << "color" << YAML::Value << particlesystem->color;
+        out << YAML::Key << "start_color_1" << YAML::Value << particlesystem->start_color_1;
+        out << YAML::Key << "end_color_1" << YAML::Value << particlesystem->end_color_1;
+        out << YAML::Key << "lifetime_1" << YAML::Value << particlesystem->lifetime_1;
+        out << YAML::Key << "lifetime_2" << YAML::Value << particlesystem->lifetime_2;
         out << YAML::EndMap;
     }
     else if (auto const sound = std::dynamic_pointer_cast<class Sound>(component); sound != nullptr)
@@ -1359,9 +1362,21 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             {
                 deserialized_component->max_spawn_count = component["max_spawn_count"].as<i32>();
             }
-            if (component["color"].IsDefined())
+            if (component["start_color_1"].IsDefined())
             {
-                deserialized_component->color = component["color"].as<glm::vec4>();
+                deserialized_component->start_color_1 = component["start_color_1"].as<glm::vec4>();
+            }
+            if (component["end_color_1"].IsDefined())
+            {
+                deserialized_component->end_color_1 = component["end_color_1"].as<glm::vec4>();
+            }
+            if (component["lifetime_1"].IsDefined())
+            {
+                deserialized_component->lifetime_1 = component["lifetime_1"].as<float>();
+            }
+            if (component["lifetime_2"].IsDefined())
+            {
+                deserialized_component->lifetime_2 = component["lifetime_2"].as<float>();
             }
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();

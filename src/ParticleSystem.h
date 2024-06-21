@@ -11,6 +11,10 @@ struct ParticleSpawnData
     float spawn_time = 0.0f;
     float spawn_alpha = 0.0f;
     float particle_speed = 0.0f;
+    float lifetime = 0.0f;
+
+    glm::vec4 start_color_1 = {};
+    glm::vec4 end_color_1 = {};
 };
 
 class ParticleSystem final : public Component
@@ -45,7 +49,11 @@ public:
     i32 min_spawn_count = 3;
     i32 max_spawn_count = 6;
 
-    glm::vec4 color = {1.0f, 1.0f, 1.0f, 1.0f};
+    glm::vec4 start_color_1 = {1.0f, 1.0f, 1.0f, 1.0f};
+    glm::vec4 end_color_1 = {1.0f, 1.0f, 1.0f, 1.0f};
+
+    float lifetime_1 = 5.0f;
+    float lifetime_2 = 5.0f;
 
 private:
     void spawn_calculations();
