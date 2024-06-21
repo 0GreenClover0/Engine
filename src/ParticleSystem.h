@@ -15,6 +15,8 @@ struct ParticleSpawnData
 
     glm::vec4 start_color_1 = {};
     glm::vec4 end_color_1 = {};
+
+    bool simulate_in_world_space = false;
 };
 
 class ParticleSystem final : public Component
@@ -54,6 +56,8 @@ public:
 
     float lifetime_1 = 5.0f;
     float lifetime_2 = 5.0f;
+
+    bool m_simulate_in_world_space = false;
 
 private:
     void spawn_calculations();
