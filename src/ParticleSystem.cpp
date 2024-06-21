@@ -69,8 +69,8 @@ void ParticleSystem::update_system()
                 continue;
             }
 
-            auto const particle_parent = Entity::create("PARTICLE_PARENT" + AK::generate_guid());
-            auto const particle = Entity::create("PARTICLE_" + AK::generate_guid());
+            auto const particle_parent = Entity::create("PARTICLE_PARENT");
+            auto const particle = Entity::create("PARTICLE_");
 
             particle_parent->transform->set_parent(entity->transform);
             particle->transform->set_parent(particle_parent->transform);
