@@ -458,6 +458,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "factories" << YAML::Value << levelcontroller->factories;
         out << YAML::Key << "port" << YAML::Value << levelcontroller->port;
         out << YAML::Key << "lighthouse" << YAML::Value << levelcontroller->lighthouse;
+        out << YAML::Key << "customer_manager" << YAML::Value << levelcontroller->customer_manager;
         out << YAML::Key << "playfield_width" << YAML::Value << levelcontroller->playfield_width;
         out << YAML::Key << "playfield_additional_width" << YAML::Value << levelcontroller->playfield_additional_width;
         out << YAML::Key << "playfield_height" << YAML::Value << levelcontroller->playfield_height;
@@ -1694,6 +1695,10 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             if (component["lighthouse"].IsDefined())
             {
                 deserialized_component->lighthouse = component["lighthouse"].as<std::weak_ptr<Lighthouse>>();
+            }
+            if (component["customer_manager"].IsDefined())
+            {
+                deserialized_component->customer_manager = component["customer_manager"].as<std::weak_ptr<CustomerManager>>();
             }
             if (component["playfield_width"].IsDefined())
             {
