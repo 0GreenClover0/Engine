@@ -20,6 +20,14 @@ Entities:
       - ComponentName: PlayerComponent
         guid: 08103e8102ed192608af34eb670b53c496888e5216e32577fa2299265deba883
         custom_name: ""
+        packages_text:
+          guid: ee4e247732c52ec0ed3e8ea113760361d45ce9d583b5147c83db563e39b71436
+        flashes_text:
+          guid: 17cc5736fd32f1aea7a009effabacaa3bbc77dc95bee4c69b25f21a53dbc46f6
+        level_text:
+          guid: b104f17243ccc60348be2e4e1a0c5c2631c1fb6ab9810e2228f3d2c222b925d3
+        clock_text:
+          guid: 702dc38b586f9e787c46eadf21898b6e533b61517c295204dee5d1cc00bd2bf1
       - ComponentName: PathComponent
         guid: 335d43ffcb74f7e5448d4d26212ee0d167f1dd6a494b6722618f6767f958a415
         custom_name: ""
@@ -176,21 +184,201 @@ Entities:
         radius: 1
         drag: 0.00999999978
         velocity: [0, 0]
+  - Entity: UI_MainPanel
+    guid: 0f1c59b510f43b9f9c9cd4171a6e83501750bc1ae7b4adb838d73a57a44d6fea
+    Name: UI_MainPanel
+    TransformComponent:
+      Translation: [0, 0.850000024, 0]
+      Rotation: [0, 0, 0]
+      Scale: [0.197734162, 0.153902978, 0.172426298]
+      Parent:
+        guid: dbacdd6b48665243e2f90f7dea7298de945bf38a1a9331f9f0afcb61b5006d00
+    Components:
+      - ComponentName: PanelComponent
+        guid: 28428a70f92d5367335aee4da9dc6bebe9e370f3486b268960aec7d25888df57
+        custom_name: ""
+        background_path: ./res/textures/UI/panel.png
+        material:
+          Shader:
+            VertexPath: ./res/shaders/ui.hlsl
+            FragmentPath: ./res/shaders/ui.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 3001
+          NeedsForward: true
+          CastsShadows: false
+          IsBillboard: false
+  - Entity: Glass
+    guid: 0114d75f6549a9e1e2dd326de8c42e09a327e19c523804b202bc6deed2838b5c
+    Name: Glass
+    TransformComponent:
+      Translation: [0, -0.100000381, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: 0f1c59b510f43b9f9c9cd4171a6e83501750bc1ae7b4adb838d73a57a44d6fea
+    Components:
+      - ComponentName: PanelComponent
+        guid: 64de1990fc879db1ffe47d6f234eea878f42e77dee7a3640c6615de85a0fbdb0
+        custom_name: ""
+        background_path: ./res/textures/UI/glass.png
+        material:
+          Shader:
+            VertexPath: ./res/shaders/ui.hlsl
+            FragmentPath: ./res/shaders/ui.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 3001
+          NeedsForward: true
+          CastsShadows: false
+          IsBillboard: false
+  - Entity: Packages
+    guid: e5f409d82752b58af7e31461190db95392771e5dac1ebce9e4d86e6efd5a9b60
+    Name: Packages
+    TransformComponent:
+      Translation: [-0.569999993, -0.610000014, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: 0f1c59b510f43b9f9c9cd4171a6e83501750bc1ae7b4adb838d73a57a44d6fea
+    Components:
+      - ComponentName: ScreenTextComponent
+        guid: ee4e247732c52ec0ed3e8ea113760361d45ce9d583b5147c83db563e39b71436
+        custom_name: ""
+        text: 4
+        position: [0, 0]
+        font_size: 40
+        color: 4278229503
+        flags: 2053
+        font_name: KG The Last Time
+        bold: false
+        button_ref:
+          guid: nullptr
+        material:
+          Shader:
+            VertexPath: ./res/shaders/ui.hlsl
+            FragmentPath: ./res/shaders/ui.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 3003
+          NeedsForward: true
+          CastsShadows: false
+          IsBillboard: false
+  - Entity: Flashes
+    guid: 717d6c3f2f51862613c490cd12a11c82de447ca11456b2d5620b980cfe4323b5
+    Name: Flashes
+    TransformComponent:
+      Translation: [-0.0799999982, -0.610000014, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: 0f1c59b510f43b9f9c9cd4171a6e83501750bc1ae7b4adb838d73a57a44d6fea
+    Components:
+      - ComponentName: ScreenTextComponent
+        guid: 17cc5736fd32f1aea7a009effabacaa3bbc77dc95bee4c69b25f21a53dbc46f6
+        custom_name: ""
+        text: 3
+        position: [0, 0]
+        font_size: 40
+        color: 4278229503
+        flags: 2053
+        font_name: KG The Last Time
+        bold: false
+        button_ref:
+          guid: nullptr
+        material:
+          Shader:
+            VertexPath: ./res/shaders/ui.hlsl
+            FragmentPath: ./res/shaders/ui.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 3003
+          NeedsForward: true
+          CastsShadows: false
+          IsBillboard: false
+  - Entity: Level
+    guid: 661f6c32d1e75014a71c55bfbd4b7579e61cb6547eea1478f8816085194faccf
+    Name: Level
+    TransformComponent:
+      Translation: [0.649999976, -0.609934807, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: 0f1c59b510f43b9f9c9cd4171a6e83501750bc1ae7b4adb838d73a57a44d6fea
+    Components:
+      - ComponentName: ScreenTextComponent
+        guid: b104f17243ccc60348be2e4e1a0c5c2631c1fb6ab9810e2228f3d2c222b925d3
+        custom_name: ""
+        text: 6/10
+        position: [0, 0]
+        font_size: 40
+        color: 4278229503
+        flags: 2053
+        font_name: KG The Last Time
+        bold: false
+        button_ref:
+          guid: nullptr
+        material:
+          Shader:
+            VertexPath: ./res/shaders/ui.hlsl
+            FragmentPath: ./res/shaders/ui.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 3003
+          NeedsForward: true
+          CastsShadows: false
+          IsBillboard: false
+  - Entity: Clock
+    guid: 752695c242b89b2c7deacc2f434bbcc0a84ed1ca5a1d209ae0ea65eabb5c87c5
+    Name: Clock
+    TransformComponent:
+      Translation: [0, 0.351999998, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: 0f1c59b510f43b9f9c9cd4171a6e83501750bc1ae7b4adb838d73a57a44d6fea
+    Components:
+      - ComponentName: ScreenTextComponent
+        guid: 702dc38b586f9e787c46eadf21898b6e533b61517c295204dee5d1cc00bd2bf1
+        custom_name: ""
+        text: 21:38
+        position: [0, 0]
+        font_size: 40
+        color: 4278229503
+        flags: 2053
+        font_name: KG The Last Time
+        bold: true
+        button_ref:
+          guid: nullptr
+        material:
+          Shader:
+            VertexPath: ./res/shaders/ui.hlsl
+            FragmentPath: ./res/shaders/ui.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 3003
+          NeedsForward: true
+          CastsShadows: false
+          IsBillboard: false
   - Entity: Directional light
-    guid: d161a1f444dd240f804f87e351f0096f620828b0abe15b782ac981b021be1253
+    guid: f2f8fa2f514374f204432ad8b9fd233f718b5087fa4475dcf2ec7ca0d55dc4a7
     Name: Directional light
     TransformComponent:
-      Translation: [0, 5, 0]
+      Translation: [-5, 15, 0]
       Rotation: [-70, 0, 30]
       Scale: [1, 1, 1]
       Parent:
         guid: dbacdd6b48665243e2f90f7dea7298de945bf38a1a9331f9f0afcb61b5006d00
     Components:
       - ComponentName: DirectionalLightComponent
-        guid: 81ac22aae5211426527512b11a3130b6f16aa30a5ee9d06c227ff33963990f8e
+        guid: a2b7b4790000f1c9a7086c5675ee21278d89e822402949384043acbb7f658adb
         custom_name: ""
         ambient: [0.195996806, 0.189537033, 0.383333325]
         diffuse: [0.674197555, 0.767983675, 0.955555558]
         specular: [0.328781307, 0.138024718, 0.955555558]
-        m_near_plane: 0.5
+        m_near_plane: -25
         m_far_plane: 25
+        m_blocker_search_num_samples: 16
+        m_pcf_num_samples: 16
+        m_light_world_size: 0.0310000461
+        m_light_frustum_width: 50
