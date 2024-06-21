@@ -9,6 +9,7 @@
 #include "Player.h"
 #include "ScreenText.h"
 #include "Ship.h"
+#include "ShipSpawner.h"
 
 #include <GLFW/glfw3.h>
 
@@ -219,19 +220,26 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
         switch (tutorial_progress)
         {
         case 0:
+            if (action == TutorialProgressAction::LevelStarted)
+            {
+                entity->get_component<ShipSpawner>()->spawn_ship_at_position(ShipType::FoodSmall, {0.0f, 0.0f}, 0.0f);
+                progress_tutorial();
+            }
+            break;
+        case 1:
             //TODO: Dialog
             if (action == TutorialProgressAction::LighthouseEnabled)
             {
                 progress_tutorial();
             }
             break;
-        case 1:
+        case 2:
             if (action == TutorialProgressAction::ShipEnteredControl)
             {
                 progress_tutorial();
             }
             break;
-        case 2:
+        case 3:
             if (action == TutorialProgressAction::ShipDestroyed)
             {
                 progress_tutorial();
@@ -242,7 +250,7 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
                 progress_tutorial(2);
             }
             break;
-        case 3:
+        case 4:
             //TODO: Dialog*
             if (action == TutorialProgressAction::ShipEnteredPort)
             {
@@ -250,7 +258,7 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
                 progress_tutorial();
             }
             break;
-        case 4:
+        case 5:
             //TODO: Dialog
             //TODO: PROMPT [SPACE] Leave lighthouse
             if (action == TutorialProgressAction::KeeperLeftLighthouse)
@@ -258,21 +266,21 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
                 progress_tutorial();
             }
             break;
-        case 5:
+        case 6:
             //TODO: PROMPT [WSAD] Move
             if (action == TutorialProgressAction::KeeperEnteredPort)
             {
                 progress_tutorial();
             }
             break;
-        case 6:
+        case 7:
             //TODO: PROMPT [SPACE] Take the package
             if (action == TutorialProgressAction::PackageCollected)
             {
                 progress_tutorial();
             }
             break;
-        case 7:
+        case 8:
             //TODO: Dialog
             //TODO: End dialog and all penguins in water
             if (true)
@@ -282,10 +290,11 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
             }
             break;
         }
+        break; // Missing break statement added
     case 2:
         switch (tutorial_progress)
         {
-        case 0:
+        case 1:
             //TODO: Dialog
             if (action == TutorialProgressAction::LighthouseEnabled)
             {
@@ -293,19 +302,19 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
                 progress_tutorial();
             }
             break;
-        case 1:
+        case 2:
             if (action == TutorialProgressAction::ShipEnteredControl)
             {
                 progress_tutorial();
             }
             break;
-        case 2:
+        case 3:
             if (action == TutorialProgressAction::ShipEnteredPort)
             {
                 progress_tutorial();
             }
             break;
-        case 3:
+        case 4:
             //TODO: Dialog*
             //TODO: PROMPT [SPACE] Leave lighthouse
             if (action == TutorialProgressAction::PackageCollected)
@@ -313,7 +322,7 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
                 progress_tutorial();
             }
             break;
-        case 4:
+        case 5:
             //TODO: [FOCUS ON GENERATOR]
             //TODO: Dialog
             //TODO: PROMPT [SPACE] Fuel The generator
@@ -322,14 +331,14 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
                 progress_tutorial();
             }
             break;
-        case 5:
+        case 6:
             //TODO: Ship spawn
             if (action == TutorialProgressAction::KeeperEnteredLighthouse)
             {
                 progress_tutorial();
             }
             break;
-        case 6:
+        case 7:
             //TODO: Dialog
             //TODO: PROMPT [RMB] Flash!
             //TODO: Move to other state if player use flash and crush ship
@@ -343,7 +352,7 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
                 progress_tutorial(2);
             }
             break;
-        case 7:
+        case 8:
             //TODO: Dialog*
             //TODO: Disable dialogs until [8]
             //TODO: Move to other state if dialog ended
@@ -352,7 +361,7 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
                 progress_tutorial(-5);
             }
             break;
-        case 8:
+        case 9:
             //TODO: Dialog
             //TODO: Move to next progress if player crush ship
             if (false)
@@ -364,7 +373,7 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
                 progress_tutorial();
             }
             break;
-        case 9:
+        case 10:
             //TODO: Dialog
             //TODO: End dialog and all penguins in water
             if (true)
@@ -374,29 +383,30 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
             }
             break;
         }
+        break; // Missing break statement added
     case 3:
         switch (tutorial_progress)
         {
-        case 0:
+        case 1:
             //TODO: Dialog
             if (action == TutorialProgressAction::LighthouseEnabled)
             {
                 progress_tutorial();
             }
             break;
-        case 1:
+        case 2:
             if (action == TutorialProgressAction::ShipEnteredControl)
             {
                 progress_tutorial();
             }
             break;
-        case 2:
+        case 3:
             if (action == TutorialProgressAction::PackageCollected)
             {
                 progress_tutorial();
             }
             break;
-        case 3:
+        case 4:
             //TODO: Dialog
             //TODO: [FOCUS ON WORKSHOP]
             //TODO: PROMPT [SPACE] Upgrade lighthouse
@@ -405,21 +415,21 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
                 progress_tutorial();
             }
             break;
-        case 4:
+        case 5:
             //TODO: Spawn Ship
             if (action == TutorialProgressAction::KeeperEnteredLighthouse)
             {
                 progress_tutorial();
             }
             break;
-        case 5:
+        case 6:
             //TODO: Dialog
             if (action == TutorialProgressAction::PackageCollected)
             {
                 progress_tutorial();
             }
             break;
-        case 6:
+        case 7:
             //TODO: Spawn food and 2 pirates
             //TODO: If food was crushed spawn another one + one pirate
             //TODO: Dialog*
@@ -428,7 +438,7 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
                 progress_tutorial();
             }
             break;
-        case 7:
+        case 8:
             //TODO: Dialog
             //TODO: End dialog and all penguins in water
             if (true)
@@ -438,6 +448,7 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
             }
             break;
         }
+        break;
     }
 }
 
