@@ -66,7 +66,7 @@ void ParticleSystem::update_system()
     {
         //  TODO: Modes in shader/cbuffer: override/multiply color, adjustable alpha bias
 
-        for (u32 i = 0; i < m_random_spawn_count; i++)
+        for (i32 i = 0; i < m_random_spawn_count; i++)
         {
             if (m_time_counter < m_spawn_data_vector[i].spawn_time)
             {
@@ -93,7 +93,8 @@ void ParticleSystem::update_system()
             glm::vec3 const scale_factor = glm::linearRand(start_min_particle_size, start_max_particle_size);
             particle->transform->set_local_scale(scale_factor);
 
-            m_spawn_data_vector.erase(m_spawn_data_vector.begin() + i);
+            AK::swap_and_erase(m_spawn_data_vector, i);
+            i -= 1;
             m_random_spawn_count -= 1;
         }
     }
