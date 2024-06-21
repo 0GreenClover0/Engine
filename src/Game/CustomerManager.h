@@ -23,6 +23,8 @@ public:
     virtual void draw_editor() override;
 #endif
 
+    i32 get_number_of_customers();
+
     std::vector<std::weak_ptr<Entity>> destinations_after_feeding = {};
     std::weak_ptr<Curve> destination_curve = {};
     std::string customer_prefab = {};
