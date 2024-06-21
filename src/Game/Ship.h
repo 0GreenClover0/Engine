@@ -165,6 +165,7 @@ public:
 #endif
 
     virtual void on_trigger_enter(std::shared_ptr<Collider2D> const& other) override;
+    virtual void on_trigger_exit(std::shared_ptr<Collider2D> const& other) override;
 
     void set_start_direction();
     void destroy();
@@ -194,6 +195,9 @@ public:
 
     NON_SERIALIZED
     BehavioralState behavioral_state = BehavioralState::Normal;
+
+    NON_SERIALIZED
+    bool is_in_flash_collider = false;
 
 private:
     void follow_point(glm::vec2 ship_position, glm::vec2 target_position);
