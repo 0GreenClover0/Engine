@@ -440,6 +440,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "playfield_width" << YAML::Value << levelcontroller->playfield_width;
         out << YAML::Key << "playfield_additional_width" << YAML::Value << levelcontroller->playfield_additional_width;
         out << YAML::Key << "playfield_height" << YAML::Value << levelcontroller->playfield_height;
+        out << YAML::Key << "playfield_y_shift" << YAML::Value << levelcontroller->playfield_y_shift;
         out << YAML::Key << "ships_limit_curve" << YAML::Value << levelcontroller->ships_limit_curve;
         out << YAML::Key << "ships_limit" << YAML::Value << levelcontroller->ships_limit;
         out << YAML::Key << "ships_speed_curve" << YAML::Value << levelcontroller->ships_speed_curve;
@@ -1610,6 +1611,10 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             if (component["playfield_height"].IsDefined())
             {
                 deserialized_component->playfield_height = component["playfield_height"].as<float>();
+            }
+            if (component["playfield_y_shift"].IsDefined())
+            {
+                deserialized_component->playfield_y_shift = component["playfield_y_shift"].as<float>();
             }
             if (component["ships_limit_curve"].IsDefined())
             {
