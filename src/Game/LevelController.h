@@ -2,6 +2,7 @@
 
 #include "Component.h"
 #include "Curve.h"
+#include "CustomerManager.h"
 #include "Engine.h"
 #include "Factory.h"
 #include "Lighthouse.h"
@@ -63,6 +64,7 @@ public:
     std::vector<std::weak_ptr<Factory>> factories = {};
     std::weak_ptr<Port> port = {};
     std::weak_ptr<Lighthouse> lighthouse = {};
+    std::weak_ptr<CustomerManager> customer_manager = {};
 
     float playfield_width = 6.5f;
     float playfield_additional_width = 2.0f;
