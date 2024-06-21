@@ -105,6 +105,11 @@ void CustomerManager::draw_editor()
 }
 #endif
 
+i32 CustomerManager::get_number_of_customers()
+{
+    return m_customers.size();
+}
+
 glm::vec2 CustomerManager::get_destination_from_curve(float const x) const
 {
     auto const curve_locked = destination_curve.lock();
