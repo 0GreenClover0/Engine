@@ -90,8 +90,7 @@ void ParticleSystem::update_system()
 
             // Adjust scale
             float const scale_factor = AK::random_float(min_particle_size, max_particle_size);
-            glm::vec3 const scale = particle->transform->get_local_scale() * scale_factor;
-            particle->transform->set_local_scale(scale);
+            particle->transform->set_local_scale({scale_factor, scale_factor, scale_factor});
 
             m_spawn_data_vector.erase(m_spawn_data_vector.begin() + i);
             m_random_spawn_count -= 1;
