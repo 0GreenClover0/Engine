@@ -184,28 +184,6 @@ Entities:
         radius: 1
         drag: 0.00999999978
         velocity: [0, 0]
-  - Entity: Directional light
-    guid: d161a1f444dd240f804f87e351f0096f620828b0abe15b782ac981b021be1253
-    Name: Directional light
-    TransformComponent:
-      Translation: [0, 5, 0]
-      Rotation: [-70, 0, 30]
-      Scale: [1, 1, 1]
-      Parent:
-        guid: dbacdd6b48665243e2f90f7dea7298de945bf38a1a9331f9f0afcb61b5006d00
-    Components:
-      - ComponentName: DirectionalLightComponent
-        guid: 81ac22aae5211426527512b11a3130b6f16aa30a5ee9d06c227ff33963990f8e
-        custom_name: ""
-        ambient: [0.195996806, 0.189537033, 0.383333325]
-        diffuse: [0.674197555, 0.767983675, 0.955555558]
-        specular: [0.328781307, 0.138024718, 0.955555558]
-        m_near_plane: 0.5
-        m_far_plane: 25
-        m_blocker_search_num_samples: 16
-        m_pcf_num_samples: 16
-        m_light_world_size: 0.5
-        m_light_frustum_width: 30
   - Entity: UI_MainPanel
     guid: 0f1c59b510f43b9f9c9cd4171a6e83501750bc1ae7b4adb838d73a57a44d6fea
     Name: UI_MainPanel
@@ -382,3 +360,25 @@ Entities:
           NeedsForward: true
           CastsShadows: false
           IsBillboard: false
+  - Entity: Directional light
+    guid: f2f8fa2f514374f204432ad8b9fd233f718b5087fa4475dcf2ec7ca0d55dc4a7
+    Name: Directional light
+    TransformComponent:
+      Translation: [-5, 15, 0]
+      Rotation: [-70, 0, 30]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: dbacdd6b48665243e2f90f7dea7298de945bf38a1a9331f9f0afcb61b5006d00
+    Components:
+      - ComponentName: DirectionalLightComponent
+        guid: a2b7b4790000f1c9a7086c5675ee21278d89e822402949384043acbb7f658adb
+        custom_name: ""
+        ambient: [0.195996806, 0.189537033, 0.383333325]
+        diffuse: [0.674197555, 0.767983675, 0.955555558]
+        specular: [0.328781307, 0.138024718, 0.955555558]
+        m_near_plane: -25
+        m_far_plane: 25
+        m_blocker_search_num_samples: 16
+        m_pcf_num_samples: 16
+        m_light_world_size: 0.0310000461
+        m_light_frustum_width: 50
