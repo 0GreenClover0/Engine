@@ -58,6 +58,7 @@ void GameController::awake()
     {
         m_points_backup = path->points;
     }
+    else
     {
         Debug::log("No Path component present on GameController entity.", DebugType::Error);
     }
