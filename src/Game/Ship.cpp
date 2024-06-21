@@ -472,6 +472,11 @@ void Ship::update()
     case BehavioralState::Stop:
         break;
     }
+
+    if (is_in_flash_collider)
+    {
+        LevelController::get_instance()->check_tutorial_progress(TutorialProgressAction::ShipInFlashCollider);
+    }
 }
 
 void Ship::destroy()
@@ -517,6 +522,11 @@ void Ship::on_trigger_enter(std::shared_ptr<Collider2D> const& other)
     if (is_destroyed)
         return;
 
+    if (other->entity->name == "Level_2_Flash_Collider")
+    {
+        is_in_flash_collider = true;
+    }
+
     if (other->entity->get_component<Ship>() != nullptr)
     {
         destroy();
@@ -528,6 +538,15 @@ void Ship::on_trigger_enter(std::shared_ptr<Collider2D> const& other)
     else if (!m_is_in_port && other->entity->get_component<LighthouseKeeper>() != nullptr)
     {
         destroy();
+    }
+}
+
+void Ship::on_trigger_exit(std::shared_ptr<Collider2D> const& other)
+{
+
+    if (other->entity->name == "Level_2_Flash_Collider")
+    {
+        is_in_flash_collider = false;
     }
 }
 
