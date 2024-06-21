@@ -352,6 +352,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "end_color_1" << YAML::Value << particlesystem->end_color_1;
         out << YAML::Key << "lifetime_1" << YAML::Value << particlesystem->lifetime_1;
         out << YAML::Key << "lifetime_2" << YAML::Value << particlesystem->lifetime_2;
+        out << YAML::Key << "m_simulate_in_world_space" << YAML::Value << particlesystem->m_simulate_in_world_space;
         out << YAML::EndMap;
     }
     else if (auto const sound = std::dynamic_pointer_cast<class Sound>(component); sound != nullptr)
@@ -1377,6 +1378,10 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             if (component["lifetime_2"].IsDefined())
             {
                 deserialized_component->lifetime_2 = component["lifetime_2"].as<float>();
+            }
+            if (component["m_simulate_in_world_space"].IsDefined())
+            {
+                deserialized_component->m_simulate_in_world_space = component["m_simulate_in_world_space"].as<bool>();
             }
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
