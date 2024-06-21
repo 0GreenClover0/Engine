@@ -64,7 +64,7 @@ private:
     void spawn_ship(SpawnEvent const* being_spawn);
     void prepare_for_spawn();
     void remove_ship(std::shared_ptr<Ship> const& ship_to_remove);
-    bool is_spawn_possible() const;
+    bool is_spawn_possible();
     bool is_time_for_last_chance();
     void add_warning();
 
@@ -84,4 +84,6 @@ private:
     bool m_is_last_chance_activated = false;
 
     SpawnType m_spawn_type = SpawnType::Sequence;
+
+    bool m_one_tick_skip = true;
 };
