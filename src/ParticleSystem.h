@@ -10,11 +10,12 @@ struct ParticleSpawnData
 {
     float spawn_time = 0.0f;
     float spawn_alpha = 0.0f;
-    float particle_speed = 0.0f;
     float lifetime = 0.0f;
 
     glm::vec4 start_color_1 = {};
     glm::vec4 end_color_1 = {};
+
+    glm::vec3 start_velocity = {};
 
     bool simulate_in_world_space = false;
 };
@@ -37,8 +38,8 @@ public:
     float min_spawn_interval = 0.5f;
     float max_spawn_interval = 1.0f;
 
-    float min_particle_speed = 1.0f;
-    float max_particle_speed = 2.0f;
+    glm::vec3 start_velocity_1 = {-0.1f, 0.2f, -0.1f};
+    glm::vec3 start_velocity_2 = {0.1f, 1.0f, 0.1f};
 
     float min_spawn_alpha = 0.5f;
     float max_spawn_alpha = 0.8f;

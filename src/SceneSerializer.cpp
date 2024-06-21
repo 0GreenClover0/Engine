@@ -398,8 +398,8 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "sprite_path" << YAML::Value << particlesystem->sprite_path;
         out << YAML::Key << "min_spawn_interval" << YAML::Value << particlesystem->min_spawn_interval;
         out << YAML::Key << "max_spawn_interval" << YAML::Value << particlesystem->max_spawn_interval;
-        out << YAML::Key << "min_particle_speed" << YAML::Value << particlesystem->min_particle_speed;
-        out << YAML::Key << "max_particle_speed" << YAML::Value << particlesystem->max_particle_speed;
+        out << YAML::Key << "start_velocity_1" << YAML::Value << particlesystem->start_velocity_1;
+        out << YAML::Key << "start_velocity_2" << YAML::Value << particlesystem->start_velocity_2;
         out << YAML::Key << "min_spawn_alpha" << YAML::Value << particlesystem->min_spawn_alpha;
         out << YAML::Key << "max_spawn_alpha" << YAML::Value << particlesystem->max_spawn_alpha;
         out << YAML::Key << "min_particle_size" << YAML::Value << particlesystem->min_particle_size;
@@ -1590,13 +1590,13 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             {
                 deserialized_component->max_spawn_interval = component["max_spawn_interval"].as<float>();
             }
-            if (component["min_particle_speed"].IsDefined())
+            if (component["start_velocity_1"].IsDefined())
             {
-                deserialized_component->min_particle_speed = component["min_particle_speed"].as<float>();
+                deserialized_component->start_velocity_1 = component["start_velocity_1"].as<glm::vec3>();
             }
-            if (component["max_particle_speed"].IsDefined())
+            if (component["start_velocity_2"].IsDefined())
             {
-                deserialized_component->max_particle_speed = component["max_particle_speed"].as<float>();
+                deserialized_component->start_velocity_2 = component["start_velocity_2"].as<glm::vec3>();
             }
             if (component["min_spawn_alpha"].IsDefined())
             {
