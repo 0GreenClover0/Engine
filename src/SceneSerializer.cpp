@@ -13,6 +13,7 @@
 #include "Cube.h"
 #include "Curve.h"
 #include "DebugDrawing.h"
+#include "DialoguePromptController.h"
 #include "DirectionalLight.h"
 #include "Drawable.h"
 #include "Ellipse.h"
@@ -162,6 +163,21 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
             out << YAML::Key << "custom_name" << YAML::Value << curve->custom_name;
         }
         out << YAML::Key << "points" << YAML::Value << curve->points;
+        out << YAML::EndMap;
+    }
+    else if (auto const dialoguepromptcontroller = std::dynamic_pointer_cast<class DialoguePromptController>(component);
+             dialoguepromptcontroller != nullptr)
+    {
+        out << YAML::BeginMap;
+        out << YAML::Key << "ComponentName" << YAML::Value << "DialoguePromptControllerComponent";
+        out << YAML::Key << "guid" << YAML::Value << dialoguepromptcontroller->guid;
+        out << YAML::Key << "custom_name" << YAML::Value << dialoguepromptcontroller->custom_name;
+        out << YAML::Key << "interp_speed" << YAML::Value << dialoguepromptcontroller->interp_speed;
+        out << YAML::Key << "dialogue_panel" << YAML::Value << dialoguepromptcontroller->dialogue_panel;
+        out << YAML::Key << "upper_text" << YAML::Value << dialoguepromptcontroller->upper_text;
+        out << YAML::Key << "middle_text" << YAML::Value << dialoguepromptcontroller->middle_text;
+        out << YAML::Key << "lower_text" << YAML::Value << dialoguepromptcontroller->lower_text;
+        out << YAML::Key << "dialogue_objects" << YAML::Value << dialoguepromptcontroller->dialogue_objects;
         out << YAML::EndMap;
     }
     else if (auto const drawable = std::dynamic_pointer_cast<class Drawable>(component); drawable != nullptr)
@@ -793,6 +809,47 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             if (component["points"].IsDefined())
             {
                 deserialized_component->points = component["points"].as<std::vector<glm::vec2>>();
+            }
+            deserialized_entity->add_component(deserialized_component);
+            deserialized_component->reprepare();
+        }
+    }
+    else if (component_name == "DialoguePromptControllerComponent")
+    {
+        if (first_pass)
+        {
+            auto const deserialized_component = DialoguePromptController::create();
+            deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_component->custom_name = component["custom_name"].as<std::string>();
+            deserialized_pool.emplace_back(deserialized_component);
+        }
+        else
+        {
+            auto const deserialized_component =
+                std::dynamic_pointer_cast<class DialoguePromptController>(get_from_pool(component["guid"].as<std::string>()));
+            if (component["interp_speed"].IsDefined())
+            {
+                deserialized_component->interp_speed = component["interp_speed"].as<float>();
+            }
+            if (component["dialogue_panel"].IsDefined())
+            {
+                deserialized_component->dialogue_panel = component["dialogue_panel"].as<std::weak_ptr<Panel>>();
+            }
+            if (component["upper_text"].IsDefined())
+            {
+                deserialized_component->upper_text = component["upper_text"].as<std::weak_ptr<ScreenText>>();
+            }
+            if (component["middle_text"].IsDefined())
+            {
+                deserialized_component->middle_text = component["middle_text"].as<std::weak_ptr<ScreenText>>();
+            }
+            if (component["lower_text"].IsDefined())
+            {
+                deserialized_component->lower_text = component["lower_text"].as<std::weak_ptr<ScreenText>>();
+            }
+            if (component["dialogue_objects"].IsDefined())
+            {
+                deserialized_component->dialogue_objects = component["dialogue_objects"].as<std::vector<DialogueObject>>();
             }
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
