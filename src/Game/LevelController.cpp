@@ -235,12 +235,13 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
                 ships_limit = 1;
                 entity->get_component<ShipSpawner>()->spawn_ship_at_position(ShipType::FoodSmall, {-6.2f, 2.5f}, 0.0f);
                 progress_tutorial();
+                GameController::get_instance()->dialog_manager.lock()->play_content(0);
             }
             break;
         case 1:
-            //TODO: Dialog
             if (action == TutorialProgressAction::LighthouseEnabled)
             {
+                GameController::get_instance()->dialog_manager.lock()->end_content();
                 progress_tutorial();
             }
             break;
@@ -253,27 +254,29 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
         case 3:
             if (action == TutorialProgressAction::ShipDestroyed)
             {
+                GameController::get_instance()->dialog_manager.lock()->play_content(1);
                 progress_tutorial();
             }
             if (action == TutorialProgressAction::ShipEnteredPort)
             {
+                GameController::get_instance()->dialog_manager.lock()->play_content(2);
                 set_exiting_lighthouse(true);
                 progress_tutorial(2);
             }
             break;
         case 4:
-            //TODO: Dialog*
             if (action == TutorialProgressAction::ShipEnteredPort)
             {
+                GameController::get_instance()->dialog_manager.lock()->play_content(2);
                 set_exiting_lighthouse(true);
                 progress_tutorial();
             }
             break;
         case 5:
-            //TODO: Dialog
             //TODO: PROMPT [SPACE] Leave lighthouse
             if (action == TutorialProgressAction::KeeperLeftLighthouse)
             {
+                GameController::get_instance()->dialog_manager.lock()->end_content();
                 progress_tutorial();
             }
             break;
@@ -288,14 +291,13 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
             //TODO: PROMPT [SPACE] Take the package
             if (action == TutorialProgressAction::PackageCollected)
             {
+                GameController::get_instance()->dialog_manager.lock()->play_content(3);
+                entity->get_component<ShipSpawner>()->set_enabled(false);
                 progress_tutorial();
             }
             break;
         case 8:
-            //TODO: Dialog
-            //TODO: End dialog
-            //TODO: Call method when dialog ended
-            if (true && customer_manager.lock()->get_number_of_customers() == 0)
+            if (action == TutorialProgressAction::DialogEnded && customer_manager.lock()->get_number_of_customers() == 0)
             {
                 lighthouse.lock()->turn_light(false);
                 GameController::get_instance()->move_to_next_scene();
@@ -315,7 +317,7 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
             }
             break;
         case 1:
-            //TODO: Dialog
+            //TODO: Dialog [Ah, and this is the ship with our vital fuel! ]
             if (action == TutorialProgressAction::LighthouseEnabled)
             {
                 set_exiting_lighthouse(true);
@@ -335,7 +337,7 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
             }
             break;
         case 4:
-            //TODO: Dialog*
+            //TODO: Dialog* [Now go, take the package! ]
             //TODO: PROMPT [SPACE] Leave lighthouse
             if (action == TutorialProgressAction::PackageCollected)
             {
@@ -345,7 +347,7 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
             break;
         case 5:
             //TODO: [FOCUS ON GENERATOR]
-            //TODO: Dialog
+            //TODO: Dialog [Got the package? Great... start the generator.]
             //TODO: PROMPT [SPACE] Fuel The generator
             if (action == TutorialProgressAction::GeneratorFueled)
             {
@@ -357,7 +359,7 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
             }
             break;
         case 6:
-            //TODO: Dialog
+            //TODO: Dialog [Remember: You can flash the lights when the generator ignites! ]
             //TODO: PROMPT [RMB] Flash!
             if (action == TutorialProgressAction::PackageCollected)
             {
@@ -377,7 +379,7 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
             }
             break;
         case 7:
-            //TODO: Dialog*
+            //TODO: Dialog* [You wasted your flash! I guess you need another shipment. ]
             //TODO: Move to other state if dialog ended
             if (true)
             {
@@ -386,7 +388,7 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
             }
             break;
         case 8:
-            //TODO: Dialog
+            //TODO: Dialog [Need to turn back a ship with haste? Haha! The flash is your friend! ]
             if (Player::get_instance()->flash == 0 && action == TutorialProgressAction::ShipDestroyed)
             {
                 tutorial_spawn_path = 0;
@@ -400,7 +402,7 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
             }
             break;
         case 9:
-            //TODO: Dialog
+            //TODO: Dialog* [Ha! ha!]
             //TODO: End dialog
             //TODO: Call method when dialog ended
             if (true && customer_manager.lock()->get_number_of_customers() == 0)
@@ -423,7 +425,6 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
             }
             break;
         case 1:
-            //TODO: Dialog
             if (action == TutorialProgressAction::LighthouseEnabled)
             {
                 set_exiting_lighthouse(true);
@@ -446,7 +447,7 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
             }
             break;
         case 4:
-            //TODO: Dialog
+            //TODO: Dialog [You won't get far without upgrades. That's what the workshop is for!]
             //TODO: [FOCUS ON WORKSHOP]
             //TODO: PROMPT [SPACE] Upgrade lighthouse
             if (action == TutorialProgressAction::WorkshopUpgraded)
@@ -456,7 +457,7 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
             }
             break;
         case 5:
-            //TODO: Dialog
+            //TODO: Dialog [Now thats a big one. It's easier to guide them with a brighter light!]
             if (action == TutorialProgressAction::PackageCollected)
             {
                 ships_limit = 3;
@@ -465,7 +466,7 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
             }
             break;
         case 6:
-            //TODO: Dialog*
+            //TODO: Dialog* [Oh no, pesky pirates incoming! Destroy their ships as fast as you can!]
             if (action == TutorialProgressAction::PirateDestroyed)
             {
                 ships_limit--;
@@ -478,7 +479,7 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
             }
             break;
         case 7:
-            //TODO: Dialog
+            //TODO: Dialog [ho ho]
             //TODO: End dialog
             //TODO: Call method when dialog ended
             if (true && customer_manager.lock()->get_number_of_customers() == 0)
