@@ -72,6 +72,50 @@ void Button::draw_editor()
 
     ImGui::InputText("Hovered Image Path", &path_hovered);
     ImGui::InputText("Pressed Image Path", &path_pressed);
+
+    ImGui::Separator();
+
+    ImGui::Text("Size Calculator");
+
+    static float width = 1;
+    static float height = 1;
+    static float result = 1;
+    static float img_scale = 1;
+
+    bool is_size_changed = false;
+
+    is_size_changed |= ImGui::InputFloat("Width: ", &width);
+    is_size_changed |= ImGui::InputFloat("Height: ", &height);
+
+    if (is_size_changed)
+    {
+        float x = (9 * width) / 16;
+        result = x / height;
+    }
+
+    ImGui::Text(("Result: " + std::to_string(result)).c_str());
+
+    if (ImGui::Button("Applay to width"))
+    {
+        glm::vec3 scale = entity->transform->get_local_scale();
+        entity->transform->set_local_scale({scale.x * result, scale.y, 1.0f});
+    }
+
+    ImGui::SameLine();
+
+    if (ImGui::Button("Applay to height"))
+    {
+        glm::vec3 scale = entity->transform->get_local_scale();
+        entity->transform->set_local_scale({scale.x, scale.y * result, 1.0f});
+    }
+
+    ImGui::InputFloat("Scale: ", &img_scale);
+
+    if (ImGui::Button("Applay scale"))
+    {
+        glm::vec3 scale = entity->transform->get_local_scale();
+        entity->transform->set_local_scale({scale.x * img_scale, scale.y * img_scale, 1.0f});
+    }
 }
 #endif
 
