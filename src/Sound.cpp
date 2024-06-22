@@ -85,6 +85,19 @@ void Sound::awake()
     }
 }
 
+void Sound::on_enabled()
+{
+    Component::on_enabled();
+}
+
+void Sound::on_disabled()
+{
+    Component::on_disabled();
+
+    stop();
+    entity->destroy_immediate();
+}
+
 #if EDITOR
 void Sound::draw_editor()
 {
@@ -166,5 +179,6 @@ void Sound::update()
         set_can_tick(false);
 
         // TODO: Destroy the entity
+        entity->destroy_immediate();
     }
 }
