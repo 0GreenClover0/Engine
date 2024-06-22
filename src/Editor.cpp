@@ -279,6 +279,17 @@ void Editor::draw_content_browser(std::shared_ptr<EditorWindow> const& window)
         }
     }
 
+    if (ImGui::CollapsingHeader("Sounds"))
+    {
+        for (auto const& asset : m_assets)
+        {
+            if (asset.type == AssetType::Audio && ImGui::Selectable(asset.path.c_str()))
+            {
+                ImGui::SetClipboardText(asset.path.c_str());
+            }
+        }
+    }
+
     bool const ctrl_pressed = ImGui::GetIO().KeyCtrl;
 
     if (ImGui::CollapsingHeader("Scenes"))
@@ -873,6 +884,14 @@ void Editor::load_assets()
         if (std::ranges::find(m_known_textures_formats, entry.path().extension().string()) != m_known_textures_formats.end())
         {
             m_assets.emplace_back(entry.path().string(), AssetType::Texture);
+        }
+    }
+
+    for (auto const& entry : std::filesystem::recursive_directory_iterator(m_audio_path))
+    {
+        if (std::ranges::find(m_known_audio_formats, entry.path().extension().string()) != m_known_audio_formats.end())
+        {
+            m_assets.emplace_back(entry.path().string(), AssetType::Audio);
         }
     }
 }
