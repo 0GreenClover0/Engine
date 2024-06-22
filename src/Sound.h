@@ -33,6 +33,7 @@ public:
 
     void play();
     void stop();
+    bool has_finished() const;
     void stop_with_fade(u64 const milliseconds);
     void set_volume(float const new_volume);
     virtual void update() override;
