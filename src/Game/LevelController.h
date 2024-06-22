@@ -20,6 +20,7 @@ enum class TutorialProgressAction
     ShipEnteredControl,
     ShipDestroyed,
     ShipInFlashCollider,
+    PirateDestroyed,
     KeeperLeftLighthouse,
     KeeperEnteredLighthouse,
     KeeperEnteredPort,
