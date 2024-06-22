@@ -18,6 +18,8 @@
 #include <imgui.h>
 #include "imgui_extensions.h"
 #endif
+#include "IceBound.h"
+#include <Floater.h>
 
 std::shared_ptr<LighthouseKeeper> LighthouseKeeper::create()
 {
@@ -150,6 +152,23 @@ void LighthouseKeeper::draw_editor()
     ImGuiEx::draw_ptr("Lighthouse", lighthouse);
 }
 #endif
+
+void LighthouseKeeper::on_trigger_enter(std::shared_ptr<Collider2D> const& other)
+{
+    if (other->entity->get_component<IceBound>())
+    {
+        entity->get_component<Floater>()->set_enabled(false);
+        auto position = entity->transform->get_position();
+        entity->transform->set_position(glm::vec3(position.x, 0.070f, position.z)); 
+    }
+}
+void LighthouseKeeper::on_trigger_exit(std::shared_ptr<Collider2D> const& other)
+{
+    if (other->entity->get_component<IceBound>())
+    {
+        entity->get_component<Floater>()->set_enabled(true);
+    }
+}
 
 bool LighthouseKeeper::is_inside_port() const
 {
