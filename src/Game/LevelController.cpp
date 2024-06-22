@@ -232,6 +232,7 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
         case 0:
             if (action == TutorialProgressAction::LevelStarted)
             {
+                ships_limit = 1;
                 entity->get_component<ShipSpawner>()->spawn_ship_at_position(ShipType::FoodSmall, {-6.2f, 2.5f}, 0.0f);
                 progress_tutorial();
             }
@@ -308,6 +309,7 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
         case 0:
             if (action == TutorialProgressAction::LevelStarted)
             {
+                ships_limit = 1;
                 entity->get_component<ShipSpawner>()->spawn_ship_at_position(ShipType::Tool, {1.7f, 3.2f}, 270.0f);
                 progress_tutorial();
             }
@@ -415,6 +417,7 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
         case 0:
             if (action == TutorialProgressAction::LevelStarted)
             {
+                ships_limit = 1;
                 entity->get_component<ShipSpawner>()->spawn_ship_at_position(ShipType::Tool, {6.8f, 0.0f}, 180.0f);
                 progress_tutorial();
             }
