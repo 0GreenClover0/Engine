@@ -108,7 +108,10 @@ void LevelController::update()
 
         float const x = time / map_time * -1.0 + 1.0f;
 
-        ships_limit = glm::ceil(ships_limit_curve.lock()->get_y_at(x));
+        if (!is_tutorial)
+        {
+            ships_limit = glm::ceil(ships_limit_curve.lock()->get_y_at(x));
+        }
         ships_speed = ships_speed_curve.lock()->get_y_at(x);
     }
     else
