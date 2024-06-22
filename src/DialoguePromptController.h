@@ -31,7 +31,8 @@ public:
 
     float interp_speed = 4.0f; // Unused but maybe will be used
 
-    std::weak_ptr<Panel> dialogue_panel = {};
+    std::weak_ptr<Button> dialogue_panel = {};
+    std::weak_ptr<Entity> panel_parent = {};
 
     std::weak_ptr<ScreenText> upper_text = {};
     std::weak_ptr<ScreenText> middle_text = {};
