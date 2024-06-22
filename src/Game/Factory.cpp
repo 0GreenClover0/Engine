@@ -124,3 +124,9 @@ void Factory::update_lights() const
         Debug::log("Something wants to update lights in Workshop where there are no lights!", DebugType::Warning);
     }
 }
+
+void Factory::set_glowing(bool const is_glowing) const
+{
+    auto const drawable = entity->get_component<Drawable>();
+    drawable->set_glowing(is_glowing);
+}

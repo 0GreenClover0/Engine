@@ -1,5 +1,5 @@
-#include "lighting_calculations.hlsl"
 #include "ShadingDefines.h"
+#include "halo.hlsl"
 
 struct VS_Input
 {
@@ -67,6 +67,12 @@ float4 ps_main(VS_Output input) : SV_Target
         }
 
         result.xyz += calculate_spot_light(spot_lights[spot_light_index], normal.xyz, pos.xyz, view_dir, diffuse.xyz, spot_light_index, true, ambient_occlusion);
+    }
+
+    // Normal alpha channel stores info whether glow should be applied
+    if (normal.a > 0.0f)
+    {
+        result.xyz = glow(result.xyz, pos.xyz, normal.xyz).xyz;
     }
 
     result.xyz += scatter;

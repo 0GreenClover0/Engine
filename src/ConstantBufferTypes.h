@@ -103,6 +103,7 @@ struct ConstantBufferPerObject
     glm::mat4 projection_view_model;
     glm::mat4 model;
     glm::mat4 projection_view;
+    i32 is_glowing;
 };
 
 struct ConstantBufferParticle

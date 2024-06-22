@@ -27,6 +27,9 @@ public:
 
     virtual bool is_particle() const;
 
+    void set_glowing(bool const is_glowing);
+    i32 is_glowing() const;
+
     RasterizerDrawType get_rasterizer_draw_type() const;
     void set_rasterizer_draw_type(RasterizerDrawType const new_draw_mode);
 
@@ -39,5 +42,6 @@ protected:
     RasterizerDrawType m_rasterizer_draw_type = RasterizerDrawType::Default;
 
 private:
+    i32 m_is_glowing = 0;
     friend class SceneSerializer;
 };
