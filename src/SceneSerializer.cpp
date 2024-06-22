@@ -466,6 +466,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "custom_name" << YAML::Value << gamecontroller->custom_name;
         out << YAML::Key << "current_scene" << YAML::Value << gamecontroller->current_scene;
         out << YAML::Key << "next_scene" << YAML::Value << gamecontroller->next_scene;
+        out << YAML::Key << "dialog_manager" << YAML::Value << gamecontroller->dialog_manager;
         out << YAML::EndMap;
     }
     else if (auto const icebound = std::dynamic_pointer_cast<class IceBound>(component); icebound != nullptr)
@@ -1745,6 +1746,10 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             if (component["next_scene"].IsDefined())
             {
                 deserialized_component->next_scene = component["next_scene"].as<std::weak_ptr<Entity>>();
+            }
+            if (component["dialog_manager"].IsDefined())
+            {
+                deserialized_component->dialog_manager = component["dialog_manager"].as<std::weak_ptr<DialoguePromptController>>();
             }
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();

@@ -3,6 +3,7 @@
 #include "AK/Badge.h"
 #include "AK/Types.h"
 #include "Component.h"
+#include "DialoguePromptController.h"
 
 #include <glm/vec2.hpp>
 
@@ -30,6 +31,7 @@ public:
 
     std::weak_ptr<Entity> current_scene = {};
     std::weak_ptr<Entity> next_scene = {};
+    std::weak_ptr<DialoguePromptController> dialog_manager = {};
 
 private:
     void reset_scene();

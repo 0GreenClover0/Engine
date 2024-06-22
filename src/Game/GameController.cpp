@@ -118,6 +118,8 @@ void GameController::draw_editor()
     {
         move_to_next_scene();
     }
+
+    ImGuiEx::draw_ptr("Dialog manager", dialog_manager);
 }
 #endif
 
