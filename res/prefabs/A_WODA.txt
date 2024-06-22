@@ -1,0 +1,33 @@
+Scene: Untitled
+Entities:
+  - Entity: A_WODA
+    guid: b0ed792ad47f422e7cb61998fdd9a35357971f1c6318af428234adcdb61defd1
+    Name: A_WODA
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 0.750043929]
+      Parent:
+        guid: eb2514f1e8a95e1c9b9118d5fac08e1fb5a844ac1e0ce3a762c6a109f53e5a2c
+    Components:
+      - ComponentName: WaterComponent
+        guid: 68989e5443b7f73689bd31bc63b00a8237985b91e0e79c82a1a4ef7c0e52df27
+        custom_name: ""
+        waves:
+          - [[1, 0.0270000007], [0, 0], 7.5, 1, 13, 0.0140000004]
+          - [[-0.351000011, 0.108000003], [0, 0], 4, 1, 3.5, 0.0199999996]
+          - [[0.595000029, 0.338], [0, 0], 6.5, 1, 10.5, 0.0199999996]
+          - [[0.595000029, -0.419], [0, 0], 6.5, 1, 16, 0.00999999978]
+        m_ps_buffer: [[0.0337027088, 0, 0.50555557, 1], [0.00814755727, 0, 0.24444443, 1], 9.99999975e-05, 9.99999975e-05, 2.88000011, 14.4720001, 0.064000003, 0.861000001]
+        tesselation_level: 8
+        model_path: ""
+        material:
+          Shader:
+            VertexPath: ./res/shaders/water.hlsl
+            FragmentPath: ./res/shaders/water.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+          NeedsForward: true
+          CastsShadows: false
+          IsBillboard: false
