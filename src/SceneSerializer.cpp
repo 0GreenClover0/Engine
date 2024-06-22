@@ -429,6 +429,9 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "guid" << YAML::Value << endscreen->guid;
         out << YAML::Key << "custom_name" << YAML::Value << endscreen->custom_name;
         out << YAML::Key << "is_failed" << YAML::Value << endscreen->is_failed;
+        out << YAML::Key << "number_of_stars" << YAML::Value << endscreen->number_of_stars;
+        out << YAML::Key << "stars" << YAML::Value << endscreen->stars;
+        out << YAML::Key << "star_scale" << YAML::Value << endscreen->star_scale;
         out << YAML::EndMap;
     }
     else if (auto const factory = std::dynamic_pointer_cast<class Factory>(component); factory != nullptr)
@@ -1630,6 +1633,18 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             if (component["is_failed"].IsDefined())
             {
                 deserialized_component->is_failed = component["is_failed"].as<bool>();
+            }
+            if (component["number_of_stars"].IsDefined())
+            {
+                deserialized_component->number_of_stars = component["number_of_stars"].as<u32>();
+            }
+            if (component["stars"].IsDefined())
+            {
+                deserialized_component->stars = component["stars"].as<std::vector<std::weak_ptr<Entity>>>();
+            }
+            if (component["star_scale"].IsDefined())
+            {
+                deserialized_component->star_scale = component["star_scale"].as<glm::vec2>();
             }
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();

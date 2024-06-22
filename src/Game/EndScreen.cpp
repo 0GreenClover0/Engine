@@ -16,19 +16,11 @@
 #include <imgui.h>
 #endif
 #include <Panel.h>
+#include <imgui_extensions.h>
 
 std::shared_ptr<EndScreen> EndScreen::create()
 {
     return std::make_shared<EndScreen>(AK::Badge<EndScreen> {});
-}
-
-std::shared_ptr<EndScreen> EndScreen::create(bool is_failed)
-{
-    auto end_screen = std::make_shared<EndScreen>(AK::Badge<EndScreen> {});
-
-    end_screen->is_failed = is_failed;
-
-    return end_screen;
 }
 
 EndScreen::EndScreen(AK::Badge<EndScreen>)
@@ -37,6 +29,11 @@ EndScreen::EndScreen(AK::Badge<EndScreen>)
 
 void EndScreen::awake()
 {
+    for (auto star : stars)
+    {
+        star.lock()->transform->set_local_scale({0.0f, 0.0f, 0.0f});
+    }
+
     update_background();
 
     set_can_tick(true);
@@ -44,19 +41,55 @@ void EndScreen::awake()
 
 void EndScreen::update()
 {
-    if (!m_is_in_screen)
+    if (!m_is_animation_end)
     {
-        if (m_appear_counter < 1.0f)
+        if (!m_is_in_screen)
         {
-            m_appear_counter += delta_time * 0.75f;
-            update_screen_position();
+            if (m_appear_counter < 1.0f)
+            {
+                m_appear_counter += delta_time * 0.75f;
+                update_screen_position();
+            }
+            else
+            {
+                m_is_in_screen = true;
+                m_appear_counter = 1.0f;
+
+                update_screen_position();
+
+                m_appear_counter = 0.0f;
+
+                if (is_failed)
+                {
+                    m_is_animation_end = true;
+                }
+            }
         }
         else
         {
-            m_is_in_screen = false;
-            m_appear_counter = 1.0f;
+            if (m_shown_stars >= number_of_stars)
+            {
+                m_is_animation_end = true;
+                return;
+            }
 
-            update_screen_position();
+            if (m_appear_counter < 0.65f)
+            {
+                m_appear_counter += delta_time * 0.75;
+                update_star(m_shown_stars);
+            }
+            else
+            {
+                m_appear_counter = 1.0f;
+
+                update_star(m_shown_stars);
+
+                if (m_shown_stars < number_of_stars)
+                {
+                    m_shown_stars++;
+                    m_appear_counter = 0.0f;
+                }
+            }
         }
     }
 }
@@ -70,6 +103,20 @@ void EndScreen::draw_editor()
     {
         update_background();
     }
+
+    ImGuiEx::draw_ptr("Stars", stars[0]);
+    ImGuiEx::draw_ptr("Stars", stars[1]);
+    ImGuiEx::draw_ptr("Stars", stars[2]);
+
+    if (ImGui::Button("Save star size"))
+    {
+        star_scale = glm::vec2(stars[0].lock()->transform->get_local_scale().x, stars[0].lock()->transform->get_local_scale().y);
+    }
+
+    unsigned int const min_level = 1;
+    unsigned int const max_level = 3;
+
+    ImGui::SliderScalar("Number of stars: ", ImGuiDataType_U32, &number_of_stars, &min_level, &max_level);
 }
 #endif
 
@@ -92,10 +139,34 @@ void EndScreen::update_screen_position()
     entity->transform->set_local_position({0.0f, (1.0f - easeOutBack(m_appear_counter)) * -2.0f, 0.0f});
 }
 
+void EndScreen::update_star(u32 star_number)
+{
+    stars[star_number].lock()->transform->set_local_scale(
+        {easeOutElastic(m_appear_counter) * star_scale.x, easeOutElastic(m_appear_counter) * star_scale.y, 0.0f});
+}
+
 float EndScreen::easeOutBack(float x)
 {
     float const c1 = 1.70158;
     float const c3 = c1 + 1;
 
     return 1 + c3 * std::pow(x - 1, 3) + c1 * std::pow(x - 1, 2);
+}
+
+float EndScreen::easeOutElastic(float x)
+{
+    float const c4 = (2 * 3.14) / 3;
+
+    if (x == 0)
+    {
+        return 0;
+    }
+    else if (x == 1)
+    {
+        return 1;
+    }
+    else
+    {
+        return std::pow(2, -10 * x) * std::sin((x * 10 - 0.75) * c4) + 1;
+    }
 }
