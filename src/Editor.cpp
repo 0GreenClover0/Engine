@@ -32,6 +32,7 @@
 #include "FloatersManager.h"
 #include "Game/Customer.h"
 #include "Game/CustomerManager.h"
+#include "Game/EndScreen.h"
 #include "Game/Factory.h"
 #include "Game/GameController.h"
 #include "Game/IceBound.h"
