@@ -122,6 +122,11 @@ void LevelController::update()
             check_tutorial_progress(TutorialProgressAction::LighthouseEnabled);
             lighthouse.lock()->turn_light(true);
             is_started = true;
+
+            if (!is_tutorial)
+            {
+                set_exiting_lighthouse(true);
+            }
         }
     }
 }
