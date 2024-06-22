@@ -17,6 +17,7 @@
     ENUMERATE_COMPONENT(SoundListener, "Sound Listener")                        \
     ENUMERATE_COMPONENT(Customer, "Customer")                                   \
     ENUMERATE_COMPONENT(CustomerManager, "Customer Manager")                    \
+    ENUMERATE_COMPONENT(EndScreen, "End Screen")                                \
     ENUMERATE_COMPONENT(Factory, "Factory")                                     \
     ENUMERATE_COMPONENT(GameController, "Game Controller")                      \
     ENUMERATE_COMPONENT(IceBound, "Ice Bound")                                  \
