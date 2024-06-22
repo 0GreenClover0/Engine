@@ -135,6 +135,11 @@ void Sound::stop()
     ma_sound_stop(&m_internal_sound);
 }
 
+bool Sound::has_finished() const
+{
+    return m_internal_sound.atEnd;
+}
+
 void Sound::stop_with_fade(u64 const milliseconds)
 {
     ma_sound_stop_with_fade_in_milliseconds(&m_internal_sound, milliseconds);
