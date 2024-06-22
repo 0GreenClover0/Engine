@@ -23,6 +23,10 @@ void DialoguePromptController::awake()
 {
     Component::awake();
 
+    upper_text.lock()->color = 0xfff4ecf8;
+    middle_text.lock()->color = 0xfff4ecf8;
+    lower_text.lock()->color = 0xfff4ecf8;
+
     set_can_tick(true);
 }
 
@@ -30,11 +34,12 @@ void DialoguePromptController::update()
 {
     Component::update();
 
-    if (Input::input->get_key_down(GLFW_MOUSE_BUTTON_LEFT))
-        show_or_hide_panel(InterpolationMode::Show);
+    if (m_interpolation_value > 0.99f && m_currently_played_sound == nullptr)
+        m_currently_played_sound = Sound::play_sound(dialogue_objects[m_currently_played_content].sound_path);
 
-    if (Input::input->get_key_down(GLFW_MOUSE_BUTTON_RIGHT))
-        show_or_hide_panel(InterpolationMode::Hide);
+    if (m_currently_played_sound != nullptr && m_currently_played_sound->has_finished()
+        && dialogue_objects[m_currently_played_content].auto_end)
+        end_content();
 
     realign_lines();
 
@@ -203,10 +208,22 @@ void DialoguePromptController::realign_lines()
 
 void DialoguePromptController::play_content(u16 vector_index)
 {
+    m_currently_played_content = vector_index;
     DialogueObject const dialogue = dialogue_objects[vector_index];
+    bool const auto_end = dialogue_objects[vector_index].auto_end;
 
-    Sound::play_sound(dialogue.sound_path);
     upper_text.lock()->set_text(dialogue.upper_line);
     middle_text.lock()->set_text(dialogue.middle_line);
     lower_text.lock()->set_text(dialogue.lower_line);
+
+    show_or_hide_panel(InterpolationMode::Show);
+}
+
+void DialoguePromptController::end_content()
+{
+    DialogueObject const dialogue = dialogue_objects[m_currently_played_content];
+
+    show_or_hide_panel(InterpolationMode::Hide);
+    m_currently_played_content = -1;
+    m_currently_played_sound = nullptr;
 }

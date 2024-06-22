@@ -3,6 +3,7 @@
 #include "Drawable.h"
 #include "Panel.h"
 #include "ScreenText.h"
+#include "Sound.h"
 
 enum class InterpolationMode
 {
@@ -23,7 +24,10 @@ public:
     virtual void draw_editor() override;
 #endif
 
+    // Those are your friends
     void play_content(u16 vector_index);
+    void end_content();
+
     float interp_speed = 4.0f; // Unused but maybe will be used
 
     std::weak_ptr<Panel> dialogue_panel = {};
@@ -42,4 +46,6 @@ private:
     bool m_perform_panel_move = false;
     InterpolationMode m_interpolation_mode = InterpolationMode::Show;
     float m_interpolation_value = 0.0f;
+    std::shared_ptr<Sound> m_currently_played_sound = nullptr;
+    i32 m_currently_played_content = -1;
 };
