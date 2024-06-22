@@ -701,6 +701,8 @@ void RendererDX11::set_light_buffer() const
         light_data.directional_light.pcf_num_samples = m_directional_light->m_pcf_num_samples;
         light_data.directional_light.blocker_search_num_samples = m_directional_light->m_blocker_search_num_samples;
         light_data.directional_light.near_plane = m_directional_light->m_near_plane;
+        light_data.gamma = m_directional_light->gamma;
+        light_data.exposure = m_directional_light->exposure;    
     }
 
     for (i32 i = 0; i < m_point_lights.size(); i++)

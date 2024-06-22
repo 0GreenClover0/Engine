@@ -126,7 +126,9 @@ struct ConstantBufferLight
     glm::vec3 camera_pos;
     i32 number_of_point_lights;
     i32 number_of_spot_lights;
-    glm::vec3 padding;
+    float gamma;
+    float exposure;
+    float padding;
 };
 
 struct ConstantBufferSkybox : public ConstantBuffer
