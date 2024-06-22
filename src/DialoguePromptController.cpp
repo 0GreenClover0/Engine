@@ -24,8 +24,11 @@ void DialoguePromptController::awake()
     Component::awake();
 
     upper_text.lock()->color = 0xfff4ecf8;
+    upper_text.lock()->font_size = 30;
     middle_text.lock()->color = 0xfff4ecf8;
+    middle_text.lock()->font_size = 30;
     lower_text.lock()->color = 0xfff4ecf8;
+    lower_text.lock()->font_size = 30;
 
     set_can_tick(true);
 }
@@ -41,12 +44,18 @@ void DialoguePromptController::update()
         && dialogue_objects[m_currently_played_content].auto_end)
         end_content();
 
+    if (Input::input->get_key_down(GLFW_MOUSE_BUTTON_LEFT))
+        play_content(0);
+
+    if (Input::input->get_key_down(GLFW_MOUSE_BUTTON_RIGHT))
+        end_content();
+
     realign_lines();
 
     if (!m_perform_panel_move)
         return;
 
-    auto const panel_entity = dialogue_panel.lock()->entity;
+    auto const panel_entity = panel_parent.lock();
     glm::vec3 v = panel_entity->transform->get_local_position();
 
     switch (m_interpolation_mode)
@@ -62,7 +71,7 @@ void DialoguePromptController::update()
 
     if (m_interpolation_value > 0.01f && m_interpolation_value < 0.99f)
     {
-        v.y = AK::Math::ease_in_out_elastic(m_interpolation_value) - 1.75f;
+        v.y = AK::Math::ease_in_out_elastic(m_interpolation_value) - 1.8f;
     }
 
     panel_entity->transform->set_local_position(v);
@@ -79,6 +88,7 @@ void DialoguePromptController::draw_editor()
     realign_lines();
 
     ImGuiEx::draw_ptr("Panel Reference", dialogue_panel);
+    ImGuiEx::draw_ptr("Parent Reference", panel_parent);
     ImGui::Separator();
     ImGuiEx::draw_ptr("Upper text", upper_text);
     ImGuiEx::draw_ptr("Middle text", middle_text);
@@ -189,19 +199,19 @@ void DialoguePromptController::realign_lines()
         new_upper = lines[0];
         new_lower = lines[1];
 
-        new_upper.lock()->entity->transform->set_local_position({new_upper.lock()->entity->transform->get_local_position().x, 0.25f,
+        new_upper.lock()->entity->transform->set_local_position({new_upper.lock()->entity->transform->get_local_position().x, 0.18f,
                                                                  new_upper.lock()->entity->transform->get_local_position().z});
 
-        new_lower.lock()->entity->transform->set_local_position({new_lower.lock()->entity->transform->get_local_position().x, -0.25f,
+        new_lower.lock()->entity->transform->set_local_position({new_lower.lock()->entity->transform->get_local_position().x, -0.18f,
                                                                  new_lower.lock()->entity->transform->get_local_position().z});
     }
     else
     {
-        upper_text.lock()->entity->transform->set_local_position({upper_text.lock()->entity->transform->get_local_position().x, 0.5f,
+        upper_text.lock()->entity->transform->set_local_position({upper_text.lock()->entity->transform->get_local_position().x, 0.36f,
                                                                   upper_text.lock()->entity->transform->get_local_position().z});
         middle_text.lock()->entity->transform->set_local_position({middle_text.lock()->entity->transform->get_local_position().x, 0.0f,
                                                                    middle_text.lock()->entity->transform->get_local_position().z});
-        lower_text.lock()->entity->transform->set_local_position({lower_text.lock()->entity->transform->get_local_position().x, -0.5f,
+        lower_text.lock()->entity->transform->set_local_position({lower_text.lock()->entity->transform->get_local_position().x, -0.36f,
                                                                   lower_text.lock()->entity->transform->get_local_position().z});
     }
 }
@@ -221,7 +231,13 @@ void DialoguePromptController::play_content(u16 vector_index)
 
 void DialoguePromptController::end_content()
 {
+    if (m_currently_played_content < 0)
+        return;
+
     DialogueObject const dialogue = dialogue_objects[m_currently_played_content];
+
+    if (m_currently_played_sound != nullptr)
+        m_currently_played_sound->stop_with_fade(500);
 
     show_or_hide_panel(InterpolationMode::Hide);
     m_currently_played_content = -1;
