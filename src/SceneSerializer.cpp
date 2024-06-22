@@ -424,6 +424,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "ComponentName" << YAML::Value << "EndScreenComponent";
         out << YAML::Key << "guid" << YAML::Value << endscreen->guid;
         out << YAML::Key << "custom_name" << YAML::Value << endscreen->custom_name;
+        out << YAML::Key << "is_failed" << YAML::Value << endscreen->is_failed;
         out << YAML::EndMap;
     }
     else if (auto const factory = std::dynamic_pointer_cast<class Factory>(component); factory != nullptr)
@@ -1605,6 +1606,10 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component =
                 std::dynamic_pointer_cast<class EndScreen>(get_from_pool(component["guid"].as<std::string>()));
+            if (component["is_failed"].IsDefined())
+            {
+                deserialized_component->is_failed = component["is_failed"].as<bool>();
+            }
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
         }
