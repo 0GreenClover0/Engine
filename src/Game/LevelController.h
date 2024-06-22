@@ -74,7 +74,7 @@ public:
     float playfield_y_shift = -2.1f;
 
     std::weak_ptr<Curve> ships_limit_curve = {};
-    u32 ships_limit = 0;
+    u32 ships_limit = 1;
 
     std::weak_ptr<Curve> ships_speed_curve = {};
     float ships_speed = 0.0f;
