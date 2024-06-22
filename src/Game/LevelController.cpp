@@ -481,30 +481,33 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
                 tutorial_spawn_path = 1;
                 entity->get_component<ShipSpawner>()->pop_event();
                 entity->get_component<ShipSpawner>()->set_enabled(false);
+                GameController::get_instance()->dialog_manager.lock()->play_content(11);
+
                 progress_tutorial();
             }
             break;
         case 4:
-            //TODO: Dialog [You won't get far without upgrades. That's what the workshop is for!]
             //TODO: [FOCUS ON WORKSHOP]
             //TODO: PROMPT [SPACE] Upgrade lighthouse
             if (action == TutorialProgressAction::WorkshopUpgraded)
             {
+                GameController::get_instance()->dialog_manager.lock()->end_content();
+                GameController::get_instance()->dialog_manager.lock()->play_content(12);
                 entity->get_component<ShipSpawner>()->set_enabled(true);
                 progress_tutorial();
             }
             break;
         case 5:
-            //TODO: Dialog [Now thats a big one. It's easier to guide them with a brighter light!]
             if (action == TutorialProgressAction::PackageCollected)
             {
                 ships_limit = 3;
                 entity->get_component<ShipSpawner>()->pop_event();
+                GameController::get_instance()->dialog_manager.lock()->end_content();
+                GameController::get_instance()->dialog_manager.lock()->play_content(15);
                 progress_tutorial();
             }
             break;
         case 6:
-            //TODO: Dialog* [Oh no, pesky pirates incoming! Destroy their ships as fast as you can!]
             if (action == TutorialProgressAction::PirateDestroyed)
             {
                 ships_limit--;
@@ -513,14 +516,13 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
 
             if (action == TutorialProgressAction::PackageCollected)
             {
+                GameController::get_instance()->dialog_manager.lock()->play_content(13);
+                entity->get_component<ShipSpawner>()->set_enabled(false);
                 progress_tutorial();
             }
             break;
         case 7:
-            //TODO: Dialog [ho ho]
-            //TODO: End dialog
-            //TODO: Call method when dialog ended
-            if (true && customer_manager.lock()->get_number_of_customers() == 0)
+            if (action == TutorialProgressAction::DialogEnded && customer_manager.lock()->get_number_of_customers() == 0)
             {
                 lighthouse.lock()->turn_light(false);
                 GameController::get_instance()->move_to_next_scene();
