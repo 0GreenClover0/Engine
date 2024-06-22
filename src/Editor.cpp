@@ -32,6 +32,7 @@
 #include "FloatersManager.h"
 #include "Game/Customer.h"
 #include "Game/CustomerManager.h"
+#include "Game/EndScreen.h"
 #include "Game/Factory.h"
 #include "Game/GameController.h"
 #include "Game/IceBound.h"
@@ -255,7 +256,7 @@ void Editor::draw_content_browser(std::shared_ptr<EditorWindow> const& window)
 
     draw_scene_save();
 
-    if (ImGui::CollapsingHeader("Models", ImGuiTreeNodeFlags_DefaultOpen))
+    if (ImGui::CollapsingHeader("Models"))
     {
         for (auto const& asset : m_assets)
         {
@@ -266,9 +267,20 @@ void Editor::draw_content_browser(std::shared_ptr<EditorWindow> const& window)
         }
     }
 
+    if (ImGui::CollapsingHeader("Textures"))
+    {
+        for (auto const& asset : m_assets)
+        {
+            if (asset.type == AssetType::Texture && ImGui::Selectable(asset.path.c_str()))
+            {
+                ImGui::SetClipboardText(asset.path.c_str());
+            }
+        }
+    }
+
     bool const ctrl_pressed = ImGui::GetIO().KeyCtrl;
 
-    if (ImGui::CollapsingHeader("Scenes", ImGuiTreeNodeFlags_DefaultOpen))
+    if (ImGui::CollapsingHeader("Scenes"))
     {
         for (auto const& asset : m_assets)
         {
@@ -292,7 +304,7 @@ void Editor::draw_content_browser(std::shared_ptr<EditorWindow> const& window)
         }
     }
 
-    if (ImGui::CollapsingHeader("Prefabs", ImGuiTreeNodeFlags_DefaultOpen))
+    if (ImGui::CollapsingHeader("Prefabs"))
     {
         for (auto const& asset : m_assets)
         {
@@ -852,6 +864,14 @@ void Editor::load_assets()
         if (std::ranges::find(m_known_scene_formats, entry.path().extension().string()) != m_known_scene_formats.end())
         {
             m_assets.emplace_back(entry.path().string(), AssetType::Prefab);
+        }
+    }
+
+    for (auto const& entry : std::filesystem::recursive_directory_iterator(m_textures_path))
+    {
+        if (std::ranges::find(m_known_textures_formats, entry.path().extension().string()) != m_known_textures_formats.end())
+        {
+            m_assets.emplace_back(entry.path().string(), AssetType::Texture);
         }
     }
 }
