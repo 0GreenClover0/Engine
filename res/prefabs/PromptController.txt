@@ -1,43 +1,43 @@
 Scene: Untitled
 Entities:
   - Entity: PromptController
-    guid: af94a954e4540822d648a50444601f52ad5ce0097e806bcaf6fbdcd957fbc4de
+    guid: 1e598558ddc4823c6cbd95bbed1cb051e2c4e1e1c5ce5bc8529d29d9e286f14b
     Name: PromptController
     TransformComponent:
       Translation: [0, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: dbacdd6b48665243e2f90f7dea7298de945bf38a1a9331f9f0afcb61b5006d00
+        guid: ""
     Components:
       - ComponentName: DialoguePromptControllerComponent
-        guid: 8466a6ddf392cbf5a8016ac48e32a1f32ab86c6c0a3774d5c92afb89e9fe3c5e
+        guid: 3b62a7800f45d81d38afb62b95a4c0d848840090b5269b0a8c0b1f4c62397385
         custom_name: ""
         interp_speed: 0.100000001
         dialogue_panel:
-          guid: c56f05fb5daf48ab96e2256a77a6b7e8546e705456565eaa12cde8e4612c7edd
+          guid: 8bc16f03e64c37a3950f8c50060e118411c2e4be5212109b7937bdc49f5d3931
         upper_text:
-          guid: b227a10fe3450ca012ae64ad97f72471d9d9ac06b92210eb1ab7bb670d51d7d6
+          guid: 34e750ee72db6ca11fb139bfb9772471a141f0bc05bca348b1a1388d6c595399
         middle_text:
-          guid: 6b8c1d4ff85ffd188bcc2146ac6c25ded6506ddb6bbcc592b1f36a594bfb63d2
+          guid: afe33685a70017a3fd3f669ed2dd3e31b44ad63e9a81a8f64a88e619ce98646f
         lower_text:
-          guid: 732fe88f1f8b73d3e573ff61922c535b1b7667aa7a82fe8361f320c765de5e1c
+          guid: 1dcd8490fdb6d6f91aed4c7103b0e95f5aa0cfc97468718025a608dfc6f0152a
         dialogue_objects:
           - [true, "Ahoy, lighthouse adept! The weather is awful, so we need to light", the way for the ships. Let's guide them to the port!, "", ./res/audio/ahoy.wav]
   - Entity: Panel
-    guid: ea724137d821680f86eb126ec526db2926a55b4e6b35779c271620c88738b93d
+    guid: 4beb93442281dbaf75640f0e5ee51392e1e522386feb9e3a551ca48d473f9b98
     Name: Panel
     TransformComponent:
       Translation: [-0.270000011, -1.75, 0]
       Rotation: [0, 0, 0]
       Scale: [0.699999988, 0.200000003, 0.290000021]
       Parent:
-        guid: af94a954e4540822d648a50444601f52ad5ce0097e806bcaf6fbdcd957fbc4de
+        guid: 1e598558ddc4823c6cbd95bbed1cb051e2c4e1e1c5ce5bc8529d29d9e286f14b
     Components:
       - ComponentName: PanelComponent
-        guid: c56f05fb5daf48ab96e2256a77a6b7e8546e705456565eaa12cde8e4612c7edd
+        guid: 8bc16f03e64c37a3950f8c50060e118411c2e4be5212109b7937bdc49f5d3931
         custom_name: ""
-        background_path: ./res/textures/black.jpg
+        background_path: ./res/textures/UI/dialogue.png
         material:
           Shader:
             VertexPath: ./res/shaders/ui.hlsl
@@ -49,17 +49,17 @@ Entities:
           CastsShadows: false
           IsBillboard: false
   - Entity: Middle text
-    guid: 04103a3f5c1635120c1b42b1eba484f59790e8f3e0dc1accec77b518c35421ca
+    guid: f282f4b9b3554c88d736eb7c636ca2f30543cad554201f691a1dd70d2c129703
     Name: Middle text
     TransformComponent:
       Translation: [0, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: ea724137d821680f86eb126ec526db2926a55b4e6b35779c271620c88738b93d
+        guid: 4beb93442281dbaf75640f0e5ee51392e1e522386feb9e3a551ca48d473f9b98
     Components:
       - ComponentName: ScreenTextComponent
-        guid: 6b8c1d4ff85ffd188bcc2146ac6c25ded6506ddb6bbcc592b1f36a594bfb63d2
+        guid: afe33685a70017a3fd3f669ed2dd3e31b44ad63e9a81a8f64a88e619ce98646f
         custom_name: ""
         text: Use the flash, upgrade the lighthouse, defeat the pirates.
         position: [0, 0]
@@ -81,17 +81,17 @@ Entities:
           CastsShadows: false
           IsBillboard: false
   - Entity: Upper text
-    guid: 85ae18418388c0ec888b49be89a793f93ea768f8c33bc0d084b47aa85f8ee72e
+    guid: 71d8e4baf0969ffc97f2a2fbace9d4d7c6360fa24203843a9df4eb17a484d1eb
     Name: Upper text
     TransformComponent:
       Translation: [-2.98023224e-08, 0.5, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: ea724137d821680f86eb126ec526db2926a55b4e6b35779c271620c88738b93d
+        guid: 4beb93442281dbaf75640f0e5ee51392e1e522386feb9e3a551ca48d473f9b98
     Components:
       - ComponentName: ScreenTextComponent
-        guid: b227a10fe3450ca012ae64ad97f72471d9d9ac06b92210eb1ab7bb670d51d7d6
+        guid: 34e750ee72db6ca11fb139bfb9772471a141f0bc05bca348b1a1388d6c595399
         custom_name: ""
         text: "Now you're on your own. Remember what I've taught you:"
         position: [0, 0]
@@ -113,17 +113,17 @@ Entities:
           CastsShadows: false
           IsBillboard: false
   - Entity: Lower text
-    guid: e6b911c92527de745887ae4c7a17d95a931902198699961f4e0b95d46a5055c6
+    guid: a75662133dc0b16b7fbdddb59087e85c1987bee93daeb7198d8576631af8653d
     Name: Lower text
     TransformComponent:
       Translation: [-2.98023224e-08, -0.5, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: ea724137d821680f86eb126ec526db2926a55b4e6b35779c271620c88738b93d
+        guid: 4beb93442281dbaf75640f0e5ee51392e1e522386feb9e3a551ca48d473f9b98
     Components:
       - ComponentName: ScreenTextComponent
-        guid: 732fe88f1f8b73d3e573ff61922c535b1b7667aa7a82fe8361f320c765de5e1c
+        guid: 1dcd8490fdb6d6f91aed4c7103b0e95f5aa0cfc97468718025a608dfc6f0152a
         custom_name: ""
         text: And most importantly, feed all the penguins before the storm comes!
         position: [0, 0]
@@ -141,6 +141,30 @@ Entities:
             GeometryPath: ""
           Color: [1, 1, 1, 1]
           RenderOrder: 3003
+          NeedsForward: true
+          CastsShadows: false
+          IsBillboard: false
+  - Entity: KeeperSprite
+    guid: 981b905fb185d2e3ae389c1e03feba4338faa434e6b79e4ca420bd7334d9c83c
+    Name: KeeperSprite
+    TransformComponent:
+      Translation: [1.3654232, 1.08676219, -2.54287028]
+      Rotation: [0, 0, 0]
+      Scale: [0.554782569, 2.44000006, 2.44000006]
+      Parent:
+        guid: 4beb93442281dbaf75640f0e5ee51392e1e522386feb9e3a551ca48d473f9b98
+    Components:
+      - ComponentName: PanelComponent
+        guid: 8ce641cdda42bc5da711fce0e6d33515ce27fb8aca33e6e264725dd064acaf3b
+        custom_name: ""
+        background_path: ./res/textures/UI/keeper_sprite.png
+        material:
+          Shader:
+            VertexPath: ./res/shaders/ui.hlsl
+            FragmentPath: ./res/shaders/ui.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 3001
           NeedsForward: true
           CastsShadows: false
           IsBillboard: false
