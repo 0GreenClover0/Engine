@@ -367,6 +367,8 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
             out << YAML::Key << "ComponentName" << YAML::Value << "DirectionalLightComponent";
             out << YAML::Key << "guid" << YAML::Value << directionallight->guid;
             out << YAML::Key << "custom_name" << YAML::Value << directionallight->custom_name;
+            out << YAML::Key << "gamma" << YAML::Value << directionallight->gamma;
+            out << YAML::Key << "exposure" << YAML::Value << directionallight->exposure;
         }
         else
         {
@@ -1366,6 +1368,14 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component =
                 std::dynamic_pointer_cast<class DirectionalLight>(get_from_pool(component["guid"].as<std::string>()));
+            if (component["gamma"].IsDefined())
+            {
+                deserialized_component->gamma = component["gamma"].as<float>();
+            }
+            if (component["exposure"].IsDefined())
+            {
+                deserialized_component->exposure = component["exposure"].as<float>();
+            }
             if (component["ambient"].IsDefined())
             {
                 deserialized_component->ambient = component["ambient"].as<glm::vec3>();
