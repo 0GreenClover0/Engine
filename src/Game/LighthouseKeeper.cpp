@@ -4,7 +4,9 @@
 #include "Entity.h"
 #include "ExampleUIBar.h"
 #include "Factory.h"
+#include "Floater.h"
 #include "Globals.h"
+#include "IceBound.h"
 #include "LevelController.h"
 #include "Lighthouse.h"
 #include "Player.h"
@@ -15,8 +17,8 @@
 #include <glm/gtc/random.hpp>
 
 #if EDITOR
-#include <imgui.h>
 #include "imgui_extensions.h"
+#include <imgui.h>
 #endif
 
 std::shared_ptr<LighthouseKeeper> LighthouseKeeper::create()
@@ -150,6 +152,23 @@ void LighthouseKeeper::draw_editor()
     ImGuiEx::draw_ptr("Lighthouse", lighthouse);
 }
 #endif
+
+void LighthouseKeeper::on_trigger_enter(std::shared_ptr<Collider2D> const& other)
+{
+    if (other->entity->get_component<IceBound>())
+    {
+        entity->get_component<Floater>()->set_enabled(false);
+        auto const position = entity->transform->get_position();
+        entity->transform->set_position(glm::vec3(position.x, 0.07f, position.z));
+    }
+}
+void LighthouseKeeper::on_trigger_exit(std::shared_ptr<Collider2D> const& other)
+{
+    if (other->entity->get_component<IceBound>())
+    {
+        entity->get_component<Floater>()->set_enabled(true);
+    }
+}
 
 bool LighthouseKeeper::is_inside_port() const
 {

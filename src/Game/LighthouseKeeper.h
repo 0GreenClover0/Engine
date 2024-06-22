@@ -20,6 +20,10 @@ public:
     virtual void draw_editor() override;
 #endif
 
+    void on_trigger_enter(std::shared_ptr<Collider2D> const& other);
+
+    void on_trigger_exit(std::shared_ptr<Collider2D> const& other);
+
     bool is_inside_port() const;
     void set_is_inside_port(bool const value);
 
