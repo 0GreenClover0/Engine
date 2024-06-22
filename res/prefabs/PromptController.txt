@@ -1,7 +1,7 @@
 Scene: Untitled
 Entities:
   - Entity: PromptController
-    guid: 1e598558ddc4823c6cbd95bbed1cb051e2c4e1e1c5ce5bc8529d29d9e286f14b
+    guid: f1951acfe8b4eda88c515077609c29e6567bc3fc570857ce52bbf3c06c248ade
     Name: PromptController
     TransformComponent:
       Translation: [0, 0, 0]
@@ -11,57 +11,46 @@ Entities:
         guid: ""
     Components:
       - ComponentName: DialoguePromptControllerComponent
-        guid: 3b62a7800f45d81d38afb62b95a4c0d848840090b5269b0a8c0b1f4c62397385
+        guid: 840653f70e856e27643d1d246dce44435e3dc0c26d8599cbb005ed344484af56
         custom_name: ""
         interp_speed: 0.100000001
         dialogue_panel:
-          guid: 8bc16f03e64c37a3950f8c50060e118411c2e4be5212109b7937bdc49f5d3931
+          guid: f94d7aaf71d5bc84c96f0817266f01f2e2392783cd61e6b80453879a5ba4d7a6
+        panel_parent:
+          guid: 9226aef127a76100d4a8b8c0689f1fb0b88b2d0dda7df52a13eb187c0f230373
         upper_text:
-          guid: 34e750ee72db6ca11fb139bfb9772471a141f0bc05bca348b1a1388d6c595399
+          guid: 9ba934a6a2548a51da33aab1a5892c94dbe044e1fea5cabf93629423b3c18d0a
         middle_text:
-          guid: afe33685a70017a3fd3f669ed2dd3e31b44ad63e9a81a8f64a88e619ce98646f
+          guid: 001487d2d94a92041a3455dd033d2a274b1cd3e30ac0ba34cf4c2be0ffdc002b
         lower_text:
-          guid: 1dcd8490fdb6d6f91aed4c7103b0e95f5aa0cfc97468718025a608dfc6f0152a
+          guid: ef8d12d3c2182e88b5542d2812f717d9af20a2a52c1b3ab049098fe7b3f96533
         dialogue_objects:
           - [true, "Ahoy, lighthouse adept! The weather is awful, so we need to light", the way for the ships. Let's guide them to the port!, "", ./res/audio/ahoy.wav]
-  - Entity: Panel
-    guid: 4beb93442281dbaf75640f0e5ee51392e1e522386feb9e3a551ca48d473f9b98
-    Name: Panel
+  - Entity: Parent
+    guid: 9226aef127a76100d4a8b8c0689f1fb0b88b2d0dda7df52a13eb187c0f230373
+    Name: Parent
     TransformComponent:
-      Translation: [-0.270000011, -1.75, 0]
+      Translation: [0.163605928, -1.79999995, 0]
       Rotation: [0, 0, 0]
       Scale: [0.699999988, 0.200000003, 0.290000021]
       Parent:
-        guid: 1e598558ddc4823c6cbd95bbed1cb051e2c4e1e1c5ce5bc8529d29d9e286f14b
+        guid: f1951acfe8b4eda88c515077609c29e6567bc3fc570857ce52bbf3c06c248ade
     Components:
-      - ComponentName: PanelComponent
-        guid: 8bc16f03e64c37a3950f8c50060e118411c2e4be5212109b7937bdc49f5d3931
-        custom_name: ""
-        background_path: ./res/textures/UI/dialogue.png
-        material:
-          Shader:
-            VertexPath: ./res/shaders/ui.hlsl
-            FragmentPath: ./res/shaders/ui.hlsl
-            GeometryPath: ""
-          Color: [1, 1, 1, 1]
-          RenderOrder: 3001
-          NeedsForward: true
-          CastsShadows: false
-          IsBillboard: false
+      []
   - Entity: Middle text
-    guid: f282f4b9b3554c88d736eb7c636ca2f30543cad554201f691a1dd70d2c129703
+    guid: 9545e478f1028ca1e0e1ad63359a6b6c42dfcbabb88e370bd2f07504e3113d99
     Name: Middle text
     TransformComponent:
       Translation: [0, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: 4beb93442281dbaf75640f0e5ee51392e1e522386feb9e3a551ca48d473f9b98
+        guid: 9226aef127a76100d4a8b8c0689f1fb0b88b2d0dda7df52a13eb187c0f230373
     Components:
       - ComponentName: ScreenTextComponent
-        guid: afe33685a70017a3fd3f669ed2dd3e31b44ad63e9a81a8f64a88e619ce98646f
+        guid: 001487d2d94a92041a3455dd033d2a274b1cd3e30ac0ba34cf4c2be0ffdc002b
         custom_name: ""
-        text: Use the flash, upgrade the lighthouse, defeat the pirates.
+        text: ""
         position: [0, 0]
         font_size: 40
         color: 4278229503
@@ -81,19 +70,19 @@ Entities:
           CastsShadows: false
           IsBillboard: false
   - Entity: Upper text
-    guid: 71d8e4baf0969ffc97f2a2fbace9d4d7c6360fa24203843a9df4eb17a484d1eb
+    guid: b86b6f780f77b2fdaced9d6a7199ff02eaefe30dd5116eca8e606922c2317d87
     Name: Upper text
     TransformComponent:
       Translation: [-2.98023224e-08, 0.5, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: 4beb93442281dbaf75640f0e5ee51392e1e522386feb9e3a551ca48d473f9b98
+        guid: 9226aef127a76100d4a8b8c0689f1fb0b88b2d0dda7df52a13eb187c0f230373
     Components:
       - ComponentName: ScreenTextComponent
-        guid: 34e750ee72db6ca11fb139bfb9772471a141f0bc05bca348b1a1388d6c595399
+        guid: 9ba934a6a2548a51da33aab1a5892c94dbe044e1fea5cabf93629423b3c18d0a
         custom_name: ""
-        text: "Now you're on your own. Remember what I've taught you:"
+        text: ""
         position: [0, 0]
         font_size: 40
         color: 4278229503
@@ -113,19 +102,19 @@ Entities:
           CastsShadows: false
           IsBillboard: false
   - Entity: Lower text
-    guid: a75662133dc0b16b7fbdddb59087e85c1987bee93daeb7198d8576631af8653d
+    guid: 24f468b21e53c0a5ab3fbed00d0a255b7f7820eb17d9eb2e685eb4410d95f62d
     Name: Lower text
     TransformComponent:
       Translation: [-2.98023224e-08, -0.5, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: 4beb93442281dbaf75640f0e5ee51392e1e522386feb9e3a551ca48d473f9b98
+        guid: 9226aef127a76100d4a8b8c0689f1fb0b88b2d0dda7df52a13eb187c0f230373
     Components:
       - ComponentName: ScreenTextComponent
-        guid: 1dcd8490fdb6d6f91aed4c7103b0e95f5aa0cfc97468718025a608dfc6f0152a
+        guid: ef8d12d3c2182e88b5542d2812f717d9af20a2a52c1b3ab049098fe7b3f96533
         custom_name: ""
-        text: And most importantly, feed all the penguins before the storm comes!
+        text: ""
         position: [0, 0]
         font_size: 40
         color: 4278229503
@@ -145,19 +134,49 @@ Entities:
           CastsShadows: false
           IsBillboard: false
   - Entity: KeeperSprite
-    guid: 981b905fb185d2e3ae389c1e03feba4338faa434e6b79e4ca420bd7334d9c83c
+    guid: 1b09e69a70d891a6ab962176affa277d9dd323502234e520e326df01c54f037a
     Name: KeeperSprite
     TransformComponent:
-      Translation: [1.3654232, 1.08676219, -2.54287028]
+      Translation: [0.855474651, 0.795397043, -2.54287028]
       Rotation: [0, 0, 0]
-      Scale: [0.554782569, 2.44000006, 2.44000006]
+      Scale: [0.439999998, 2.20000005, 2.44000006]
       Parent:
-        guid: 4beb93442281dbaf75640f0e5ee51392e1e522386feb9e3a551ca48d473f9b98
+        guid: 9226aef127a76100d4a8b8c0689f1fb0b88b2d0dda7df52a13eb187c0f230373
     Components:
       - ComponentName: PanelComponent
-        guid: 8ce641cdda42bc5da711fce0e6d33515ce27fb8aca33e6e264725dd064acaf3b
+        guid: d0888ea05f8aeefaa8cb84028e3f0df071a268b21bfd0a2084a61e7f23661d02
         custom_name: ""
         background_path: ./res/textures/UI/keeper_sprite.png
+        material:
+          Shader:
+            VertexPath: ./res/shaders/ui.hlsl
+            FragmentPath: ./res/shaders/ui.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 3001
+          NeedsForward: true
+          CastsShadows: false
+          IsBillboard: false
+  - Entity: Bubble
+    guid: 7617e3e0f8a621036247e08608162f7101e8a74cf3abfeb11d8d0fda952bb54f
+    Name: Bubble
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [0.850000024, 0.850000024, 1]
+      Parent:
+        guid: 9226aef127a76100d4a8b8c0689f1fb0b88b2d0dda7df52a13eb187c0f230373
+    Components:
+      - ComponentName: ButtonComponent
+        guid: f94d7aaf71d5bc84c96f0817266f01f2e2392783cd61e6b80453879a5ba4d7a6
+        custom_name: ""
+        path_default: ./res/textures/UI/dialogue.png
+        path_hovered: ./res/textures/UI/dialogue.png
+        path_pressed: ./res/textures/UI/dialogue.png
+        top_left_corner: [0, 0]
+        top_right_corner: [0, 0]
+        bottom_left_corner: [0, 0]
+        bottom_right_corner: [0, 0]
         material:
           Shader:
             VertexPath: ./res/shaders/ui.hlsl
