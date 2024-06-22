@@ -5,6 +5,7 @@
 - **DO NOT OVERWRITE** `b0 (PS)` buffer which is declared in `lighting_calculations.hlsl`
 - `b3 (PS)` is occupied by a misc buffer
 - `b4 (PS)` is for particles
+- `b10 (PS)` is the same buffer as VS b0
 
 ## Sampler registers:
 - `s0` is for the main texture sampler
