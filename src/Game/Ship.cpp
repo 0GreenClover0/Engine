@@ -155,6 +155,11 @@ bool Ship::destroyed_state_change()
 
         LevelController::get_instance()->check_tutorial_progress(TutorialProgressAction::ShipDestroyed);
 
+        if (type == ShipType::Pirates)
+        {
+            LevelController::get_instance()->check_tutorial_progress(TutorialProgressAction::PirateDestroyed);
+        }
+
         return true;
     }
 
