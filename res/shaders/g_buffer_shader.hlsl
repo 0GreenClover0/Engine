@@ -16,7 +16,7 @@ struct VS_Output
 struct PS_Output
 {
     float4 position : SV_Target0;
-    float4 normal : SV_Target1;
+    float4 normal : SV_Target1; // ALPHA CHANNEL HOLDS WHETHER SOMETHING IS BLINKING OR NOT
     float4 diffuse : SV_Target2;
 };
 
@@ -25,6 +25,15 @@ cbuffer object_buffer : register(b0)
     float4x4 projection_view_model;
     float4x4 model;
     float4x4 projection_view;
+    float4 gowno;
+};
+
+cbuffer object_buffer : register(b10)
+{
+    float4x4 projection_view_model1;
+    float4x4 model1;
+    float4x4 projection_view1;
+    bool is_glowing;
 };
 
 Texture2D obj_texture : register(t0);
@@ -47,7 +56,7 @@ PS_Output ps_main(VS_Output input)
     output.diffuse = obj_texture.Sample(obj_sampler_state, input.UV);
     output.position.xyz = input.world_pos;
     output.normal.xyz = normalize(input.normal);
-    output.normal.a = 1.0f;
+    output.normal.a = is_glowing ? 1.0f : -1.0f;
     output.position.a = 1.0f;
     
     return output;

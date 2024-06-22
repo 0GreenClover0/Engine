@@ -591,6 +591,7 @@ void RendererDX11::update_object(std::shared_ptr<Drawable> const& drawable, std:
     data.projection_view_model = projection_view * model;
     data.model = drawable->entity->transform->get_model_matrix();
     data.projection_view = projection_view;
+    data.is_glowing = drawable->is_glowing();
 
     D3D11_MAPPED_SUBRESOURCE mapped_resource;
     HRESULT hr = get_device_context()->Map(m_constant_buffer_per_object, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped_resource);
@@ -600,6 +601,7 @@ void RendererDX11::update_object(std::shared_ptr<Drawable> const& drawable, std:
 
     get_device_context()->Unmap(m_constant_buffer_per_object, 0);
     get_device_context()->VSSetConstantBuffers(0, 1, &m_constant_buffer_per_object);
+    get_device_context()->PSSetConstantBuffers(10, 1, &m_constant_buffer_per_object);
 
     if (drawable->is_particle())
     {
