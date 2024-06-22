@@ -407,10 +407,18 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
     case 3:
         switch (tutorial_progress)
         {
+        case 0:
+            if (action == TutorialProgressAction::LevelStarted)
+            {
+                entity->get_component<ShipSpawner>()->spawn_ship_at_position(ShipType::Tool, {6.8f, 0.0f}, 180.0f);
+                progress_tutorial();
+            }
+            break;
         case 1:
             //TODO: Dialog
             if (action == TutorialProgressAction::LighthouseEnabled)
             {
+                set_exiting_lighthouse(true);
                 progress_tutorial();
             }
             break;
@@ -423,6 +431,9 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
         case 3:
             if (action == TutorialProgressAction::PackageCollected)
             {
+                tutorial_spawn_path = 1;
+                entity->get_component<ShipSpawner>()->pop_event();
+                entity->get_component<ShipSpawner>()->set_enabled(false);
                 progress_tutorial();
             }
             break;
@@ -432,36 +443,37 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
             //TODO: PROMPT [SPACE] Upgrade lighthouse
             if (action == TutorialProgressAction::WorkshopUpgraded)
             {
+                entity->get_component<ShipSpawner>()->set_enabled(true);
                 progress_tutorial();
             }
             break;
         case 5:
-            //TODO: Spawn Ship
-            if (action == TutorialProgressAction::KeeperEnteredLighthouse)
+            //TODO: Dialog
+            if (action == TutorialProgressAction::PackageCollected)
             {
+                ships_limit = 3;
+                entity->get_component<ShipSpawner>()->pop_event();
                 progress_tutorial();
             }
             break;
         case 6:
-            //TODO: Dialog
+            //TODO: Dialog*
+            if (action == TutorialProgressAction::PirateDestroyed)
+            {
+                ships_limit--;
+                break;
+            }
+
             if (action == TutorialProgressAction::PackageCollected)
             {
                 progress_tutorial();
             }
             break;
         case 7:
-            //TODO: Spawn food and 2 pirates
-            //TODO: If food was crushed spawn another one + one pirate
-            //TODO: Dialog*
-            if (action == TutorialProgressAction::PackageCollected)
-            {
-                progress_tutorial();
-            }
-            break;
-        case 8:
             //TODO: Dialog
-            //TODO: End dialog and all penguins in water
-            if (true)
+            //TODO: End dialog
+            //TODO: Call method when dialog ended
+            if (true && customer_manager.lock()->get_number_of_customers() == 0)
             {
                 lighthouse.lock()->turn_light(false);
                 GameController::get_instance()->move_to_next_scene();
