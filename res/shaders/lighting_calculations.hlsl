@@ -10,6 +10,8 @@ cbuffer light_buffer : register(b0)
     float3 camera_pos;
     int number_of_point_lights;
     int number_of_spot_lights;
+    float gamma_strength;
+    float exposure_strength;
 };
 
 cbuffer ps_misc_buffer : register(b3)

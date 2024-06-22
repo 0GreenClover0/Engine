@@ -76,6 +76,6 @@ float4 ps_main(VS_Output input) : SV_Target
     }
 
     result.xyz += scatter;
-    result.xyz = exposure_tonemapping(result.xyz);
-    return gamma_correction(result.xyz);
+    result.xyz = exposure_tonemapping(result.xyz, exposure_strength);
+    return gamma_correction(result.xyz, gamma_strength);
 }

@@ -24,6 +24,8 @@ public:
 
     void set_render_target_for_shadow_mapping() const;
 
+    float gamma = 1.5f;
+    float exposure = 1.5f;
 protected:
     virtual void set_up_shadow_mapping() override;
 

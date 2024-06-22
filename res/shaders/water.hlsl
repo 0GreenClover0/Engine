@@ -257,7 +257,7 @@ float4 ps_main(VS_Output input) : SV_TARGET
     float4 final;
     final.xyz = falloff_value * float3(0.1f, 0.1f, 0.6f) + (1.0f - falloff_value) * result;
     final.xyz += scatter;
-    final.xyz = gamma_correction(exposure_tonemapping(final.xyz));
+    final.xyz = gamma_correction(exposure_tonemapping(final.xyz, exposure_strength), gamma_strength);
     if (halo_value.a > 0.0f)
     {
         final.xyz += abs(halo_value.xyz);
