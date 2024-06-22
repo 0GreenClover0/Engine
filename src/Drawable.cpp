@@ -25,6 +25,16 @@ bool Drawable::is_particle() const
     return false;
 }
 
+void Drawable::set_glowing(bool is_glowing)
+{
+    m_is_glowing = is_glowing ? 1 : 0;
+}
+
+i32 Drawable::is_glowing() const
+{
+    return m_is_glowing;
+}
+
 RasterizerDrawType Drawable::get_rasterizer_draw_type() const
 {
     return m_rasterizer_draw_type;

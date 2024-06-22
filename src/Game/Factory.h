@@ -32,6 +32,7 @@ public:
 
     void update_lights() const;
 
+    void set_glowing(bool is_glowing) const;
     FactoryType type = FactoryType::Generator;
 
     std::vector<std::weak_ptr<PointLight>> lights = {};

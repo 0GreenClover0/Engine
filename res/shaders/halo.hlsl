@@ -22,7 +22,7 @@ struct vs_output
 };
 
 Texture2D obj_texture : register(t0);
-SamplerState obj_sampler_state : register(s0);
+SamplerState default_sampler : register(s0);
 
 vs_output vs_main(vs_input input)
 {
@@ -36,20 +36,22 @@ vs_output vs_main(vs_input input)
 
 float4 glow(float3 color, float3 world_pos, float3 world_normal)
 {
+    color.b *= 0.7f; // make it more yellow-ish
+    color.xyz = exposure_tonemapping(gamma_correction(color.xyz).xyz);
+    float strength = abs(sin(time_ps* 5.0f)) * 8.0f;
     float3 view_dir = normalize(camera_pos.xyz - world_pos.xyz);
-    color.xyz = calculate_directional_light(directional_light, world_normal, view_dir, color.xyz, world_pos, true);
-
     float normal_dot_view = dot(world_normal, view_dir);
-
-    float halo_strength = pow(1.1f - abs(normal_dot_view), 1.5f);
-
+    float halo_strength = pow(1.1f - abs(normal_dot_view), strength);
     float3 halo_color = float3(1.0f, 1.0f, 1.0f) * halo_strength;
-    return float4((color + halo_color), 1.0f);
+    float3 cool_color = color + halo_color;
+    return float4(cool_color, 1.0f);
 }
 
 float4 ps_main(vs_output input) : SV_TARGET
 {
-    float4 tex_color = obj_texture.Sample(obj_sampler_state, input.uv);
-
-    return glow(tex_color.xyz, input.world_pos, input.world_normal);
+    float4 tex_color = obj_texture.Sample(default_sampler, input.uv);
+    tex_color = glow(tex_color.xyz, input.world_pos, input.world_normal);
+    tex_color.b *= 0.7f;
+    tex_color.xyz = exposure_tonemapping(gamma_correction(tex_color.xyz).xyz);
+    return float4(tex_color.xyzw);
 }
