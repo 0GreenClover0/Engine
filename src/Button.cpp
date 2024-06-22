@@ -79,7 +79,8 @@ void Button::draw_editor()
 
     static float width = 1.0f;
     static float height = 1.0f;
-    static float result = 1.0f;
+    static float result_width = 1.0f;
+    static float result_height = 1.0f;
     static float img_scale = 1.0f;
 
     bool is_size_changed = false;
@@ -90,15 +91,18 @@ void Button::draw_editor()
     if (is_size_changed)
     {
         float const x = (9.0f * width) / 16.0f;
-        result = x / height;
+        float const y = (16.0f * height) / 9.0f;
+        result_width = x / height;
+        result_height = y / width;
     }
 
-    ImGui::Text(("Result: " + std::to_string(result)).c_str());
+    ImGui::Text(("Result width: " + std::to_string(result_width)).c_str());
+    ImGui::Text(("Result height: " + std::to_string(result_height)).c_str());
 
     if (ImGui::Button("Apply to width"))
     {
         glm::vec3 const scale = entity->transform->get_local_scale();
-        entity->transform->set_local_scale({scale.x * result, scale.y, 1.0f});
+        entity->transform->set_local_scale({scale.x * result_width, scale.y, 1.0f});
     }
 
     ImGui::SameLine();
@@ -106,7 +110,7 @@ void Button::draw_editor()
     if (ImGui::Button("Apply to height"))
     {
         glm::vec3 const scale = entity->transform->get_local_scale();
-        entity->transform->set_local_scale({scale.x, scale.y * result, 1.0f});
+        entity->transform->set_local_scale({scale.x, scale.y * result_height, 1.0f});
     }
 
     ImGui::InputFloat("Scale: ", &img_scale);
