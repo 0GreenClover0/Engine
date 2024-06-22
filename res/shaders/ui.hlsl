@@ -1,3 +1,5 @@
+#include "common_functions.hlsl"
+
 struct VS_Input
 {
     float3 pos : POSITION;
@@ -38,5 +40,6 @@ VS_Output vs_main(VS_Input input)
 
 float4 ps_main(VS_Output input) : SV_TARGET
 {
-    return UITexture.Sample(UISampler, input.UV);
+    float4 color = UITexture.Sample(UISampler, input.UV);
+    return float4(exposure_tonemapping(gamma_correction(color.xyz)), color.a);
 }
