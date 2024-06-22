@@ -15,10 +15,20 @@
 #if EDITOR
 #include <imgui.h>
 #endif
+#include <Panel.h>
 
 std::shared_ptr<EndScreen> EndScreen::create()
 {
     return std::make_shared<EndScreen>(AK::Badge<EndScreen> {});
+}
+
+std::shared_ptr<EndScreen> EndScreen::create(bool is_failed)
+{
+    auto end_screen = std::make_shared<EndScreen>(AK::Badge<EndScreen> {});
+
+    end_screen->is_failed = is_failed;
+
+    return end_screen;
 }
 
 EndScreen::EndScreen(AK::Badge<EndScreen>)
@@ -27,6 +37,8 @@ EndScreen::EndScreen(AK::Badge<EndScreen>)
 
 void EndScreen::awake()
 {
+    update_background();
+
     set_can_tick(true);
 }
 
@@ -53,8 +65,27 @@ void EndScreen::update()
 void EndScreen::draw_editor()
 {
     Component::draw_editor();
+
+    if (ImGui::Checkbox("Failed", &is_failed))
+    {
+        update_background();
+    }
 }
 #endif
+
+void EndScreen::update_background()
+{
+    if (is_failed)
+    {
+        entity->get_component<Panel>()->background_path = m_failed_background_path;
+    }
+    else
+    {
+        entity->get_component<Panel>()->background_path = m_win_background_path;
+    }
+
+    entity->get_component<Panel>()->reprepare();
+}
 
 void EndScreen::update_screen_position()
 {
