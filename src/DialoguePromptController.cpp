@@ -2,6 +2,7 @@
 #include "AK/Math.h"
 #include "DialogueObject.h"
 #include "Entity.h"
+#include "Game/LevelController.h"
 #include "Globals.h"
 #include "Input.h"
 #include "Sound.h"
@@ -42,13 +43,10 @@ void DialoguePromptController::update()
 
     if (m_currently_played_sound != nullptr && m_currently_played_sound->has_finished()
         && dialogue_objects[m_currently_played_content].auto_end)
+    {
+        LevelController::get_instance()->check_tutorial_progress(TutorialProgressAction::DialogEnded);
         end_content();
-
-    if (Input::input->get_key_down(GLFW_MOUSE_BUTTON_LEFT))
-        play_content(0);
-
-    if (Input::input->get_key_down(GLFW_MOUSE_BUTTON_RIGHT))
-        end_content();
+    }
 
     realign_lines();
 
@@ -86,6 +84,11 @@ void DialoguePromptController::draw_editor()
     Component::draw_editor();
 
     realign_lines();
+
+    if (ImGui::Button("Play"))
+    {
+        play_content(0);
+    }
 
     ImGuiEx::draw_ptr("Panel Reference", dialogue_panel);
     ImGuiEx::draw_ptr("Parent Reference", panel_parent);
