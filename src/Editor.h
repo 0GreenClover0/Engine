@@ -126,6 +126,7 @@ enum class AssetType
     Scene,
     Prefab,
     Texture,
+    Audio
 };
 
 class Asset
@@ -269,7 +270,9 @@ private:
     std::string m_scene_path = "./res/scenes/";
     std::string m_prefab_path = "./res/prefabs/";
     std::string m_textures_path = "./res/textures/UI";
+    std::string m_audio_path = "./res/audio/";
     std::array<std::string, 3> m_known_model_formats = {".gltf", ".obj", ".fbx"};
+    std::array<std::string, 3> m_known_audio_formats = {".wav"};
     std::array<std::string, 1> m_known_scene_formats = {".txt"};
     std::array<std::string, 1> m_known_textures_formats = {".png"};
 
