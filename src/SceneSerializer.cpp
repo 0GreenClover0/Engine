@@ -23,6 +23,7 @@
 #include "Floater.h"
 #include "FloatersManager.h"
 #include "FloeButton.h"
+#include "Game/Credits.h"
 #include "Game/Customer.h"
 #include "Game/CustomerManager.h"
 #include "Game/EndScreen.h"
@@ -422,6 +423,15 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "ComponentName" << YAML::Value << "SoundListenerComponent";
         out << YAML::Key << "guid" << YAML::Value << soundlistener->guid;
         out << YAML::Key << "custom_name" << YAML::Value << soundlistener->custom_name;
+        out << YAML::EndMap;
+    }
+    else if (auto const credits = std::dynamic_pointer_cast<class Credits>(component); credits != nullptr)
+    {
+        out << YAML::BeginMap;
+        out << YAML::Key << "ComponentName" << YAML::Value << "CreditsComponent";
+        out << YAML::Key << "guid" << YAML::Value << credits->guid;
+        out << YAML::Key << "custom_name" << YAML::Value << credits->custom_name;
+        out << YAML::Key << "back_to_menu_button" << YAML::Value << credits->back_to_menu_button;
         out << YAML::EndMap;
     }
     else if (auto const customer = std::dynamic_pointer_cast<class Customer>(component); customer != nullptr)
@@ -1643,6 +1653,27 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component =
                 std::dynamic_pointer_cast<class SoundListener>(get_from_pool(component["guid"].as<std::string>()));
+            deserialized_entity->add_component(deserialized_component);
+            deserialized_component->reprepare();
+        }
+    }
+    else if (component_name == "CreditsComponent")
+    {
+        if (first_pass)
+        {
+            auto const deserialized_component = Credits::create();
+            deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_component->custom_name = component["custom_name"].as<std::string>();
+            deserialized_pool.emplace_back(deserialized_component);
+        }
+        else
+        {
+            auto const deserialized_component =
+                std::dynamic_pointer_cast<class Credits>(get_from_pool(component["guid"].as<std::string>()));
+            if (component["back_to_menu_button"].IsDefined())
+            {
+                deserialized_component->back_to_menu_button = component["back_to_menu_button"].as<std::weak_ptr<Button>>();
+            }
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
         }
