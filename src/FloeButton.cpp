@@ -6,6 +6,7 @@
 #include "ExampleDynamicText.h"
 #include "Game/GameController.h"
 #include "Game/LighthouseLight.h"
+#include <Game/LevelController.h>
 #include <ResourceManager.h>
 #include <SceneSerializer.h>
 
@@ -55,7 +56,7 @@ void FloeButton::update()
 
     bool is_hovered = m_hovered_credits || m_hovered_exit || m_hovered_start;
 
-    if (is_hovered)
+    if (is_hovered && LevelController::get_instance()->lighthouse.lock()->light.lock()->enabled())
     {
         glm::vec3 position = entity->transform->get_local_position();
 
