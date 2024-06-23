@@ -20,6 +20,8 @@ public:
 
     void update_screen_position();
 
+    void hide();
+
 protected:
     Popup();
 
@@ -28,4 +30,6 @@ protected:
 
     bool m_is_in_screen = false;
     float m_appear_counter = 0.0f;
+
+    bool m_is_hiding = false;
 };
