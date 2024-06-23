@@ -35,6 +35,14 @@ void ParticleSystem::draw_editor()
 {
     Component::draw_editor();
 
+    // Dropdown list
+    std::array const particle_types = {"Default", "Prompt", "Snow"};
+    i32 current_item_index = static_cast<i32>(particle_type);
+    if (ImGui::Combo("Floe Button Type", &current_item_index, particle_types.data(), particle_types.size()))
+    {
+        particle_type = static_cast<ParticleType>(current_item_index);
+    }
+
     ImGui::InputText("Sprite", &sprite_path);
     ImGui::ColorEdit4("Start color 1", value_ptr(start_color_1));
     ImGui::ColorEdit4("End color 1", value_ptr(end_color_1));
@@ -48,6 +56,8 @@ void ParticleSystem::draw_editor()
     ImGui::DragFloat("Emitter size", &emitter_bounds, 0.1f, 0.0f, FLT_MAX);
     ImGui::DragIntRange2("Spawn count", &min_spawn_count, &max_spawn_count, 1, 0, INT_MAX);
     ImGui::Checkbox("Simulate in world space", &m_simulate_in_world_space);
+    ImGui::Checkbox("Rotate particles", &rotate_particles);
+    ImGui::Checkbox("Spawn instantly", &spawn_instantly);
 }
 #endif
 
@@ -87,7 +97,10 @@ void ParticleSystem::update_system()
 
             particle->transform->set_parent(particle_parent->transform);
 
-            auto const particle_comp = particle->add_component(Particle::create(m_spawn_data_vector[i], emitter_bounds, sprite_path));
+            auto const particle_comp =
+                particle->add_component(Particle::create(m_spawn_data_vector[i], emitter_bounds, sprite_path, rotate_particles));
+
+            particle_comp->particle_type = particle_type;
 
             // Adjust scale
             glm::vec3 const scale_factor = glm::linearRand(start_min_particle_size, start_max_particle_size);
@@ -111,7 +124,16 @@ void ParticleSystem::spawn_calculations()
     {
         ParticleSpawnData data = {};
 
-        data.spawn_time = AK::random_float(min_spawn_interval, max_spawn_interval);
+        if (m_first_time_spawning)
+        {
+            m_first_time_spawning = false;
+            data.spawn_time = 0.0f;
+        }
+        else
+        {
+            data.spawn_time = AK::random_float(min_spawn_interval, max_spawn_interval);
+        }
+
         data.spawn_alpha = AK::random_float(min_spawn_alpha, max_spawn_alpha);
         data.start_velocity = glm::linearRand(start_velocity_1, start_velocity_2);
         data.lifetime = AK::random_float(lifetime_1, lifetime_2);

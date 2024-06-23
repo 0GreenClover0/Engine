@@ -426,6 +426,28 @@ struct convert<FloeButtonType>
 };
 
 template<>
+struct convert<ParticleType>
+{
+    static Node encode(ParticleType const rhs)
+    {
+        Node node;
+        node.push_back(to_integral(rhs));
+        return node;
+    }
+
+    static bool decode(Node const& node, ParticleType& rhs)
+    {
+        if (!node.IsScalar())
+        {
+            return false;
+        }
+
+        rhs = static_cast<ParticleType>(node.as<int>());
+        return true;
+    }
+};
+
+template<>
 struct convert<SpawnEvent>
 {
     static Node encode(SpawnEvent const& rhs)
@@ -697,6 +719,13 @@ inline Emitter& operator<<(YAML::Emitter& out, ColliderType2D const& v)
 }
 
 inline Emitter& operator<<(YAML::Emitter& out, FactoryType const& v)
+{
+    out << YAML::Flow;
+    out << to_integral(v);
+    return out;
+}
+
+inline Emitter& operator<<(YAML::Emitter& out, ParticleType const& v)
 {
     out << YAML::Flow;
     out << to_integral(v);

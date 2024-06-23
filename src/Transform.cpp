@@ -45,6 +45,7 @@ glm::vec3 Transform::get_position()
 
 void Transform::set_rotation(glm::vec3 const& euler_angles)
 {
+    // this was null when adding individual particle component AGAIN?
     if (parent.expired())
     {
         m_local_rotation = glm::quat(glm::radians(euler_angles));

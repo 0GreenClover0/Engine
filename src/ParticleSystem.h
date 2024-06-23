@@ -6,6 +6,13 @@
 
 #include <glm/vec4.hpp>
 
+enum class ParticleType
+{
+    Default,
+    Prompt,
+    Snow
+};
+
 struct ParticleSpawnData
 {
     float spawn_time = 0.0f;
@@ -27,12 +34,18 @@ public:
     explicit ParticleSystem(AK::Badge<ParticleSystem>);
 
     virtual void awake() override;
+
 #if EDITOR
     virtual void draw_editor() override;
 #endif
+
     virtual void update() override;
     void update_system();
 
+    ParticleType particle_type = ParticleType::Default;
+
+    bool rotate_particles = true;
+    bool spawn_instantly = false;
     std::string sprite_path = "./res/textures/particle.png"; // Default particle
 
     float min_spawn_interval = 0.5f;
@@ -68,4 +81,5 @@ private:
     u32 m_random_spawn_count = 0;
     double m_time_counter = 0.0;
     double m_spawn_interval = 0.0;
+    bool m_first_time_spawning = true;
 };
