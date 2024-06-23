@@ -241,6 +241,8 @@ void Engine::set_game_running(bool const is_running)
 
     if (m_is_game_running)
     {
+        uninitialize_miniaudio();
+
         MainScene::get_instance()->unload();
 
         MainScene::set_instance(nullptr);
@@ -248,6 +250,10 @@ void Engine::set_game_running(bool const is_running)
         create_game();
 
         set_game_paused(false);
+    }
+    else
+    {
+        initialize_miniaudio();
     }
 
     m_is_game_running = is_running;
@@ -297,9 +303,6 @@ i32 Engine::initialize_thirdparty_before_renderer()
     }
 
     srand(static_cast<u32>(glfwGetTime()));
-
-    if (setup_miniaudio() != 0)
-        return 4;
 
     return 0;
 }
@@ -374,7 +377,7 @@ void Engine::setup_imgui(GLFWwindow* glfw_window)
 #endif
 }
 
-i32 Engine::setup_miniaudio()
+i32 Engine::initialize_miniaudio()
 {
     ma_engine_config config = ma_engine_config_init();
     config.channels = 2;
@@ -384,8 +387,10 @@ i32 Engine::setup_miniaudio()
     if (ma_engine_init(&config, &audio_engine) != MA_SUCCESS)
         return -1;
 
-    if (ma_engine_start(&audio_engine) != MA_SUCCESS)
-        return -2;
-
     return 0;
+}
+
+void Engine::uninitialize_miniaudio()
+{
+    ma_engine_uninit(&audio_engine);
 }
