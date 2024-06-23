@@ -59,12 +59,18 @@ void Particle::awake()
 
     update_particle();
 
-    entity->transform->parent.lock()->set_euler_angles(Camera::get_main_camera()->entity->transform->get_euler_angles());
+    if (!entity->transform->parent.expired())
+        entity->transform->parent.lock()->set_euler_angles(Camera::get_main_camera()->entity->transform->get_euler_angles());
+    else
+        entity->transform->set_euler_angles(Camera::get_main_camera()->entity->transform->get_euler_angles());
 }
 
 void Particle::draw() const
 {
-    entity->transform->parent.lock()->set_euler_angles(Camera::get_main_camera()->entity->transform->get_euler_angles());
+    if (!entity->transform->parent.expired())
+        entity->transform->parent.lock()->set_euler_angles(Camera::get_main_camera()->entity->transform->get_euler_angles());
+    else
+        entity->transform->set_euler_angles(Camera::get_main_camera()->entity->transform->get_euler_angles());
 
     if (m_rasterizer_draw_type == RasterizerDrawType::None)
     {
@@ -126,7 +132,10 @@ void Particle::decrement_alpha()
 
     if (m_color.a < 0.01f)
     {
-        entity->transform->parent.lock()->entity.lock()->destroy_immediate();
+        if (!entity->transform->parent.expired())
+            entity->transform->parent.lock()->entity.lock()->destroy_immediate();
+        else
+            destroy_immediate();
     }
 }
 
