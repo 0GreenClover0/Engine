@@ -59,7 +59,7 @@ void FloeButton::update()
     {
         glm::vec3 position = entity->transform->get_local_position();
 
-        float y = std::lerp(position.y, 0.0f, 0.1f);
+        float y = std::lerp(position.y, 0.022f, 0.1f);
 
         entity->transform->set_local_position({position.x, y, position.z});
     }
@@ -67,7 +67,7 @@ void FloeButton::update()
     {
         glm::vec3 position = entity->transform->get_local_position();
 
-        float y = std::lerp(position.y, -0.14f, 0.1f);
+        float y = std::lerp(position.y, -0.118f, 0.1f);
 
         entity->transform->set_local_position({position.x, y, position.z});
     }
