@@ -1,0 +1,42 @@
+Scene: Untitled
+Entities:
+  - Entity: EXIT
+    guid: cebce9f2564df798765d2cc24fd13ce00592b4ac715e0234f99316f40620a4cc
+    Name: EXIT
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: ""
+    Components:
+      - ComponentName: ModelComponent
+        guid: 7bd7d158a5e18b74502ca70c6a38084ece8a194f90e5904b64afaa139af06a31
+        custom_name: ""
+        model_path: ./res/models\main_menu\exit.gltf
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+          NeedsForward: false
+          CastsShadows: true
+          IsBillboard: false
+      - ComponentName: Collider2DComponent
+        guid: 7d555fadec945c721c984b4cdd30f1122662d8f7a32a9d67f5c881d60652546e
+        custom_name: ""
+        offset: [0, 0]
+        is_trigger: true
+        is_static: false
+        collider_type: 0
+        width: 2
+        height: 1.39999998
+        radius: 2
+        drag: 0.00999999978
+        velocity: [0, 0]
+      - ComponentName: FloeButtonComponent
+        guid: 91f05cc4af6546ece8ed6c2a77ed9b9cef919415a33b7ae97228ab529e1703a3
+        custom_name: ""
+        floe_button_type: 3

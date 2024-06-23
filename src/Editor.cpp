@@ -31,6 +31,7 @@
 #include "ExampleUIBar.h"
 #include "Floater.h"
 #include "FloatersManager.h"
+#include "FloeButton.h"
 #include "Game/Customer.h"
 #include "Game/CustomerManager.h"
 #include "Game/EndScreen.h"
