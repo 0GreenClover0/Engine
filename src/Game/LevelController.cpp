@@ -299,7 +299,6 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
         case 8:
             if (action == TutorialProgressAction::DialogEnded && customer_manager.lock()->get_number_of_customers() == 0)
             {
-                lighthouse.lock()->turn_light(false);
                 GameController::get_instance()->move_to_next_scene();
             }
             break;
@@ -446,7 +445,6 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
         case 9:
             if (action == TutorialProgressAction::DialogEnded && customer_manager.lock()->get_number_of_customers() == 0)
             {
-                lighthouse.lock()->turn_light(false);
                 GameController::get_instance()->move_to_next_scene();
             }
             break;
@@ -526,7 +524,6 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
         case 7:
             if (action == TutorialProgressAction::DialogEnded && customer_manager.lock()->get_number_of_customers() == 0)
             {
-                lighthouse.lock()->turn_light(false);
                 GameController::get_instance()->move_to_next_scene();
             }
             break;
