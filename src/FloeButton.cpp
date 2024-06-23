@@ -7,6 +7,9 @@
 #include "Game/GameController.h"
 #include "Game/LighthouseLight.h"
 #include <ResourceManager.h>
+#include <SceneSerializer.h>
+
+bool FloeButton::m_is_credits_open = false;
 
 std::shared_ptr<FloeButton> FloeButton::create()
 {
@@ -21,6 +24,9 @@ FloeButton::FloeButton(AK::Badge<FloeButton>)
 void FloeButton::awake()
 {
     Component::awake();
+
+    m_is_credits_open = false;
+
     set_can_tick(true);
 }
 
@@ -28,11 +34,22 @@ void FloeButton::update()
 {
     Component::update();
 
-    if (Input::input->get_key_down(GLFW_MOUSE_BUTTON_LEFT))
+    if (Input::input->get_key_down(GLFW_MOUSE_BUTTON_LEFT) && m_is_credits_open == false)
     {
         if (m_hovered_start)
         {
             GameController::get_instance()->move_to_next_scene();
+        }
+
+        if (m_hovered_credits)
+        {
+            SceneSerializer::load_prefab("CreditScreen");
+            FloeButton::m_is_credits_open = true;
+        }
+
+        if (m_hovered_exit)
+        {
+            Engine::should_exit = true;
         }
     }
 
@@ -42,7 +59,7 @@ void FloeButton::update()
     {
         glm::vec3 position = entity->transform->get_local_position();
 
-        float y = std::lerp(position.y, -0.14f, 0.1f);
+        float y = std::lerp(position.y, 0.0f, 0.1f);
 
         entity->transform->set_local_position({position.x, y, position.z});
     }
@@ -50,7 +67,7 @@ void FloeButton::update()
     {
         glm::vec3 position = entity->transform->get_local_position();
 
-        float y = std::lerp(position.y, 0.0f, 0.1f);
+        float y = std::lerp(position.y, -0.14f, 0.1f);
 
         entity->transform->set_local_position({position.x, y, position.z});
     }

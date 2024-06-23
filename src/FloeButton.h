@@ -30,4 +30,6 @@ public:
     bool m_hovered_start = false;
     bool m_hovered_credits = false;
     bool m_hovered_exit = false;
+
+    static bool m_is_credits_open;
 };
