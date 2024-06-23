@@ -29,6 +29,8 @@ public:
 
     void reset_level();
 
+    u32 get_level();
+
     std::weak_ptr<Entity> current_scene = {};
     std::weak_ptr<Entity> next_scene = {};
 

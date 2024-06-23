@@ -32,6 +32,7 @@
 #include "Floater.h"
 #include "FloatersManager.h"
 #include "FloeButton.h"
+#include "Game/Clock.h"
 #include "Game/Credits.h"
 #include "Game/Customer.h"
 #include "Game/CustomerManager.h"

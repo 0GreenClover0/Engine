@@ -16,6 +16,7 @@
 #include <imgui.h>
 #include <imgui_extensions.h>
 #endif
+#include "Clock.h"
 
 std::shared_ptr<GameController> GameController::create()
 {
@@ -73,6 +74,8 @@ void GameController::awake()
     current_scene = SceneSerializer::load_prefab(level);
 
     reset_level();
+
+    Clock::get_instance()->update_visibility();
 
     set_can_tick(true);
 }
@@ -200,6 +203,7 @@ void GameController::move_to_next_scene()
     }
 
     m_level_number++;
+    Clock::get_instance()->update_visibility();
 
     m_move_to_next_scene = true;
 }
@@ -215,4 +219,9 @@ void GameController::reset_level()
     LevelController::get_instance()->set_exiting_lighthouse(false);
     LevelController::get_instance()->lighthouse.lock()->turn_light(false);
     LevelController::get_instance()->check_tutorial_progress(TutorialProgressAction::LevelStarted);
+}
+
+u32 GameController::get_level()
+{
+    return m_level_number;
 }
