@@ -234,8 +234,8 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
             {
                 ships_limit = 1;
                 entity->get_component<ShipSpawner>()->spawn_ship_at_position(ShipType::FoodSmall, {-6.2f, 2.5f}, 0.0f);
-                progress_tutorial();
                 GameController::get_instance()->dialog_manager.lock()->play_content(0);
+                progress_tutorial();
             }
             break;
         case 1:

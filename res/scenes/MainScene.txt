@@ -18,7 +18,7 @@ Entities:
         next_scene:
           guid: nullptr
         dialog_manager:
-          guid: 97d8f8ecf75facf622ddb0204f1af91d8fef57893a5392a24d83ce38d2b5ba32
+          guid: 748bff1e79bc529980f9bad5940f19ee00bd8aa672fcaddca3944fd65d480944
       - ComponentName: PlayerComponent
         guid: 08103e8102ed192608af34eb670b53c496888e5216e32577fa2299265deba883
         custom_name: ""
@@ -385,7 +385,7 @@ Entities:
         m_light_world_size: 0.0310000461
         m_light_frustum_width: 50
   - Entity: PromptController
-    guid: e31780e2e92be5fe4c10918ea352f2ed5ec67576cc7eb80030d29a44a3913839
+    guid: 64fcb9a88a572e04ec2c02e395f5af032cbc1f724bd19c99507071ed5a401c57
     Name: PromptController
     TransformComponent:
       Translation: [0, 0, 0]
@@ -395,19 +395,19 @@ Entities:
         guid: dbacdd6b48665243e2f90f7dea7298de945bf38a1a9331f9f0afcb61b5006d00
     Components:
       - ComponentName: DialoguePromptControllerComponent
-        guid: 97d8f8ecf75facf622ddb0204f1af91d8fef57893a5392a24d83ce38d2b5ba32
+        guid: 748bff1e79bc529980f9bad5940f19ee00bd8aa672fcaddca3944fd65d480944
         custom_name: ""
         interp_speed: 0.100000001
         dialogue_panel:
-          guid: 6fe92724388fa6df297697e67a57a75abfc29a86b350782071d2afec04a0565f
+          guid: 470e228fe296b3c1e38d1dacb1fae14b3f64ae0ed8776a297218ddad78b3e6e1
         panel_parent:
-          guid: ebe576efde3e3a7bae94dbbcb774b9f543ca7efef554713dfd34a67c4b93be0b
+          guid: f6fa097999bf6a5f030cd68f31fa533cb02dae2fbac7b86b15db86ef8bf539b9
         upper_text:
-          guid: f49a332fe93b5a2d65f93dc0ee63e4a81f4d4064b7581829ce0da542dae826a2
+          guid: 87bd7c26844953fd29a79ad15e578436636b725fd59c7d71ae280f059a62906b
         middle_text:
-          guid: 4a9c22824800a70501c6a708a27198a40945534a45d2fc30ab774e4cb9fcd4d1
+          guid: 6ddea4235c23bbc0e0c1e4236cb1dc910ba53fe84e0e322926a5f5412f41e300
         lower_text:
-          guid: 6c8b7c1c518e2c918ae6e4144e647ab8fae5fc2f3664397f3e0a2c7dc19fe5da
+          guid: 7e46a229d18fe960e327a3b9fde858a34cf9c5e0811216dc342f541f0edec7f9
         dialogue_objects:
           - [false, "Ahoy, lighthouse adept! The weather is awful, so we need to light", the way for the ships. Let's guide them to the port!, "", ./res/audio/dialog_0.wav]
           - [true, "", You wasted the cargo! I guess you need another shipment., "", ./res/audio/dialog_1.wav]
@@ -426,30 +426,30 @@ Entities:
           - [false, "Now you're on your own. Remember what I've taught you:", "Use the flash, upgrade the lighthouse, defeat the pirates.", "And most importantly, feed all the penguins before the storm comes! Ha! Ha! Ha!", ./res/audio/dialog_14.wav]
           - [true, "Oh no, pesky pirates incoming! ", "", Destroy their ships as fast as you can!, ./res/audio/dialog_15.wav]
   - Entity: Parent
-    guid: ebe576efde3e3a7bae94dbbcb774b9f543ca7efef554713dfd34a67c4b93be0b
+    guid: f6fa097999bf6a5f030cd68f31fa533cb02dae2fbac7b86b15db86ef8bf539b9
     Name: Parent
     TransformComponent:
-      Translation: [0.163605928, -1.79999995, 0]
+      Translation: [0.163605928, -1.79971945, 0]
       Rotation: [0, 0, 0]
       Scale: [0.699999988, 0.200000003, 0.290000021]
       Parent:
-        guid: e31780e2e92be5fe4c10918ea352f2ed5ec67576cc7eb80030d29a44a3913839
+        guid: 64fcb9a88a572e04ec2c02e395f5af032cbc1f724bd19c99507071ed5a401c57
     Components:
       []
   - Entity: Middle text
-    guid: a5ec8275d3289d3f653fa6527a9dd310eae40afb41d256554df96709064b541f
+    guid: b2e0a79c715a1e3611da0605f4316c83e5f27a68d280a9478f461a7130998ffd
     Name: Middle text
     TransformComponent:
-      Translation: [0, 0, 0]
+      Translation: [0, -0.180000007, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: ebe576efde3e3a7bae94dbbcb774b9f543ca7efef554713dfd34a67c4b93be0b
+        guid: f6fa097999bf6a5f030cd68f31fa533cb02dae2fbac7b86b15db86ef8bf539b9
     Components:
       - ComponentName: ScreenTextComponent
-        guid: 4a9c22824800a70501c6a708a27198a40945534a45d2fc30ab774e4cb9fcd4d1
+        guid: 6ddea4235c23bbc0e0c1e4236cb1dc910ba53fe84e0e322926a5f5412f41e300
         custom_name: ""
-        text: Use the flash, upgrade the lighthouse, defeat the pirates.
+        text: the way for the ships. Let's guide them to the port!
         position: [0, 0]
         font_size: 30
         color: 4294241528
@@ -469,19 +469,19 @@ Entities:
           CastsShadows: false
           IsBillboard: false
   - Entity: Upper text
-    guid: 23fad47feb2e29e38ae724d67cc4793950b9d34f1ebf01c57afe80e7ae6db87f
+    guid: f15ac881728db8a4e7d688a9f2fd7634ea18aa6a8441ed91d43a24fcf5fa23b2
     Name: Upper text
     TransformComponent:
-      Translation: [-2.98023224e-08, 0.360000014, 0]
+      Translation: [-2.98023224e-08, 0.180000007, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: ebe576efde3e3a7bae94dbbcb774b9f543ca7efef554713dfd34a67c4b93be0b
+        guid: f6fa097999bf6a5f030cd68f31fa533cb02dae2fbac7b86b15db86ef8bf539b9
     Components:
       - ComponentName: ScreenTextComponent
-        guid: f49a332fe93b5a2d65f93dc0ee63e4a81f4d4064b7581829ce0da542dae826a2
+        guid: 87bd7c26844953fd29a79ad15e578436636b725fd59c7d71ae280f059a62906b
         custom_name: ""
-        text: "Now you're on your own. Remember what I've taught you:"
+        text: Ahoy, lighthouse adept! The weather is awful, so we need to light
         position: [0, 0]
         font_size: 30
         color: 4294241528
@@ -501,19 +501,19 @@ Entities:
           CastsShadows: false
           IsBillboard: false
   - Entity: Lower text
-    guid: 2975f7dce352c3ac41703853801f5f166a64c26a7ee08ee791aa265538cec515
+    guid: a297bae7d00fcca68c3746aa7523c5477e95615a11c0a6dd22cc5fed85dce12a
     Name: Lower text
     TransformComponent:
       Translation: [-2.98023224e-08, -0.360000014, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: ebe576efde3e3a7bae94dbbcb774b9f543ca7efef554713dfd34a67c4b93be0b
+        guid: f6fa097999bf6a5f030cd68f31fa533cb02dae2fbac7b86b15db86ef8bf539b9
     Components:
       - ComponentName: ScreenTextComponent
-        guid: 6c8b7c1c518e2c918ae6e4144e647ab8fae5fc2f3664397f3e0a2c7dc19fe5da
+        guid: 7e46a229d18fe960e327a3b9fde858a34cf9c5e0811216dc342f541f0edec7f9
         custom_name: ""
-        text: And most importantly, feed all the penguins before the storm comes! Ha! Ha! Ha!
+        text: ""
         position: [0, 0]
         font_size: 30
         color: 4294241528
@@ -533,17 +533,17 @@ Entities:
           CastsShadows: false
           IsBillboard: false
   - Entity: KeeperSprite
-    guid: 41015c0247fb109c239636f3442fee3cb264e939dd5a471fd3ca2ce78823473e
+    guid: 28b1ff2f3ca0d3c349282ff61e022387dcd6d6e38ada00b90a034d70e53fd79f
     Name: KeeperSprite
     TransformComponent:
       Translation: [0.855474651, 0.795397043, -2.54287028]
       Rotation: [0, 0, 0]
       Scale: [0.439999998, 2.20000005, 2.44000006]
       Parent:
-        guid: ebe576efde3e3a7bae94dbbcb774b9f543ca7efef554713dfd34a67c4b93be0b
+        guid: f6fa097999bf6a5f030cd68f31fa533cb02dae2fbac7b86b15db86ef8bf539b9
     Components:
       - ComponentName: PanelComponent
-        guid: fe64865742ca36b966e1b97b2899e6fc7d162bc4fb5d8e75e18bde427f4c999e
+        guid: f2afb9749beb60598ccb9ee98254da3f8f503e7bd94a0ace8dbf04977c7a59ac
         custom_name: ""
         background_path: ./res/textures/UI/keeper_sprite.png
         material:
@@ -557,17 +557,17 @@ Entities:
           CastsShadows: false
           IsBillboard: false
   - Entity: Bubble
-    guid: 32850ac4916292c9efd64defc76275bad78e472db0611bc23ab86c7c51eea2dc
+    guid: 9b17f10216f433fa55266f8321d19ee7c61397455a2b78304dfd9cb306b64c5f
     Name: Bubble
     TransformComponent:
       Translation: [0, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [0.850000024, 0.850000024, 1]
       Parent:
-        guid: ebe576efde3e3a7bae94dbbcb774b9f543ca7efef554713dfd34a67c4b93be0b
+        guid: f6fa097999bf6a5f030cd68f31fa533cb02dae2fbac7b86b15db86ef8bf539b9
     Components:
       - ComponentName: ButtonComponent
-        guid: 6fe92724388fa6df297697e67a57a75abfc29a86b350782071d2afec04a0565f
+        guid: 470e228fe296b3c1e38d1dacb1fae14b3f64ae0ed8776a297218ddad78b3e6e1
         custom_name: ""
         path_default: ./res/textures/UI/dialogue.png
         path_hovered: ./res/textures/UI/dialogue.png
