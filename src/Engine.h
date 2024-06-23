@@ -53,7 +53,8 @@ private:
 
     static void setup_imgui(GLFWwindow* glfw_window);
 
-    static i32 setup_miniaudio();
+    static i32 initialize_miniaudio();
+    static void uninitialize_miniaudio();
 
     inline static bool m_is_game_running = false;
     inline static bool m_is_game_paused = false;
