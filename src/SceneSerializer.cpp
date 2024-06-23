@@ -34,6 +34,7 @@
 #include "Game/Path.h"
 #include "Game/Player.h"
 #include "Game/Player/PlayerInput.h"
+#include "Game/Popup.h"
 #include "Game/Port.h"
 #include "Game/Ship.h"
 #include "Game/ShipEyes.h"
@@ -418,18 +419,6 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "customer_prefab" << YAML::Value << customermanager->customer_prefab;
         out << YAML::EndMap;
     }
-    else if (auto const endscreen = std::dynamic_pointer_cast<class EndScreen>(component); endscreen != nullptr)
-    {
-        out << YAML::BeginMap;
-        out << YAML::Key << "ComponentName" << YAML::Value << "EndScreenComponent";
-        out << YAML::Key << "guid" << YAML::Value << endscreen->guid;
-        out << YAML::Key << "custom_name" << YAML::Value << endscreen->custom_name;
-        out << YAML::Key << "is_failed" << YAML::Value << endscreen->is_failed;
-        out << YAML::Key << "number_of_stars" << YAML::Value << endscreen->number_of_stars;
-        out << YAML::Key << "stars" << YAML::Value << endscreen->stars;
-        out << YAML::Key << "star_scale" << YAML::Value << endscreen->star_scale;
-        out << YAML::EndMap;
-    }
     else if (auto const factory = std::dynamic_pointer_cast<class Factory>(component); factory != nullptr)
     {
         out << YAML::BeginMap;
@@ -528,6 +517,28 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "flashes_text" << YAML::Value << player->flashes_text;
         out << YAML::Key << "level_text" << YAML::Value << player->level_text;
         out << YAML::Key << "clock_text" << YAML::Value << player->clock_text;
+        out << YAML::EndMap;
+    }
+    else if (auto const popup = std::dynamic_pointer_cast<class Popup>(component); popup != nullptr)
+    {
+        out << YAML::BeginMap;
+        // # Put new Popup kid here
+        if (auto const endscreen = std::dynamic_pointer_cast<class EndScreen>(component); endscreen != nullptr)
+        {
+            out << YAML::Key << "ComponentName" << YAML::Value << "EndScreenComponent";
+            out << YAML::Key << "guid" << YAML::Value << endscreen->guid;
+            out << YAML::Key << "custom_name" << YAML::Value << endscreen->custom_name;
+            out << YAML::Key << "is_failed" << YAML::Value << endscreen->is_failed;
+            out << YAML::Key << "number_of_stars" << YAML::Value << endscreen->number_of_stars;
+            out << YAML::Key << "stars" << YAML::Value << endscreen->stars;
+            out << YAML::Key << "star_scale" << YAML::Value << endscreen->star_scale;
+        }
+        else
+        {
+            out << YAML::Key << "ComponentName" << YAML::Value << "PopupComponent";
+            out << YAML::Key << "guid" << YAML::Value << popup->guid;
+            out << YAML::Key << "custom_name" << YAML::Value << popup->custom_name;
+        }
         out << YAML::EndMap;
     }
     else if (auto const port = std::dynamic_pointer_cast<class Port>(component); port != nullptr)
@@ -1596,39 +1607,6 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             deserialized_component->reprepare();
         }
     }
-    else if (component_name == "EndScreenComponent")
-    {
-        if (first_pass)
-        {
-            auto const deserialized_component = EndScreen::create();
-            deserialized_component->guid = component["guid"].as<std::string>();
-            deserialized_component->custom_name = component["custom_name"].as<std::string>();
-            deserialized_pool.emplace_back(deserialized_component);
-        }
-        else
-        {
-            auto const deserialized_component =
-                std::dynamic_pointer_cast<class EndScreen>(get_from_pool(component["guid"].as<std::string>()));
-            if (component["is_failed"].IsDefined())
-            {
-                deserialized_component->is_failed = component["is_failed"].as<bool>();
-            }
-            if (component["number_of_stars"].IsDefined())
-            {
-                deserialized_component->number_of_stars = component["number_of_stars"].as<u32>();
-            }
-            if (component["stars"].IsDefined())
-            {
-                deserialized_component->stars = component["stars"].as<std::vector<std::weak_ptr<Entity>>>();
-            }
-            if (component["star_scale"].IsDefined())
-            {
-                deserialized_component->star_scale = component["star_scale"].as<glm::vec2>();
-            }
-            deserialized_entity->add_component(deserialized_component);
-            deserialized_component->reprepare();
-        }
-    }
     else if (component_name == "FactoryComponent")
     {
         if (first_pass)
@@ -1903,6 +1881,55 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             if (component["clock_text"].IsDefined())
             {
                 deserialized_component->clock_text = component["clock_text"].as<std::weak_ptr<ScreenText>>();
+            }
+            deserialized_entity->add_component(deserialized_component);
+            deserialized_component->reprepare();
+        }
+    }
+    else if (component_name == "PopupComponent")
+    {
+        if (first_pass)
+        {
+            auto const deserialized_component = Popup::create();
+            deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_component->custom_name = component["custom_name"].as<std::string>();
+            deserialized_pool.emplace_back(deserialized_component);
+        }
+        else
+        {
+            auto const deserialized_component = std::dynamic_pointer_cast<class Popup>(get_from_pool(component["guid"].as<std::string>()));
+            deserialized_entity->add_component(deserialized_component);
+            deserialized_component->reprepare();
+        }
+    }
+    else if (component_name == "EndScreenComponent")
+    {
+        if (first_pass)
+        {
+            auto const deserialized_component = EndScreen::create();
+            deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_component->custom_name = component["custom_name"].as<std::string>();
+            deserialized_pool.emplace_back(deserialized_component);
+        }
+        else
+        {
+            auto const deserialized_component =
+                std::dynamic_pointer_cast<class EndScreen>(get_from_pool(component["guid"].as<std::string>()));
+            if (component["is_failed"].IsDefined())
+            {
+                deserialized_component->is_failed = component["is_failed"].as<bool>();
+            }
+            if (component["number_of_stars"].IsDefined())
+            {
+                deserialized_component->number_of_stars = component["number_of_stars"].as<u32>();
+            }
+            if (component["stars"].IsDefined())
+            {
+                deserialized_component->stars = component["stars"].as<std::vector<std::weak_ptr<Entity>>>();
+            }
+            if (component["star_scale"].IsDefined())
+            {
+                deserialized_component->star_scale = component["star_scale"].as<glm::vec2>();
             }
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();

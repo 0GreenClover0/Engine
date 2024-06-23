@@ -43,6 +43,7 @@
 #include "Game/Path.h"
 #include "Game/Player.h"
 #include "Game/Player/PlayerInput.h"
+#include "Game/Popup.h"
 #include "Game/Port.h"
 #include "Game/Ship.h"
 #include "Game/ShipEyes.h"

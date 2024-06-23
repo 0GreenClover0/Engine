@@ -97,7 +97,7 @@ void EndScreen::update()
 #if EDITOR
 void EndScreen::draw_editor()
 {
-    Component::draw_editor();
+    Popup::draw_editor();
 
     if (ImGui::Checkbox("Failed", &is_failed))
     {
@@ -134,39 +134,8 @@ void EndScreen::update_background()
     entity->get_component<Panel>()->reprepare();
 }
 
-void EndScreen::update_screen_position()
-{
-    entity->transform->set_local_position({0.0f, (1.0f - easeOutBack(m_appear_counter)) * -2.0f, 0.0f});
-}
-
 void EndScreen::update_star(u32 star_number)
 {
     stars[star_number].lock()->transform->set_local_scale(
         {easeOutElastic(m_appear_counter) * star_scale.x, easeOutElastic(m_appear_counter) * star_scale.y, 0.0f});
-}
-
-float EndScreen::easeOutBack(float x)
-{
-    float const c1 = 1.70158;
-    float const c3 = c1 + 1;
-
-    return 1 + c3 * std::pow(x - 1, 3) + c1 * std::pow(x - 1, 2);
-}
-
-float EndScreen::easeOutElastic(float x)
-{
-    float const c4 = (2 * 3.14) / 3;
-
-    if (x == 0)
-    {
-        return 0;
-    }
-    else if (x == 1)
-    {
-        return 1;
-    }
-    else
-    {
-        return std::pow(2, -10 * x) * std::sin((x * 10 - 0.75) * c4) + 1;
-    }
 }
