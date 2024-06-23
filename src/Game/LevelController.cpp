@@ -116,8 +116,13 @@ void LevelController::update()
     }
     else
     {
-        // TODO: Change RMB to LMB in final game
-        if (Input::input->get_key_down(GLFW_MOUSE_BUTTON_RIGHT))
+        if (GameController::get_instance()->get_level_number() == 0) // We're in menu
+        {
+            lighthouse.lock()->turn_light(true);
+            is_started = true;
+            set_exiting_lighthouse(true);
+        }
+        else if (Input::input->get_key_down(GLFW_MOUSE_BUTTON_RIGHT)) // TODO: Change RMB to LMB in final game
         {
             check_tutorial_progress(TutorialProgressAction::LighthouseEnabled);
             lighthouse.lock()->turn_light(true);
