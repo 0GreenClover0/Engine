@@ -59,23 +59,38 @@ void DialoguePromptController::update()
     switch (m_interpolation_mode)
     {
     case InterpolationMode::Show:
-        m_interpolation_value += static_cast<float>(delta_time);
+        if (m_perform_panel_move)
+        {
+            if (m_interpolation_value < 0.99f)
+            {
+                m_interpolation_value += static_cast<float>(delta_time);
+                v.y = AK::Math::ease_in_out_elastic(m_interpolation_value) - 1.8f;
+            }
+            else
+            {
+                m_interpolation_value = 1.0f;
+                v.y = AK::Math::ease_in_out_elastic(m_interpolation_value) - 1.8f;
+                m_perform_panel_move = false;
+            }
+        }
         break;
 
     case InterpolationMode::Hide:
-        m_interpolation_value -= static_cast<float>(delta_time);
+        if (m_interpolation_value > 0.01f)
+        {
+            m_interpolation_value -= static_cast<float>(delta_time);
+            v.y = AK::Math::ease_in_out_elastic(m_interpolation_value) - 1.8f;
+        }
+        else
+        {
+            m_interpolation_value = 0.0f;
+            v.y = AK::Math::ease_in_out_elastic(m_interpolation_value) - 1.8f;
+            m_perform_panel_move = false;
+        }
         break;
     }
 
-    if (m_interpolation_value > 0.01f && m_interpolation_value < 0.99f)
-    {
-        v.y = AK::Math::ease_in_out_elastic(m_interpolation_value) - 1.8f;
-    }
-
     panel_entity->transform->set_local_position(v);
-
-    if (m_interpolation_value > 1.0f || m_interpolation_value < 0.0f)
-        m_perform_panel_move = false;
 }
 
 #if EDITOR
