@@ -1,0 +1,59 @@
+Scene: Untitled
+Entities:
+  - Entity: CreditScreen
+    guid: ca9e14bbb4a93a55ebe92ff351e9b7591f15c6f53feb5392cd85a3a4b0aed966
+    Name: CreditScreen
+    TransformComponent:
+      Translation: [0, -2, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: ""
+    Components:
+      - ComponentName: PanelComponent
+        guid: c459ca02645457e3b8b2592b0b8def72c21a9e7012c72335edf4de768f21b1a0
+        custom_name: ""
+        background_path: ./res/textures/UI\credits.png
+        material:
+          Shader:
+            VertexPath: ./res/shaders/ui.hlsl
+            FragmentPath: ./res/shaders/ui.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 3001
+          NeedsForward: true
+          CastsShadows: false
+          IsBillboard: false
+      - ComponentName: PopupComponent
+        guid: d17ef8525b47bb1d045a9fe155f2ebaec40982589006796d5b56bd7581a0f01e
+        custom_name: ""
+  - Entity: ButtonMenu
+    guid: f7133d9c0132402a82c23f99dbf6a8df8d92f974b80743c7791d40dc0f4cffa5
+    Name: ButtonMenu
+    TransformComponent:
+      Translation: [0.66900003, -0.504999995, 0]
+      Rotation: [0, 0, 0]
+      Scale: [0.129999995, 0.073368609, 1]
+      Parent:
+        guid: ca9e14bbb4a93a55ebe92ff351e9b7591f15c6f53feb5392cd85a3a4b0aed966
+    Components:
+      - ComponentName: ButtonComponent
+        guid: 8ef28f21b584d0390a8dc4649da93bb13987c69bff53dc67eee49b906291497c
+        custom_name: ""
+        path_default: ./res/textures/UI\buttons\default\b_menu_default-01.png
+        path_hovered: ./res/textures/UI\buttons\hover\b_menu_hover.png
+        path_pressed: ./res/textures/UI\buttons\click\b_menu_click-01.png
+        top_left_corner: [1477.44006, 716.531494]
+        top_right_corner: [1727.04004, 716.531494]
+        bottom_left_corner: [1477.44006, 789.973511]
+        bottom_right_corner: [1727.04004, 789.973511]
+        material:
+          Shader:
+            VertexPath: ./res/shaders/ui.hlsl
+            FragmentPath: ./res/shaders/ui.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 3001
+          NeedsForward: true
+          CastsShadows: false
+          IsBillboard: false
