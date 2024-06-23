@@ -1,7 +1,7 @@
 Scene: Untitled
 Entities:
   - Entity: CreditScreen
-    guid: ca9e14bbb4a93a55ebe92ff351e9b7591f15c6f53feb5392cd85a3a4b0aed966
+    guid: e127e47b52624ed149e75c4a8ff6f1f98c6470d851e7da3111b33e6c92662fbf
     Name: CreditScreen
     TransformComponent:
       Translation: [0, -2, 0]
@@ -11,7 +11,7 @@ Entities:
         guid: ""
     Components:
       - ComponentName: PanelComponent
-        guid: c459ca02645457e3b8b2592b0b8def72c21a9e7012c72335edf4de768f21b1a0
+        guid: 3466e3f3ea4741d2cdec33e8bd9949e70fca3010396088965d9b8afe59b26a7b
         custom_name: ""
         background_path: ./res/textures/UI\credits.png
         material:
@@ -25,20 +25,25 @@ Entities:
           CastsShadows: false
           IsBillboard: false
       - ComponentName: PopupComponent
-        guid: d17ef8525b47bb1d045a9fe155f2ebaec40982589006796d5b56bd7581a0f01e
+        guid: 30439d55403203c26c1ee5ecd33395f40d3e1c26360c85ec49a9407c5068f789
         custom_name: ""
+      - ComponentName: CreditsComponent
+        guid: 945a92ef241b8ef901ffb8279c6f394c339cce6f698cac095a07935e9c649c16
+        custom_name: ""
+        back_to_menu_button:
+          guid: 238399226bb5c53f5d42f63e2713e6e7fff729cc55c3fbd396776e00948fcda7
   - Entity: ButtonMenu
-    guid: f7133d9c0132402a82c23f99dbf6a8df8d92f974b80743c7791d40dc0f4cffa5
+    guid: bdd96102e908ad14a05124ad95b1c863548574daf2a57936d9d5bab7bcb263a3
     Name: ButtonMenu
     TransformComponent:
       Translation: [0.66900003, -0.504999995, 0]
       Rotation: [0, 0, 0]
       Scale: [0.129999995, 0.073368609, 1]
       Parent:
-        guid: ca9e14bbb4a93a55ebe92ff351e9b7591f15c6f53feb5392cd85a3a4b0aed966
+        guid: e127e47b52624ed149e75c4a8ff6f1f98c6470d851e7da3111b33e6c92662fbf
     Components:
       - ComponentName: ButtonComponent
-        guid: 8ef28f21b584d0390a8dc4649da93bb13987c69bff53dc67eee49b906291497c
+        guid: 238399226bb5c53f5d42f63e2713e6e7fff729cc55c3fbd396776e00948fcda7
         custom_name: ""
         path_default: ./res/textures/UI\buttons\default\b_menu_default-01.png
         path_hovered: ./res/textures/UI\buttons\hover\b_menu_hover.png
