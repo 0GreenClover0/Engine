@@ -83,5 +83,24 @@ void Path::draw_editor()
             points.erase(points.begin() + i);
         }
     }
+
+    ImGui::Separator();
+
+    static glm::vec2 shift = {0.0f, 0.0f};
+
+    ImGui::InputFloat2("Shift", &shift[0]);
+
+    if (ImGui::Button("Apply shift"))
+    {
+        shift_all_by(shift);
+    }
 }
 #endif
+
+void Path::shift_all_by(glm::vec2 const value)
+{
+    for (auto& point : points)
+    {
+        point += value;
+    }
+}
