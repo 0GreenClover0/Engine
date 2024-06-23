@@ -1,10 +1,12 @@
 #include "FloeButton.h"
 
 #include "Collider2D.h"
+#include "CommonEntities.h"
 #include "Entity.h"
 #include "ExampleDynamicText.h"
 #include "Game/GameController.h"
 #include "Game/LighthouseLight.h"
+#include "ResourceManager.h"
 
 std::shared_ptr<FloeButton> FloeButton::create()
 {
@@ -19,6 +21,36 @@ FloeButton::FloeButton(AK::Badge<FloeButton>)
 void FloeButton::awake()
 {
     set_can_tick(true);
+}
+
+void FloeButton::update()
+{
+    Component::update();
+
+    if (Input::input->get_key_down(GLFW_MOUSE_BUTTON_LEFT))
+    {
+        if (m_hovered && floe_button_type == FloeButtonType::Start)
+        {
+            GameController::get_instance()->move_to_next_scene();
+        }
+    }
+
+    if (m_hovered)
+    {
+        glm::vec3 position = entity->transform->get_local_position();
+
+        float y = std::lerp(position.y, -0.14f, 0.1f);
+
+        entity->transform->set_local_position({position.x, y, position.z});
+    }
+    else
+    {
+        glm::vec3 position = entity->transform->get_local_position();
+
+        float y = std::lerp(position.y, 0.0f, 0.1f);
+
+        entity->transform->set_local_position({position.x, y, position.z});
+    }
 }
 
 void FloeButton::on_trigger_enter(std::shared_ptr<Collider2D> const& other)
@@ -43,19 +75,6 @@ void FloeButton::on_trigger_exit(std::shared_ptr<Collider2D> const& other)
     }
 }
 
-void FloeButton::update()
-{
-    Component::update();
-
-    if (Input::input->get_key_down(GLFW_MOUSE_BUTTON_LEFT))
-    {
-        if (m_hovered && floe_button_type == FloeButtonType::Start)
-        {
-            GameController::get_instance()->move_to_next_scene();
-        }
-    }
-}
-
 #if EDITOR
 void FloeButton::draw_editor()
 {
@@ -71,6 +90,14 @@ void FloeButton::draw_editor()
     if (ImGui::Combo("Floe Button Type", &current_item_index, floe_button_types.data(), floe_button_types.size()))
     {
         floe_button_type = static_cast<FloeButtonType>(current_item_index);
+    }
+
+    if (ImGui::Button("Add cube"))
+    {
+        auto const standard_shader = ResourceManager::get_instance().load_shader("./res/shaders/lit.hlsl", "./res/shaders/lit.hlsl");
+        auto const standard_material = Material::create(standard_shader);
+
+        CommonEntities::create_cube("kuba", "./res/textures/color.jpg", standard_material);
     }
 }
 #endif
