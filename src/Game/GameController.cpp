@@ -69,6 +69,8 @@ void GameController::awake()
 
     reset_level();
 
+    Sound::play_sound("./res/audio/ost_loop.wav", true);
+
     set_can_tick(true);
 }
 
