@@ -1,3 +1,5 @@
+#include "common_functions.hlsl"
+
 cbuffer object_buffer : register(b0)
 {
     float4x4 projection_view_model;
@@ -47,5 +49,5 @@ float4 ps_main(VS_Output input) : SV_TARGET
         final_color *= color;
     }
 
-    return final_color;
+    return float4(exposure_tonemapping(gamma_correction(final_color.xyz)), final_color.a);
 }

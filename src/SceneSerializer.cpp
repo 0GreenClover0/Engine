@@ -210,6 +210,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
             out << YAML::Key << "ComponentName" << YAML::Value << "ParticleComponent";
             out << YAML::Key << "guid" << YAML::Value << particle->guid;
             out << YAML::Key << "custom_name" << YAML::Value << particle->custom_name;
+            out << YAML::Key << "path" << YAML::Value << particle->path;
         }
         else if (auto const panel = std::dynamic_pointer_cast<class Panel>(component); panel != nullptr)
         {
@@ -395,6 +396,9 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "ComponentName" << YAML::Value << "ParticleSystemComponent";
         out << YAML::Key << "guid" << YAML::Value << particlesystem->guid;
         out << YAML::Key << "custom_name" << YAML::Value << particlesystem->custom_name;
+        out << YAML::Key << "particle_type" << YAML::Value << particlesystem->particle_type;
+        out << YAML::Key << "rotate_particles" << YAML::Value << particlesystem->rotate_particles;
+        out << YAML::Key << "spawn_instantly" << YAML::Value << particlesystem->spawn_instantly;
         out << YAML::Key << "sprite_path" << YAML::Value << particlesystem->sprite_path;
         out << YAML::Key << "min_spawn_interval" << YAML::Value << particlesystem->min_spawn_interval;
         out << YAML::Key << "max_spawn_interval" << YAML::Value << particlesystem->max_spawn_interval;
@@ -1160,6 +1164,10 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component =
                 std::dynamic_pointer_cast<class Particle>(get_from_pool(component["guid"].as<std::string>()));
+            if (component["path"].IsDefined())
+            {
+                deserialized_component->path = component["path"].as<std::string>();
+            }
             if (component["material"].IsDefined())
             {
                 deserialized_component->material = component["material"].as<std::shared_ptr<Material>>();
@@ -1578,6 +1586,18 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component =
                 std::dynamic_pointer_cast<class ParticleSystem>(get_from_pool(component["guid"].as<std::string>()));
+            if (component["particle_type"].IsDefined())
+            {
+                deserialized_component->particle_type = component["particle_type"].as<ParticleType>();
+            }
+            if (component["rotate_particles"].IsDefined())
+            {
+                deserialized_component->rotate_particles = component["rotate_particles"].as<bool>();
+            }
+            if (component["spawn_instantly"].IsDefined())
+            {
+                deserialized_component->spawn_instantly = component["spawn_instantly"].as<bool>();
+            }
             if (component["sprite_path"].IsDefined())
             {
                 deserialized_component->sprite_path = component["sprite_path"].as<std::string>();
