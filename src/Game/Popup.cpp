@@ -48,6 +48,11 @@ void Popup::update()
             m_appear_counter = 1.0f;
 
             update_screen_position();
+
+            if (m_is_hiding)
+            {
+                entity->destroy_immediate();
+            }
         }
     }
 }
@@ -61,7 +66,22 @@ void Popup::draw_editor()
 
 void Popup::update_screen_position()
 {
-    entity->transform->set_local_position({0.0f, (1.0f - easeOutBack(m_appear_counter)) * -2.0f, 0.0f});
+    if (m_is_hiding)
+    {
+        entity->transform->set_local_position({0.0f, (easeOutBack(m_appear_counter)) * -2.0f, 0.0f});
+    }
+    else
+    {
+        entity->transform->set_local_position({0.0f, (1.0f - easeOutBack(m_appear_counter)) * -2.0f, 0.0f});
+    }
+}
+
+void Popup::hide()
+{
+    m_is_hiding = true;
+    m_is_in_screen = false;
+
+    m_appear_counter = 0.0f;
 }
 
 float Popup::easeOutBack(float x)
