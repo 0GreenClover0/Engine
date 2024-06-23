@@ -56,11 +56,18 @@ void Particle::awake()
 
     update_particle();
 
-    entity->transform->parent.lock()->set_euler_angles(Camera::get_main_camera()->entity->transform->get_euler_angles());
+    if (!entity->transform->parent.expired())
+        entity->transform->parent.lock()->set_euler_angles(Camera::get_main_camera()->entity->transform->get_euler_angles());
+    else
+        entity->transform->set_euler_angles(Camera::get_main_camera()->entity->transform->get_euler_angles());
 }
 
 void Particle::draw() const
 {
+    if (!entity->transform->parent.expired())
+        entity->transform->parent.lock()->set_euler_angles(Camera::get_main_camera()->entity->transform->get_euler_angles());
+    else
+        entity->transform->set_euler_angles(Camera::get_main_camera()->entity->transform->get_euler_angles());
 
     if (m_rasterizer_draw_type == RasterizerDrawType::None)
     {
@@ -69,7 +76,11 @@ void Particle::draw() const
 
     // Either wireframe or solid for individual model
     Renderer::get_instance()->set_rasterizer_draw_type(m_rasterizer_draw_type);
-    entity->transform->parent.lock()->set_rotation(Camera::get_main_camera()->entity->transform->get_euler_angles());
+
+    if (!entity->transform->parent.expired())
+        entity->transform->parent.lock()->set_rotation(Camera::get_main_camera()->entity->transform->get_euler_angles());
+    else
+        entity->transform->set_rotation(Camera::get_main_camera()->entity->transform->get_euler_angles());
 
     if (m_mesh != nullptr)
     {
@@ -131,6 +142,13 @@ void Particle::move() const
 void Particle::interpolate_color()
 {
     m_color = AK::interpolate_color(m_start_color_1, m_end_color_1, m_current_lifetime / m_lifetime);
+    if (m_color.a < 0.01f)
+    {
+        if (!entity->transform->parent.expired())
+            entity->transform->parent.lock()->entity.lock()->destroy_immediate();
+        else
+            destroy_immediate();
+    }
 }
 
 bool Particle::is_particle() const
