@@ -354,13 +354,13 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
                 entity->get_component<ShipSpawner>()->set_enabled(false);
                 if (is_tutorial_dialogs_enabled)
                 {
+                    factories[1].lock()->set_glowing(true);
                     GameController::get_instance()->dialog_manager.lock()->play_content(6);
                 }
                 progress_tutorial();
             }
             break;
         case 5:
-            //TODO: [FOCUS ON GENERATOR]
             //TODO: PROMPT [SPACE] Fuel The generator
             if (action == TutorialProgressAction::GeneratorFueled)
             {
@@ -370,6 +370,7 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
                 is_tutorial_dialogs_enabled = true;
                 if (is_tutorial_dialogs_enabled)
                 {
+                    factories[1].lock()->set_glowing(false);
                     GameController::get_instance()->dialog_manager.lock()->end_content();
                     GameController::get_instance()->dialog_manager.lock()->play_content(7);
                 }
@@ -482,18 +483,19 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
                 entity->get_component<ShipSpawner>()->pop_event();
                 entity->get_component<ShipSpawner>()->set_enabled(false);
                 GameController::get_instance()->dialog_manager.lock()->play_content(11);
+                factories[0].lock()->set_glowing(true);
 
                 progress_tutorial();
             }
             break;
         case 4:
-            //TODO: [FOCUS ON WORKSHOP]
             //TODO: PROMPT [SPACE] Upgrade lighthouse
             if (action == TutorialProgressAction::WorkshopUpgraded)
             {
                 GameController::get_instance()->dialog_manager.lock()->end_content();
                 GameController::get_instance()->dialog_manager.lock()->play_content(12);
                 entity->get_component<ShipSpawner>()->set_enabled(true);
+                factories[0].lock()->set_glowing(false);
                 progress_tutorial();
             }
             break;
