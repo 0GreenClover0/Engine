@@ -22,6 +22,7 @@
 #include "ExampleUIBar.h"
 #include "Floater.h"
 #include "FloatersManager.h"
+#include "FloeButton.h"
 #include "Game/Customer.h"
 #include "Game/CustomerManager.h"
 #include "Game/EndScreen.h"
@@ -323,6 +324,15 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "tool_boat_settings" << YAML::Value << floatersmanager->tool_boat_settings;
         out << YAML::Key << "pirate_boat_settings" << YAML::Value << floatersmanager->pirate_boat_settings;
         out << YAML::Key << "water" << YAML::Value << floatersmanager->water;
+        out << YAML::EndMap;
+    }
+    else if (auto const floebutton = std::dynamic_pointer_cast<class FloeButton>(component); floebutton != nullptr)
+    {
+        out << YAML::BeginMap;
+        out << YAML::Key << "ComponentName" << YAML::Value << "FloeButtonComponent";
+        out << YAML::Key << "guid" << YAML::Value << floebutton->guid;
+        out << YAML::Key << "custom_name" << YAML::Value << floebutton->custom_name;
+        out << YAML::Key << "floe_button_type" << YAML::Value << floebutton->floe_button_type;
         out << YAML::EndMap;
     }
     else if (auto const light = std::dynamic_pointer_cast<class Light>(component); light != nullptr)
@@ -1298,6 +1308,27 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             if (component["water"].IsDefined())
             {
                 deserialized_component->water = component["water"].as<std::weak_ptr<Water>>();
+            }
+            deserialized_entity->add_component(deserialized_component);
+            deserialized_component->reprepare();
+        }
+    }
+    else if (component_name == "FloeButtonComponent")
+    {
+        if (first_pass)
+        {
+            auto const deserialized_component = FloeButton::create();
+            deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_component->custom_name = component["custom_name"].as<std::string>();
+            deserialized_pool.emplace_back(deserialized_component);
+        }
+        else
+        {
+            auto const deserialized_component =
+                std::dynamic_pointer_cast<class FloeButton>(get_from_pool(component["guid"].as<std::string>()));
+            if (component["floe_button_type"].IsDefined())
+            {
+                deserialized_component->floe_button_type = component["floe_button_type"].as<FloeButtonType>();
             }
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
