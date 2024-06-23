@@ -260,6 +260,9 @@ float Water::get_wave_height(glm::vec2 const& position) const
     float time = glfwGetTime();
     for (auto const& wave : waves)
     {
+        if (wave.wave_length < 3.5f)
+            continue;
+
         float frequency = sqrt(gravity * 2.0f * PI / wave.wave_length);
         float steepness = wave.steepness / (frequency * wave.amplitude * waves.size());
         float phi = wave.speed * 2.0f / wave.wave_length;
