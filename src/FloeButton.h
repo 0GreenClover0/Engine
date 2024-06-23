@@ -27,8 +27,8 @@ public:
 
     FloeButtonType floe_button_type = FloeButtonType::Undefined;
 
+    static bool are_credits_open;
+
 private:
     bool m_hovered = false;
-
-    static bool m_are_credits_open;
 };

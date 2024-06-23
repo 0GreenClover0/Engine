@@ -9,7 +9,7 @@
 #include "ResourceManager.h"
 #include "SceneSerializer.h"
 
-bool FloeButton::m_are_credits_open = false;
+bool FloeButton::are_credits_open = false;
 
 std::shared_ptr<FloeButton> FloeButton::create()
 {
@@ -23,7 +23,7 @@ FloeButton::FloeButton(AK::Badge<FloeButton>)
 
 void FloeButton::awake()
 {
-    m_are_credits_open = false;
+    are_credits_open = false;
 
     set_can_tick(true);
 }
@@ -32,7 +32,7 @@ void FloeButton::update()
 {
     Component::update();
 
-    if (Input::input->get_key_down(GLFW_MOUSE_BUTTON_LEFT) && m_are_credits_open == false)
+    if (Input::input->get_key_down(GLFW_MOUSE_BUTTON_LEFT) && are_credits_open == false)
     {
         if (m_hovered && floe_button_type == FloeButtonType::Start)
         {
@@ -42,7 +42,7 @@ void FloeButton::update()
         if (m_hovered && floe_button_type == FloeButtonType::Credits)
         {
             SceneSerializer::load_prefab("CreditScreen");
-            FloeButton::m_are_credits_open = true;
+            FloeButton::are_credits_open = true;
         }
 
         if (m_hovered && floe_button_type == FloeButtonType::Exit)
