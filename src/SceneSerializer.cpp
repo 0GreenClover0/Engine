@@ -23,6 +23,7 @@
 #include "Floater.h"
 #include "FloatersManager.h"
 #include "FloeButton.h"
+#include "Game/Clock.h"
 #include "Game/Credits.h"
 #include "Game/Customer.h"
 #include "Game/CustomerManager.h"
@@ -423,6 +424,14 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "ComponentName" << YAML::Value << "SoundListenerComponent";
         out << YAML::Key << "guid" << YAML::Value << soundlistener->guid;
         out << YAML::Key << "custom_name" << YAML::Value << soundlistener->custom_name;
+        out << YAML::EndMap;
+    }
+    else if (auto const clock = std::dynamic_pointer_cast<class Clock>(component); clock != nullptr)
+    {
+        out << YAML::BeginMap;
+        out << YAML::Key << "ComponentName" << YAML::Value << "ClockComponent";
+        out << YAML::Key << "guid" << YAML::Value << clock->guid;
+        out << YAML::Key << "custom_name" << YAML::Value << clock->custom_name;
         out << YAML::EndMap;
     }
     else if (auto const credits = std::dynamic_pointer_cast<class Credits>(component); credits != nullptr)
@@ -1653,6 +1662,22 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component =
                 std::dynamic_pointer_cast<class SoundListener>(get_from_pool(component["guid"].as<std::string>()));
+            deserialized_entity->add_component(deserialized_component);
+            deserialized_component->reprepare();
+        }
+    }
+    else if (component_name == "ClockComponent")
+    {
+        if (first_pass)
+        {
+            auto const deserialized_component = Clock::create();
+            deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_component->custom_name = component["custom_name"].as<std::string>();
+            deserialized_pool.emplace_back(deserialized_component);
+        }
+        else
+        {
+            auto const deserialized_component = std::dynamic_pointer_cast<class Clock>(get_from_pool(component["guid"].as<std::string>()));
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
         }
