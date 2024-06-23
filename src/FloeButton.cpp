@@ -1,6 +1,10 @@
 #include "FloeButton.h"
 
+#include "Collider2D.h"
+#include "Entity.h"
 #include "ExampleDynamicText.h"
+#include "Game/GameController.h"
+#include "Game/LighthouseLight.h"
 
 std::shared_ptr<FloeButton> FloeButton::create()
 {
@@ -10,6 +14,46 @@ std::shared_ptr<FloeButton> FloeButton::create()
 
 FloeButton::FloeButton(AK::Badge<FloeButton>)
 {
+}
+
+void FloeButton::awake()
+{
+    set_can_tick(true);
+}
+
+void FloeButton::on_trigger_enter(std::shared_ptr<Collider2D> const& other)
+{
+    std::weak_ptr<LighthouseLight> lighthouse_light = {};
+    if (auto const l = other->entity->get_component<LighthouseLight>())
+    {
+        lighthouse_light = l;
+        m_hovered = true;
+    }
+}
+
+void FloeButton::on_trigger_exit(std::shared_ptr<Collider2D> const& other)
+{
+    Component::on_trigger_exit(other);
+
+    std::weak_ptr<LighthouseLight> lighthouse_light = {};
+    if (auto const l = other->entity->get_component<LighthouseLight>())
+    {
+        lighthouse_light = l;
+        m_hovered = false;
+    }
+}
+
+void FloeButton::update()
+{
+    Component::update();
+
+    if (Input::input->get_key_down(GLFW_MOUSE_BUTTON_LEFT))
+    {
+        if (m_hovered && floe_button_type == FloeButtonType::Start)
+        {
+            GameController::get_instance()->move_to_next_scene();
+        }
+    }
 }
 
 #if EDITOR
