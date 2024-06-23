@@ -333,6 +333,9 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "guid" << YAML::Value << floebutton->guid;
         out << YAML::Key << "custom_name" << YAML::Value << floebutton->custom_name;
         out << YAML::Key << "floe_button_type" << YAML::Value << floebutton->floe_button_type;
+        out << YAML::Key << "m_hovered_start" << YAML::Value << floebutton->m_hovered_start;
+        out << YAML::Key << "m_hovered_credits" << YAML::Value << floebutton->m_hovered_credits;
+        out << YAML::Key << "m_hovered_exit" << YAML::Value << floebutton->m_hovered_exit;
         out << YAML::EndMap;
     }
     else if (auto const light = std::dynamic_pointer_cast<class Light>(component); light != nullptr)
@@ -1328,6 +1331,18 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             if (component["floe_button_type"].IsDefined())
             {
                 deserialized_component->floe_button_type = component["floe_button_type"].as<FloeButtonType>();
+            }
+            if (component["m_hovered_start"].IsDefined())
+            {
+                deserialized_component->m_hovered_start = component["m_hovered_start"].as<bool>();
+            }
+            if (component["m_hovered_credits"].IsDefined())
+            {
+                deserialized_component->m_hovered_credits = component["m_hovered_credits"].as<bool>();
+            }
+            if (component["m_hovered_exit"].IsDefined())
+            {
+                deserialized_component->m_hovered_exit = component["m_hovered_exit"].as<bool>();
             }
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
