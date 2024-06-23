@@ -41,6 +41,8 @@ public:
 
     inline static std::shared_ptr<Window> window;
 
+    inline static bool should_exit;
+
 private:
     static i32 initialize_thirdparty_before_renderer();
     static i32 initialize_thirdparty_after_renderer();

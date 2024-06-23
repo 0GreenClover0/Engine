@@ -125,7 +125,7 @@ void Engine::run()
     double last_frame = 0.0; // Time of last frame
 
     // Main loop
-    while (!glfwWindowShouldClose(window->get_glfw_window()))
+    while (!glfwWindowShouldClose(window->get_glfw_window()) && !should_exit)
     {
         double const current_frame = glfwGetTime();
         delta_time = current_frame - last_frame;
