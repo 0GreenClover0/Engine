@@ -17,7 +17,6 @@
     ENUMERATE_COMPONENT(SoundListener, "Sound Listener")                        \
     ENUMERATE_COMPONENT(Customer, "Customer")                                   \
     ENUMERATE_COMPONENT(CustomerManager, "Customer Manager")                    \
-    ENUMERATE_COMPONENT(EndScreen, "End Screen")                                \
     ENUMERATE_COMPONENT(Factory, "Factory")                                     \
     ENUMERATE_COMPONENT(GameController, "Game Controller")                      \
     ENUMERATE_COMPONENT(IceBound, "Ice Bound")                                  \
@@ -26,6 +25,7 @@
     ENUMERATE_COMPONENT(LighthouseKeeper, "Lighthouse Keeper")                  \
     ENUMERATE_COMPONENT(LighthouseLight, "Lighthouse Light")                    \
     ENUMERATE_COMPONENT(Player, "Player")                                       \
+    ENUMERATE_COMPONENT(Popup, "Popup")                                         \
     ENUMERATE_COMPONENT(Port, "Port")                                           \
     ENUMERATE_COMPONENT(Ship, "Ship")                                           \
     ENUMERATE_COMPONENT(ShipEyes, "Ship Eyes")                                  \
@@ -44,5 +44,6 @@
     ENUMERATE_COMPONENT(DirectionalLight, "Directional Light")                  \
     ENUMERATE_COMPONENT(PointLight, "Point Light")                              \
     ENUMERATE_COMPONENT(SpotLight, "Spot Light")                                \
+    ENUMERATE_COMPONENT(EndScreen, "End Screen")                                \
     // # Auto component list end                                                \
     // # Put new component here

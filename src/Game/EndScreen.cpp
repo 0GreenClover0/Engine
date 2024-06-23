@@ -98,7 +98,7 @@ void EndScreen::update()
 #if EDITOR
 void EndScreen::draw_editor()
 {
-    Component::draw_editor();
+    Popup::draw_editor();
 
     if (ImGui::Checkbox("Failed", &is_failed))
     {
@@ -135,38 +135,8 @@ void EndScreen::update_background()
     entity->get_component<Panel>()->reprepare();
 }
 
-void EndScreen::update_screen_position() const
-{
-    entity->transform->set_local_position({0.0f, (1.0f - ease_out_back(m_appear_counter)) * -2.0f, 0.0f});
-}
-
-void EndScreen::update_star(u32 const star_number) const
+void EndScreen::update_star(u32 const star_number)
 {
     stars[star_number].lock()->transform->set_local_scale(
         {ease_out_elastic(m_appear_counter) * star_scale.x, ease_out_elastic(m_appear_counter) * star_scale.y, 0.0f});
-}
-
-float EndScreen::ease_out_back(float const x)
-{
-    float constexpr c1 = 1.70158f;
-    float constexpr c3 = c1 + 1.0f;
-
-    return 1.0f + c3 * std::powf(x - 1.0f, 3) + c1 * std::powf(x - 1.0f, 2.0f);
-}
-
-float EndScreen::ease_out_elastic(float const x) const
-{
-    float constexpr c4 = (2.0f * 3.14f) / 3.0f;
-
-    if (AK::Math::are_nearly_equal(x, 0.0f))
-    {
-        return 0.0f;
-    }
-
-    if (AK::Math::are_nearly_equal(x, 1.0f))
-    {
-        return 1.0f;
-    }
-
-    return std::powf(2.0f, -10.0f * x) * std::sin((x * 10.0f - 0.75f) * c4) + 1.0f;
 }
