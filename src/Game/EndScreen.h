@@ -2,10 +2,11 @@
 
 #include "AK/Badge.h"
 #include "AK/Types.h"
+#include "Button.h"
 #include "Component.h"
-#include <Button.h>
+#include "Popup.h"
 
-class EndScreen final : public Component
+class EndScreen final : public Popup
 {
 public:
     static std::shared_ptr<EndScreen> create();
@@ -18,8 +19,7 @@ public:
     virtual void draw_editor() override;
 #endif
     void update_background();
-    void update_screen_position() const;
-    void update_star(u32 const star_number) const;
+    void update_star(u32 const star_number);
 
     bool is_failed = false;
     u32 number_of_stars = 1;
@@ -29,11 +29,6 @@ public:
     glm::vec2 star_scale = {};
 
 private:
-    static float ease_out_back(float x);
-    float ease_out_elastic(float x) const;
-
-    bool m_is_in_screen = false;
-    float m_appear_counter = 0.0f;
     u32 m_shown_stars = 0;
     bool m_is_animation_end = false;
 
