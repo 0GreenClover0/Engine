@@ -46,10 +46,11 @@ std::shared_ptr<Sound> Sound::create(std::string const& path, glm::vec3 const di
     return sound;
 }
 
-std::shared_ptr<Sound> Sound::play_sound(std::string const& path)
+std::shared_ptr<Sound> Sound::play_sound(std::string const& path, bool const loop)
 {
     auto sound = create(path);
     ma_sound_start(&sound->m_internal_sound);
+    ma_sound_set_looping(&sound->m_internal_sound, loop);
 
     auto const e = Entity::create("TemporarySound");
     e->add_component<Sound>(sound);
