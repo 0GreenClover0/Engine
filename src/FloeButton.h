@@ -17,9 +17,9 @@ public:
     explicit FloeButton(AK::Badge<FloeButton>);
 
     virtual void awake() override;
+    virtual void update() override;
     virtual void on_trigger_enter(std::shared_ptr<Collider2D> const& other) override;
     virtual void on_trigger_exit(std::shared_ptr<Collider2D> const& other) override;
-    virtual void update() override;
 
 #if EDITOR
     virtual void draw_editor() override;
