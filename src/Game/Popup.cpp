@@ -13,7 +13,9 @@
 #if EDITOR
 #include <imgui.h>
 #endif
+#include "LevelController.h"
 #include "Popup.h"
+#include <Engine.h>
 #include <Panel.h>
 #include <imgui_extensions.h>
 
@@ -30,6 +32,9 @@ Popup::Popup() = default;
 
 void Popup::awake()
 {
+    LevelController::get_instance()->lighthouse.lock()->turn_light(false);
+    glfwSetInputMode(Engine::window->get_glfw_window(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+
     set_can_tick(true);
 }
 
@@ -78,6 +83,9 @@ void Popup::update_screen_position()
 
 void Popup::hide()
 {
+    LevelController::get_instance()->lighthouse.lock()->turn_light(true);
+    glfwSetInputMode(Engine::window->get_glfw_window(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
     m_is_hiding = true;
     m_is_in_screen = false;
 
