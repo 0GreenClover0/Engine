@@ -540,7 +540,7 @@ void Ship::on_trigger_enter(std::shared_ptr<Collider2D> const& other)
     {
         destroy();
     }
-    else if (other->entity->get_component<IceBound>() != nullptr)
+    else if (other->entity->get_component<IceBound>() != nullptr && behavioral_state != BehavioralState::Stop)
     {
         destroy();
     }
