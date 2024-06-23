@@ -5,6 +5,7 @@
 #include "Entity.h"
 #include "ExampleDynamicText.h"
 #include "Game/GameController.h"
+#include "Game/LevelController.h"
 #include "Game/LighthouseLight.h"
 #include "ResourceManager.h"
 #include "SceneSerializer.h"
@@ -51,7 +52,7 @@ void FloeButton::update()
         }
     }
 
-    if (m_hovered)
+    if (m_hovered && LevelController::get_instance()->lighthouse.lock()->light.lock()->enabled())
     {
         glm::vec3 position = entity->transform->get_local_position();
 
