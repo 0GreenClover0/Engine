@@ -14,6 +14,8 @@ public:
     virtual void draw_editor() override;
 #endif
 
+    void shift_all_by(glm::vec2 value);
+
 private:
     bool m_reverse_y = true;
 };
