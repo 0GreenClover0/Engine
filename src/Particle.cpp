@@ -16,21 +16,21 @@ std::shared_ptr<Particle> Particle::create()
     particle_material->casts_shadows = false;
     particle_material->needs_forward_rendering = true;
 
-    auto particle = std::make_shared<Particle>(AK::Badge<Particle> {}, 1.0f, "./res/textures/particle.png", particle_material);
+    auto particle = std::make_shared<Particle>(AK::Badge<Particle> {}, 1.0f, "./res/textures/particle.png", particle_material, true);
 
     particle->prepare();
 
     return particle;
 }
 
-std::shared_ptr<Particle> Particle::create(ParticleSpawnData const& data, float spawn_bounds, std::string const& path)
+std::shared_ptr<Particle> Particle::create(ParticleSpawnData const& data, float spawn_bounds, std::string const& path, bool rotate_particle)
 {
     auto const particle_shader = ResourceManager::get_instance().load_shader("./res/shaders/particle.hlsl", "./res/shaders/particle.hlsl");
     auto const particle_material = Material::create(particle_shader, 1000, false, false, true);
     particle_material->casts_shadows = false;
     particle_material->needs_forward_rendering = true;
 
-    auto particle = std::make_shared<Particle>(AK::Badge<Particle> {}, spawn_bounds, path, particle_material);
+    auto particle = std::make_shared<Particle>(AK::Badge<Particle> {}, spawn_bounds, path, particle_material, rotate_particle);
 
     particle->prepare();
     particle->set_data(data);
@@ -38,8 +38,9 @@ std::shared_ptr<Particle> Particle::create(ParticleSpawnData const& data, float 
     return particle;
 }
 
-Particle::Particle(AK::Badge<Particle>, float spawn_bounds, std::string const& path, std::shared_ptr<Material> const& mat)
-    : Drawable(mat), m_particle_material(mat), m_spawn_bounds(spawn_bounds), m_path(path)
+Particle::Particle(AK::Badge<Particle>, float spawn_bounds, std::string const& path, std::shared_ptr<Material> const& mat,
+                   bool rotate_particle)
+    : Drawable(mat), rotate(rotate_particle), m_particle_material(mat), m_spawn_bounds(spawn_bounds), m_path(path)
 {
 }
 
@@ -50,7 +51,8 @@ void Particle::awake()
     entity->transform->set_local_position({AK::random_float(-m_spawn_bounds, m_spawn_bounds),
                                            AK::random_float(-m_spawn_bounds, m_spawn_bounds),
                                            AK::random_float(-m_spawn_bounds, m_spawn_bounds)});
-    entity->transform->set_euler_angles({0, 0, AK::random_float(0.0f, 360.0f)});
+    if (rotate)
+        entity->transform->set_euler_angles({0, 0, AK::random_float(0.0f, 360.0f)});
 
     m_rotation_direction = AK::random_bool() ? 1.0f : -1.0f;
 

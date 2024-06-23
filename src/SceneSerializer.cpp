@@ -391,6 +391,8 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "ComponentName" << YAML::Value << "ParticleSystemComponent";
         out << YAML::Key << "guid" << YAML::Value << particlesystem->guid;
         out << YAML::Key << "custom_name" << YAML::Value << particlesystem->custom_name;
+        out << YAML::Key << "rotate_particles" << YAML::Value << particlesystem->rotate_particles;
+        out << YAML::Key << "spawn_instantly" << YAML::Value << particlesystem->spawn_instantly;
         out << YAML::Key << "sprite_path" << YAML::Value << particlesystem->sprite_path;
         out << YAML::Key << "min_spawn_interval" << YAML::Value << particlesystem->min_spawn_interval;
         out << YAML::Key << "max_spawn_interval" << YAML::Value << particlesystem->max_spawn_interval;
@@ -1550,6 +1552,14 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component =
                 std::dynamic_pointer_cast<class ParticleSystem>(get_from_pool(component["guid"].as<std::string>()));
+            if (component["rotate_particles"].IsDefined())
+            {
+                deserialized_component->rotate_particles = component["rotate_particles"].as<bool>();
+            }
+            if (component["spawn_instantly"].IsDefined())
+            {
+                deserialized_component->spawn_instantly = component["spawn_instantly"].as<bool>();
+            }
             if (component["sprite_path"].IsDefined())
             {
                 deserialized_component->sprite_path = component["sprite_path"].as<std::string>();

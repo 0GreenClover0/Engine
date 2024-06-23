@@ -33,6 +33,9 @@ public:
     virtual void update() override;
     void update_system();
 
+    bool rotate_particles = true;
+    bool spawn_instantly = false;
+
     std::string sprite_path = "./res/textures/particle.png"; // Default particle
 
     float min_spawn_interval = 0.5f;
@@ -68,4 +71,5 @@ private:
     u32 m_random_spawn_count = 0;
     double m_time_counter = 0.0;
     double m_spawn_interval = 0.0;
+    bool m_first_time_spawning = true;
 };

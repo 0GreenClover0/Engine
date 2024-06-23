@@ -415,21 +415,21 @@ void ShipSpawner::draw_editor()
 
 void ShipSpawner::add_warning()
 {
-    auto const warning = Entity::create("Warning");
+    auto const warning = SceneSerializer::load_prefab("Exclamation"); //Entity::create("Warning");
     warning->transform->set_parent(GameController::get_instance()->current_scene.lock()->transform);
 
-    auto const warning_light_component = warning->add_component(PointLight::create());
+    // auto const warning_light_component = warning->add_component(PointLight::create());
 
-    warning_light_component->diffuse = glm::vec3(0.7f, 0.0f, 0.0f);
-    warning_light_component->ambient = glm::vec3(0.0f);
-    warning_light_component->specular = glm::vec3(0.0f);
+    // warning_light_component->diffuse = glm::vec3(0.7f, 0.0f, 0.0f);
+    // warning_light_component->ambient = glm::vec3(0.0f);
+    // warning_light_component->specular = glm::vec3(0.0f);
 
     //warning_light_component->linear = 10.0f;
     //warning_light_component->quadratic = 10.0f;
 
     warning->transform->set_local_position({m_spawn_position[0].x - glm::sign(m_spawn_position[0].x) * 1.5f, 1.0f,
                                             m_spawn_position[0].y - glm::sign(m_spawn_position[0].y) * 1.5f});
-    warning->transform->set_euler_angles({-90.0f, 0.0f, 0.0f});
+    // warning->transform->set_euler_angles({-90.0f, 0.0f, 0.0f});
 
     if (m_spawn_type == SpawnType::Rapid)
     {

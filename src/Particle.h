@@ -10,8 +10,10 @@ class Particle final : public Drawable
 {
 public:
     static std::shared_ptr<Particle> create();
-    static std::shared_ptr<Particle> create(ParticleSpawnData const& data, float spawn_bounds, std::string const& path);
-    explicit Particle(AK::Badge<Particle>, float spawn_bounds, std::string const& path, std::shared_ptr<Material> const& mat);
+    static std::shared_ptr<Particle> create(ParticleSpawnData const& data, float spawn_bounds, std::string const& path,
+                                            bool rotate_particle);
+    explicit Particle(AK::Badge<Particle>, float spawn_bounds, std::string const& path, std::shared_ptr<Material> const& mat,
+                      bool rotate_particle);
 
     virtual void awake() override;
 
@@ -27,6 +29,9 @@ public:
     void prepare();
 
     void set_data(ParticleSpawnData const& data);
+
+    NON_SERIALIZED
+    bool rotate = true;
 
 private:
     [[nodiscard]] std::shared_ptr<Mesh> create_sprite() const;

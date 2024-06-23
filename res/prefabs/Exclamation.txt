@@ -1,0 +1,68 @@
+Scene: Untitled
+Entities:
+  - Entity: Exclamation
+    guid: 71cea78b350fec5be249c79111895f89debf66aed1efc3fadd26009669973eda
+    Name: Exclamation
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: ""
+    Components:
+      - ComponentName: ParticleSystemComponent
+        guid: 3775a2d28da8581a680c46280d2b7e5114b7f13731d6988d5ad5ce35cebe1f4a
+        custom_name: ""
+        rotate_particles: false
+        spawn_instantly: true
+        sprite_path: ./res/textures/UI/exclamation_wide.png
+        min_spawn_interval: 0.699999988
+        max_spawn_interval: 0.699999988
+        start_velocity_1: [0, 0, 0]
+        start_velocity_2: [0, 0, 0]
+        min_spawn_alpha: 1
+        max_spawn_alpha: 1
+        start_min_particle_size: [0.200000003, 0.200000003, 0.200000003]
+        start_max_particle_size: [0.200000003, 0.200000003, 0.200000003]
+        emitter_bounds: 0
+        min_spawn_count: 1
+        max_spawn_count: 1
+        start_color_1: [1, 1, 1, 1]
+        end_color_1: [1, 1, 1, 0]
+        lifetime_1: 0.699999988
+        lifetime_2: 0.699999988
+        m_simulate_in_world_space: true
+  - Entity: PARTICLE_PARENT
+    guid: 3786cb21b9d27437129d05df011aaa31eaedd48d4976785b5687a65254941d78
+    Name: PARTICLE_PARENT
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [-50.0000038, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: 71cea78b350fec5be249c79111895f89debf66aed1efc3fadd26009669973eda
+    Components:
+      []
+  - Entity: PARTICLE_
+    guid: 35bb3c49a3b38555d28bbf2e1c7dd5be63f43ed78e111f57596d876e1c79b8f9
+    Name: PARTICLE_
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [0.200000003, 0.200000003, 0.200000003]
+      Parent:
+        guid: 3786cb21b9d27437129d05df011aaa31eaedd48d4976785b5687a65254941d78
+    Components:
+      - ComponentName: ParticleComponent
+        guid: 51ca568f12b3e3c478ae94ab069a11e5f4859cc3102168fe1c4e71f07f781989
+        custom_name: ""
+        material:
+          Shader:
+            VertexPath: ./res/shaders/particle.hlsl
+            FragmentPath: ./res/shaders/particle.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 0.967705965]
+          RenderOrder: 1000
+          NeedsForward: true
+          CastsShadows: false
+          IsBillboard: false
