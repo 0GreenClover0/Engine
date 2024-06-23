@@ -29,4 +29,6 @@ public:
 
 private:
     bool m_hovered = false;
+
+    static bool m_are_credits_open;
 };
