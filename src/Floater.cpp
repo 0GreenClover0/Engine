@@ -61,6 +61,7 @@ void Floater::update()
         return;
 
     auto water_ptr = water.lock();
+
     glm::vec3 const position = entity->transform->get_position();
     glm::vec2 const position_2d = AK::convert_3d_to_2d(position);
     glm::vec2 const movement_direction = AK::convert_3d_to_2d(glm::normalize(entity->transform->get_forward()));
