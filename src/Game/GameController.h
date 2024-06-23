@@ -15,6 +15,7 @@ public:
     explicit GameController(AK::Badge<GameController>);
 
     static std::shared_ptr<GameController> get_instance();
+    u32 get_level_number() const;
 
     virtual void uninitialize() override;
 

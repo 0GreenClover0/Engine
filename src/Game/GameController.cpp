@@ -39,6 +39,11 @@ std::shared_ptr<GameController> GameController::get_instance()
     return m_instance;
 }
 
+u32 GameController::get_level_number() const
+{
+    return m_level_number;
+}
+
 void GameController::uninitialize()
 {
     Component::uninitialize();
