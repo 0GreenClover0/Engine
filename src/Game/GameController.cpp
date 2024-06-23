@@ -1,6 +1,7 @@
 #include "GameController.h"
 
 #include "AK/Math.h"
+#include "Clock.h"
 #include "Entity.h"
 #include "Globals.h"
 #include "Input.h"
@@ -75,6 +76,8 @@ void GameController::awake()
     reset_level();
 
     Sound::play_sound("./res/audio/ost_loop.wav", true);
+
+    Clock::get_instance()->update_visibility();
 
     set_can_tick(true);
 }
@@ -205,6 +208,7 @@ void GameController::move_to_next_scene()
     }
 
     m_level_number++;
+    Clock::get_instance()->update_visibility();
 
     m_move_to_next_scene = true;
 }
