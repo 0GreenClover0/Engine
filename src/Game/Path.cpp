@@ -27,7 +27,7 @@ void Path::draw_editor()
 {
     Component::draw_editor();
 
-    if (ImPlot::BeginPlot("Path visualised"))
+    if (ImPlot::BeginPlot("Path visualised") or true)
     {
         ImPlot::PushStyleVar(ImPlotStyleVar_LineWeight, 2.0f);
         ImPlot::SetupLegend(ImPlotFlags_NoLegend);
@@ -83,5 +83,24 @@ void Path::draw_editor()
             points.erase(points.begin() + i);
         }
     }
+
+    ImGui::Separator();
+
+    static glm::vec2 shift = {0.0f, 0.0f};
+
+    ImGui::InputFloat2("Shift", &shift[0]);
+
+    if (ImGui::Button("Applay shift"))
+    {
+        shift_all_by(shift);
+    }
 }
 #endif
+
+void Path::shift_all_by(glm::vec2 value)
+{
+    for (auto& point : points)
+    {
+        point += value;
+    }
+}
