@@ -6,6 +6,13 @@
 
 #include <glm/vec4.hpp>
 
+enum class ParticleType
+{
+    Default,
+    Prompt,
+    Snow
+};
+
 struct ParticleSpawnData
 {
     float spawn_time = 0.0f;
@@ -27,11 +34,15 @@ public:
     explicit ParticleSystem(AK::Badge<ParticleSystem>);
 
     virtual void awake() override;
+
 #if EDITOR
     virtual void draw_editor() override;
 #endif
+
     virtual void update() override;
     void update_system();
+
+    ParticleType particle_type = ParticleType::Default;
 
     bool rotate_particles = true;
     bool spawn_instantly = false;

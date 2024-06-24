@@ -35,6 +35,14 @@ void ParticleSystem::draw_editor()
 {
     Component::draw_editor();
 
+    // Dropdown list
+    std::array const particle_types = {"Default", "Prompt", "Snow"};
+    i32 current_item_index = static_cast<i32>(particle_type);
+    if (ImGui::Combo("Floe Button Type", &current_item_index, particle_types.data(), particle_types.size()))
+    {
+        particle_type = static_cast<ParticleType>(current_item_index);
+    }
+
     ImGui::InputText("Sprite", &sprite_path);
     ImGui::ColorEdit4("Start color 1", value_ptr(start_color_1));
     ImGui::ColorEdit4("End color 1", value_ptr(end_color_1));
@@ -91,6 +99,8 @@ void ParticleSystem::update_system()
 
             auto const particle_comp =
                 particle->add_component(Particle::create(m_spawn_data_vector[i], emitter_bounds, sprite_path, rotate_particles));
+
+            particle_comp->particle_type = particle_type;
 
             // Adjust scale
             glm::vec3 const scale_factor = glm::linearRand(start_min_particle_size, start_max_particle_size);

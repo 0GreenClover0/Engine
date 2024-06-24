@@ -10,28 +10,31 @@ class Particle final : public Drawable
 {
 public:
     static std::shared_ptr<Particle> create();
-    static std::shared_ptr<Particle> create(ParticleSpawnData const& data, float spawn_bounds, std::string const& path,
+    static std::shared_ptr<Particle> create(ParticleSpawnData const& data, float spawn_bounds, std::string const& sprite_path,
                                             bool rotate_particle);
-    explicit Particle(AK::Badge<Particle>, float spawn_bounds, std::string const& path, std::shared_ptr<Material> const& mat,
+    explicit Particle(AK::Badge<Particle>, float spawn_bounds, std::string const& sprite_path, std::shared_ptr<Material> const& mat,
                       bool rotate_particle);
 
     virtual void awake() override;
-
     virtual void update() override;
-
     virtual bool is_particle() const override;
-
     virtual void draw() const override;
+
 #if EDITOR
     virtual void draw_editor() override;
 #endif
 
+    virtual void reprepare() override;
     void prepare();
-
     void set_data(ParticleSpawnData const& data);
 
     NON_SERIALIZED
     bool rotate = true;
+
+    NON_SERIALIZED
+    ParticleType particle_type = ParticleType::Default;
+
+    std::string path = "./res/textures/particle.png";
 
 private:
     [[nodiscard]] std::shared_ptr<Mesh> create_sprite() const;
@@ -54,7 +57,6 @@ private:
     float m_spawn_bounds = 1.0f;
     float m_rotation_direction = 1.0f;
     float m_lifetime = 5.0f;
-    std::string m_path = "./res/textures/particle.png";
 
     std::shared_ptr<Mesh> m_mesh = {};
 };

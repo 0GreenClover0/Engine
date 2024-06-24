@@ -6,8 +6,11 @@
 #include "Globals.h"
 #include "RendererDX11.h"
 #include "ResourceManager.h"
-
 #include <glm/gtc/type_ptr.inl>
+
+#if EDITOR
+#include "imgui_stdlib.h"
+#endif
 
 std::shared_ptr<Particle> Particle::create()
 {
@@ -23,14 +26,15 @@ std::shared_ptr<Particle> Particle::create()
     return particle;
 }
 
-std::shared_ptr<Particle> Particle::create(ParticleSpawnData const& data, float spawn_bounds, std::string const& path, bool rotate_particle)
+std::shared_ptr<Particle> Particle::create(ParticleSpawnData const& data, float spawn_bounds, std::string const& sprite_path,
+                                           bool rotate_particle)
 {
     auto const particle_shader = ResourceManager::get_instance().load_shader("./res/shaders/particle.hlsl", "./res/shaders/particle.hlsl");
     auto const particle_material = Material::create(particle_shader, 1000, false, false, true);
     particle_material->casts_shadows = false;
     particle_material->needs_forward_rendering = true;
 
-    auto particle = std::make_shared<Particle>(AK::Badge<Particle> {}, spawn_bounds, path, particle_material, rotate_particle);
+    auto particle = std::make_shared<Particle>(AK::Badge<Particle> {}, spawn_bounds, sprite_path, particle_material, rotate_particle);
 
     particle->prepare();
     particle->set_data(data);
@@ -38,9 +42,9 @@ std::shared_ptr<Particle> Particle::create(ParticleSpawnData const& data, float 
     return particle;
 }
 
-Particle::Particle(AK::Badge<Particle>, float spawn_bounds, std::string const& path, std::shared_ptr<Material> const& mat,
+Particle::Particle(AK::Badge<Particle>, float spawn_bounds, std::string const& sprite_path, std::shared_ptr<Material> const& mat,
                    bool rotate_particle)
-    : Drawable(mat), rotate(rotate_particle), m_particle_material(mat), m_spawn_bounds(spawn_bounds), m_path(path)
+    : Drawable(mat), rotate(rotate_particle), m_particle_material(mat), m_spawn_bounds(spawn_bounds), path(sprite_path)
 {
 }
 
@@ -98,9 +102,22 @@ void Particle::draw_editor()
     Drawable::draw_editor();
 
     ImGui::ColorEdit4("Color", glm::value_ptr(m_color));
+    ImGui::InputText("Sprite Path", &path);
+    if (ImGui::IsItemDeactivatedAfterEdit())
+    {
+        reprepare();
+    }
+
     update_particle();
 }
 #endif
+
+void Particle::reprepare()
+{
+    Drawable::reprepare();
+
+    prepare();
+}
 
 void Particle::update_particle() const
 {
@@ -128,16 +145,30 @@ void Particle::update()
     }
 
     move();
-
     interpolate_color();
-
     update_particle();
 }
 
 void Particle::move() const
 {
-    glm::vec3 const p = entity->transform->get_position();
-    glm::vec3 const change = m_velocity * static_cast<float>(delta_time);
+    glm::vec3 p = entity->transform->get_position();
+    glm::vec3 change = {};
+
+    switch (particle_type)
+    {
+    case ParticleType::Prompt:
+
+        change = {0.0f, sin(glfwGetTime() * 7.5f) * 0.01f, 0.0f};
+
+        break;
+
+    default:
+
+        change = m_velocity * static_cast<float>(delta_time);
+
+        break;
+    }
+
     entity->transform->set_position(p + change);
 }
 
@@ -190,10 +221,10 @@ std::shared_ptr<Mesh> Particle::create_sprite() const
     texture_settings.wrap_mode_x = TextureWrapMode::ClampToEdge;
     texture_settings.wrap_mode_y = TextureWrapMode::ClampToEdge;
 
-    if (!m_path.empty())
-        diffuse_maps.emplace_back(ResourceManager::get_instance().load_texture(m_path, TextureType::Diffuse, texture_settings));
+    if (!path.empty())
+        diffuse_maps.emplace_back(ResourceManager::get_instance().load_texture(path, TextureType::Diffuse, texture_settings));
 
     textures.insert(textures.end(), diffuse_maps.begin(), diffuse_maps.end());
 
-    return ResourceManager::get_instance().load_mesh(0, m_path, vertices, indices, textures, DrawType::Triangles, material);
+    return ResourceManager::get_instance().load_mesh(0, path, vertices, indices, textures, DrawType::Triangles, material);
 }
