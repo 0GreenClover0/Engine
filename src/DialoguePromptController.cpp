@@ -108,8 +108,14 @@ void DialoguePromptController::draw_editor()
         play_content(0);
     }
 
+    if (ImGui::Button("Flip"))
+    {
+        flip();
+    }
+
     ImGuiEx::draw_ptr("Panel Reference", dialogue_panel);
     ImGuiEx::draw_ptr("Parent Reference", panel_parent);
+    ImGuiEx::draw_ptr("Keeper Reference", keeper_sprite);
     ImGui::Separator();
     ImGuiEx::draw_ptr("Upper text", upper_text);
     ImGuiEx::draw_ptr("Middle text", middle_text);
@@ -264,4 +270,25 @@ void DialoguePromptController::end_content()
     show_or_hide_panel(InterpolationMode::Hide);
     m_currently_played_content = -1;
     m_currently_played_sound = nullptr;
+}
+
+void DialoguePromptController::flip()
+{
+    m_is_flipped = !m_is_flipped;
+
+    glm::vec3 position = keeper_sprite.lock()->transform->get_local_position();
+    keeper_sprite.lock()->transform->set_local_position({-position.x, position.y, position.z});
+
+    if (m_is_flipped)
+    {
+        keeper_sprite.lock()->get_component<Panel>()->background_path = "./res/textures/UI/keeper_sprite_flip.png";
+    }
+    else
+    {
+        keeper_sprite.lock()->get_component<Panel>()->background_path = "./res/textures/UI/keeper_sprite.png";
+    }
+    keeper_sprite.lock()->get_component<Panel>()->reprepare();
+
+    position = panel_parent.lock()->transform->get_local_position();
+    panel_parent.lock()->transform->set_local_position({-position.x, position.y, position.z});
 }

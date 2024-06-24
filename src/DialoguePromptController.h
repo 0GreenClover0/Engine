@@ -29,10 +29,13 @@ public:
     void play_content(u16 const vector_index);
     void end_content();
 
+    void flip();
+
     float interp_speed = 4.0f; // Unused but maybe will be used
 
     std::weak_ptr<Button> dialogue_panel = {};
     std::weak_ptr<Entity> panel_parent = {};
+    std::weak_ptr<Entity> keeper_sprite = {};
 
     std::weak_ptr<ScreenText> upper_text = {};
     std::weak_ptr<ScreenText> middle_text = {};
@@ -50,4 +53,6 @@ private:
     float m_interpolation_value = 0.0f;
     std::shared_ptr<Sound> m_currently_played_sound = nullptr;
     i32 m_currently_played_content = -1;
+
+    bool m_is_flipped = false;
 };

@@ -181,6 +181,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "interp_speed" << YAML::Value << dialoguepromptcontroller->interp_speed;
         out << YAML::Key << "dialogue_panel" << YAML::Value << dialoguepromptcontroller->dialogue_panel;
         out << YAML::Key << "panel_parent" << YAML::Value << dialoguepromptcontroller->panel_parent;
+        out << YAML::Key << "keeper_sprite" << YAML::Value << dialoguepromptcontroller->keeper_sprite;
         out << YAML::Key << "upper_text" << YAML::Value << dialoguepromptcontroller->upper_text;
         out << YAML::Key << "middle_text" << YAML::Value << dialoguepromptcontroller->middle_text;
         out << YAML::Key << "lower_text" << YAML::Value << dialoguepromptcontroller->lower_text;
@@ -898,6 +899,10 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             if (component["panel_parent"].IsDefined())
             {
                 deserialized_component->panel_parent = component["panel_parent"].as<std::weak_ptr<Entity>>();
+            }
+            if (component["keeper_sprite"].IsDefined())
+            {
+                deserialized_component->keeper_sprite = component["keeper_sprite"].as<std::weak_ptr<Entity>>();
             }
             if (component["upper_text"].IsDefined())
             {
