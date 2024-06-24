@@ -1,5 +1,7 @@
 #include "SceneSerializer.h"
 
+#include "AssetPreloader.h"
+
 #include <filesystem>
 #include <fstream>
 #include <iostream>
@@ -2386,17 +2388,31 @@ void SceneSerializer::serialize_this_entity(std::shared_ptr<Entity> const& entit
 // Replaces all guids that are not present in the scene with newly generated ones.
 std::shared_ptr<Entity> SceneSerializer::deserialize_this_entity(std::string const& file_path)
 {
-    std::ifstream scene_file(file_path);
-
-    if (!scene_file.is_open())
-    {
-        Debug::log("Could not open a scene file: " + file_path + "\n", DebugType::Error);
-        return {};
-    }
+    std::optional<std::string> scene_data = Engine::asset_preloader->get_text_asset(file_path);
 
     std::stringstream stream;
-    stream << scene_file.rdbuf();
-    scene_file.close();
+
+    if (!scene_data.has_value())
+    {
+        Debug::log("Preloading failed " + file_path);
+        std::ifstream scene_file(file_path);
+
+        if (!scene_file.is_open())
+        {
+            Debug::log("Could not open a scene file: " + file_path + "\n", DebugType::Error);
+            return {};
+        }
+
+        stream << scene_file.rdbuf();
+        scene_file.close();
+
+        scene_data = stream.str();
+    }
+    else
+    {
+        Debug::log("Preloading succ " + file_path);
+        stream = std::stringstream(scene_data.value());
+    }
 
     std::unordered_set<std::string> included_guids = {};
     std::string line = {};
@@ -2578,19 +2594,26 @@ void SceneSerializer::serialize(std::string const& file_path) const
 
 bool SceneSerializer::deserialize(std::string const& file_path)
 {
-    std::ifstream scene_file(file_path);
+    std::optional<std::string> scene_data = Engine::asset_preloader->get_text_asset(file_path);
 
-    if (!scene_file.is_open())
+    if (!scene_data.has_value())
     {
-        std::cout << "Could not open a scene file: " << file_path << "\n";
-        return false;
+        std::ifstream scene_file(file_path);
+
+        if (!scene_file.is_open())
+        {
+            std::cout << "Could not open a scene file: " << file_path << "\n";
+            return false;
+        }
+
+        std::stringstream stream;
+        stream << scene_file.rdbuf();
+        scene_file.close();
+
+        scene_data = stream.str();
     }
 
-    std::stringstream stream;
-    stream << scene_file.rdbuf();
-    scene_file.close();
-
-    YAML::Node data = YAML::Load(stream.str());
+    YAML::Node data = YAML::Load(scene_data.value());
 
     if (!data["Scene"])
         return false;

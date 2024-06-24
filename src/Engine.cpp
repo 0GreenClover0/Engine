@@ -9,6 +9,7 @@
 
 #include <miniaudio.h>
 
+#include "AssetPreloader.h"
 #include "Editor.h"
 #include "Game/Game.h"
 #include "Globals.h"
@@ -52,6 +53,8 @@ i32 Engine::initialize()
 
     if (auto const result = initialize_thirdparty_after_renderer(); result != 0)
         return result;
+
+    asset_preloader = AssetPreloader::create();
 
     if (Renderer::renderer_api == Renderer::RendererApi::OpenGL)
     {
