@@ -407,6 +407,8 @@ i32 Engine::initialize_miniaudio()
     if (ma_engine_init(&config, &audio_engine) != MA_SUCCESS)
         return -1;
 
+    ma_device_set_master_volume(audio_engine.pDevice, 0.2f);
+
     return 0;
 }
 

@@ -39,7 +39,10 @@ void DialoguePromptController::awake()
 void DialoguePromptController::update()
 {
     if (m_interpolation_value > 0.99f && m_currently_played_sound == nullptr)
+    {
         m_currently_played_sound = Sound::play_sound(dialogue_objects[m_currently_played_content].sound_path);
+        m_currently_played_sound->set_volume(0.65f);
+    }
 
     if (m_currently_played_sound != nullptr && m_currently_played_sound->has_finished()
         && dialogue_objects[m_currently_played_content].auto_end)

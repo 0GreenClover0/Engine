@@ -23,8 +23,6 @@ std::shared_ptr<Sound> Sound::create(std::string const& path)
     std::shared_ptr<Sound> sound = std::make_shared<Sound>(AK::Badge<Sound> {});
     ma_sound_init_from_file(&Engine::audio_engine, path.c_str(), 0, nullptr, nullptr, &sound->m_internal_sound);
 
-    ma_sound_set_attenuation_model(&sound->m_internal_sound, ma_attenuation_model_none);
-
     sound->set_can_tick(true);
 
     return sound;
@@ -82,6 +80,9 @@ void Sound::awake()
 
     if (m_internal_sound.pDataSource != nullptr)
     {
+        if (!is_positional)
+            ma_sound_set_attenuation_model(&m_internal_sound, ma_attenuation_model_linear);
+
         ma_sound_set_volume(&m_internal_sound, volume);
     }
 }
@@ -96,7 +97,7 @@ void Sound::draw_editor()
         reprepare();
     }
 
-    if (ImGui::SliderFloat("Volume", &volume, 0.0f, 100.0f, "%.2f"))
+    if (ImGui::SliderFloat("Volume", &volume, 0.0f, 1.0f, "%.2f"))
     {
         set_volume(volume);
     }
@@ -122,6 +123,10 @@ void Sound::reprepare()
 
         // NOTE: Setting attenuation model to none makes the ma_sound_set_volume() not work at all, for some reason.
         // ma_sound_set_attenuation_model(&m_internal_sound, ma_attenuation_model_none);
+
+        if (!is_positional)
+            ma_sound_set_attenuation_model(&m_internal_sound, ma_attenuation_model_linear);
+
         ma_sound_set_volume(&m_internal_sound, volume);
     }
 }
@@ -148,6 +153,9 @@ void Sound::stop_with_fade(u64 const milliseconds)
 
 void Sound::set_volume(float const new_volume)
 {
+    if (!is_positional)
+        ma_sound_set_attenuation_model(&m_internal_sound, ma_attenuation_model_linear);
+
     ma_sound_set_volume(&m_internal_sound, new_volume);
     volume = new_volume;
 }
@@ -164,8 +172,7 @@ void Sound::update()
     if (m_internal_sound.atEnd)
     {
         ma_sound_uninit(&m_internal_sound);
-        set_can_tick(false);
 
-        // TODO: Destroy the entity
+        entity->destroy_immediate();
     }
 }
