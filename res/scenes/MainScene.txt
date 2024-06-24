@@ -398,7 +398,7 @@ Entities:
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: dbacdd6b48665243e2f90f7dea7298de945bf38a1a9331f9f0afcb61b5006d00
+        guid: ""
     Components:
       - ComponentName: DialoguePromptControllerComponent
         guid: 748bff1e79bc529980f9bad5940f19ee00bd8aa672fcaddca3944fd65d480944
@@ -592,3 +592,36 @@ Entities:
           NeedsForward: true
           CastsShadows: false
           IsBillboard: false
+  - Entity: FallingSnow
+    guid: d45dcc7a12ef18f50315dc2b4ab7d21bc31bf44bb3948fb4508e0a6110afd480
+    Name: FallingSnow
+    TransformComponent:
+      Translation: [0, 2, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: 83139da87b5b366493870e126a611f3edc8afda278571a1afa702a506731e35e
+    Components:
+      - ComponentName: ParticleSystemComponent
+        guid: 75f3bdf8ee87464b5e2b4c32ae57dfa0912a85444a6548ded3f773d2189632a7
+        custom_name: ""
+        particle_type: 2
+        rotate_particles: true
+        spawn_instantly: false
+        sprite_path: ./res/textures/particle.png
+        min_spawn_interval: 0.100000001
+        max_spawn_interval: 0.200000003
+        start_velocity_1: [-0.100000001, 0.200000003, -0.100000001]
+        start_velocity_2: [0.100000001, 1, 0.100000001]
+        min_spawn_alpha: 0.5
+        max_spawn_alpha: 0.800000012
+        start_min_particle_size: [0.0434999987, 0.0434999987, 0.0434999987]
+        start_max_particle_size: [0.0434999987, 0.0434999987, 0.0434999987]
+        emitter_bounds: 6
+        min_spawn_count: 25
+        max_spawn_count: 30
+        start_color_1: [1, 1, 1, 0.392156869]
+        end_color_1: [1, 1, 1, 0]
+        lifetime_1: 0.5
+        lifetime_2: 0.699999988
+        m_simulate_in_world_space: true

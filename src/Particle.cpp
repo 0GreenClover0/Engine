@@ -1,6 +1,7 @@
 #include "Particle.h"
 
 #include "AK/AK.h"
+#include "AK/Math.h"
 #include "Camera.h"
 #include "Entity.h"
 #include "Globals.h"
@@ -73,6 +74,8 @@ void Particle::awake()
     {
         entity->transform->set_euler_angles(Camera::get_main_camera()->entity->transform->get_euler_angles());
     }
+
+    m_random_seed = AK::random_float(-1.0f, 1.0f);
 }
 
 void Particle::draw() const
@@ -173,15 +176,19 @@ void Particle::move() const
     switch (particle_type)
     {
     case ParticleType::Prompt:
-
         change = {0.0f, sin(glfwGetTime() * 7.5f) * 0.01f, 0.0f};
+        break;
 
+    case ParticleType::Snow:
+        change.x = sin(static_cast<float>(glfwGetTime()) + m_random_seed * 1.5f) * 0.035f - static_cast<float>(delta_time) * 1.7f;
+        change.z = change.x;
+
+        // Ensure the y-component decreases over time for downward motion
+        change.y = -static_cast<float>(delta_time) * 6.5f;
         break;
 
     default:
-
         change = m_velocity * static_cast<float>(delta_time);
-
         break;
     }
 
