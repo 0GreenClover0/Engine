@@ -34,6 +34,9 @@ public:
 
     std::weak_ptr<Entity> spawn_position = {};
 
+    NON_SERIALIZED
+    bool is_entering_lighthouse_allowed = true;
+
 private:
     bool m_is_keeeper_inside = true;
     bool m_has_keeper_entered_this_frame = false;

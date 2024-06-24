@@ -240,7 +240,7 @@ void LighthouseKeeper::handle_input()
         }
     }
 
-    if (!lighthouse.expired() && Input::input->get_key_down(GLFW_KEY_SPACE))
+    if (!lighthouse.expired() && Input::input->get_key_down(GLFW_KEY_SPACE) && lighthouse.lock()->is_entering_lighthouse_allowed)
     {
         auto const lighthouse_locked = lighthouse.lock();
         auto const lighthouse_transform = lighthouse_locked->entity->transform;
