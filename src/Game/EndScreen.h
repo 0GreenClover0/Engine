@@ -15,11 +15,17 @@ public:
 
     virtual void awake() override;
     virtual void update() override;
+    virtual void on_enabled() override;
+    virtual void on_disabled() override;
 #if EDITOR
     virtual void draw_editor() override;
 #endif
     void update_background();
     void update_star(u32 const star_number);
+
+    void next_level();
+    void restart();
+    void menu();
 
     bool is_failed = false;
     u32 number_of_stars = 1;
@@ -27,6 +33,10 @@ public:
     std::vector<std::weak_ptr<Entity>> stars = {};
 
     glm::vec2 star_scale = {};
+
+    std::weak_ptr<Button> next_level_button = {};
+    std::weak_ptr<Button> restart_button = {};
+    std::weak_ptr<Button> menu_button = {};
 
 private:
     u32 m_shown_stars = 0;

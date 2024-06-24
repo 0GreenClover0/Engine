@@ -3,11 +3,13 @@
 #include "AK/AK.h"
 #include "AK/Math.h"
 #include "Entity.h"
+#include "GameController.h"
 #include "Globals.h"
 #include "Input.h"
 #include "Model.h"
 #include "Panel.h"
 #include "ResourceManager.h"
+#include "SceneSerializer.h"
 
 #include <GLFW/glfw3.h>
 #include <glm/gtc/random.hpp>
@@ -35,14 +37,53 @@ void EndScreen::awake()
         star.lock()->transform->set_local_scale({0.0f, 0.0f, 0.0f});
     }
 
+    glfwSetInputMode(Engine::window->get_glfw_window(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+
     update_background();
 
     set_can_tick(true);
 }
 
+void EndScreen::on_enabled()
+{
+    if (!next_level_button.expired())
+    {
+        next_level_button.lock()->on_unclicked.attach(&EndScreen::next_level, shared_from_this());
+    }
+
+    if (!restart_button.expired())
+    {
+        restart_button.lock()->on_unclicked.attach(&EndScreen::restart, shared_from_this());
+    }
+
+    if (!menu_button.expired())
+    {
+        menu_button.lock()->on_unclicked.attach(&EndScreen::menu, shared_from_this());
+    }
+}
+
+void EndScreen::on_disabled()
+{
+    if (!next_level_button.expired())
+    {
+        next_level_button.lock()->on_unclicked.detach(shared_from_this());
+    }
+
+    if (!restart_button.expired())
+    {
+        restart_button.lock()->on_unclicked.detach(shared_from_this());
+    }
+
+    if (!menu_button.expired())
+    {
+        // FIXME: For some reason this makes unloading the scene unhappy.
+        //menu_button.lock()->on_unclicked.detach(shared_from_this());
+    }
+}
+
 void EndScreen::update()
 {
-    if (!m_is_animation_end)
+    if (!m_is_animation_end || m_is_hiding)
     {
         if (!m_is_in_screen)
         {
@@ -63,6 +104,11 @@ void EndScreen::update()
                 if (is_failed)
                 {
                     m_is_animation_end = true;
+                }
+
+                if (m_is_hiding)
+                {
+                    entity->destroy_immediate();
                 }
             }
         }
@@ -118,6 +164,10 @@ void EndScreen::draw_editor()
     u32 constexpr max_level = 3;
 
     ImGui::SliderScalar("Number of stars: ", ImGuiDataType_U32, &number_of_stars, &min_level, &max_level);
+
+    ImGuiEx::draw_ptr("Next level button", next_level_button);
+    ImGuiEx::draw_ptr("Restart button", restart_button);
+    ImGuiEx::draw_ptr("Menu button", menu_button);
 }
 #endif
 
@@ -139,4 +189,23 @@ void EndScreen::update_star(u32 const star_number)
 {
     stars[star_number].lock()->transform->set_local_scale(
         {ease_out_elastic(m_appear_counter) * star_scale.x, ease_out_elastic(m_appear_counter) * star_scale.y, 0.0f});
+}
+
+void EndScreen::next_level()
+{
+    GameController::get_instance()->move_to_next_scene();
+    hide();
+}
+
+void EndScreen::restart()
+{
+    GameController::get_instance()->move_to_next_scene();
+    hide();
+}
+
+void EndScreen::menu()
+{
+    auto const lock = shared_from_this();
+    MainScene::get_instance()->unload();
+    SceneSerializer::get_instance()->deserialize("./res/scenes/MainScene.txt");
 }
