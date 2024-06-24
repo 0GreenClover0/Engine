@@ -1,7 +1,7 @@
 Scene: Untitled
 Entities:
   - Entity: EndScreen
-    guid: ed797b42a955e13afaf2d389767c2ddc95996dd8fffa14b125e28808d7a004eb
+    guid: 34b8d490194718231893c0de7364d1e9b952bcb8aad6140e41ba979d6c83b3f1
     Name: EndScreen
     TransformComponent:
       Translation: [0, -2, 0]
@@ -11,7 +11,7 @@ Entities:
         guid: ""
     Components:
       - ComponentName: PanelComponent
-        guid: 1af73b1b9da7c0bf209ee431ff9fd2df3f3af99baf7587dcfeedfc72f4da75de
+        guid: cfc8d8063a908e2539be25cf2c346dd556bbedb551dcad4903caa67b77bad29e
         custom_name: ""
         background_path: ./res/textures/UI/end_screen_level_completed.png
         material:
@@ -25,27 +25,33 @@ Entities:
           CastsShadows: false
           IsBillboard: false
       - ComponentName: EndScreenComponent
-        guid: 5b399dfcb13a0810ba49affa44fe4660dfc870da83480e7ea63af47bd58a8d4f
+        guid: de589f9813b37b985c8d96c28a85f20d3d28632c7bd01039d8eb19c4c6644cb6
         custom_name: ""
         is_failed: false
         number_of_stars: 0
         stars:
-          - guid: 556f546a462fc26e0d08485487cf52b1d33a2ceb653cc288273a3def760c0797
-          - guid: a6fbcf8db4eb873418a409b04076efd24136300559ad8d66e80efcd440a7fbd6
-          - guid: 096e758bbc4461d362d5693d4179094a0e9016c58aa1ff6fff91327b8c33cc09
+          - guid: e6231773c7e7ae8cac64bcb38f4e796c6c55d79b221087d48be5ff178ddc035d
+          - guid: f8529cfb4bf1897e44a038bec4e71f7575312180b4b5d9f173b20801e6d7e184
+          - guid: 3a06011682ade14dff8afef45820d8d4dc8e4aad7390fe1c596368bd32428779
         star_scale: [0.239999995, 0.414555997]
+        next_level_button:
+          guid: c4539a3c084d9ab03964e59d21951c54041789a7282c12a0e66c83a4c9fee7ba
+        restart_button:
+          guid: 8f65eef8bae14efb9d0c687a784fef314cebed51fa3a45f6eaafae9bd9945ed8
+        menu_button:
+          guid: 3a3280c89e324850b9e202002eba1d07bd90bcc1f1c1e6521319422e3b0ebc76
   - Entity: Star
-    guid: 556f546a462fc26e0d08485487cf52b1d33a2ceb653cc288273a3def760c0797
+    guid: e6231773c7e7ae8cac64bcb38f4e796c6c55d79b221087d48be5ff178ddc035d
     Name: Star
     TransformComponent:
       Translation: [-0.236302286, -0.157406867, 0]
       Rotation: [0, 0, 0]
       Scale: [0.239999995, 0.414555997, 1]
       Parent:
-        guid: ed797b42a955e13afaf2d389767c2ddc95996dd8fffa14b125e28808d7a004eb
+        guid: 34b8d490194718231893c0de7364d1e9b952bcb8aad6140e41ba979d6c83b3f1
     Components:
       - ComponentName: ButtonComponent
-        guid: 8e959af4aa897122c64d9bff6f4ce05cc702a9caa0e2340cda2e5c0d8eaccfba
+        guid: f78884d210315979c40d64f4d140cbc03bea793b1074548c41767e03a822b11e
         custom_name: ""
         path_default: ./res/textures/UI\star.png
         path_hovered: ./res/textures/UI\star.png
@@ -65,17 +71,17 @@ Entities:
           CastsShadows: false
           IsBillboard: false
   - Entity: Star
-    guid: a6fbcf8db4eb873418a409b04076efd24136300559ad8d66e80efcd440a7fbd6
+    guid: f8529cfb4bf1897e44a038bec4e71f7575312180b4b5d9f173b20801e6d7e184
     Name: Star
     TransformComponent:
       Translation: [-0.6343292, -0.356668651, 0]
       Rotation: [0, 0, 0]
       Scale: [0.239999995, 0.414555997, 1]
       Parent:
-        guid: ed797b42a955e13afaf2d389767c2ddc95996dd8fffa14b125e28808d7a004eb
+        guid: 34b8d490194718231893c0de7364d1e9b952bcb8aad6140e41ba979d6c83b3f1
     Components:
       - ComponentName: ButtonComponent
-        guid: 26874c21f6eba6f80fb11f579df3e50a59b3a8b147ba7bec829919aeaeea3b32
+        guid: 18bf8f53f21c7a8a558a3aa88558e3fe22ed6ec6caef6f75387598dca49d9d2e
         custom_name: ""
         path_default: ./res/textures/UI\star.png
         path_hovered: ./res/textures/UI\star.png
@@ -95,17 +101,17 @@ Entities:
           CastsShadows: false
           IsBillboard: false
   - Entity: Star
-    guid: 096e758bbc4461d362d5693d4179094a0e9016c58aa1ff6fff91327b8c33cc09
+    guid: 3a06011682ade14dff8afef45820d8d4dc8e4aad7390fe1c596368bd32428779
     Name: Star
     TransformComponent:
       Translation: [-0.52685833, 0.403592527, 0]
       Rotation: [0, 0, 0]
       Scale: [0.239999995, 0.414555997, 1]
       Parent:
-        guid: ed797b42a955e13afaf2d389767c2ddc95996dd8fffa14b125e28808d7a004eb
+        guid: 34b8d490194718231893c0de7364d1e9b952bcb8aad6140e41ba979d6c83b3f1
     Components:
       - ComponentName: ButtonComponent
-        guid: ba49814ae8881bd132c471826a7012d0896d3ed9154685d16b3132928e1ee49b
+        guid: f00c807332123000c0af28b26d0b10a75db2637e88ba50350c6be806439c3794
         custom_name: ""
         path_default: ./res/textures/UI\star.png
         path_hovered: ./res/textures/UI\star.png
@@ -125,28 +131,28 @@ Entities:
           CastsShadows: false
           IsBillboard: false
   - Entity: Buttons
-    guid: 4fdce0357b258cf12ffa0e825dd9d8601e7d95249e164a8793b72ebc0ef8d043
+    guid: 1ce0cd26d9c0d864b15f26cced90e91118555dea20097d4e1ba23d714b152797
     Name: Buttons
     TransformComponent:
       Translation: [0.35497725, -0.136922449, 0.0601075329]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: ed797b42a955e13afaf2d389767c2ddc95996dd8fffa14b125e28808d7a004eb
+        guid: 34b8d490194718231893c0de7364d1e9b952bcb8aad6140e41ba979d6c83b3f1
     Components:
       []
   - Entity: ButtonNextLevel
-    guid: 028e0340f1a296e41bc166f4fa34a0a0f1c4de71bdb0df7efeaba9d4e1020e35
+    guid: c79e380672b1aadf7d78badea849d0991a1112b0838a4fb7701d9026d2e127d6
     Name: ButtonNextLevel
     TransformComponent:
       Translation: [0, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [0.129999995, 0.073368609, 1]
       Parent:
-        guid: 4fdce0357b258cf12ffa0e825dd9d8601e7d95249e164a8793b72ebc0ef8d043
+        guid: 1ce0cd26d9c0d864b15f26cced90e91118555dea20097d4e1ba23d714b152797
     Components:
       - ComponentName: ButtonComponent
-        guid: adf49118e4eec2490cac679eddad19d400869c0108eb48fc18504f2b8dde663e
+        guid: c4539a3c084d9ab03964e59d21951c54041789a7282c12a0e66c83a4c9fee7ba
         custom_name: ""
         path_default: ./res/textures/UI\buttons\default\b_next_level_default.png
         path_hovered: ./res/textures/UI\buttons\hover\b_next_level_hover.png
@@ -166,17 +172,17 @@ Entities:
           CastsShadows: false
           IsBillboard: false
   - Entity: ButtonRestart
-    guid: be8f232f9460c95ed366822cc34783c5f051f131952db92995ccfed9337ac2ef
+    guid: a780b8765d72c8bce244cb8841c77855435f487733acad6d7c0b4b7c7a71a314
     Name: ButtonRestart
     TransformComponent:
       Translation: [0, -0.209999993, 0]
       Rotation: [0, 0, 0]
       Scale: [0.129999995, 0.073368609, 1]
       Parent:
-        guid: 4fdce0357b258cf12ffa0e825dd9d8601e7d95249e164a8793b72ebc0ef8d043
+        guid: 1ce0cd26d9c0d864b15f26cced90e91118555dea20097d4e1ba23d714b152797
     Components:
       - ComponentName: ButtonComponent
-        guid: 84f62c13a7a1d2e3541409e16c9bcfbc24229e8ab1287b7dff520343f2b5e9b3
+        guid: 8f65eef8bae14efb9d0c687a784fef314cebed51fa3a45f6eaafae9bd9945ed8
         custom_name: ""
         path_default: ./res/textures/UI\buttons\default\b_restart_default.png
         path_hovered: ./res/textures/UI\buttons\hover\b_restart_hover.png
@@ -196,17 +202,17 @@ Entities:
           CastsShadows: false
           IsBillboard: false
   - Entity: ButtonMenu
-    guid: 1574e8296939f6aa605f063b804d493ba97498b7bae8bdede7be968eb926a773
+    guid: 7ca68519f7b757e48e0baaefeee3d4d9d1e4919d31f7c8df429d5babbb146964
     Name: ButtonMenu
     TransformComponent:
       Translation: [0, -0.419999987, 0]
       Rotation: [0, 0, 0]
       Scale: [0.129999995, 0.073368609, 1]
       Parent:
-        guid: 4fdce0357b258cf12ffa0e825dd9d8601e7d95249e164a8793b72ebc0ef8d043
+        guid: 1ce0cd26d9c0d864b15f26cced90e91118555dea20097d4e1ba23d714b152797
     Components:
       - ComponentName: ButtonComponent
-        guid: c92758308f6c045d6b9e41f43b5dd1bcf3f6a7814f73e291aa8393a74f076301
+        guid: 3a3280c89e324850b9e202002eba1d07bd90bcc1f1c1e6521319422e3b0ebc76
         custom_name: ""
         path_default: ./res/textures/UI\buttons\default\b_menu_default-01.png
         path_hovered: ./res/textures/UI\buttons\hover\b_menu_hover.png

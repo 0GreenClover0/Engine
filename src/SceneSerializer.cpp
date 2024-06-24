@@ -598,6 +598,9 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
             out << YAML::Key << "number_of_stars" << YAML::Value << endscreen->number_of_stars;
             out << YAML::Key << "stars" << YAML::Value << endscreen->stars;
             out << YAML::Key << "star_scale" << YAML::Value << endscreen->star_scale;
+            out << YAML::Key << "next_level_button" << YAML::Value << endscreen->next_level_button;
+            out << YAML::Key << "restart_button" << YAML::Value << endscreen->restart_button;
+            out << YAML::Key << "menu_button" << YAML::Value << endscreen->menu_button;
         }
         else
         {
@@ -2171,6 +2174,18 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             if (component["star_scale"].IsDefined())
             {
                 deserialized_component->star_scale = component["star_scale"].as<glm::vec2>();
+            }
+            if (component["next_level_button"].IsDefined())
+            {
+                deserialized_component->next_level_button = component["next_level_button"].as<std::weak_ptr<Button>>();
+            }
+            if (component["restart_button"].IsDefined())
+            {
+                deserialized_component->restart_button = component["restart_button"].as<std::weak_ptr<Button>>();
+            }
+            if (component["menu_button"].IsDefined())
+            {
+                deserialized_component->menu_button = component["menu_button"].as<std::weak_ptr<Button>>();
             }
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
