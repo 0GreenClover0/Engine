@@ -45,6 +45,7 @@
 #include "Game/Ship.h"
 #include "Game/ShipEyes.h"
 #include "Game/ShipSpawner.h"
+#include "Game/Thanks.h"
 #include "Light.h"
 #include "Model.h"
 #include "Panel.h"
@@ -653,6 +654,15 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "last_chance_time_threshold" << YAML::Value << shipspawner->last_chance_time_threshold;
         out << YAML::Key << "main_event_spawn" << YAML::Value << shipspawner->main_event_spawn;
         out << YAML::Key << "backup_spawn" << YAML::Value << shipspawner->backup_spawn;
+        out << YAML::EndMap;
+    }
+    else if (auto const thanks = std::dynamic_pointer_cast<class Thanks>(component); thanks != nullptr)
+    {
+        out << YAML::BeginMap;
+        out << YAML::Key << "ComponentName" << YAML::Value << "ThanksComponent";
+        out << YAML::Key << "guid" << YAML::Value << thanks->guid;
+        out << YAML::Key << "custom_name" << YAML::Value << thanks->custom_name;
+        out << YAML::Key << "back_to_menu_button" << YAML::Value << thanks->back_to_menu_button;
         out << YAML::EndMap;
     }
     else if (auto const playerinput = std::dynamic_pointer_cast<class PlayerInput>(component); playerinput != nullptr)
@@ -2304,6 +2314,26 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             if (component["backup_spawn"].IsDefined())
             {
                 deserialized_component->backup_spawn = component["backup_spawn"].as<std::vector<SpawnEvent>>();
+            }
+            deserialized_entity->add_component(deserialized_component);
+            deserialized_component->reprepare();
+        }
+    }
+    else if (component_name == "ThanksComponent")
+    {
+        if (first_pass)
+        {
+            auto const deserialized_component = Thanks::create();
+            deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_component->custom_name = component["custom_name"].as<std::string>();
+            deserialized_pool.emplace_back(deserialized_component);
+        }
+        else
+        {
+            auto const deserialized_component = std::dynamic_pointer_cast<class Thanks>(get_from_pool(component["guid"].as<std::string>()));
+            if (component["back_to_menu_button"].IsDefined())
+            {
+                deserialized_component->back_to_menu_button = component["back_to_menu_button"].as<std::weak_ptr<Button>>();
             }
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();

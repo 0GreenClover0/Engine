@@ -52,6 +52,7 @@
 #include "Game/Ship.h"
 #include "Game/ShipEyes.h"
 #include "Game/ShipSpawner.h"
+#include "Game/Thanks.h"
 #include "Globals.h"
 #include "Grass.h"
 #include "Input.h"
