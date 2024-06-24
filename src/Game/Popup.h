@@ -20,7 +20,7 @@ public:
 
     void update_screen_position();
 
-    void hide();
+    virtual void hide();
 
 protected:
     Popup();

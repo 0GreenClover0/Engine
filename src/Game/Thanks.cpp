@@ -2,6 +2,7 @@
 
 #include "AK/AK.h"
 #include "Credits.h"
+#include "Engine.h"
 #include "Entity.h"
 #include "FloeButton.h"
 #include "Popup.h"
@@ -35,10 +36,11 @@ void Thanks::on_enabled()
 
 void Thanks::on_disabled()
 {
-    if (!back_to_menu_button.expired())
-    {
-        back_to_menu_button.lock()->on_unclicked.detach(shared_from_this());
-    }
+    // FIXME: For some reason this makes unloading the scene unhappy.
+    //if (!back_to_menu_button.expired())
+    //{
+    //    back_to_menu_button.lock()->on_unclicked.detach(shared_from_this());
+    //}
 }
 
 void Thanks::update()
@@ -56,5 +58,6 @@ void Thanks::draw_editor()
 
 void Thanks::hide()
 {
-    entity->get_component<Popup>()->hide();
+    Engine::set_game_running(false);
+    Engine::set_game_running(true);
 }

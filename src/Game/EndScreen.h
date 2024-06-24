@@ -27,6 +27,8 @@ public:
     void restart();
     void menu();
 
+    virtual void hide() override;
+
     bool is_failed = false;
     u32 number_of_stars = 1;
 
