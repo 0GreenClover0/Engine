@@ -6,6 +6,7 @@
 #include "GameController.h"
 #include "Globals.h"
 #include "Input.h"
+#include "LevelController.h"
 #include "Model.h"
 #include "Panel.h"
 #include "ResourceManager.h"
@@ -40,6 +41,8 @@ void EndScreen::awake()
     glfwSetInputMode(Engine::window->get_glfw_window(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
     update_background();
+
+    LevelController::get_instance()->lighthouse.lock()->is_entering_lighthouse_allowed = false;
 
     set_can_tick(true);
 }
