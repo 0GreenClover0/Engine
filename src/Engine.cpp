@@ -81,6 +81,23 @@ void Engine::create_game()
     auto const main_scene = std::make_shared<Scene>();
     MainScene::set_instance(main_scene);
 
+    asset_preloader->preload_text_asset("./res/scenes/MainScene.txt");
+    asset_preloader->preload_text_asset("./res/prefabs/Level_0.txt");
+    asset_preloader->preload_text_asset("./res/prefabs/Level_1.txt");
+    asset_preloader->preload_text_asset("./res/prefabs/Level_2.txt");
+    asset_preloader->preload_text_asset("./res/prefabs/Level_3.txt");
+    asset_preloader->preload_text_asset("./res/prefabs/Level_4.txt");
+    asset_preloader->preload_text_asset("./res/prefabs/Level_5.txt");
+    asset_preloader->preload_text_asset("./res/prefabs/Level_6.txt");
+    asset_preloader->preload_text_asset("./res/prefabs/ShipBig.txt");
+    asset_preloader->preload_text_asset("./res/prefabs/ShipMedium.txt");
+    asset_preloader->preload_text_asset("./res/prefabs/ShipPirates.txt");
+    asset_preloader->preload_text_asset("./res/prefabs/ShipSmall.txt");
+    asset_preloader->preload_text_asset("./res/prefabs/ShipTool.txt");
+    asset_preloader->preload_text_asset("./res/prefabs/Customer.txt");
+    asset_preloader->preload_text_asset("./res/prefabs/Keeper.txt");
+    asset_preloader->preload_text_asset("./res/prefabs/Buoy.txt");
+
 #if EDITOR
     m_editor->set_scene(main_scene);
 #endif
