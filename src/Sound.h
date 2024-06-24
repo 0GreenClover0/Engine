@@ -40,7 +40,7 @@ public:
 
     std::string path = {};
 
-    float volume = 10.0f;
+    float volume = 1.0f;
     bool play_on_awake = false;
     bool is_positional = false;
 
