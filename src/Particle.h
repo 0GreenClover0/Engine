@@ -58,6 +58,7 @@ private:
     float m_spawn_bounds = 1.0f;
     float m_rotation_direction = 1.0f;
     float m_lifetime = 5.0f;
+    float m_random_seed = 0.0f;
 
     std::shared_ptr<Mesh> m_mesh = {};
 };
