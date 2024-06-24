@@ -1,7 +1,7 @@
 Scene: Untitled
 Entities:
   - Entity: ThanksScreen
-    guid: b3975a003c72fd6c6585a7750b06500b99529901a14e6cd1af789a8bdfae9e70
+    guid: efd5ecfe44d72faf8a41726c7523e13cbe1966895261c6498bf0cf44d7ee164f
     Name: ThanksScreen
     TransformComponent:
       Translation: [0, -2, 0]
@@ -11,7 +11,7 @@ Entities:
         guid: ""
     Components:
       - ComponentName: PanelComponent
-        guid: 2b6fe4471d11acb22a98aee8e454be515d7bdeeec10241e29f32cbb056e1738b
+        guid: 2eefec42b4ba3c7310c1f91e570eaad1fb6529055b50283595784991921e8bae
         custom_name: ""
         background_path: ./res/textures/UI\thanks_for_playing.png
         material:
@@ -25,20 +25,25 @@ Entities:
           CastsShadows: false
           IsBillboard: false
       - ComponentName: PopupComponent
-        guid: a8017693bc99e5e91cf4becfd9d701c29172b4c0e5b5483022de354a7bf0ea8d
+        guid: 1acaaaae5d69694aed6296da0b3e54943e9cbf3e6550fa8f0f83a5f0f5722951
         custom_name: ""
+      - ComponentName: ThanksComponent
+        guid: b72f226f6f4a5ee35181cf162446270558175e88f3d96a10e0450693a9aad80f
+        custom_name: ""
+        back_to_menu_button:
+          guid: 993bc76610ba8e3cebdd10502d745bff0f06f5d68d1ef4c9267401fe812b2eab
   - Entity: ButtonBackToMenu
-    guid: 24019b278743df618cb21f93f94de1f5f1d36adb91238e1bc0c84b45932545b5
+    guid: 10c6017cd6a92b79b4ca1fa9a0e92f5161b4e6a9115c87b1c38b1151dc937132
     Name: ButtonBackToMenu
     TransformComponent:
       Translation: [0, -0.529999971, 0]
-      Rotation: [0, -0, 0]
+      Rotation: [0, 0, 0]
       Scale: [0.189999998, 0.0927960873, 1]
       Parent:
-        guid: b3975a003c72fd6c6585a7750b06500b99529901a14e6cd1af789a8bdfae9e70
+        guid: efd5ecfe44d72faf8a41726c7523e13cbe1966895261c6498bf0cf44d7ee164f
     Components:
       - ComponentName: ButtonComponent
-        guid: 7930833532523543b6877f4f5ef163edf1d7b75448e0fac32ebd3669946766c9
+        guid: 993bc76610ba8e3cebdd10502d745bff0f06f5d68d1ef4c9267401fe812b2eab
         custom_name: ""
         path_default: ./res/textures/UI\buttons\default\b_back_to_menu_default.png
         path_hovered: ./res/textures/UI\buttons\hover\b_back_to_menu_hover.png
