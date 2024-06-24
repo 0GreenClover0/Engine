@@ -38,7 +38,7 @@ void DialoguePromptController::awake()
 
 void DialoguePromptController::update()
 {
-    if (m_interpolation_value > 0.99f && m_currently_played_sound == nullptr)
+    if (m_interpolation_value > 1.0f && m_currently_played_sound == nullptr)
     {
         m_currently_played_sound = Sound::play_sound(dialogue_objects[m_currently_played_content].sound_path);
         m_currently_played_sound->set_volume(0.65f);
@@ -47,8 +47,8 @@ void DialoguePromptController::update()
     if (m_currently_played_sound != nullptr && m_currently_played_sound->has_finished()
         && dialogue_objects[m_currently_played_content].auto_end)
     {
-        LevelController::get_instance()->check_tutorial_progress(TutorialProgressAction::DialogEnded);
         end_content();
+        LevelController::get_instance()->check_tutorial_progress(TutorialProgressAction::DialogEnded);
     }
 
     realign_lines();
@@ -64,9 +64,9 @@ void DialoguePromptController::update()
     case InterpolationMode::Show:
         if (m_perform_panel_move)
         {
-            if (m_interpolation_value < 0.99f)
+            if (m_interpolation_value < 1.0f)
             {
-                m_interpolation_value += static_cast<float>(delta_time);
+                m_interpolation_value += delta_time;
                 v.y = AK::Math::ease_in_out_elastic(m_interpolation_value) - 1.8f;
             }
             else
@@ -79,9 +79,9 @@ void DialoguePromptController::update()
         break;
 
     case InterpolationMode::Hide:
-        if (m_interpolation_value > 0.01f)
+        if (m_interpolation_value > 0.0f)
         {
-            m_interpolation_value -= static_cast<float>(delta_time);
+            m_interpolation_value -= delta_time;
             v.y = AK::Math::ease_in_out_elastic(m_interpolation_value) - 1.8f;
         }
         else
@@ -181,11 +181,11 @@ void DialoguePromptController::show_or_hide_panel(InterpolationMode const& show)
     switch (show)
     {
     case InterpolationMode::Show:
-        m_interpolation_value = 0.01f;
+        m_interpolation_value = 0.0f;
         break;
 
     case InterpolationMode::Hide:
-        m_interpolation_value = 0.99f;
+        m_interpolation_value = 1.0f;
         break;
     }
 }
