@@ -15,6 +15,8 @@
 #include "EngineDefines.h"
 #include "Window.h"
 
+class AssetPreloader;
+
 namespace Editor
 {
 class Editor;
@@ -42,6 +44,8 @@ public:
     inline static std::shared_ptr<Window> window;
 
     inline static bool should_exit;
+
+    inline static std::shared_ptr<AssetPreloader> asset_preloader;
 
 private:
     static i32 initialize_thirdparty_before_renderer();
