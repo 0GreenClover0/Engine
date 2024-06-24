@@ -93,6 +93,11 @@ void GameController::update()
         }
     }
 
+    if (Input::input->get_key_down(GLFW_KEY_F4))
+    {
+        SceneSerializer::load_prefab("ThanksScreen");
+    }
+
     if (!m_move_to_next_scene)
     {
         return;
