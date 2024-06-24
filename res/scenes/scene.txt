@@ -17,6 +17,8 @@ Entities:
           guid: nullptr
         next_scene:
           guid: nullptr
+        dialog_manager:
+          guid: e722d880a0f994fdc495042aa93fd5533db8ec9d1329aff1e6f44378e89e7120
       - ComponentName: PlayerComponent
         guid: bccee0d56e5db0fb0516bf5ebca06ea9b2b3546a7189b921a3a8326297d0d46b
         custom_name: ""
@@ -388,3 +390,205 @@ Entities:
         m_pcf_num_samples: 16
         m_light_world_size: 0.0310000461
         m_light_frustum_width: 50
+  - Entity: PromptController
+    guid: 43e930f2d4c6209eea28e439069777c2804157df5bee15d962af1b723459072e
+    Name: PromptController
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: dbacdd6b48665243e2f90f7dea7298de945bf38a1a9331f9f0afcb61b5006d00
+    Components:
+      - ComponentName: DialoguePromptControllerComponent
+        guid: e722d880a0f994fdc495042aa93fd5533db8ec9d1329aff1e6f44378e89e7120
+        custom_name: ""
+        interp_speed: 0.100000001
+        dialogue_panel:
+          guid: b6bce85c337ca19cd92839b2d01e0061bf3f03cf94464e38264745c07a5797ab
+        panel_parent:
+          guid: d39e1acc490880bf110fdfecda6472c8b982c8f16e4bc0747c7a9a8280fd271e
+        upper_text:
+          guid: ab343ba6080d734abc677e47941ce94940809503286b64b5f704bb79ebd6ea4b
+        middle_text:
+          guid: 81085d6d06a17ae6f4b743559c7435ab7f2869c3f4d343b139816559e16a4665
+        lower_text:
+          guid: 7c004d6238ffa1a2e04d8166cc17585298d4fa6cf47e9179392785759bcd5f55
+        dialogue_objects:
+          - [false, "Ahoy, lighthouse adept! The weather is awful, so we need to light", the way for the ships. Let's guide them to the port!, "", ./res/audio/dialog_0.wav]
+          - [true, "", You wasted the cargo! I guess you need another shipment., "", ./res/audio/dialog_1.wav]
+          - [false, "", "The ship carrying food has arrived. Great, we can feed this penguin now! ", "", ./res/audio/dialog_2.wav]
+          - [true, "", "Mmm yummy, all well fed and happy!", "", ./res/audio/dialog_3.wav]
+          - [false, "", "Ah, and this is the ship with our vital fuel! ", "", ./res/audio/dialog_4.wav]
+          - [true, "", "Now go, take the package! ", "", ./res/audio/dialog_5.wav]
+          - [false, "Got the package? Great... start the generator.", "", I'll show you what you can do with some extra power., ./res/audio/dialog_6.wav]
+          - [false, "", "Remember: You can flash the lights when the generator ignites! ", "", ./res/audio/dialog_7.wav]
+          - [true, "", "You wasted your flash! I guess you need another shipment. ", "", ./res/audio/dialog_8.wav]
+          - [false, "", "Need to turn back a ship with haste? Ha-ha! The flash is your friend! ", "", ./res/audio/dialog_9.wav]
+          - [true, "", Ha! Ha-ha!, "", ./res/audio/dialog_10.wav]
+          - [false, "", You won't get far without upgrades. That's what the workshop is for!, "", ./res/audio/dialog_11.wav]
+          - [false, "", Now thats a big one. It's easier to guide them with a brighter light!, "", ./res/audio/dialog_12.wav]
+          - [true, "", Yo-Ho-ho-ho-ho!, "", ./res/audio/dialog_13.wav]
+          - [false, "Now you're on your own. Remember what I've taught you:", "Use the flash, upgrade the lighthouse, defeat the pirates.", "And most importantly, feed all the penguins before the storm comes! Ha! Ha! Ha!", ./res/audio/dialog_14.wav]
+          - [true, "Oh no, pesky pirates! ", "", Destroy their ships as fast as you can!, ./res/audio/dialog_15.wav]
+  - Entity: Parent
+    guid: d39e1acc490880bf110fdfecda6472c8b982c8f16e4bc0747c7a9a8280fd271e
+    Name: Parent
+    TransformComponent:
+      Translation: [0.163605928, -1.79971945, 0]
+      Rotation: [0, 0, 0]
+      Scale: [0.699999988, 0.200000003, 0.290000021]
+      Parent:
+        guid: 43e930f2d4c6209eea28e439069777c2804157df5bee15d962af1b723459072e
+    Components:
+      []
+  - Entity: Middle text
+    guid: 488f6a864e5b87c2788533330d3f76fbd41c602e5e40c7c834b1db80804a0f6c
+    Name: Middle text
+    TransformComponent:
+      Translation: [0, -0.180000007, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: d39e1acc490880bf110fdfecda6472c8b982c8f16e4bc0747c7a9a8280fd271e
+    Components:
+      - ComponentName: ScreenTextComponent
+        guid: 81085d6d06a17ae6f4b743559c7435ab7f2869c3f4d343b139816559e16a4665
+        custom_name: ""
+        text: the way for the ships. Let's guide them to the port!
+        position: [0, 0]
+        font_size: 30
+        color: 4294241528
+        flags: 2053
+        font_name: Kurri Island PERSONAL
+        bold: false
+        button_ref:
+          guid: nullptr
+        material:
+          Shader:
+            VertexPath: ./res/shaders/ui.hlsl
+            FragmentPath: ./res/shaders/ui.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 3003
+          NeedsForward: true
+          CastsShadows: false
+          IsBillboard: false
+  - Entity: Upper text
+    guid: d20e864132e05e472e3ce4d73bae1ca0fffa5be3148eab911774ba76d00cb767
+    Name: Upper text
+    TransformComponent:
+      Translation: [-2.98023224e-08, 0.180000007, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: d39e1acc490880bf110fdfecda6472c8b982c8f16e4bc0747c7a9a8280fd271e
+    Components:
+      - ComponentName: ScreenTextComponent
+        guid: ab343ba6080d734abc677e47941ce94940809503286b64b5f704bb79ebd6ea4b
+        custom_name: ""
+        text: Ahoy, lighthouse adept! The weather is awful, so we need to light
+        position: [0, 0]
+        font_size: 30
+        color: 4294241528
+        flags: 2053
+        font_name: Kurri Island PERSONAL
+        bold: false
+        button_ref:
+          guid: nullptr
+        material:
+          Shader:
+            VertexPath: ./res/shaders/ui.hlsl
+            FragmentPath: ./res/shaders/ui.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 3003
+          NeedsForward: true
+          CastsShadows: false
+          IsBillboard: false
+  - Entity: Lower text
+    guid: a09910394632ac1ed11ed4511a5370fac6761081eed2a103c33d859c60a3e038
+    Name: Lower text
+    TransformComponent:
+      Translation: [-2.98023224e-08, -0.360000014, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: d39e1acc490880bf110fdfecda6472c8b982c8f16e4bc0747c7a9a8280fd271e
+    Components:
+      - ComponentName: ScreenTextComponent
+        guid: 7c004d6238ffa1a2e04d8166cc17585298d4fa6cf47e9179392785759bcd5f55
+        custom_name: ""
+        text: ""
+        position: [0, 0]
+        font_size: 30
+        color: 4294241528
+        flags: 2053
+        font_name: Kurri Island PERSONAL
+        bold: false
+        button_ref:
+          guid: nullptr
+        material:
+          Shader:
+            VertexPath: ./res/shaders/ui.hlsl
+            FragmentPath: ./res/shaders/ui.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 3003
+          NeedsForward: true
+          CastsShadows: false
+          IsBillboard: false
+  - Entity: KeeperSprite
+    guid: ff2d34a99d9cde61f06d6f9a1364f8fe556c0482d3fe1ce732e337c79b1c456d
+    Name: KeeperSprite
+    TransformComponent:
+      Translation: [0.855474651, 0.795397043, -2.54287028]
+      Rotation: [0, 0, 0]
+      Scale: [0.439999998, 2.20000005, 2.44000006]
+      Parent:
+        guid: d39e1acc490880bf110fdfecda6472c8b982c8f16e4bc0747c7a9a8280fd271e
+    Components:
+      - ComponentName: PanelComponent
+        guid: 0d2b447be079bf3f8afe2fdb35649528e27bdb883e079920e640a8826340b0ec
+        custom_name: ""
+        background_path: ./res/textures/UI/keeper_sprite.png
+        material:
+          Shader:
+            VertexPath: ./res/shaders/ui.hlsl
+            FragmentPath: ./res/shaders/ui.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 3001
+          NeedsForward: true
+          CastsShadows: false
+          IsBillboard: false
+  - Entity: Bubble
+    guid: a8812a36340e1999924b73a2a6d44bfbc48270e09d110d7fcbcdd8817fdc0c2e
+    Name: Bubble
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [0.850000024, 0.850000024, 1]
+      Parent:
+        guid: d39e1acc490880bf110fdfecda6472c8b982c8f16e4bc0747c7a9a8280fd271e
+    Components:
+      - ComponentName: ButtonComponent
+        guid: b6bce85c337ca19cd92839b2d01e0061bf3f03cf94464e38264745c07a5797ab
+        custom_name: ""
+        path_default: ./res/textures/UI/dialogue.png
+        path_hovered: ./res/textures/UI/dialogue.png
+        path_pressed: ./res/textures/UI/dialogue.png
+        top_left_corner: [545.861694, 1001]
+        top_right_corner: [1688.26172, 1001]
+        bottom_left_corner: [545.861694, 1001]
+        bottom_right_corner: [1688.26172, 1001]
+        material:
+          Shader:
+            VertexPath: ./res/shaders/ui.hlsl
+            FragmentPath: ./res/shaders/ui.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 3001
+          NeedsForward: true
+          CastsShadows: false
+          IsBillboard: false
