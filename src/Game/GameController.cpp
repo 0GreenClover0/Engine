@@ -211,6 +211,8 @@ void GameController::move_to_next_scene()
     Clock::get_instance()->update_visibility();
 
     m_move_to_next_scene = true;
+
+    update_scenes_position();
 }
 
 void GameController::reset_level()
