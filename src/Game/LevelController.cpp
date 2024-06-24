@@ -2,11 +2,13 @@
 
 #include "AK/AK.h"
 #include "AK/Math.h"
+#include "EndScreen.h"
 #include "Entity.h"
 #include "GameController.h"
 #include "Globals.h"
 #include "Input.h"
 #include "Player.h"
+#include "SceneSerializer.h"
 #include "ScreenText.h"
 #include "Ship.h"
 #include "ShipSpawner.h"
@@ -304,7 +306,8 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
         case 8:
             if (action == TutorialProgressAction::DialogEnded && customer_manager.lock()->get_number_of_customers() == 0)
             {
-                GameController::get_instance()->move_to_next_scene();
+                auto end_screen = SceneSerializer::load_prefab("EndScreen");
+                end_screen->get_component<EndScreen>()->number_of_stars = 3;
             }
             break;
         }
@@ -451,7 +454,8 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
         case 9:
             if (action == TutorialProgressAction::DialogEnded && customer_manager.lock()->get_number_of_customers() == 0)
             {
-                GameController::get_instance()->move_to_next_scene();
+                auto end_screen = SceneSerializer::load_prefab("EndScreen");
+                end_screen->get_component<EndScreen>()->number_of_stars = 3;
             }
             break;
         }
@@ -531,7 +535,8 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
         case 7:
             if (action == TutorialProgressAction::DialogEnded && customer_manager.lock()->get_number_of_customers() == 0)
             {
-                GameController::get_instance()->move_to_next_scene();
+                auto end_screen = SceneSerializer::load_prefab("EndScreen");
+                end_screen->get_component<EndScreen>()->number_of_stars = 3;
             }
             break;
         }
