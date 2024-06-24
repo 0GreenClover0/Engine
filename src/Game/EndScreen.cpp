@@ -208,7 +208,16 @@ void EndScreen::restart()
 
 void EndScreen::menu()
 {
-    auto const lock = shared_from_this();
-    MainScene::get_instance()->unload();
-    SceneSerializer::get_instance()->deserialize("./res/scenes/MainScene.txt");
+    Engine::set_game_running(false);
+    Engine::set_game_running(true);
+}
+
+void EndScreen::hide()
+{
+    glfwSetInputMode(Engine::window->get_glfw_window(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+    m_is_hiding = true;
+    m_is_in_screen = false;
+
+    m_appear_counter = 0.0f;
 }
