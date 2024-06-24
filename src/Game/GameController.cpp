@@ -88,6 +88,7 @@ void GameController::update()
     {
         if (!m_move_to_next_scene)
         {
+            GameController::get_instance()->dialog_manager.lock()->end_content();
             move_to_next_scene();
         }
     }
