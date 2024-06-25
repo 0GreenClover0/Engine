@@ -67,6 +67,11 @@ void LevelController::awake()
 
 void LevelController::update()
 {
+    if (is_ended)
+    {
+        return;
+    }
+
     {
         float const y = Input::input->get_mouse_position().y * playfield_height + playfield_y_shift;
         float const x =
@@ -113,8 +118,8 @@ void LevelController::update()
         }
         else
         {
-            Debug::log(std::to_string(Player::get_instance()->food) + " / " + std::to_string(map_food));
-            Engine::set_game_running(false);
+            is_ended = true;
+            end_level();
             return;
         }
 
@@ -346,8 +351,7 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
         case 8:
             if (action == TutorialProgressAction::DialogEnded && customer_manager.lock()->get_number_of_customers() == 0)
             {
-                auto end_screen = SceneSerializer::load_prefab("EndScreen");
-                end_screen->get_component<EndScreen>()->number_of_stars = 3;
+                end_level();
             }
             break;
         }
@@ -499,8 +503,7 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
         case 9:
             if (action == TutorialProgressAction::DialogEnded && customer_manager.lock()->get_number_of_customers() == 0)
             {
-                auto end_screen = SceneSerializer::load_prefab("EndScreen");
-                end_screen->get_component<EndScreen>()->number_of_stars = 3;
+                end_level();
             }
             break;
         }
@@ -580,8 +583,7 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
         case 7:
             if (action == TutorialProgressAction::DialogEnded && customer_manager.lock()->get_number_of_customers() == 0)
             {
-                auto end_screen = SceneSerializer::load_prefab("EndScreen");
-                end_screen->get_component<EndScreen>()->number_of_stars = 3;
+                end_level();
             }
             break;
         }
@@ -611,4 +613,55 @@ void LevelController::destroy_mouse_prompt()
 {
     if (!m_story_mouse_prompt.expired())
         m_story_mouse_prompt.lock()->destroy_immediate();
+}
+
+void LevelController::end_level()
+{
+    auto end_screen = SceneSerializer::load_prefab("EndScreen");
+    if (Player::get_instance()->food < map_food)
+    {
+        end_screen->get_component<EndScreen>()->is_failed = true;
+        end_screen->get_component<EndScreen>()->update_background();
+    }
+    else
+    {
+        if (is_tutorial)
+        {
+            if (Player::get_instance()->destroyed_ships <= 0)
+            {
+                end_screen->get_component<EndScreen>()->number_of_stars = 3;
+            }
+            else if (Player::get_instance()->destroyed_ships <= 1)
+            {
+                end_screen->get_component<EndScreen>()->number_of_stars = 2;
+            }
+            else if (Player::get_instance()->destroyed_ships <= 2)
+            {
+                end_screen->get_component<EndScreen>()->number_of_stars = 1;
+            }
+            else
+            {
+                end_screen->get_component<EndScreen>()->number_of_stars = 0;
+            }
+        }
+        else
+        {
+            if (Player::get_instance()->destroyed_ships <= 5)
+            {
+                end_screen->get_component<EndScreen>()->number_of_stars = 3;
+            }
+            else if (Player::get_instance()->destroyed_ships <= 10)
+            {
+                end_screen->get_component<EndScreen>()->number_of_stars = 2;
+            }
+            else if (Player::get_instance()->destroyed_ships <= 15)
+            {
+                end_screen->get_component<EndScreen>()->number_of_stars = 1;
+            }
+            else
+            {
+                end_screen->get_component<EndScreen>()->number_of_stars = 0;
+            }
+        }
+    }
 }

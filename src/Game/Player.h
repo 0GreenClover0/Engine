@@ -39,6 +39,8 @@ public:
     i32 packages = 2;
     NON_SERIALIZED
     i32 lighthouse_level = 0;
+    NON_SERIALIZED
+    u32 destroyed_ships = 0;
 
     NON_SERIALIZED
     float range = 0.0f;

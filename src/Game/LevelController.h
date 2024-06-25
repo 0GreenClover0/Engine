@@ -57,9 +57,13 @@ public:
 
     void spawn_mouse_prompt_if_needed();
     void destroy_mouse_prompt();
+    
+    void end_level();
 
     NON_SERIALIZED
     bool is_started = false;
+    NON_SERIALIZED
+    bool is_ended = false;
 
     float map_time = 180.0f;
     u32 map_food = 20;
