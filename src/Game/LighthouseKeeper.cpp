@@ -5,6 +5,7 @@
 #include "ExampleUIBar.h"
 #include "Factory.h"
 #include "Floater.h"
+#include "GameController.h"
 #include "Globals.h"
 #include "IceBound.h"
 #include "LevelController.h"
@@ -12,6 +13,7 @@
 #include "Player.h"
 #include "Port.h"
 #include "ResourceManager.h"
+#include "SceneSerializer.h"
 
 #include <GLFW/glfw3.h>
 #include <glm/gtc/random.hpp>
@@ -170,6 +172,15 @@ void LighthouseKeeper::on_trigger_exit(std::shared_ptr<Collider2D> const& other)
     }
 }
 
+void LighthouseKeeper::on_destroyed()
+{
+    Component::on_destroyed();
+
+    hide_interaction_prompt(WorldPromptType::Factory);
+    hide_interaction_prompt(WorldPromptType::Port);
+    hide_interaction_prompt(WorldPromptType::Lighthouse);
+}
+
 bool LighthouseKeeper::is_inside_port() const
 {
     return m_is_inside_port;
@@ -180,6 +191,66 @@ void LighthouseKeeper::set_is_inside_port(bool const value)
     m_is_inside_port = value;
 }
 
+void LighthouseKeeper::show_interaction_prompt(glm::vec3 const& position, WorldPromptType type)
+{
+    switch (type)
+    {
+    case WorldPromptType::Factory:
+        if (m_factory_prompt.expired())
+        {
+            m_factory_prompt = SceneSerializer::load_prefab("SpacePrompt");
+            m_factory_prompt.lock()->transform->set_position({position.x, 2.0f, position.z});
+        }
+        break;
+
+    case WorldPromptType::Lighthouse:
+        if (m_lighthouse_prompt.expired())
+        {
+            m_lighthouse_prompt = SceneSerializer::load_prefab("SpacePrompt");
+            m_lighthouse_prompt.lock()->transform->set_position({position.x, 2.0f, position.z});
+        }
+        break;
+
+    case WorldPromptType::Port:
+        if (m_port_prompt.expired())
+        {
+            m_port_prompt = SceneSerializer::load_prefab("SpacePrompt");
+            m_port_prompt.lock()->transform->set_position({position.x, 1.0f, position.z});
+        }
+        break;
+    }
+}
+
+void LighthouseKeeper::hide_interaction_prompt(WorldPromptType type)
+{
+    switch (type)
+    {
+    case WorldPromptType::Factory:
+        if (!m_factory_prompt.expired())
+        {
+            m_factory_prompt.lock()->destroy_immediate();
+            m_factory_prompt.reset();
+        }
+        break;
+
+    case WorldPromptType::Lighthouse:
+        if (!m_lighthouse_prompt.expired())
+        {
+            m_lighthouse_prompt.lock()->destroy_immediate();
+            m_lighthouse_prompt.reset();
+        }
+        break;
+
+    case WorldPromptType::Port:
+        if (!m_port_prompt.expired())
+        {
+            m_port_prompt.lock()->destroy_immediate();
+            m_port_prompt.reset();
+        }
+        break;
+    }
+}
+
 glm::vec2 LighthouseKeeper::get_speed() const
 {
     return m_speed;
@@ -188,7 +259,7 @@ glm::vec2 LighthouseKeeper::get_speed() const
 void LighthouseKeeper::handle_input()
 {
     auto const& factories = LevelController::get_instance()->factories;
-    if (factories.size() > 0 && Input::input->get_key_down(GLFW_KEY_SPACE))
+    if (factories.size() > 0)
     {
         std::shared_ptr<Factory> closest_factory = factories[0].lock();
         float closest_distance = distance(AK::convert_3d_to_2d(closest_factory->entity->transform->get_position()),
@@ -207,30 +278,39 @@ void LighthouseKeeper::handle_input()
             }
         }
 
-        if (closest_distance < interact_with_factory_distance)
+        if (closest_distance < interact_with_factory_distance && Player::get_instance()->packages > 0)
         {
-            if (closest_factory->interact())
+            show_interaction_prompt(closest_factory->entity->transform->get_position(), WorldPromptType::Factory);
+
+            if (Input::input->get_key_down(GLFW_KEY_SPACE))
             {
-                remove_package();
-                return;
+                if (closest_factory->interact())
+                {
+                    remove_package();
+                    return;
+                }
             }
+        }
+        else
+        {
+            hide_interaction_prompt(WorldPromptType::Factory);
         }
     }
 
-    if (!port.expired() && Input::input->get_key_down(GLFW_KEY_SPACE))
+    if (!port.expired() && is_inside_port() && !port.lock()->get_ships_inside().empty())
     {
         auto const port_locked = port.lock();
         auto const port_transform = port_locked->entity->transform;
 
-        glm::vec2 const keeper_position = AK::convert_3d_to_2d(entity->transform->get_position());
-        glm::vec2 const port_position = AK::convert_3d_to_2d(port_transform->get_position());
+        show_interaction_prompt(port_transform->get_position(), WorldPromptType::Port);
 
-        if (is_inside_port())
+        if (Input::input->get_key_down(GLFW_KEY_SPACE))
         {
             bool const has_interacted = port_locked->interact();
 
             if (has_interacted)
             {
+                hide_interaction_prompt(WorldPromptType::Port);
                 if (packages.size() < Player::get_instance()->packages)
                 {
                     add_package();
@@ -239,8 +319,12 @@ void LighthouseKeeper::handle_input()
             }
         }
     }
+    else if (!port.expired() && !is_inside_port())
+    {
+        hide_interaction_prompt(WorldPromptType::Port);
+    }
 
-    if (!lighthouse.expired() && Input::input->get_key_down(GLFW_KEY_SPACE) && lighthouse.lock()->is_entering_lighthouse_allowed)
+    if (!lighthouse.expired())
     {
         auto const lighthouse_locked = lighthouse.lock();
         auto const lighthouse_transform = lighthouse_locked->entity->transform;
@@ -248,11 +332,22 @@ void LighthouseKeeper::handle_input()
         glm::vec2 const keeper_position = AK::convert_3d_to_2d(entity->transform->get_position());
         glm::vec2 const lighthouse_position = AK::convert_3d_to_2d(lighthouse_transform->get_position());
 
-        if (distance(keeper_position, lighthouse_position) < lighthouse_locked->enterable_distance)
+        if (distance(keeper_position, lighthouse_position) < lighthouse_locked->enterable_distance
+            && GameController::get_instance()->get_level_number() != 1)
         {
-            lighthouse_locked->enter();
-            entity->destroy_immediate();
-            return;
+            show_interaction_prompt(lighthouse_transform->get_position(), WorldPromptType::Lighthouse);
+
+            if (Input::input->get_key_down(GLFW_KEY_SPACE) && lighthouse.lock()->is_entering_lighthouse_allowed)
+            {
+                lighthouse_locked->enter();
+                entity->destroy_immediate();
+                hide_interaction_prompt(WorldPromptType::Lighthouse);
+                return;
+            }
+        }
+        else
+        {
+            hide_interaction_prompt(WorldPromptType::Lighthouse);
         }
     }
 }
