@@ -3,6 +3,7 @@
 #include "Component.h"
 #include "Input.h"
 #include "ParticleSystem.h"
+#include "Sound.h"
 
 class Port;
 class Factory;
@@ -62,6 +63,7 @@ public:
 private:
     void handle_input();
 
+    std::shared_ptr<Sound> m_engine_sound = nullptr;
     bool m_is_inside_port = false;
 
     glm::vec2 m_speed = glm::vec2(0.0f, 0.0f);
