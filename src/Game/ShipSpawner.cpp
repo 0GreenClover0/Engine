@@ -88,7 +88,7 @@ void ShipSpawner::awake()
 
     m_main_spawn = backup_spawn;
 
-    if (LevelController::get_instance()->is_started)
+    if (!LevelController::get_instance()->is_tutorial)
     {
         auto const seed = std::chrono::system_clock::now().time_since_epoch().count();
         std::ranges::shuffle(m_main_spawn, std::default_random_engine(seed));
