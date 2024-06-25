@@ -27,12 +27,6 @@ void DirectionalLight::on_destroyed()
 void DirectionalLight::draw_editor()
 {
     Light::draw_editor();
-    // Add a slider for the gamma variable
-    ImGui::SliderFloat("Gamma", &gamma, 0.0f, 5.0f, "%.2f");
-
-    // Add a slider for the exposure variable
-    ImGui::SliderFloat("Exposure", &exposure, 0.0f, 5.0f, "%.2f");
-
 }
 #endif
 
