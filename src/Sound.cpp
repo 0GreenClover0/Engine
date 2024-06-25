@@ -131,6 +131,11 @@ void Sound::reprepare()
     }
 }
 
+void Sound::set_position(glm::vec3 const& position)
+{
+    ma_sound_set_position(&m_internal_sound, position.x, position.y, position.z);
+}
+
 void Sound::play()
 {
     ma_sound_start(&m_internal_sound);
