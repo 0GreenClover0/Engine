@@ -1,6 +1,7 @@
 #include "LighthouseKeeper.h"
 
 #include "AK/AK.h"
+#include "Camera.h"
 #include "Entity.h"
 #include "ExampleUIBar.h"
 #include "Factory.h"
@@ -38,12 +39,15 @@ void LighthouseKeeper::awake()
     {
         add_package();
     }
-
     set_can_tick(true);
+    m_engine_sound = Sound::play_sound_at_location("./res/audio/poduszkowiec.wav", entity->transform->get_position(),
+                                                   Camera::get_main_camera()->get_position(), true);
+    m_engine_sound->set_volume(50.0f);
 }
 
 void LighthouseKeeper::update()
 {
+    m_engine_sound->set_position(entity->transform->get_position());
     i32 horizontal = 0;
     i32 vertical = 0;
 
@@ -366,6 +370,7 @@ void LighthouseKeeper::handle_input()
             {
                 lighthouse_locked->enter();
                 entity->destroy_immediate();
+                m_engine_sound->stop_with_fade(1000);
                 hide_interaction_prompt(WorldPromptType::Lighthouse);
                 return;
             }
