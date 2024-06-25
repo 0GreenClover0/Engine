@@ -36,4 +36,5 @@ public:
 
 private:
     bool m_is_keeeper_inside = true;
+    bool m_has_keeper_entered_this_frame = false;
 };

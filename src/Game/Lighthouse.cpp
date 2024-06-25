@@ -31,10 +31,12 @@ void Lighthouse::awake()
 
 void Lighthouse::update()
 {
-    if (m_is_keeeper_inside && Input::input->get_key_down(GLFW_KEY_SPACE))
+    if (m_is_keeeper_inside && !m_has_keeper_entered_this_frame && Input::input->get_key_down(GLFW_KEY_SPACE))
     {
         exit();
     }
+
+    m_has_keeper_entered_this_frame = false;
 }
 
 #if EDITOR
@@ -63,6 +65,7 @@ void Lighthouse::enter()
         return;
     }
 
+    m_has_keeper_entered_this_frame = true;
     m_is_keeeper_inside = true;
     light.lock()->set_enabled(true);
     light.lock()->spotlight.lock()->set_enabled(true);
