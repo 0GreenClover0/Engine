@@ -61,7 +61,14 @@ bool Renderer::is_drawable_registered(std::shared_ptr<Drawable> const& drawable)
 
 void Renderer::register_drawable(std::shared_ptr<Drawable> const& drawable)
 {
+    bool const should_register_material = drawable->material->drawables.size() == 0;
+
     drawable->material->drawables.emplace_back(drawable);
+
+    if (should_register_material)
+    {
+        register_material(drawable->material);
+    }
 }
 
 void Renderer::unregister_drawable(std::shared_ptr<Drawable> const& drawable)
@@ -97,6 +104,8 @@ void Renderer::register_material(std::shared_ptr<Material> const& material)
     {
         m_transparent_materials.emplace_back(material);
     }
+
+    material->shader->materials.emplace_back(material);
 }
 
 void Renderer::unregister_material(std::shared_ptr<Material> const& material)
@@ -125,6 +134,8 @@ void Renderer::unregister_material(std::shared_ptr<Material> const& material)
     {
         AK::swap_and_erase(m_transparent_materials, material);
     }
+
+    AK::swap_and_erase(material->shader->materials, material);
 }
 
 bool Renderer::is_light_registered(std::shared_ptr<Light> const& light) const
