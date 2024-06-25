@@ -20,6 +20,8 @@ public:
     virtual void on_trigger_enter(std::shared_ptr<Collider2D> const& other) override;
     virtual void on_trigger_exit(std::shared_ptr<Collider2D> const& other) override;
 
+    std::vector<std::weak_ptr<Ship>> const& get_ships_inside() const;
+
     [[nodiscard]] bool interact();
 
     float get_interactable_distance() const;
@@ -29,7 +31,7 @@ public:
 private:
     void adjust_lights() const;
 
-    std::vector<std::weak_ptr<Ship>> ships_inside = {};
+    std::vector<std::weak_ptr<Ship>> m_ships_inside = {};
 
     float m_interactable_distance = 0.6f;
 };

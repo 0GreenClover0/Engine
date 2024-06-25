@@ -26,7 +26,7 @@ void Port::on_trigger_enter(std::shared_ptr<Collider2D> const& other)
     if (ship != nullptr && !ship->is_in_port() && ship->type != ShipType::Pirates)
     {
         ship->stop();
-        ships_inside.emplace_back(ship);
+        m_ships_inside.emplace_back(ship);
     }
 
     if (auto const keeper = other->entity->get_component<LighthouseKeeper>(); keeper != nullptr)
@@ -44,14 +44,19 @@ void Port::on_trigger_exit(std::shared_ptr<Collider2D> const& other)
     }
 }
 
+std::vector<std::weak_ptr<Ship>> const& Port::get_ships_inside() const
+{
+    return m_ships_inside;
+}
+
 bool Port::interact()
 {
-    if (ships_inside.size() <= 0)
+    if (m_ships_inside.size() <= 0)
         return false;
 
     std::shared_ptr<Ship> chosen_ship = nullptr;
 
-    for (auto const& ship : ships_inside)
+    for (auto const& ship : m_ships_inside)
     {
         if (ship.expired())
         {
@@ -100,7 +105,7 @@ bool Port::interact()
         break;
     }
 
-    AK::erase(ships_inside, ship);
+    AK::erase(m_ships_inside, ship);
     ship->entity->destroy_immediate();
     LevelController::get_instance()->check_tutorial_progress(TutorialProgressAction::PackageCollected);
     return true;

@@ -7,6 +7,13 @@ class Port;
 class Factory;
 class Lighthouse;
 
+enum class WorldPromptType
+{
+    Port,
+    Lighthouse,
+    Factory
+};
+
 class LighthouseKeeper final : public Component
 {
 public:
@@ -24,8 +31,13 @@ public:
 
     void on_trigger_exit(std::shared_ptr<Collider2D> const& other);
 
+    virtual void on_destroyed() override;
+
     bool is_inside_port() const;
     void set_is_inside_port(bool const value);
+
+    void show_interaction_prompt(glm::vec3 const& position, WorldPromptType type);
+    void hide_interaction_prompt(WorldPromptType type);
 
     glm::vec2 get_speed() const;
 
@@ -56,4 +68,8 @@ private:
 
     float m_package_tilt_z = 0.0f;
     float m_target_package_tilt_z = 0.0f;
+
+    std::weak_ptr<Entity> m_port_prompt = {};
+    std::weak_ptr<Entity> m_lighthouse_prompt = {};
+    std::weak_ptr<Entity> m_factory_prompt = {};
 };
