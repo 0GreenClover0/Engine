@@ -223,6 +223,7 @@ private:
     void in_port_behavior();
     void stop_behavior();
 
+    void scale_down();
     bool is_out_of_room() const;
 
     float m_speed = 0.0f;
