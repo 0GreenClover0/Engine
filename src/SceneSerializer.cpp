@@ -9,6 +9,7 @@
 
 #include <yaml-cpp/yaml.h>
 
+#include "AK/ScopeGuard.h"
 #include "Button.h"
 #include "Camera.h"
 #include "Collider2D.h"
@@ -2769,6 +2770,9 @@ std::shared_ptr<Entity> SceneSerializer::load_prefab(std::string const& prefab_n
 {
     auto const scene_serializer = std::make_shared<SceneSerializer>(MainScene::get_instance());
     scene_serializer->set_instance(scene_serializer);
+    ScopeGuard unset_instance = [&] { scene_serializer->set_instance(nullptr); };
+
     std::shared_ptr<Entity> entity = scene_serializer->deserialize_this_entity(m_prefab_path + prefab_name + ".txt");
+
     return entity;
 }
