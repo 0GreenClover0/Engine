@@ -55,7 +55,7 @@ private:
     bool m_is_unspreading_arms = false;
 
     bool m_is_fed = false;
-
+    bool m_has_splashed = false;
     glm::vec3 m_desired_rotation = {};
     glm::vec3 m_standing_rotation = {90.0f, -90.0f, -90.0f};
 

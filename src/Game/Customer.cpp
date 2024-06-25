@@ -115,6 +115,14 @@ void Customer::update()
 
         if (m_is_fed && !m_is_waiting_to_jump_to_water)
         {
+            if (entity->transform->get_position().y < 0.0f && !m_has_splashed)
+            {
+                auto splash =
+                    Sound::play_sound_at_location("./res/audio/penguin/jump/wodnyskok" + std::to_string(std::rand() % 4 + 1) + ".wav",
+                                                  entity->transform->get_position(), Camera::get_main_camera()->get_position());
+                splash->set_volume(20.0f);
+                m_has_splashed = true;
+            }
             if (entity->transform->get_position().y <= desired_height - 5.0f)
             {
                 entity->destroy_immediate();
@@ -211,6 +219,8 @@ void Customer::draw_editor()
 void Customer::feed(glm::vec3 const& destination)
 {
     set_destination(destination);
+    auto squeal = Sound::play_sound_at_location("./res/audio/penguin/happy/phappy" + std::to_string(std::rand() % 6 + 1) + ".wav",
+                                                entity->transform->get_position(), Camera::get_main_camera()->get_position());
     m_is_fed = true;
     m_is_waiting_to_jump_to_water = true;
 }
