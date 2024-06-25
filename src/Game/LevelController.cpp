@@ -125,6 +125,20 @@ void LevelController::update()
             ships_limit = glm::ceil(ships_limit_curve.lock()->get_y_at(x));
         }
         ships_speed = ships_speed_curve.lock()->get_y_at(x);
+
+        // For disabling tutorial WASD prompt when player uses WASD.
+        if (!m_story_wasd_prompt.expired()
+            && (Input::input->get_key_down(GLFW_KEY_W) || Input::input->get_key_down(GLFW_KEY_S) || Input::input->get_key_down(GLFW_KEY_A)
+                || Input::input->get_key_down(GLFW_KEY_D)))
+        {
+            m_story_wasd_prompt.lock()->destroy_immediate();
+        }
+
+        // For disabling second space prompt in tutorial when space is used.
+        if (!m_story_second_space_prompt.expired() && Input::input->get_key_down(GLFW_KEY_SPACE))
+        {
+            m_story_second_space_prompt.lock()->destroy_immediate();
+        }
     }
     else
     {
@@ -134,15 +148,22 @@ void LevelController::update()
             is_started = true;
             set_exiting_lighthouse(true);
         }
-        else if (Input::input->get_key_down(GLFW_MOUSE_BUTTON_RIGHT)) // TODO: Change RMB to LMB in final game
+        else // TODO: Change RMB to LMB in final game
         {
-            check_tutorial_progress(TutorialProgressAction::LighthouseEnabled);
-            lighthouse.lock()->turn_light(true);
-            is_started = true;
-
-            if (!is_tutorial)
+            spawn_mouse_prompt_if_needed();
+            if (Input::input->get_key_down(GLFW_MOUSE_BUTTON_RIGHT))
             {
-                set_exiting_lighthouse(true);
+                if (!m_story_mouse_prompt.expired())
+                    m_story_mouse_prompt.lock()->destroy_immediate();
+
+                check_tutorial_progress(TutorialProgressAction::LighthouseEnabled);
+                lighthouse.lock()->turn_light(true);
+                is_started = true;
+
+                if (!is_tutorial)
+                {
+                    set_exiting_lighthouse(true);
+                }
             }
         }
     }
@@ -277,6 +298,8 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
             if (action == TutorialProgressAction::ShipEnteredPort)
             {
                 GameController::get_instance()->dialog_manager.lock()->play_content(2);
+                m_story_space_prompt = SceneSerializer::load_prefab("SpacePrompt");
+                m_story_space_prompt.lock()->transform->set_position(m_space_prompt_pos);
                 set_exiting_lighthouse(true);
                 progress_tutorial(2);
             }
@@ -285,20 +308,27 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
             if (action == TutorialProgressAction::ShipEnteredPort)
             {
                 GameController::get_instance()->dialog_manager.lock()->play_content(2);
+                m_story_space_prompt = SceneSerializer::load_prefab("SpacePrompt");
+                m_story_space_prompt.lock()->transform->set_position(m_space_prompt_pos);
                 set_exiting_lighthouse(true);
                 progress_tutorial();
             }
             break;
         case 5:
-            //TODO: PROMPT [SPACE] Leave lighthouse
             if (action == TutorialProgressAction::KeeperLeftLighthouse)
             {
                 GameController::get_instance()->dialog_manager.lock()->end_content();
+
+                if (!m_story_space_prompt.expired())
+                    m_story_space_prompt.lock()->destroy_immediate();
+
+                m_story_wasd_prompt = SceneSerializer::load_prefab("WASDPrompt");
+                m_story_wasd_prompt.lock()->transform->set_position(m_wasd_prompt_pos);
+
                 progress_tutorial();
             }
             break;
         case 6:
-            //TODO: PROMPT [WSAD] Move
             if (action == TutorialProgressAction::KeeperEnteredPort)
             {
                 progress_tutorial();
@@ -361,12 +391,17 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
                 if (is_tutorial_dialogs_enabled)
                 {
                     GameController::get_instance()->dialog_manager.lock()->play_content(5);
+
+                    if (lighthouse.lock()->is_keeper_inside())
+                    {
+                        m_story_second_space_prompt = SceneSerializer::load_prefab("SpacePrompt");
+                        m_story_second_space_prompt.lock()->transform->set_position(m_second_space_prompt_pos);
+                    }
                 }
                 progress_tutorial();
             }
             break;
         case 4:
-            //TODO: PROMPT [SPACE] Leave lighthouse
             if (action == TutorialProgressAction::PackageCollected)
             {
                 entity->get_component<ShipSpawner>()->set_enabled(false);
@@ -557,4 +592,23 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
 void LevelController::progress_tutorial(i32 step)
 {
     tutorial_progress += step;
+}
+
+void LevelController::spawn_mouse_prompt_if_needed()
+{
+    if (!m_story_mouse_prompt.expired())
+        return;
+
+    if (!GameController::get_instance()->is_moving_to_next_scene())
+    {
+        m_story_mouse_prompt = SceneSerializer::load_prefab("MousePrompt");
+        m_mouse_prompt_pos = lighthouse.lock()->entity->transform->get_position() + glm::vec3(0.0f, 1.3f, -0.75f);
+        m_story_mouse_prompt.lock()->transform->set_position(m_mouse_prompt_pos);
+    }
+}
+
+void LevelController::destroy_mouse_prompt()
+{
+    if (!m_story_mouse_prompt.expired())
+        m_story_mouse_prompt.lock()->destroy_immediate();
 }

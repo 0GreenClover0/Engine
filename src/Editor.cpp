@@ -58,6 +58,7 @@
 #include "Input.h"
 #include "Light.h"
 #include "Model.h"
+#include "NowPromptTrigger.h"
 #include "Panel.h"
 #include "Particle.h"
 #include "ParticleSystem.h"

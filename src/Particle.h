@@ -49,6 +49,8 @@ private:
 
     ID3D11Buffer* m_constant_buffer_particle = nullptr;
 
+    glm::vec3 m_original_position = {};
+
     float m_current_lifetime = 0.0f;
     glm::vec4 m_color = {1.0f, 1.0f, 1.0f, 1.0f};
 
