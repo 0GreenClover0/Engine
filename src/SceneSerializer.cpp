@@ -561,6 +561,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "light" << YAML::Value << lighthouse->light;
         out << YAML::Key << "water" << YAML::Value << lighthouse->water;
         out << YAML::Key << "spawn_position" << YAML::Value << lighthouse->spawn_position;
+        out << YAML::Key << "keeper" << YAML::Value << lighthouse->keeper;
         out << YAML::EndMap;
     }
     else if (auto const lighthousekeeper = std::dynamic_pointer_cast<class LighthouseKeeper>(component); lighthousekeeper != nullptr)
@@ -2059,6 +2060,10 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             if (component["spawn_position"].IsDefined())
             {
                 deserialized_component->spawn_position = component["spawn_position"].as<std::weak_ptr<Entity>>();
+            }
+            if (component["keeper"].IsDefined())
+            {
+                deserialized_component->keeper = component["keeper"].as<std::shared_ptr<Entity>>();
             }
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();

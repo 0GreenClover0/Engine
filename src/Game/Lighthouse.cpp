@@ -31,12 +31,30 @@ void Lighthouse::awake()
 
 void Lighthouse::update()
 {
+
     if (m_is_keeeper_inside && !m_has_keeper_entered_this_frame && Input::input->get_key_down(GLFW_KEY_SPACE))
     {
         exit();
     }
 
     m_has_keeper_entered_this_frame = false;
+}
+
+void Lighthouse::start()
+{
+    if (GameController::get_instance()->get_level_number() != 0)
+    {
+        keeper = SceneSerializer::load_prefab("Keeper");
+        keeper->get_component<LighthouseKeeper>()->set_enabled(false);
+        keeper->get_component<Collider2D>()->set_enabled(false);
+        keeper->get_component<Model>()->model_path = "./res/models/hovercraft/hovercraft.gltf";
+        keeper->get_component<Model>()->reprepare();
+        keeper->get_component<LighthouseKeeper>()->port = LevelController::get_instance()->port;
+        keeper->get_component<LighthouseKeeper>()->lighthouse = std::static_pointer_cast<Lighthouse>(shared_from_this());
+        keeper->get_component<Floater>()->water = water;
+        keeper->transform->set_parent(entity->transform);
+        keeper->transform->set_local_position(spawn_position.lock()->transform->get_local_position());
+    }
 }
 
 #if EDITOR
@@ -76,6 +94,10 @@ void Lighthouse::enter()
     light.lock()->spotlight.lock()->set_enabled(true);
     light.lock()->entity->get_component<Sphere>()->set_enabled(true);
 
+    keeper->get_component<LighthouseKeeper>()->set_enabled(false);
+    keeper->get_component<Model>()->model_path = "./res/models/hovercraft/hovercraft.gltf";
+    keeper->get_component<Model>()->reprepare();
+
     LevelController::get_instance()->check_tutorial_progress(TutorialProgressAction::KeeperEnteredLighthouse);
 }
 
@@ -97,13 +119,10 @@ void Lighthouse::exit()
     light.lock()->spotlight.lock()->set_enabled(false);
     light.lock()->entity->get_component<Sphere>()->set_enabled(false);
 
-    auto const keeper = SceneSerializer::load_prefab("Keeper");
-
-    keeper->transform->set_parent(GameController::get_instance()->current_scene.lock()->transform);
-    keeper->transform->set_local_position(spawn_position.lock()->transform->get_position());
-    keeper->get_component<LighthouseKeeper>()->port = LevelController::get_instance()->port;
-    keeper->get_component<LighthouseKeeper>()->lighthouse = std::static_pointer_cast<Lighthouse>(shared_from_this());
-    keeper->get_component<Floater>()->water = water;
+    keeper->get_component<LighthouseKeeper>()->set_enabled(true);
+    keeper->get_component<Collider2D>()->set_enabled(true);
+    keeper->get_component<Model>()->model_path = "./res/models/keeperInHovercraft/keeper.gltf";
+    keeper->get_component<Model>()->reprepare();
 
     LevelController::get_instance()->check_tutorial_progress(TutorialProgressAction::KeeperLeftLighthouse);
 }

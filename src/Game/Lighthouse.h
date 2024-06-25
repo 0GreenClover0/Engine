@@ -17,6 +17,7 @@ public:
 
     virtual void awake() override;
     virtual void update() override;
+    virtual void start() override;
 #if EDITOR
     virtual void draw_editor() override;
 #endif
@@ -34,6 +35,7 @@ public:
     std::weak_ptr<Water> water = {};
 
     std::weak_ptr<Entity> spawn_position = {};
+    std::shared_ptr<Entity> keeper = {};
 
     NON_SERIALIZED
     bool is_entering_lighthouse_allowed = true;
