@@ -6,6 +6,7 @@
 
 class Mesh;
 
+NON_SERIALIZED
 class Particle final : public Drawable
 {
 public:
