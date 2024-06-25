@@ -120,13 +120,29 @@ void Renderer::unregister_material(std::shared_ptr<Material> const& material)
     {
         if (material->get_render_order() <= aa_render_order)
         {
-            m_custom_render_order_materials_before_aa.erase(
-                m_custom_render_order_materials_before_aa.find({material->get_render_order(), material}));
+            auto const [first, second] = m_custom_render_order_materials_before_aa.equal_range({material->get_render_order(), material});
+
+            for (auto i = first; i != second; ++i)
+            {
+                if (i->material->drawables.size() == 0)
+                {
+                    m_custom_render_order_materials_before_aa.erase(i);
+                    break;
+                }
+            }
         }
         else
         {
-            m_custom_render_order_materials_after_aa.erase(
-                m_custom_render_order_materials_after_aa.find({material->get_render_order(), material}));
+            auto const [first, second] = m_custom_render_order_materials_after_aa.equal_range({material->get_render_order(), material});
+
+            for (auto i = first; i != second; ++i)
+            {
+                if (i->material->drawables.size() == 0)
+                {
+                    m_custom_render_order_materials_after_aa.erase(i);
+                    break;
+                }
+            }
         }
     }
 
