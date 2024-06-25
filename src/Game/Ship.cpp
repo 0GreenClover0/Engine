@@ -328,11 +328,7 @@ void Ship::destroyed_behavior()
     }
     else if (m_scale_down_counter > 0.0f)
     {
-        m_scale_down_counter -= delta_time;
-        entity->transform->set_local_scale(glm::vec3((m_scale_down_counter / m_scale_down_time)));
-        my_light.lock()->diffuse = glm::vec3(my_light.lock()->diffuse * 0.98f);
-        my_light.lock()->specular = glm::vec3(my_light.lock()->specular * 0.98f);
-        my_light.lock()->ambient = glm::vec3(my_light.lock()->ambient * 0.98f);
+        scale_down();
     }
     else
     {
@@ -643,6 +639,16 @@ void Ship::follow_point(glm::vec2 ship_position, glm::vec2 target_position)
 
         m_direction += rotate_direction * Player::get_instance()->turn_speed * delta_time;
     }
+}
+
+void Ship::scale_down()
+{
+    auto const light_locked = my_light.lock();
+    m_scale_down_counter -= static_cast<float>(delta_time);
+    entity->transform->set_local_scale(glm::vec3(m_scale_down_counter / m_scale_down_time));
+    light_locked->diffuse = glm::vec3(light_locked->diffuse * 0.98f);
+    light_locked->specular = glm::vec3(light_locked->specular * 0.98f);
+    light_locked->ambient = glm::vec3(light_locked->ambient * 0.98f);
 }
 
 bool Ship::is_out_of_room() const
