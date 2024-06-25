@@ -2,6 +2,7 @@
 
 #include "AK/AK.h"
 #include "AK/Math.h"
+#include "Camera.h"
 #include "Collider2D.h"
 #include "Entity.h"
 #include "GameController.h"
@@ -97,6 +98,9 @@ void Customer::update()
     if (m_jump_timer <= 0.0f && !m_is_jumping)
     {
         m_velocity_y = m_max_jump_velocity;
+
+        auto squeal = Sound::play_sound_at_location("./res/audio/penguin/neutral/pneutral" + std::to_string(std::rand() % 7 + 1) + ".wav",
+                                                    entity->transform->get_position(), Camera::get_main_camera()->get_position());
         m_is_jumping = true;
 
         auto const particle = SceneSerializer::load_prefab("PenguinJump");
