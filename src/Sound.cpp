@@ -57,12 +57,13 @@ std::shared_ptr<Sound> Sound::play_sound(std::string const& path, bool const loo
 }
 
 std::shared_ptr<Sound> Sound::play_sound_at_location(std::string const& path, glm::vec3 const position, glm::vec3 const direction,
-                                                     float const rolloff, ma_attenuation_model const attenuation)
+                                                     float const rolloff, ma_attenuation_model const attenuation, bool const loop)
 {
     auto sound = create(path, direction, rolloff, attenuation);
 
     ma_sound_set_position(&sound->m_internal_sound, position.x, position.y, position.z);
     ma_sound_start(&sound->m_internal_sound);
+    ma_sound_set_looping(&sound->m_internal_sound, loop);
 
     auto const e = Entity::create("TemporarySound");
     e->transform->set_local_position(position);
