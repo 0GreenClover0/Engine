@@ -45,6 +45,7 @@ public:
 
     ParticleType particle_type = ParticleType::Default;
 
+    bool play_once = false;
     bool rotate_particles = true;
     bool spawn_instantly = false;
     std::string sprite_path = "./res/textures/particle.png"; // Default particle

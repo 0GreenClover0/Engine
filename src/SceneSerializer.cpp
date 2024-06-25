@@ -413,6 +413,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "guid" << YAML::Value << particlesystem->guid;
         out << YAML::Key << "custom_name" << YAML::Value << particlesystem->custom_name;
         out << YAML::Key << "particle_type" << YAML::Value << particlesystem->particle_type;
+        out << YAML::Key << "play_once" << YAML::Value << particlesystem->play_once;
         out << YAML::Key << "rotate_particles" << YAML::Value << particlesystem->rotate_particles;
         out << YAML::Key << "spawn_instantly" << YAML::Value << particlesystem->spawn_instantly;
         out << YAML::Key << "sprite_path" << YAML::Value << particlesystem->sprite_path;
@@ -1639,6 +1640,10 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             if (component["particle_type"].IsDefined())
             {
                 deserialized_component->particle_type = component["particle_type"].as<ParticleType>();
+            }
+            if (component["play_once"].IsDefined())
+            {
+                deserialized_component->play_once = component["play_once"].as<bool>();
             }
             if (component["rotate_particles"].IsDefined())
             {
