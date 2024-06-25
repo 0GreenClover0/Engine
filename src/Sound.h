@@ -17,7 +17,8 @@ public:
     static std::shared_ptr<Sound> play_sound(std::string const& path, bool const loop = false);
     static std::shared_ptr<Sound> play_sound_at_location(std::string const& path, glm::vec3 const position, glm::vec3 direction,
                                                          float rolloff = 0.5f,
-                                                         ma_attenuation_model attenuation = ma_attenuation_model_inverse);
+                                                         ma_attenuation_model attenuation = ma_attenuation_model_inverse,
+                                                         bool const loop = false);
 
     explicit Sound(AK::Badge<Sound>)
     {
