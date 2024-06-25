@@ -12,6 +12,8 @@ public:
     static std::shared_ptr<Particle> create();
     static std::shared_ptr<Particle> create(ParticleSpawnData const& data, float spawn_bounds, std::string const& sprite_path,
                                             bool const rotate_particle);
+    static std::shared_ptr<Particle> create(ParticleSpawnData const& data, float spawn_bounds, std::string const& sprite_path,
+                                            bool const rotate_particle, std::shared_ptr<Shader> const& shader);
     explicit Particle(AK::Badge<Particle>, float const spawn_bounds, std::string const& sprite_path, std::shared_ptr<Material> const& mat,
                       bool const rotate_particle);
 

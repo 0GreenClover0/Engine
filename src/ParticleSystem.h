@@ -3,6 +3,7 @@
 #include "AK/Badge.h"
 #include "AK/Types.h"
 #include "Component.h"
+#include "Shader.h"
 
 #include <glm/vec4.hpp>
 
@@ -76,8 +77,9 @@ public:
 private:
     void spawn_calculations();
 
-    std::vector<ParticleSpawnData> m_spawn_data_vector = {};
+    std::shared_ptr<Shader> m_particle_shader = {};
 
+    std::vector<ParticleSpawnData> m_spawn_data_vector = {};
     u32 m_random_spawn_count = 0;
     double m_time_counter = 0.0;
     double m_spawn_interval = 0.0;

@@ -44,6 +44,20 @@ std::shared_ptr<Particle> Particle::create(ParticleSpawnData const& data, float 
     return particle;
 }
 
+std::shared_ptr<Particle> Particle::create(ParticleSpawnData const& data, float spawn_bounds, std::string const& sprite_path,
+                                           bool const rotate_particle, std::shared_ptr<Shader> const& shader)
+{
+    auto const particle_material = Material::create(shader, 1000, false, false, true);
+    particle_material->casts_shadows = false;
+    particle_material->needs_forward_rendering = true;
+    auto particle = std::make_shared<Particle>(AK::Badge<Particle> {}, spawn_bounds, sprite_path, particle_material, rotate_particle);
+
+    particle->prepare();
+    particle->set_data(data);
+
+    return particle;
+}
+
 Particle::Particle(AK::Badge<Particle>, float const spawn_bounds, std::string const& sprite_path, std::shared_ptr<Material> const& mat,
                    bool const rotate_particle)
     : Drawable(mat), rotate(rotate_particle), path(sprite_path), m_particle_material(mat), m_spawn_bounds(spawn_bounds)

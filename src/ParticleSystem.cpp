@@ -5,6 +5,7 @@
 #include "Entity.h"
 #include "Globals.h"
 #include "Particle.h"
+#include "ResourceManager.h"
 
 #include <glm/gtc/random.hpp>
 #include <glm/gtc/type_ptr.inl>
@@ -23,6 +24,8 @@ std::shared_ptr<ParticleSystem> ParticleSystem::create()
 
 ParticleSystem::ParticleSystem(AK::Badge<ParticleSystem>)
 {
+    auto const shader = ResourceManager::get_instance().load_shader("./res/shaders/particle.hlsl", "./res/shaders/particle.hlsl");
+    m_particle_shader = shader;
 }
 
 void ParticleSystem::awake()
@@ -97,8 +100,8 @@ void ParticleSystem::update_system()
 
             particle->transform->set_parent(particle_parent->transform);
 
-            auto const particle_comp =
-                particle->add_component(Particle::create(m_spawn_data_vector[i], emitter_bounds, sprite_path, rotate_particles));
+            auto const particle_comp = particle->add_component(
+                Particle::create(m_spawn_data_vector[i], emitter_bounds, sprite_path, rotate_particles, m_particle_shader));
 
             particle_comp->particle_type = particle_type;
 
