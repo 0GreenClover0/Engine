@@ -25,6 +25,7 @@ enum class BehavioralState
     Destroyed,
     InPort,
     Stop,
+    CollectedByKeeper
 };
 
 #if EDITOR
@@ -173,6 +174,8 @@ public:
     bool is_in_port() const;
     void set_direction(float direction);
 
+    void get_collected_by_keeper();
+
     NON_SERIALIZED
     float minimum_speed = 0.11f;
     NON_SERIALIZED
@@ -222,6 +225,7 @@ private:
     void destroyed_behavior();
     void in_port_behavior();
     void stop_behavior();
+    void collected_by_keeper_behavior();
 
     void scale_down();
     bool is_out_of_room() const;
