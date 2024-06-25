@@ -247,7 +247,7 @@ private:
 
     float const m_collision_rotation_time = 0.5f;
     float const m_destroy_time = 3.5f;
-    float const m_scale_down_time = 1.0f;
+    float const m_scale_down_time = 0.25f;
     float const m_deceleration_speed = 0.17f;
 
     float m_pirates_in_control_counter = 0.0f;
