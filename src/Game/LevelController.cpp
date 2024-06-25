@@ -83,7 +83,14 @@ void LevelController::update()
         AK::extract_time(time, min, sec);
 
         auto const clock_locked = clock_text_ref.lock();
-        clock_locked->set_text(min + ":" + sec);
+        if (is_tutorial)
+        {
+            clock_locked->set_text("--:--");
+        }
+        else
+        {
+            clock_locked->set_text(min + ":" + sec);
+        }
         clock_locked->color = 0xFFD6856B;
         clock_locked->font_size = 65;
     }
@@ -98,7 +105,10 @@ void LevelController::update()
         {
             if (AK::Math::are_nearly_equal(Player::get_instance()->flash_counter, 0.0f))
             {
-                time -= delta_time;
+                if (!is_tutorial)
+                {
+                    time -= delta_time;
+                }
             }
         }
         else
