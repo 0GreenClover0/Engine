@@ -188,6 +188,12 @@ bool Ship::in_port_state_change()
     return false;
 }
 
+void Ship::get_collected_by_keeper()
+{
+    behavioral_state = BehavioralState::CollectedByKeeper;
+    m_scale_down_counter = m_scale_down_time;
+}
+
 // --- State ended
 
 bool Ship::control_state_ended()
@@ -349,6 +355,18 @@ void Ship::stop_behavior()
     m_speed = 0.0f;
 }
 
+void Ship::collected_by_keeper_behavior()
+{
+    if (m_scale_down_counter > 0.0f)
+    {
+        scale_down();
+    }
+    else
+    {
+        entity->destroy_immediate();
+    }
+}
+
 void Ship::update()
 {
     if (is_out_of_room())
@@ -466,6 +484,10 @@ void Ship::update()
         {
             break;
         }
+        break;
+    case BehavioralState::CollectedByKeeper:
+
+        collected_by_keeper_behavior();
         break;
     }
 

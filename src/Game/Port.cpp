@@ -106,7 +106,8 @@ bool Port::interact()
     }
 
     AK::erase(m_ships_inside, ship);
-    ship->entity->destroy_immediate();
+    ship->get_collected_by_keeper();
+
     LevelController::get_instance()->check_tutorial_progress(TutorialProgressAction::PackageCollected);
     return true;
 }
