@@ -86,8 +86,9 @@ void ParticleSystem::update_system()
                 continue;
             }
 
-            auto const particle_parent = Entity::create("PARTICLE_PARENT");
-            auto const particle = Entity::create("PARTICLE_");
+            // Use fake guids so that we don't have to use performance-heavy guid RNG
+            auto const particle_parent = Entity::create("1", "PARTICLE_PARENT");
+            auto const particle = Entity::create("1", "PARTICLE_");
             particle_parent->is_serialized = false;
             particle->is_serialized = false;
 
