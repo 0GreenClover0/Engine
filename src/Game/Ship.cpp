@@ -305,6 +305,12 @@ void Ship::destroyed_behavior()
         entity->transform->set_local_position({entity->transform->get_local_position().x,
                                                ((m_destroyed_counter / m_destroy_time) - 1) * m_how_deep_sink_factor,
                                                entity->transform->get_local_position().z});
+
+        // Next frame we won't execute this behavior
+        if (m_destroyed_counter <= 0.0f)
+        {
+            entity->get_component<Collider2D>()->set_enabled(false);
+        }
     }
     else
     {
