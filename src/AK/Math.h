@@ -22,6 +22,7 @@ public:
     static bool are_nearly_equal(float const x, float const y, float const epsilon = 0.001f);
 
     static float ease_in_out_elastic(float const x);
+    static float ease_out_quart(float const x);
 
     // Applies only for axis-aligned rectangles. Used mostly for buttons. Collider2D handles OBB in different way.
     static bool is_point_inside_rectangle(glm::vec2 const& point, std::array<glm::vec2, 4> const& rectangle_corners);

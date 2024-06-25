@@ -98,6 +98,11 @@ bool Math::are_nearly_equal(float const x, float const y, float const epsilon)
     return glm::epsilonEqual(x, y, epsilon);
 }
 
+float Math::ease_out_quart(float const x)
+{
+    return 1.0f - pow(1.0f - x, 4.0f);
+}
+
 float Math::ease_in_out_elastic(float const x)
 {
     float constexpr c5 = (2.0f * M_PI) / 4.5f;
