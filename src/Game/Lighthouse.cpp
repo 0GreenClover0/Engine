@@ -57,6 +57,11 @@ void Lighthouse::turn_light(bool const value) const
     light.lock()->entity->get_component<Sphere>()->set_enabled(value);
 }
 
+bool Lighthouse::is_keeper_inside() const
+{
+    return m_is_keeeper_inside;
+}
+
 void Lighthouse::enter()
 {
     if (m_is_keeeper_inside)

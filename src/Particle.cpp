@@ -76,6 +76,8 @@ void Particle::awake()
     }
 
     m_random_seed = AK::random_float(-1.0f, 1.0f);
+
+    m_original_position = entity->transform->get_position();
 }
 
 void Particle::draw() const
@@ -170,29 +172,38 @@ void Particle::update()
 
 void Particle::move() const
 {
-    glm::vec3 const p = entity->transform->get_position();
+    glm::vec3 new_position;
     glm::vec3 change = {};
 
     switch (particle_type)
     {
     case ParticleType::Prompt:
-        change = {0.0f, sin(glfwGetTime() * 7.5f) * 0.01f, 0.0f};
+    {
+        change.y = sin(m_current_lifetime * 5.0f) * 0.1f;
+        new_position = m_original_position + change;
         break;
-
+    }
     case ParticleType::Snow:
+    {
+        glm::vec3 const p = entity->transform->get_position();
         change.x = sin(static_cast<float>(glfwGetTime()) + m_random_seed * 1.5f) * 0.035f - static_cast<float>(delta_time) * 1.7f;
         change.z = change.x;
 
         // Ensure the y-component decreases over time for downward motion
         change.y = -static_cast<float>(delta_time) * 6.5f;
-        break;
-
-    default:
-        change = m_velocity * static_cast<float>(delta_time);
+        new_position = p + change;
         break;
     }
+    default:
+    {
+        glm::vec3 const p = entity->transform->get_position();
+        change = m_velocity * static_cast<float>(delta_time);
+        new_position = p + change;
+        break;
+    }
+    }
 
-    entity->transform->set_position(p + change);
+    entity->transform->set_position(new_position);
 }
 
 void Particle::interpolate_color()

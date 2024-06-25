@@ -13,6 +13,7 @@
     ENUMERATE_COMPONENT(Floater, "Floater")                                     \
     ENUMERATE_COMPONENT(FloatersManager, "Floaters Manager")                    \
     ENUMERATE_COMPONENT(FloeButton, "Floe Button")                              \
+    ENUMERATE_COMPONENT(NowPromptTrigger, "Now Prompt Trigger")                 \
     ENUMERATE_COMPONENT(ParticleSystem, "Particle System")                      \
     ENUMERATE_COMPONENT(Sound, "Sound")                                         \
     ENUMERATE_COMPONENT(SoundListener, "Sound Listener")                        \

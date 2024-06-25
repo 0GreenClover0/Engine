@@ -189,6 +189,7 @@ void GameController::update_scenes_position() const
 void GameController::move_to_next_scene()
 {
     LevelController::get_instance()->lighthouse.lock()->turn_light(false);
+    LevelController::get_instance()->destroy_mouse_prompt();
     LevelController::get_instance()->destroy_immediate();
 
     if (m_levels_order.empty())

@@ -55,6 +55,9 @@ public:
 
     void progress_tutorial(i32 step = 1);
 
+    void spawn_mouse_prompt_if_needed();
+    void destroy_mouse_prompt();
+
     NON_SERIALIZED
     bool is_started = false;
 
@@ -101,6 +104,16 @@ private:
     std::weak_ptr<Player> player_ref = {};
     std::weak_ptr<ScreenText> clock_text_ref = {};
     std::weak_ptr<ScreenText> m_text = {};
+
+    std::weak_ptr<Entity> m_story_mouse_prompt = {};
+    std::weak_ptr<Entity> m_story_space_prompt = {};
+    std::weak_ptr<Entity> m_story_second_space_prompt = {};
+    std::weak_ptr<Entity> m_story_wasd_prompt = {};
+
+    glm::vec3 m_mouse_prompt_pos = {3.863f, 2.0f, 1.168f};
+    glm::vec3 m_space_prompt_pos = {3.741f, 2.0f, 1.826f};
+    glm::vec3 m_second_space_prompt_pos = {2.244f, 2.0f, -2.885f};
+    glm::vec3 m_wasd_prompt_pos = {2.436f, 2.0f, 1.152f};
 
     bool m_is_exiting_lighthouse_enabled = true;
 };

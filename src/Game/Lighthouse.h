@@ -22,6 +22,7 @@ public:
 #endif
 
     void turn_light(bool const value) const;
+    bool is_keeper_inside() const;
 
     void enter();
     void exit();
