@@ -189,6 +189,7 @@ void LighthouseKeeper::on_destroyed()
 void LighthouseKeeper::set_is_driving(bool const is_driving)
 {
     m_is_driving = is_driving;
+    deceleration = driving_deceleration;
 }
 
 bool LighthouseKeeper::is_inside_port() const
@@ -351,6 +352,7 @@ void LighthouseKeeper::handle_input()
             {
                 lighthouse_locked->enter();
                 entity->destroy_immediate();
+                deceleration = not_driving_deceleration;
                 hide_interaction_prompt(WorldPromptType::Lighthouse);
                 return;
             }

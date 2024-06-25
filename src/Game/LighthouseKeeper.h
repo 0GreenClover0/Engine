@@ -74,4 +74,7 @@ private:
     std::weak_ptr<Entity> m_lighthouse_prompt = {};
     std::weak_ptr<Entity> m_factory_prompt = {};
     bool m_is_driving = false;
+
+    float driving_deceleration = 0.1f;
+    float not_driving_deceleration = 0.2f;
 };
