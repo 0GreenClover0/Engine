@@ -31,6 +31,7 @@ public:
 
     virtual void reprepare() override;
 
+    void set_position(glm::vec3 const& position);
     void play();
     void stop();
     bool has_finished() const;
