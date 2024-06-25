@@ -177,6 +177,8 @@ std::shared_ptr<Mesh> ResourceManager::load_mesh(u32 const array_id, std::string
 
 void ResourceManager::reset_state() const
 {
+    // NOTE: When unloading a scene all entities should have already been destroyed,
+    //       and their drawables, and thus materials, uninitialized - unregistered.
     for (auto const& shader : m_shaders)
     {
         shader->materials.clear();
