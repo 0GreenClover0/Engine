@@ -153,6 +153,11 @@ void LevelController::update()
             spawn_mouse_prompt_if_needed();
             if (Input::input->get_key_down(GLFW_MOUSE_BUTTON_RIGHT))
             {
+                if (!is_tutorial)
+                {
+                    set_exiting_lighthouse(true);
+                }
+
                 if (!m_story_mouse_prompt.expired())
                     m_story_mouse_prompt.lock()->destroy_immediate();
 
@@ -160,9 +165,9 @@ void LevelController::update()
                 lighthouse.lock()->turn_light(true);
                 is_started = true;
 
-                if (!is_tutorial)
+                if (GameController::get_instance()->get_level_number() == 4)
                 {
-                    set_exiting_lighthouse(true);
+                    GameController::get_instance()->dialog_manager.lock()->end_content();
                 }
             }
         }
