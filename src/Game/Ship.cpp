@@ -10,6 +10,7 @@
 #include "Input.h"
 #include "LighthouseKeeper.h"
 #include "Player.h"
+#include "SceneSerializer.h"
 #include "ShipSpawner.h"
 
 #include <GLFW/glfw3.h>
@@ -542,6 +543,9 @@ void Ship::destroy(std::shared_ptr<Entity> const& other_entity_collider)
 {
     if (is_destroyed)
         return;
+
+    auto const e = SceneSerializer::load_prefab("Crash");
+    e->transform->set_position(entity->transform->get_position());
 
     is_destroyed = true;
     if (m_is_in_port)
