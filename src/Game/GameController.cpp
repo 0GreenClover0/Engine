@@ -127,6 +127,11 @@ void GameController::update()
 
         m_move_to_next_scene_counter = 0.0f;
         m_move_to_next_scene = false;
+
+        if (m_level_number == 4)
+        {
+            dialog_manager.lock()->play_content(14);
+        }
     }
 }
 
