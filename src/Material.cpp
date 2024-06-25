@@ -18,9 +18,6 @@ std::shared_ptr<Material> Material::create(std::shared_ptr<Shader> const& shader
         material->needs_forward_rendering = true;
     }
 
-    Renderer::get_instance()->register_material(material);
-    shader->materials.emplace_back(material);
-
     return material;
 }
 
