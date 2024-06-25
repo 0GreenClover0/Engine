@@ -141,11 +141,11 @@ bool Particle::update_lifetime()
 
     if (m_current_lifetime >= m_lifetime)
     {
-        if (entity->transform->parent.expired())
+        if (!entity->transform->parent.expired())
         {
             entity->transform->parent.lock()->entity.lock()->destroy_immediate();
         }
-        else
+        else if (entity != nullptr)
         {
             entity->destroy_immediate();
         }
