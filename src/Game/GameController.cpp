@@ -98,6 +98,11 @@ void GameController::update()
         SceneSerializer::load_prefab("ThanksScreen");
     }
 
+    if (Input::input->get_key_down(GLFW_KEY_F6))
+    {
+        restart_level();
+    }
+
     if (!m_move_to_next_scene)
     {
         return;
@@ -224,6 +229,23 @@ void GameController::move_to_next_scene()
 
 void GameController::reset_level()
 {
+    Player::get_instance()->reset_player();
+    Player::get_instance()->packages = LevelController::get_instance()->starting_packages;
+
+    LevelController::get_instance()->entity->get_component<ShipSpawner>()->get_spawn_paths();
+    LevelController::get_instance()->on_lighthouse_upgraded();
+    LevelController::get_instance()->factories[1].lock()->turn_off_lights();
+    LevelController::get_instance()->set_exiting_lighthouse(false);
+    LevelController::get_instance()->lighthouse.lock()->turn_light(false);
+    LevelController::get_instance()->check_tutorial_progress(TutorialProgressAction::LevelStarted);
+}
+
+void GameController::restart_level()
+{
+    std::string scene_name = current_scene.lock()->name;
+    current_scene.lock()->destroy_immediate();
+    current_scene = SceneSerializer::load_prefab(scene_name);
+
     Player::get_instance()->reset_player();
     Player::get_instance()->packages = LevelController::get_instance()->starting_packages;
 

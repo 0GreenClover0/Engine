@@ -196,13 +196,14 @@ void EndScreen::update_star(u32 const star_number)
 
 void EndScreen::next_level()
 {
+    GameController::get_instance()->dialog_manager.lock()->end_content();
     GameController::get_instance()->move_to_next_scene();
     hide();
 }
 
 void EndScreen::restart()
 {
-    GameController::get_instance()->move_to_next_scene();
+    GameController::get_instance()->restart_level();
     hide();
 }
 

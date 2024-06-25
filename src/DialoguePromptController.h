@@ -29,7 +29,7 @@ public:
     void play_content(u16 const vector_index);
     void end_content();
 
-    void flip();
+    void flip(bool value);
 
     float interp_speed = 4.0f; // Unused but maybe will be used
 

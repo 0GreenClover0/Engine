@@ -29,6 +29,7 @@ public:
     void move_to_next_scene();
 
     void reset_level();
+    void restart_level();
 
     std::weak_ptr<Entity> current_scene = {};
     std::weak_ptr<Entity> next_scene = {};
