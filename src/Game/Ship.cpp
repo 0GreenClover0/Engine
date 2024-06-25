@@ -159,6 +159,10 @@ bool Ship::destroyed_state_change()
         {
             LevelController::get_instance()->check_tutorial_progress(TutorialProgressAction::PirateDestroyed);
         }
+        else
+        {
+            Player::get_instance()->destroyed_ships++;
+        }
 
         return true;
     }

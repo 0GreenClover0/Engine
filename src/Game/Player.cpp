@@ -41,6 +41,7 @@ void Player::reset_player()
     flash_counter = 0.0f;
     packages = 0;
     lighthouse_level = 0;
+    destroyed_ships = 0;
 
     range = 0.0f;
     additional_ship_speed = 0.0f;
