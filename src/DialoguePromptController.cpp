@@ -110,7 +110,7 @@ void DialoguePromptController::draw_editor()
 
     if (ImGui::Button("Flip"))
     {
-        flip();
+        flip(!m_is_flipped);
     }
 
     ImGuiEx::draw_ptr("Panel Reference", dialogue_panel);
@@ -272,9 +272,9 @@ void DialoguePromptController::end_content()
     m_currently_played_sound = nullptr;
 }
 
-void DialoguePromptController::flip()
+void DialoguePromptController::flip(bool value)
 {
-    m_is_flipped = !m_is_flipped;
+    m_is_flipped = value;
 
     glm::vec3 position = keeper_sprite.lock()->transform->get_local_position();
     keeper_sprite.lock()->transform->set_local_position({-position.x, position.y, position.z});

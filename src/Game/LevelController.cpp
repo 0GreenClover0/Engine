@@ -363,7 +363,7 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
                 if (is_tutorial_dialogs_enabled)
                 {
                     GameController::get_instance()->dialog_manager.lock()->play_content(4);
-                    GameController::get_instance()->dialog_manager.lock()->flip();
+                    GameController::get_instance()->dialog_manager.lock()->flip(true);
                 }
                 progress_tutorial();
             }
@@ -513,7 +513,7 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
             {
                 ships_limit = 1;
                 entity->get_component<ShipSpawner>()->spawn_ship_at_position(ShipType::Tool, {6.8f, 0.0f}, 180.0f);
-                GameController::get_instance()->dialog_manager.lock()->flip();
+                GameController::get_instance()->dialog_manager.lock()->flip(false);
                 progress_tutorial();
             }
             break;
