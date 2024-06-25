@@ -1,6 +1,7 @@
 #include "Ship.h"
 
 #include "AK/AK.h"
+#include "AK/Math.h"
 #include "Collider2D.h"
 #include "Entity.h"
 #include "Floater.h"
@@ -301,6 +302,19 @@ void Ship::destroyed_behavior()
 {
     if (m_destroyed_counter > 0.0f)
     {
+        if (m_collision_rotation_counter > 0.0f)
+        {
+            m_collision_rotation_counter -= delta_time;
+            float const factor = AK::Math::ease_out_quart(m_collision_rotation_counter / m_collision_rotation_time);
+
+            // NOTE: factor < 0.0f will throw an exception form lerp
+            if (factor > 0.0f)
+            {
+                entity->transform->set_euler_angles(glm::degrees(glm::eulerAngles(
+                    glm::normalize(glm::lerp(rotation_before_collision, target_rotation_after_collision, 1.0f - factor)))));
+            }
+        }
+
         m_destroyed_counter -= delta_time;
         entity->transform->set_local_position({entity->transform->get_local_position().x,
                                                ((m_destroyed_counter / m_destroy_time) - 1) * m_how_deep_sink_factor,
@@ -311,6 +325,14 @@ void Ship::destroyed_behavior()
         {
             entity->get_component<Collider2D>()->set_enabled(false);
         }
+    }
+    else if (m_scale_down_counter > 0.0f)
+    {
+        m_scale_down_counter -= delta_time;
+        entity->transform->set_local_scale(glm::vec3((m_scale_down_counter / m_scale_down_time)));
+        my_light.lock()->diffuse = glm::vec3(my_light.lock()->diffuse * 0.98f);
+        my_light.lock()->specular = glm::vec3(my_light.lock()->specular * 0.98f);
+        my_light.lock()->ambient = glm::vec3(my_light.lock()->ambient * 0.98f);
     }
     else
     {
@@ -498,18 +520,41 @@ void Ship::update()
     }
 }
 
-void Ship::destroy()
+void Ship::destroy(std::shared_ptr<Entity> const& other_entity_collider)
 {
     if (is_destroyed)
         return;
 
     is_destroyed = true;
     m_destroyed_counter = m_destroy_time;
+    m_scale_down_counter = m_scale_down_time;
+    m_collision_rotation_counter = m_collision_rotation_time;
 
     if (!floater.expired())
     {
         // Disable floater, ship is now sinking.
         floater.lock()->set_can_tick(false);
+    }
+
+    if (other_entity_collider != nullptr)
+    {
+        glm::vec2 const colliding_ship_position = AK::convert_3d_to_2d(other_entity_collider->transform->get_position());
+        glm::vec2 const vector_to_ship = glm::normalize(colliding_ship_position - AK::convert_3d_to_2d(entity->transform->get_position()));
+        glm::vec2 perpendicular_vector = {-vector_to_ship.y, vector_to_ship.x};
+
+        // To be fair this probably isn't the correct way to flip the axis direction
+        // I tried many others, it didn't work. This one seems to work acceptably.
+        if (vector_to_ship.y > 0.0f)
+        {
+            perpendicular_vector = -perpendicular_vector;
+        }
+
+        glm::quat const rotation =
+            glm::angleAxis(3.14f / 8.0f, glm::normalize(glm::vec3(perpendicular_vector.x, 0.0f, perpendicular_vector.y)));
+        glm::quat const current_quat_rotation = entity->transform->get_rotation();
+        glm::quat const quat_rotation = glm::quat(current_quat_rotation.w, 0.0, current_quat_rotation.y, 0.0f);
+        target_rotation_after_collision = quat_rotation * rotation;
+        rotation_before_collision = entity->transform->get_rotation();
     }
 }
 
@@ -548,15 +593,15 @@ void Ship::on_trigger_enter(std::shared_ptr<Collider2D> const& other)
 
     if (other->entity->get_component<Ship>() != nullptr)
     {
-        destroy();
+        destroy(other->entity);
     }
     else if (other->entity->get_component<IceBound>() != nullptr && behavioral_state != BehavioralState::Stop)
     {
-        destroy();
+        destroy(other->entity);
     }
     else if (!m_is_in_port && other->entity->get_component<LighthouseKeeper>() != nullptr)
     {
-        destroy();
+        destroy(other->entity);
     }
 }
 

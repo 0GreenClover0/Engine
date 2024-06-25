@@ -168,7 +168,7 @@ public:
     virtual void on_trigger_exit(std::shared_ptr<Collider2D> const& other) override;
 
     void set_start_direction();
-    void destroy();
+    void destroy(std::shared_ptr<Entity> const& other_entity_collider);
     void stop();
     bool is_in_port() const;
     void set_direction(float direction);
@@ -233,14 +233,20 @@ private:
 
     bool m_is_in_port = false;
 
+    float m_collision_rotation_counter = 0.0f;
     float m_destroyed_counter = 0.0f;
+    float m_scale_down_counter = 0.0f;
 
     i32 const m_visibility_range = 110;
     float const m_start_direction_wiggle = 15.0f;
-    float const m_destroy_time = 6.5f;
+
+    float const m_collision_rotation_time = 0.5f;
+    float const m_destroy_time = 3.5f;
+    float const m_scale_down_time = 1.0f;
     float const m_deceleration_speed = 0.17f;
 
     float m_pirates_in_control_counter = 0.0f;
-
+    glm::quat target_rotation_after_collision = {};
+    glm::quat rotation_before_collision = {};
     i32 m_avoid_direction = 0;
 };
