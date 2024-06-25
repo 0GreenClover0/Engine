@@ -130,9 +130,8 @@ void ParticleSystem::spawn_calculations()
     {
         ParticleSpawnData data = {};
 
-        if (m_first_time_spawning)
+        if (m_first_time_spawning && spawn_instantly)
         {
-            m_first_time_spawning = false;
             data.spawn_time = 0.0f;
         }
         else
@@ -148,6 +147,6 @@ void ParticleSystem::spawn_calculations()
 
         m_spawn_data_vector.emplace_back(data);
     }
-
+    m_first_time_spawning = false;
     m_time_counter = 0.0;
 }
