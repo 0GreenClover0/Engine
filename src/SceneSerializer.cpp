@@ -16,6 +16,7 @@
 #include "Cube.h"
 #include "Curve.h"
 #include "DebugDrawing.h"
+#include "DebugInputController.h"
 #include "DialoguePromptController.h"
 #include "DirectionalLight.h"
 #include "Drawable.h"
@@ -172,6 +173,17 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
             out << YAML::Key << "custom_name" << YAML::Value << curve->custom_name;
         }
         out << YAML::Key << "points" << YAML::Value << curve->points;
+        out << YAML::EndMap;
+    }
+    else if (auto const debuginputcontroller = std::dynamic_pointer_cast<class DebugInputController>(component);
+             debuginputcontroller != nullptr)
+    {
+        out << YAML::BeginMap;
+        out << YAML::Key << "ComponentName" << YAML::Value << "DebugInputControllerComponent";
+        out << YAML::Key << "guid" << YAML::Value << debuginputcontroller->guid;
+        out << YAML::Key << "custom_name" << YAML::Value << debuginputcontroller->custom_name;
+        out << YAML::Key << "gamma" << YAML::Value << debuginputcontroller->gamma;
+        out << YAML::Key << "exposure" << YAML::Value << debuginputcontroller->exposure;
         out << YAML::EndMap;
     }
     else if (auto const dialoguepromptcontroller = std::dynamic_pointer_cast<class DialoguePromptController>(component);
@@ -367,8 +379,6 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
             out << YAML::Key << "ComponentName" << YAML::Value << "DirectionalLightComponent";
             out << YAML::Key << "guid" << YAML::Value << directionallight->guid;
             out << YAML::Key << "custom_name" << YAML::Value << directionallight->custom_name;
-            out << YAML::Key << "gamma" << YAML::Value << directionallight->gamma;
-            out << YAML::Key << "exposure" << YAML::Value << directionallight->exposure;
         }
         else
         {
@@ -891,6 +901,31 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             deserialized_component->reprepare();
         }
     }
+    else if (component_name == "DebugInputControllerComponent")
+    {
+        if (first_pass)
+        {
+            auto const deserialized_component = DebugInputController::create();
+            deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_component->custom_name = component["custom_name"].as<std::string>();
+            deserialized_pool.emplace_back(deserialized_component);
+        }
+        else
+        {
+            auto const deserialized_component =
+                std::dynamic_pointer_cast<class DebugInputController>(get_from_pool(component["guid"].as<std::string>()));
+            if (component["gamma"].IsDefined())
+            {
+                deserialized_component->gamma = component["gamma"].as<float>();
+            }
+            if (component["exposure"].IsDefined())
+            {
+                deserialized_component->exposure = component["exposure"].as<float>();
+            }
+            deserialized_entity->add_component(deserialized_component);
+            deserialized_component->reprepare();
+        }
+    }
     else if (component_name == "DialoguePromptControllerComponent")
     {
         if (first_pass)
@@ -1379,14 +1414,6 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
         {
             auto const deserialized_component =
                 std::dynamic_pointer_cast<class DirectionalLight>(get_from_pool(component["guid"].as<std::string>()));
-            if (component["gamma"].IsDefined())
-            {
-                deserialized_component->gamma = component["gamma"].as<float>();
-            }
-            if (component["exposure"].IsDefined())
-            {
-                deserialized_component->exposure = component["exposure"].as<float>();
-            }
             if (component["ambient"].IsDefined())
             {
                 deserialized_component->ambient = component["ambient"].as<glm::vec3>();

@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "Camera.h"
+#include "DebugInputController.h"
 #include "Drawable.h"
 #include "Entity.h"
 #include "FullscreenQuad.h"
@@ -689,6 +690,19 @@ void RendererDX11::set_light_buffer() const
 {
     ConstantBufferLight light_data = {};
 
+    auto const debugcontroller = DebugInputController::get_instance();
+    if (debugcontroller)
+    {
+        light_data.gamma = DebugInputController::get_instance()->gamma;
+        light_data.exposure = DebugInputController::get_instance()->exposure;
+    }
+    else
+    {
+        // Default values based on lighting settings chosen by Nadia
+        light_data.gamma = 1.28f;
+        light_data.exposure = 1.22f;
+    }
+
     if (m_directional_light != nullptr)
     {
         light_data.directional_light.direction = m_directional_light->entity->transform->get_forward();
@@ -701,8 +715,6 @@ void RendererDX11::set_light_buffer() const
         light_data.directional_light.pcf_num_samples = m_directional_light->m_pcf_num_samples;
         light_data.directional_light.blocker_search_num_samples = m_directional_light->m_blocker_search_num_samples;
         light_data.directional_light.near_plane = m_directional_light->m_near_plane;
-        light_data.gamma = m_directional_light->gamma;
-        light_data.exposure = m_directional_light->exposure;    
     }
 
     for (i32 i = 0; i < m_point_lights.size(); i++)

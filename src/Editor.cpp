@@ -24,6 +24,7 @@
 #include "Curve.h"
 #include "Debug.h"
 #include "DebugDrawing.h"
+#include "DebugInputController.h"
 #include "DialoguePromptController.h"
 #include "DirectionalLight.h"
 #include "Ellipse.h"

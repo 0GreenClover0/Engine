@@ -7,6 +7,7 @@
     ENUMERATE_COMPONENT(Camera, "Camera")                                       \
     ENUMERATE_COMPONENT(Collider2D, "Collider2D")                               \
     ENUMERATE_COMPONENT(Curve, "Curve")                                         \
+    ENUMERATE_COMPONENT(DebugInputController, "Debug Input Controller")         \
     ENUMERATE_COMPONENT(DialoguePromptController, "Dialogue Prompt Controller") \
     ENUMERATE_COMPONENT(ExampleDynamicText, "Example Dynamic Text")             \
     ENUMERATE_COMPONENT(ExampleUIBar, "Example UIBar")                          \
