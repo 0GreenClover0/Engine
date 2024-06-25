@@ -37,7 +37,10 @@ void FloeButton::update()
     {
         if (m_hovered && floe_button_type == FloeButtonType::Start)
         {
-            GameController::get_instance()->move_to_next_scene();
+            if (!GameController::get_instance()->is_moving_to_next_scene())
+            {
+                GameController::get_instance()->move_to_next_scene();
+            }
         }
 
         if (m_hovered && floe_button_type == FloeButtonType::Credits)
