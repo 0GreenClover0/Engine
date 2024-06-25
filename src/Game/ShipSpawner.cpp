@@ -169,7 +169,7 @@ void ShipSpawner::draw_editor()
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.0f, 0.5f, 0.5f, 1.0f));
             if (ImGui::Button(("Destroy##" + std::to_string(index)).c_str()))
             {
-                ship_locked->destroy();
+                ship_locked->destroy(nullptr);
             }
             ImGui::PopStyleColor(2);
         }
