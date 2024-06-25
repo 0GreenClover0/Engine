@@ -208,13 +208,6 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
             out << YAML::Key << "bold" << YAML::Value << screentext->bold;
             out << YAML::Key << "button_ref" << YAML::Value << screentext->button_ref;
         }
-        else if (auto const particle = std::dynamic_pointer_cast<class Particle>(component); particle != nullptr)
-        {
-            out << YAML::Key << "ComponentName" << YAML::Value << "ParticleComponent";
-            out << YAML::Key << "guid" << YAML::Value << particle->guid;
-            out << YAML::Key << "custom_name" << YAML::Value << particle->custom_name;
-            out << YAML::Key << "path" << YAML::Value << particle->path;
-        }
         else if (auto const panel = std::dynamic_pointer_cast<class Panel>(component); panel != nullptr)
         {
             out << YAML::Key << "ComponentName" << YAML::Value << "PanelComponent";
@@ -1169,31 +1162,6 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             if (component["background_path"].IsDefined())
             {
                 deserialized_component->background_path = component["background_path"].as<std::string>();
-            }
-            if (component["material"].IsDefined())
-            {
-                deserialized_component->material = component["material"].as<std::shared_ptr<Material>>();
-            }
-            deserialized_entity->add_component(deserialized_component);
-            deserialized_component->reprepare();
-        }
-    }
-    else if (component_name == "ParticleComponent")
-    {
-        if (first_pass)
-        {
-            auto const deserialized_component = Particle::create();
-            deserialized_component->guid = component["guid"].as<std::string>();
-            deserialized_component->custom_name = component["custom_name"].as<std::string>();
-            deserialized_pool.emplace_back(deserialized_component);
-        }
-        else
-        {
-            auto const deserialized_component =
-                std::dynamic_pointer_cast<class Particle>(get_from_pool(component["guid"].as<std::string>()));
-            if (component["path"].IsDefined())
-            {
-                deserialized_component->path = component["path"].as<std::string>();
             }
             if (component["material"].IsDefined())
             {

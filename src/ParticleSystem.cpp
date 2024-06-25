@@ -88,6 +88,8 @@ void ParticleSystem::update_system()
 
             auto const particle_parent = Entity::create("PARTICLE_PARENT");
             auto const particle = Entity::create("PARTICLE_");
+            particle_parent->is_serialized = false;
+            particle->is_serialized = false;
 
             if (m_simulate_in_world_space)
             {

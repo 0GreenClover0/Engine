@@ -40,7 +40,6 @@
     ENUMERATE_COMPONENT(Button, "Button")                                       \
     ENUMERATE_COMPONENT(Model, "Model")                                         \
     ENUMERATE_COMPONENT(Panel, "Panel")                                         \
-    ENUMERATE_COMPONENT(Particle, "Particle")                                   \
     ENUMERATE_COMPONENT(ScreenText, "Screen Text")                              \
     ENUMERATE_COMPONENT(Cube, "Cube")                                           \
     ENUMERATE_COMPONENT(Sphere, "Sphere")                                       \
