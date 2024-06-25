@@ -31,12 +31,11 @@ void Lighthouse::awake()
 
 void Lighthouse::update()
 {
-
+    m_has_keeper_exited_this_frame = false;
     if (m_is_keeeper_inside && !m_has_keeper_entered_this_frame && Input::input->get_key_down(GLFW_KEY_SPACE))
     {
         exit();
     }
-
     m_has_keeper_entered_this_frame = false;
 }
 
@@ -81,9 +80,14 @@ bool Lighthouse::is_keeper_inside() const
     return m_is_keeeper_inside;
 }
 
+bool Lighthouse::check_if_keeper_is_inside() const
+{
+    return m_is_keeeper_inside;
+}
+
 void Lighthouse::enter()
 {
-    if (m_is_keeeper_inside)
+    if (m_is_keeeper_inside || m_has_keeper_exited_this_frame)
     {
         Debug::log("We are already inside a lighthouse, why is this being called?", DebugType::Error);
         return;
@@ -116,6 +120,7 @@ void Lighthouse::exit()
     }
 
     m_is_keeeper_inside = false;
+    m_has_keeper_exited_this_frame = true;
     light.lock()->set_enabled(false);
     light.lock()->spotlight.lock()->set_enabled(false);
     light.lock()->entity->get_component<Sphere>()->set_enabled(false);

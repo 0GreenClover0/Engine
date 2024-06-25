@@ -25,6 +25,7 @@ public:
     void turn_light(bool const value) const;
     bool is_keeper_inside() const;
 
+    bool check_if_keeper_is_inside() const;
     void enter();
     void exit();
 
@@ -41,6 +42,7 @@ public:
     bool is_entering_lighthouse_allowed = true;
 
 private:
-    bool m_is_keeeper_inside = true;
     bool m_has_keeper_entered_this_frame = false;
+    bool m_has_keeper_exited_this_frame = false;
+    bool m_is_keeeper_inside = true;
 };

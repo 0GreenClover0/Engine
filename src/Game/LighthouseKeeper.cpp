@@ -347,7 +347,7 @@ void LighthouseKeeper::handle_input()
         {
             show_interaction_prompt(lighthouse_transform->get_position(), WorldPromptType::Lighthouse);
 
-            if (Input::input->get_key_down(GLFW_KEY_SPACE) && lighthouse.lock()->is_entering_lighthouse_allowed)
+            if (Input::input->get_key_down(GLFW_KEY_SPACE) && lighthouse.lock()->is_entering_lighthouse_allowed && !lighthouse.lock()->check_if_keeper_is_inside())
             {
                 lighthouse_locked->enter();
                 entity->destroy_immediate();
