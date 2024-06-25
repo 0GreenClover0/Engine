@@ -47,21 +47,24 @@ void LighthouseKeeper::update()
     i32 horizontal = 0;
     i32 vertical = 0;
 
-    if (Input::input->get_key(GLFW_KEY_D))
+    if (m_is_driving)
     {
-        horizontal++;
-    }
-    if (Input::input->get_key(GLFW_KEY_A))
-    {
-        horizontal--;
-    }
-    if (Input::input->get_key(GLFW_KEY_W))
-    {
-        vertical--;
-    }
-    if (Input::input->get_key(GLFW_KEY_S))
-    {
-        vertical++;
+        if (Input::input->get_key(GLFW_KEY_D))
+        {
+            horizontal++;
+        }
+        if (Input::input->get_key(GLFW_KEY_A))
+        {
+            horizontal--;
+        }
+        if (Input::input->get_key(GLFW_KEY_W))
+        {
+            vertical--;
+        }
+        if (Input::input->get_key(GLFW_KEY_S))
+        {
+            vertical++;
+        }
     }
 
     m_speed.x += horizontal * acceleration;
@@ -138,8 +141,10 @@ void LighthouseKeeper::update()
     {
         package.lock()->transform->set_euler_angles({m_package_tilt_x, 0.0f, m_package_tilt_z});
     }
-
-    handle_input();
+    if (m_is_driving)
+    {
+        handle_input();
+    }
 }
 
 #if EDITOR
@@ -179,6 +184,11 @@ void LighthouseKeeper::on_destroyed()
     hide_interaction_prompt(WorldPromptType::Factory);
     hide_interaction_prompt(WorldPromptType::Port);
     hide_interaction_prompt(WorldPromptType::Lighthouse);
+}
+
+void LighthouseKeeper::set_is_driving(bool const is_driving)
+{
+    m_is_driving = is_driving;
 }
 
 bool LighthouseKeeper::is_inside_port() const

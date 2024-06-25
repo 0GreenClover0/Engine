@@ -45,15 +45,16 @@ void Lighthouse::start()
     if (GameController::get_instance()->get_level_number() != 0)
     {
         keeper = SceneSerializer::load_prefab("Keeper");
-        keeper->get_component<LighthouseKeeper>()->set_enabled(false);
+        keeper->get_component<LighthouseKeeper>()->set_is_driving(false);
         keeper->get_component<Collider2D>()->set_enabled(false);
+        keeper->get_component<Floater>()->set_enabled(false);
         keeper->get_component<Model>()->model_path = "./res/models/hovercraft/hovercraft.gltf";
         keeper->get_component<Model>()->reprepare();
         keeper->get_component<LighthouseKeeper>()->port = LevelController::get_instance()->port;
         keeper->get_component<LighthouseKeeper>()->lighthouse = std::static_pointer_cast<Lighthouse>(shared_from_this());
         keeper->get_component<Floater>()->water = water;
         keeper->transform->set_parent(entity->transform);
-        keeper->transform->set_local_position(spawn_position.lock()->transform->get_local_position());
+        keeper->transform->set_local_position(spawn_position.lock()->transform->get_local_position() + glm::vec3(0.0f, 0.07f, 0.0f));
     }
 }
 
@@ -94,7 +95,7 @@ void Lighthouse::enter()
     light.lock()->spotlight.lock()->set_enabled(true);
     light.lock()->entity->get_component<Sphere>()->set_enabled(true);
 
-    keeper->get_component<LighthouseKeeper>()->set_enabled(false);
+    keeper->get_component<LighthouseKeeper>()->set_is_driving(false);
     keeper->get_component<Model>()->model_path = "./res/models/hovercraft/hovercraft.gltf";
     keeper->get_component<Model>()->reprepare();
 
@@ -119,7 +120,7 @@ void Lighthouse::exit()
     light.lock()->spotlight.lock()->set_enabled(false);
     light.lock()->entity->get_component<Sphere>()->set_enabled(false);
 
-    keeper->get_component<LighthouseKeeper>()->set_enabled(true);
+    keeper->get_component<LighthouseKeeper>()->set_is_driving(true);
     keeper->get_component<Collider2D>()->set_enabled(true);
     keeper->get_component<Model>()->model_path = "./res/models/keeperInHovercraft/keeper.gltf";
     keeper->get_component<Model>()->reprepare();
