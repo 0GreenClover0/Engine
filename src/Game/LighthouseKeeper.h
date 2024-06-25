@@ -33,6 +33,7 @@ public:
 
     virtual void on_destroyed() override;
 
+    void set_is_driving(bool const is_driving);
     bool is_inside_port() const;
     void set_is_inside_port(bool const value);
 
@@ -72,4 +73,5 @@ private:
     std::weak_ptr<Entity> m_port_prompt = {};
     std::weak_ptr<Entity> m_lighthouse_prompt = {};
     std::weak_ptr<Entity> m_factory_prompt = {};
+    bool m_is_driving = false;
 };
