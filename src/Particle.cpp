@@ -226,7 +226,6 @@ void Particle::move() const
     {
         auto const rot = entity->transform->get_euler_angles();
         glm::vec3 const d_rot = {0.0f, 0.0f, delta_time * m_velocity.y * 50.0f};
-
         entity->transform->set_euler_angles(rot + d_rot * m_rotation_direction);
     }
 }
