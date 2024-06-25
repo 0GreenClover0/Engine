@@ -55,9 +55,10 @@ void DebugInputController::update()
         std::cout << "Gamma: " + std::to_string(exposure) << std::endl;
     }
 
-    if (Input::input->get_key_down(GLFW_KEY_LEFT_CONTROL) && Input::input->get_key_down(GLFW_KEY_S))
+    if (Input::input->get_key(GLFW_KEY_LEFT_CONTROL) && Input::input->get_key_down(GLFW_KEY_S))
     {
-        //scene_serializer->serialize_this_entity(m_selected_entity.lock(), m_prefab_path + m_selected_entity.lock()->name + ".txt");
+        SceneSerializer::save_prefab(entity, "DEBUGINPUTCONTROLLER");
+        std::cout << "Successfully saved DebugInputController" << std::endl;
     }
 }
 
