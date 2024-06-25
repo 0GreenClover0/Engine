@@ -6,6 +6,7 @@
 #include "LevelController.h"
 #include "ScreenText.h"
 #include "ShipSpawner.h"
+#include "Sound.h"
 
 #include <GLFW/glfw3.h>
 
@@ -132,6 +133,8 @@ void Player::update()
             }
 
             LevelController::get_instance()->entity->get_component<ShipSpawner>()->burn_out_all_ships(true);
+            auto flash_sound = Sound::play_sound("./res/audio/flash.wav");
+            flash_sound->set_volume(1.0f);
         }
     }
 
