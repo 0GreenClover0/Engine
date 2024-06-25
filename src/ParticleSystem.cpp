@@ -41,7 +41,7 @@ void ParticleSystem::draw_editor()
     // Dropdown list
     std::array const particle_types = {"Default", "Prompt", "Snow"};
     i32 current_item_index = static_cast<i32>(particle_type);
-    if (ImGui::Combo("Floe Button Type", &current_item_index, particle_types.data(), particle_types.size()))
+    if (ImGui::Combo("Particle type", &current_item_index, particle_types.data(), particle_types.size()))
     {
         particle_type = static_cast<ParticleType>(current_item_index);
     }
@@ -59,6 +59,7 @@ void ParticleSystem::draw_editor()
     ImGui::DragFloat("Emitter size", &emitter_bounds, 0.1f, 0.0f, FLT_MAX);
     ImGui::DragIntRange2("Spawn count", &min_spawn_count, &max_spawn_count, 1, 0, INT_MAX);
     ImGui::Checkbox("Simulate in world space", &m_simulate_in_world_space);
+    ImGui::Checkbox("Play once", &play_once);
     ImGui::Checkbox("Rotate particles", &rotate_particles);
     ImGui::Checkbox("Spawn instantly", &spawn_instantly);
 }
@@ -116,8 +117,10 @@ void ParticleSystem::update_system()
             i -= 1;
             m_random_spawn_count -= 1;
         }
-    }
 
+        if (play_once)
+            entity->destroy_immediate();
+    }
     m_time_counter += delta_time;
 }
 
