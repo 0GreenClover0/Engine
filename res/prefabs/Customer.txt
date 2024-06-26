@@ -1,7 +1,7 @@
 Scene: Untitled
 Entities:
   - Entity: Customer
-    guid: 458a3f9bfc26c1dc1b03c8c5d0ac1c19d1232ed4d45961e24292298e2c671211
+    guid: 4559c7bde7b065c40e33299916b0c6c1facecdfeeea8608e33bba9b7349910b3
     Name: Customer
     TransformComponent:
       Translation: [0, 0, 0.0820000023]
@@ -11,16 +11,16 @@ Entities:
         guid: ""
     Components:
       - ComponentName: CustomerComponent
-        guid: ac7e4e481e666d8b76b4740e434d2b461c3a24015a43007d992cb9d5c7e353db
+        guid: 7eafdffcd0e34c2dcd8cca97c75136c7b5147511ceb35ce041940ac5db30a9ce
         custom_name: ""
         collider:
-          guid: c60366ec851a1f35f862bbfa3126669d1014ba3c23702b52931a241bd1008285
+          guid: 5fbe854f7fb5a9885d4e0677d25711516ad2ba1f076a3e88990e3c381924b518
         left_hand:
-          guid: 73617450066b2c7006a8d7dbd9c69f93c059fba5a54bdb62de141538646748cc
+          guid: f758cc351d041e52d9eabbd94aa79cd0d03db4d98e70b38e1a8bd85529957d04
         right_hand:
-          guid: d58251923688eda078c78fcc21146ab162cfff60662501a1be563eb34c09ce99
+          guid: ea797b2370b0766dae1f44872270a59e06b14fe3fd25349710a971bb4c22d220
       - ComponentName: Collider2DComponent
-        guid: c60366ec851a1f35f862bbfa3126669d1014ba3c23702b52931a241bd1008285
+        guid: 5fbe854f7fb5a9885d4e0677d25711516ad2ba1f076a3e88990e3c381924b518
         custom_name: ""
         offset: [0, 0]
         is_trigger: false
@@ -32,17 +32,17 @@ Entities:
         drag: 0.00999999978
         velocity: [0, 0]
   - Entity: Child
-    guid: a74d47606beca6f504df38195d6fe0415acddb7ab403cefdbc8489fe31dad984
+    guid: 7a5491a979eac25fe8c2b632f7014c9a1d8aa47428e29a0f8a52fe28ba8451d4
     Name: Child
     TransformComponent:
       Translation: [0, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: 458a3f9bfc26c1dc1b03c8c5d0ac1c19d1232ed4d45961e24292298e2c671211
+        guid: 4559c7bde7b065c40e33299916b0c6c1facecdfeeea8608e33bba9b7349910b3
     Components:
       - ComponentName: ModelComponent
-        guid: 44b06cf7baeab44c31964b40c4ca84665fdb7c207c8114b9d045698dbecf8a2d
+        guid: 8497ff764bee3f4c2acb74bea96940c1e43f917949a448339a06ad95d92ec279
         custom_name: ""
         model_path: ./res/models\penguin\body.gltf
         material:
@@ -54,18 +54,19 @@ Entities:
           RenderOrder: 0
           NeedsForward: false
           CastsShadows: true
+          IsBillboard: false
   - Entity: Left
-    guid: 73617450066b2c7006a8d7dbd9c69f93c059fba5a54bdb62de141538646748cc
+    guid: f758cc351d041e52d9eabbd94aa79cd0d03db4d98e70b38e1a8bd85529957d04
     Name: Left
     TransformComponent:
       Translation: [0, 0.172000006, -0.0820000023]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: a74d47606beca6f504df38195d6fe0415acddb7ab403cefdbc8489fe31dad984
+        guid: 7a5491a979eac25fe8c2b632f7014c9a1d8aa47428e29a0f8a52fe28ba8451d4
     Components:
       - ComponentName: ModelComponent
-        guid: ecb6b7b819cfbe8b578ad7904336c94711b2f8dcec0ccca6350fafd3f0f019ef
+        guid: 247d0545cff8171a8f593c072de103f0649ad8e44ed69a9f3fd5dd05d8cc1b5b
         custom_name: ""
         model_path: ./res/models\penguin\wing_left.gltf
         material:
@@ -77,18 +78,19 @@ Entities:
           RenderOrder: 0
           NeedsForward: false
           CastsShadows: true
+          IsBillboard: false
   - Entity: Right
-    guid: d58251923688eda078c78fcc21146ab162cfff60662501a1be563eb34c09ce99
+    guid: ea797b2370b0766dae1f44872270a59e06b14fe3fd25349710a971bb4c22d220
     Name: Right
     TransformComponent:
       Translation: [0, 0.172000006, 0.0820000023]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: a74d47606beca6f504df38195d6fe0415acddb7ab403cefdbc8489fe31dad984
+        guid: 7a5491a979eac25fe8c2b632f7014c9a1d8aa47428e29a0f8a52fe28ba8451d4
     Components:
       - ComponentName: ModelComponent
-        guid: 9968acab040d9a2a79d454239bf2ddb954b0c1bc70dd9b306d3ed65143bb746d
+        guid: d1c1df9a9847801358f00c18cfa1622532ee1bb968f6ae649d8f7d76e76b7532
         custom_name: ""
         model_path: ./res/models\penguin\wing_right.gltf
         material:
@@ -100,3 +102,4 @@ Entities:
           RenderOrder: 0
           NeedsForward: false
           CastsShadows: true
+          IsBillboard: false
