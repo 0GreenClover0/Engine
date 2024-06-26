@@ -71,6 +71,11 @@ void Player::awake()
 
 void Player::update()
 {
+    if (LevelController::get_instance() != nullptr)
+        m_map_food_helper_variable = LevelController::get_instance()->map_food;
+
+    Debug::log(std::to_string(food) + "/" + std::to_string(m_map_food_helper_variable));
+
     if (LevelController::get_instance() != nullptr
         && LevelController::get_instance()->entity->get_component<ShipSpawner>()->should_decal_be_drawn())
     {
@@ -116,6 +121,21 @@ void Player::update()
         Debug::log("LEVELS ScreenText is not attached. UI is not working properly.", DebugType::Error);
     }
 
+    if (!progress_bar.expired())
+    {
+        auto const pb = progress_bar.lock();
+        if (m_map_food_helper_variable == 0)
+            pb->transform->set_local_scale({1.0f, 1.0f, 1.0f});
+        else
+            pb->transform->set_local_scale(
+                {std::clamp(static_cast<float>(food) / static_cast<float>(m_map_food_helper_variable), 0.0f, 1.0f), 1.0f, 1.0f});
+    }
+    else
+    {
+        Debug::log("PROGRESS BAR Entity is not attached. UI is not working properly.", DebugType::Error);
+    }
+
+    // TODO: CHANGE TO RMB!
     if (Input::input->get_key_down(GLFW_MOUSE_BUTTON_RIGHT))
     {
         if (flash > 0 && glm::epsilonEqual(flash_counter, 0.0f, 0.0001f))
@@ -155,6 +175,7 @@ void Player::draw_editor()
     ImGuiEx::draw_ptr("Flashes UI Text", flashes_text);
     ImGuiEx::draw_ptr("Level UI Text", level_text);
     ImGuiEx::draw_ptr("Clock UI Text", clock_text);
+    ImGuiEx::draw_ptr("Food progress bar", progress_bar);
 
     if (Engine::is_game_running())
     {

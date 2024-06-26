@@ -607,6 +607,7 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "flashes_text" << YAML::Value << player->flashes_text;
         out << YAML::Key << "level_text" << YAML::Value << player->level_text;
         out << YAML::Key << "clock_text" << YAML::Value << player->clock_text;
+        out << YAML::Key << "progress_bar" << YAML::Value << player->progress_bar;
         out << YAML::EndMap;
     }
     else if (auto const popup = std::dynamic_pointer_cast<class Popup>(component); popup != nullptr)
@@ -2184,6 +2185,10 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             if (component["clock_text"].IsDefined())
             {
                 deserialized_component->clock_text = component["clock_text"].as<std::weak_ptr<ScreenText>>();
+            }
+            if (component["progress_bar"].IsDefined())
+            {
+                deserialized_component->progress_bar = component["progress_bar"].as<std::weak_ptr<Entity>>();
             }
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();

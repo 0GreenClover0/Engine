@@ -28,6 +28,7 @@ public:
     std::weak_ptr<ScreenText> flashes_text = {};
     std::weak_ptr<ScreenText> level_text = {};
     std::weak_ptr<ScreenText> clock_text = {};
+    std::weak_ptr<Entity> progress_bar = {};
 
     NON_SERIALIZED
     i32 food = 0;
@@ -36,7 +37,7 @@ public:
     NON_SERIALIZED
     float flash_counter = 0.0f;
     NON_SERIALIZED
-    i32 packages = 2;
+    i32 packages = 0;
     NON_SERIALIZED
     i32 lighthouse_level = 0;
     NON_SERIALIZED
@@ -54,5 +55,7 @@ public:
 private:
     inline static std::shared_ptr<Player> m_instance;
 
+    float progress_bar_value = 0.0f;
+    u32 m_map_food_helper_variable = 0;
     float const m_flash_time = 8.3f;
 };

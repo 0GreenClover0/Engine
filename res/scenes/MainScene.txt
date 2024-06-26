@@ -30,6 +30,8 @@ Entities:
           guid: 12199d4dfd10623da45a02686e2621959d48f9813a16ebbb9fc3684e13a037e4
         clock_text:
           guid: a65b8fd647209b2e69eeb27adf3bf3a9c5d9f78046a48dc366c1b0863ee73631
+        progress_bar:
+          guid: 96b30ac04fa6d1b82db5568348b74757f4c3c5a7e048f0ee698baf107a4daad5
       - ComponentName: PathComponent
         guid: 8994e67f0136d6cc6a1b9a82cfe7f88c98b173bf279ba59752fbc83fc5c6116e
         custom_name: ""
@@ -379,8 +381,6 @@ Entities:
       - ComponentName: DirectionalLightComponent
         guid: 21bca7ade2acc48ef4657f6513c02a5ceda6bb95a8997d9b703c25a7fbeb8351
         custom_name: ""
-        gamma: 1.27999997
-        exposure: 1.22000003
         ambient: [0.104691222, 0.0543209799, 0.222222209]
         diffuse: [0.0901234522, 0.330452949, 0.811111093]
         specular: [0.337499976, 0.557500005, 0.75]
@@ -627,3 +627,62 @@ Entities:
         lifetime_1: 0.5
         lifetime_2: 0.699999988
         m_simulate_in_world_space: true
+  - Entity: Background
+    guid: 42395279f98b6120160573964dd903bbfa87d5a02a58b2d6be30c12a6ba6a1d9
+    Name: Background
+    TransformComponent:
+      Translation: [0, -1.17458057, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 0.171560526, 0.999999702]
+      Parent:
+        guid: 7c59c2404ab679476ab6f7cba5fd996d67d742009eb1c8d913abd91ba7d8bc9c
+    Components:
+      - ComponentName: PanelComponent
+        guid: 3f6b3b5d51ea1a39a54e7a86b426a7a76ff11622ede31bc135f9f10dbd5ec9f3
+        custom_name: ""
+        background_path: ./res/textures/black.jpg
+        material:
+          Shader:
+            VertexPath: ./res/shaders/ui.hlsl
+            FragmentPath: ./res/shaders/ui.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 3001
+          NeedsForward: true
+          CastsShadows: false
+          IsBillboard: false
+  - Entity: Parent
+    guid: 96b30ac04fa6d1b82db5568348b74757f4c3c5a7e048f0ee698baf107a4daad5
+    Name: Parent
+    TransformComponent:
+      Translation: [-1, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: 42395279f98b6120160573964dd903bbfa87d5a02a58b2d6be30c12a6ba6a1d9
+    Components:
+      []
+  - Entity: Fill
+    guid: a164e33d02fc394e829f8bb896914ddc0edf5b37ed607c7df4ffce941ff2d514
+    Name: Fill
+    TransformComponent:
+      Translation: [1, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: 96b30ac04fa6d1b82db5568348b74757f4c3c5a7e048f0ee698baf107a4daad5
+    Components:
+      - ComponentName: PanelComponent
+        guid: 614cfbdaeed363347aef44a3624afb975c0c9413d673e40550d5eca95c547c8b
+        custom_name: ""
+        background_path: ./res/textures/white.jpg
+        material:
+          Shader:
+            VertexPath: ./res/shaders/ui.hlsl
+            FragmentPath: ./res/shaders/ui.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 3001
+          NeedsForward: true
+          CastsShadows: false
+          IsBillboard: false
