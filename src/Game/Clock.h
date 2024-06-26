@@ -22,7 +22,7 @@ public:
     virtual void draw_editor() override;
 #endif
 
-    void update_visibility() const;
+    void update_visibility(bool const hide = false) const;
 
 private:
     inline static std::shared_ptr<Clock> m_instance;

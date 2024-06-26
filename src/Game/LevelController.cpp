@@ -2,6 +2,7 @@
 
 #include "AK/AK.h"
 #include "AK/Math.h"
+#include "Clock.h"
 #include "EndScreen.h"
 #include "Entity.h"
 #include "GameController.h"
@@ -63,6 +64,7 @@ void LevelController::awake()
 
     set_can_tick(true);
     on_lighthouse_upgraded();
+    Clock::get_instance()->update_visibility();
 }
 
 void LevelController::update()
@@ -174,7 +176,7 @@ void LevelController::update()
                 LevelController::get_instance()->on_lighthouse_upgraded();
             }
         }
-        else 
+        else
         {
             spawn_mouse_prompt_if_needed();
             if (Input::input->get_key_down(GLFW_MOUSE_BUTTON_LEFT))
