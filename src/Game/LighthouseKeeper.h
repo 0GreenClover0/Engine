@@ -2,6 +2,7 @@
 
 #include "Component.h"
 #include "Input.h"
+#include "ParticleSystem.h"
 
 class Port;
 class Factory;
@@ -53,6 +54,8 @@ public:
 
     std::weak_ptr<Lighthouse> lighthouse = {};
     std::weak_ptr<Port> port = {};
+    std::weak_ptr<ParticleSystem> keeper_dust = {};
+    std::weak_ptr<ParticleSystem> keeper_splash = {};
 
     std::vector<std::weak_ptr<Entity>> packages = {};
 
