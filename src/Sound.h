@@ -32,6 +32,7 @@ public:
 
     virtual void reprepare() override;
 
+    // NOTE: Positional sounds automatically set their position to entity's position in Update.
     void set_position(glm::vec3 const& position);
     void play();
     void stop();
