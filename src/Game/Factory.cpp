@@ -52,7 +52,6 @@ bool Factory::interact()
         }
         else
         {
-            factory_light.lock()->set_flash(true);
             Player::get_instance()->upgrade_lighthouse();
             LevelController::get_instance()->check_tutorial_progress(TutorialProgressAction::WorkshopUpgraded);
 
