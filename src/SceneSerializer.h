@@ -35,6 +35,7 @@ public:
     void serialize(std::string const& file_path) const;
     bool deserialize(std::string const& file_path);
 
+    static void save_prefab(std::shared_ptr<Entity> const& entity, std::string const& prefab_name);
     static std::shared_ptr<Entity> load_prefab(std::string const& prefab_name);
 
 private:
