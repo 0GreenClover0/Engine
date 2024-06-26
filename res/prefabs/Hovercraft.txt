@@ -1,0 +1,41 @@
+Scene: Untitled
+Entities:
+  - Entity: Hovercraft
+    guid: afc6e1215f39fb69749fb4f565b78d83a3f34b4509dc4596fc99b8d2590e3aae
+    Name: Hovercraft
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+      Parent:
+        guid: ""
+    Components:
+      - ComponentName: ModelComponent
+        guid: 188eaaf45f23b9bd51968c6b574d31d56abdcc99faa8e8ea60eeb93697b58ee1
+        custom_name: ""
+        model_path: ./res/models/hovercraft/hovercraft.gltf
+        material:
+          Shader:
+            VertexPath: ./res/shaders/lit.hlsl
+            FragmentPath: ./res/shaders/lit.hlsl
+            GeometryPath: ""
+          Color: [1, 1, 1, 1]
+          RenderOrder: 0
+          NeedsForward: false
+          CastsShadows: true
+          IsBillboard: false
+      - ComponentName: HovercraftWithoutKeeperComponent
+        guid: 2e6090007b6f7eca526e0fd1909e42d9fbd82ec9dab8782dcec30f878b4eb3c9
+        custom_name: ""
+      - ComponentName: Collider2DComponent
+        guid: e8967bbc0a08fab664579c2b1f9994cb727f8506fe09ca7a34a81b5a20c74f90
+        custom_name: ""
+        offset: [0, 0]
+        is_trigger: false
+        is_static: false
+        collider_type: 1
+        width: 1
+        height: 1
+        radius: 0.100000001
+        drag: 0.00999999978
+        velocity: [0, 0]

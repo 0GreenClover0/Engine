@@ -47,24 +47,21 @@ void LighthouseKeeper::update()
     i32 horizontal = 0;
     i32 vertical = 0;
 
-    if (m_is_driving)
+    if (Input::input->get_key(GLFW_KEY_D))
     {
-        if (Input::input->get_key(GLFW_KEY_D))
-        {
-            horizontal++;
-        }
-        if (Input::input->get_key(GLFW_KEY_A))
-        {
-            horizontal--;
-        }
-        if (Input::input->get_key(GLFW_KEY_W))
-        {
-            vertical--;
-        }
-        if (Input::input->get_key(GLFW_KEY_S))
-        {
-            vertical++;
-        }
+        horizontal++;
+    }
+    if (Input::input->get_key(GLFW_KEY_A))
+    {
+        horizontal--;
+    }
+    if (Input::input->get_key(GLFW_KEY_W))
+    {
+        vertical--;
+    }
+    if (Input::input->get_key(GLFW_KEY_S))
+    {
+        vertical++;
     }
 
     m_speed.x += horizontal * acceleration;
@@ -141,10 +138,8 @@ void LighthouseKeeper::update()
     {
         package.lock()->transform->set_euler_angles({m_package_tilt_x, 0.0f, m_package_tilt_z});
     }
-    if (m_is_driving)
-    {
-        handle_input();
-    }
+
+    handle_input();
 }
 
 #if EDITOR
@@ -184,12 +179,6 @@ void LighthouseKeeper::on_destroyed()
     hide_interaction_prompt(WorldPromptType::Factory);
     hide_interaction_prompt(WorldPromptType::Port);
     hide_interaction_prompt(WorldPromptType::Lighthouse);
-}
-
-void LighthouseKeeper::set_is_driving(bool const is_driving)
-{
-    m_is_driving = is_driving;
-    deceleration = driving_deceleration;
 }
 
 bool LighthouseKeeper::is_inside_port() const
@@ -348,11 +337,10 @@ void LighthouseKeeper::handle_input()
         {
             show_interaction_prompt(lighthouse_transform->get_position(), WorldPromptType::Lighthouse);
 
-            if (Input::input->get_key_down(GLFW_KEY_SPACE) && lighthouse.lock()->is_entering_lighthouse_allowed && !lighthouse.lock()->check_if_keeper_is_inside())
+            if (Input::input->get_key_down(GLFW_KEY_SPACE) && lighthouse.lock()->is_entering_lighthouse_allowed)
             {
                 lighthouse_locked->enter();
                 entity->destroy_immediate();
-                deceleration = not_driving_deceleration;
                 hide_interaction_prompt(WorldPromptType::Lighthouse);
                 return;
             }

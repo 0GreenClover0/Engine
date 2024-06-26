@@ -27,13 +27,12 @@ public:
     virtual void draw_editor() override;
 #endif
 
-    void on_trigger_enter(std::shared_ptr<Collider2D> const& other);
+    virtual void on_trigger_enter(std::shared_ptr<Collider2D> const& other) override;
 
-    void on_trigger_exit(std::shared_ptr<Collider2D> const& other);
+    virtual void on_trigger_exit(std::shared_ptr<Collider2D> const& other) override;
 
     virtual void on_destroyed() override;
 
-    void set_is_driving(bool const is_driving);
     bool is_inside_port() const;
     void set_is_inside_port(bool const value);
 
@@ -73,8 +72,4 @@ private:
     std::weak_ptr<Entity> m_port_prompt = {};
     std::weak_ptr<Entity> m_lighthouse_prompt = {};
     std::weak_ptr<Entity> m_factory_prompt = {};
-    bool m_is_driving = false;
-
-    float driving_deceleration = 0.1f;
-    float not_driving_deceleration = 0.2f;
 };

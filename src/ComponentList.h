@@ -24,6 +24,7 @@
     ENUMERATE_COMPONENT(CustomerManager, "Customer Manager")                    \
     ENUMERATE_COMPONENT(Factory, "Factory")                                     \
     ENUMERATE_COMPONENT(GameController, "Game Controller")                      \
+    ENUMERATE_COMPONENT(HovercraftWithoutKeeper, "Hovercraft Without Keeper")   \
     ENUMERATE_COMPONENT(IceBound, "Ice Bound")                                  \
     ENUMERATE_COMPONENT(LevelController, "Level Controller")                    \
     ENUMERATE_COMPONENT(Lighthouse, "Lighthouse")                               \
