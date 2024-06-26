@@ -481,6 +481,10 @@ void Ship::update()
             maximum_speed = LevelController::get_instance()->ships_speed;
             break;
         }
+        if (in_port_state_change())
+        {
+            break;
+        }
         if (destroyed_state_change())
         {
             break;
