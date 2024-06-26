@@ -1,7 +1,7 @@
 Scene: Untitled
 Entities:
   - Entity: Level_5
-    guid: df24490ded1f143d88aa75c17aca9522e4d5a014016d05a450cd8b362a3fc67d
+    guid: a6344aec2533af6c72dc8ab06d0aecdefc1795ab3a8454708b914a04681571ae
     Name: Level_5
     TransformComponent:
       Translation: [0, 0, 0]
@@ -12,26 +12,26 @@ Entities:
     Components:
       []
   - Entity: Lighthouse
-    guid: 36a6ad8d01a1276a6a7a57661c8cd14499e76c81e640835a64adf0db599900f1
+    guid: 9dae6a5ed745d7034bd153331ee473a3c1f76dc5b3a0a71da3ed0396cb194409
     Name: Lighthouse
     TransformComponent:
       Translation: [5.79210758, 0.0700715408, -1.76493061]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: df24490ded1f143d88aa75c17aca9522e4d5a014016d05a450cd8b362a3fc67d
+        guid: a6344aec2533af6c72dc8ab06d0aecdefc1795ab3a8454708b914a04681571ae
     Components:
       - ComponentName: LighthouseComponent
-        guid: 2a4572341a7e9f1df2cbd169fdf9a941422357dc55c291de2145c320208a2db3
+        guid: 3b19697e31fda3e539d9b1e00b6eab4a5dd5dc6b989fad0ab3f5fef52d07ad48
         custom_name: ""
         light:
-          guid: e4bbf92e013c2e56ebdf85750403a3e522f7b703215753e4d3341f53c9c5c229
+          guid: f76fbaf2e0da823794fdb6799026f924bce44280d2490e7be59493023e560175
         water:
-          guid: 2661990f4639801e607161668b7af5262d8185a1e19142c7bd71ad1ed3ff58dd
+          guid: 754e9f6360e523e191989f013d8b0c99c7fcde6932458d39ec2a7730c946684e
         spawn_position:
-          guid: ba6e0410d6a771c0b73f4e47925f895d068bf6073a9fda563049a39398489c85
+          guid: 1a0748784fd8a722e316ae369df617e389db4e5d714f5217018b56cf86b40fc4
       - ComponentName: Collider2DComponent
-        guid: 724a0f340ed46699376e017638d1e785cf665934989a0a38d6ab9be390f58aec
+        guid: 71231c706d7d12bf9a367d93424e5e623af033aa96622a03db96669c86010abb
         custom_name: ""
         offset: [0, 0]
         is_trigger: false
@@ -43,17 +43,17 @@ Entities:
         drag: 0.00999999978
         velocity: [0, 0]
   - Entity: Spotlight
-    guid: bf30d0da50912e8e28debf6eccf8a1a34d32d3efbecfe196f38c7f7cdb0212aa
+    guid: 0c499cdf7c702eb64276cc0a556c71f0bc85385bb26421295aea0e1fbf839573
     Name: Spotlight
     TransformComponent:
       Translation: [0, 0.879999995, 0]
       Rotation: [-4.53499222, 64.0360184, 4.87529462e-07]
       Scale: [1, 1, 1]
       Parent:
-        guid: 36a6ad8d01a1276a6a7a57661c8cd14499e76c81e640835a64adf0db599900f1
+        guid: 9dae6a5ed745d7034bd153331ee473a3c1f76dc5b3a0a71da3ed0396cb194409
     Components:
       - ComponentName: SpotLightComponent
-        guid: 865bd34b4a804f6e21e4c0d0cc7a71d15b06a8fe312ddbfe1201e3c0a4e329bd
+        guid: 427f00c4184079e4847b9b74743fa3ece861c0f98431c357b427c8981ff5994b
         custom_name: ""
         constant: 1
         linear: 0.0900000036
@@ -71,28 +71,28 @@ Entities:
         m_light_world_size: 0.5
         m_light_frustum_width: 30
   - Entity: Spawn
-    guid: ba6e0410d6a771c0b73f4e47925f895d068bf6073a9fda563049a39398489c85
+    guid: 1a0748784fd8a722e316ae369df617e389db4e5d714f5217018b56cf86b40fc4
     Name: Spawn
     TransformComponent:
       Translation: [0, 0, 0.400000006]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: 36a6ad8d01a1276a6a7a57661c8cd14499e76c81e640835a64adf0db599900f1
+        guid: 9dae6a5ed745d7034bd153331ee473a3c1f76dc5b3a0a71da3ed0396cb194409
     Components:
       []
   - Entity: Model
-    guid: 0db6063c95ef58d003ab1636cfe558ad5df60cb974e03e19f525d2d6c4c50aae
+    guid: 91f0c366e8e0b8c65aa70f7028ef73dd86a4671a84e3f8863ce12c56d4525958
     Name: Model
     TransformComponent:
       Translation: [0, 0, 0]
       Rotation: [0, -90, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: 36a6ad8d01a1276a6a7a57661c8cd14499e76c81e640835a64adf0db599900f1
+        guid: 9dae6a5ed745d7034bd153331ee473a3c1f76dc5b3a0a71da3ed0396cb194409
     Components:
       - ComponentName: ModelComponent
-        guid: 012fac4596fc7a2f938d40d09816d09773c0b12bf5c986ce6e4827cf453a56ae
+        guid: b00acc4734eab33d5f7424a3e0a749fa8a21aa8336f0322428ab42a333a815eb
         custom_name: ""
         model_path: ./res/models\lighthouseNew\lighthouse.gltf
         material:
@@ -106,65 +106,65 @@ Entities:
           CastsShadows: true
           IsBillboard: false
   - Entity: Controller
-    guid: 6654451b443a03badc0229af00aa9786572268b56221becd3a57da9e4fbb53c1
+    guid: e6e5dd9ea95ad70c4ff20b110f3e232b31b699ffaf58f7fa58bebf1af7adb6a5
     Name: Controller
     TransformComponent:
       Translation: [0, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: df24490ded1f143d88aa75c17aca9522e4d5a014016d05a450cd8b362a3fc67d
+        guid: a6344aec2533af6c72dc8ab06d0aecdefc1795ab3a8454708b914a04681571ae
     Components:
       - ComponentName: LevelControllerComponent
-        guid: 4e256eaa4770c8422c654ab2a33eacb1c11d0dee58a2f5c5eea171db3d3e1926
+        guid: c376fae381c0c357cbe9368f2a112dbd800caadd9dc842c1598b9db0a2dd3e0d
         custom_name: ""
         map_time: 180
-        map_food: 25
+        map_food: 20
         maximum_lighthouse_level: 6
         factories:
-          - guid: dc9b54b9dc7a496a6d440287690f3dfbe2406d7d15fb41bbf356faaa55ef54a6
-          - guid: 54fb88e05b12578bd66f9eb67f05fc28e81f81949bac112497eb8c8e4002561a
+          - guid: 2818b7a5e3ad13b72b3399df02cce5ae7c2136c7ed66823de4e69be19761d2be
+          - guid: 8b4e6c57a0ef6ada3d050ea96a1e6cbde09f4291ab29789ba48a46fb5a87a554
         port:
-          guid: ddaf40ea5354b866b4bf88f1d91d78660f612e703242fae5ebc8db7fad660d07
+          guid: 267ba9c04009bf462830ff83608e27bfc810adcafaa6e18fd3eacd6c9607747d
         lighthouse:
-          guid: 2a4572341a7e9f1df2cbd169fdf9a941422357dc55c291de2145c320208a2db3
+          guid: 3b19697e31fda3e539d9b1e00b6eab4a5dd5dc6b989fad0ab3f5fef52d07ad48
         customer_manager:
-          guid: 004b30f2694cce78095c21d32dd7840740a695f8a3cd414d2de6bf72f39bc28c
+          guid: 3c40abe24cd6a72d66126ee83cbc202a05e12b8d82d647af89bdfd34a1a295f0
         playfield_width: 6
         playfield_additional_width: 2
         playfield_height: 5.19999981
         playfield_y_shift: -2.0999999
         ships_limit_curve:
-          guid: 8e27f57c552c0bc987b8b6d4eaf2a78583803427023967073a77fdfa1a97fcea
+          guid: abb31e1a52075d3a0149120dd630d35cc49dc82767830ea4f49742191bde298f
         ships_limit: 0
         ships_speed_curve:
-          guid: ac1587602ded6697b167cdf0c154dbf8dde4a62c74b1d90c0f4dfdcc4f1b6b93
+          guid: ae0cd0092747dea229279fcef3c6e8c4c24ec58a57b97113024a989a45256734
         ships_speed: 0
         ships_range_curve:
-          guid: cc3042177e2858eb3fc5b92a0b53607dffa19c7858b59b734eed9409b85681a3
+          guid: afb642fcde80c805f84189d8da2b3864740489d94a7760db88d6a74b2d7a88e7
         ships_turn_curve:
-          guid: 93a558ed01d5c77d49edc2a3487789a5de218c7a0e1d4d68aa636eae852e53ab
+          guid: 0d74db2b8171816a0466eea5405d2c5dbac81bfb3f7cfe9fd58b8d95d283d76c
         ships_additional_speed_curve:
-          guid: 68676b0bbb61e77c33001e02e6f59b76e9ee01421383a1d4cf3b0a768c2b74dc
+          guid: f45af6c7429699f729eb14c890dfc7df2f66272dceafdbbe001d9cd3633f52dc
         pirates_in_control_curve:
-          guid: 72ad69b642042fa08100561f1741beb0c892a2300efb71798e1c2c26048c4a8e
+          guid: 5680994109dbfeef53be79d9606d26e34c604e8a3474e41250685b713857f6c2
         is_tutorial: false
         starting_packages: 0
         tutorial_level: 1
       - ComponentName: ShipSpawnerComponent
-        guid: 2a2353792f05d5db05f8765f4040c1bc339437eb0cdfc20764fead1c24fb906b
+        guid: dc2621e56a35d91ab5c1907fa59aeee2ecb37d32df003f9de45d3cc257f1f3d6
         custom_name: ""
         paths:
-          - guid: 0dde0b6838c7a29297f20d8967afb1706acbfb944e300427e4632016d77f6412
-          - guid: 03cac1837ccc131c1f9e662be1935c2c95fc08da05de2b6d2b8dd7c43f1b9595
-          - guid: 0dde0b6838c7a29297f20d8967afb1706acbfb944e300427e4632016d77f6412
-          - guid: 03cac1837ccc131c1f9e662be1935c2c95fc08da05de2b6d2b8dd7c43f1b9595
+          - guid: d396291b948e41a6cf7664852df4835ca102037e4be663f81008cd48f15b9e9f
+          - guid: c237831c234caf23a383020870d6ba8b4677a9735cbe8be67e6c76d11b332fe1
+          - guid: d396291b948e41a6cf7664852df4835ca102037e4be663f81008cd48f15b9e9f
+          - guid: c237831c234caf23a383020870d6ba8b4677a9735cbe8be67e6c76d11b332fe1
         floaters_manager:
-          guid: 8c1746a2befb934c9e98e7d91d7663e1efdf576269843f9bf5f43ce98cc877bb
+          guid: f8091790cbc1210d6bdb5b6f3fbf4d8f2477b5e768e2592396c0d4fd0a00e383
         light:
-          guid: e4bbf92e013c2e56ebdf85750403a3e522f7b703215753e4d3341f53c9c5c229
-        last_chance_food_threshold: 3
-        last_chance_time_threshold: 40
+          guid: f76fbaf2e0da823794fdb6799026f924bce44280d2490e7be59493023e560175
+        last_chance_food_threshold: 5
+        last_chance_time_threshold: 60
         main_event_spawn:
           []
         backup_spawn:
@@ -176,14 +176,15 @@ Entities:
           - [[1], 0]
           - [[0], 0]
           - [[3], 0]
+          - [[4], 0]
       - ComponentName: PathComponent
-        guid: 0dde0b6838c7a29297f20d8967afb1706acbfb944e300427e4632016d77f6412
+        guid: d396291b948e41a6cf7664852df4835ca102037e4be663f81008cd48f15b9e9f
         custom_name: ""
         points:
           - [-7.68955421, -2.41220474]
           - [-8.33705997, 2.15056062]
       - ComponentName: CurveComponent
-        guid: 8e27f57c552c0bc987b8b6d4eaf2a78583803427023967073a77fdfa1a97fcea
+        guid: abb31e1a52075d3a0149120dd630d35cc49dc82767830ea4f49742191bde298f
         custom_name: Ships limit
         points:
           - [0, 2]
@@ -191,66 +192,66 @@ Entities:
           - [0.600000024, 6]
           - [1, 6]
       - ComponentName: CurveComponent
-        guid: ac1587602ded6697b167cdf0c154dbf8dde4a62c74b1d90c0f4dfdcc4f1b6b93
+        guid: ae0cd0092747dea229279fcef3c6e8c4c24ec58a57b97113024a989a45256734
         custom_name: Ships speed
         points:
           - [0, 0.560000002]
           - [0.221183807, 0.560000002]
           - [1, 0.639999986]
       - ComponentName: CurveComponent
-        guid: cc3042177e2858eb3fc5b92a0b53607dffa19c7858b59b734eed9409b85681a3
+        guid: afb642fcde80c805f84189d8da2b3864740489d94a7760db88d6a74b2d7a88e7
         custom_name: Ships range
         points:
           - [0, 1.5]
           - [0.600000024, 1.79999995]
           - [1, 2.5]
       - ComponentName: CurveComponent
-        guid: 93a558ed01d5c77d49edc2a3487789a5de218c7a0e1d4d68aa636eae852e53ab
+        guid: 0d74db2b8171816a0466eea5405d2c5dbac81bfb3f7cfe9fd58b8d95d283d76c
         custom_name: Ships turn
         points:
           - [0, 10]
           - [0.200000003, 15]
           - [1, 30]
       - ComponentName: CurveComponent
-        guid: 68676b0bbb61e77c33001e02e6f59b76e9ee01421383a1d4cf3b0a768c2b74dc
+        guid: f45af6c7429699f729eb14c890dfc7df2f66272dceafdbbe001d9cd3633f52dc
         custom_name: Ships additional speed
         points:
           - [0, 0.00999999978]
           - [0.200000003, 0.0199999996]
           - [1, 0.100000001]
       - ComponentName: CurveComponent
-        guid: 72ad69b642042fa08100561f1741beb0c892a2300efb71798e1c2c26048c4a8e
+        guid: 5680994109dbfeef53be79d9606d26e34c604e8a3474e41250685b713857f6c2
         custom_name: Pirates in control
         points:
           - [0, 0.360000014]
           - [1, 1.65999997]
       - ComponentName: PathComponent
-        guid: 03cac1837ccc131c1f9e662be1935c2c95fc08da05de2b6d2b8dd7c43f1b9595
+        guid: c237831c234caf23a383020870d6ba8b4677a9735cbe8be67e6c76d11b332fe1
         custom_name: ""
         points:
           - [5.29730463, -6.9972024]
           - [7.69891977, -6.94388819]
           - [7.79128981, -5.77096796]
   - Entity: Port
-    guid: 2d05fc6115c6acc1f877e33cf23763df5cfb5f0e8fc222e5470225817883d3b5
+    guid: 90155a9d1cb83a9e2b839d8e18d7dd79c6a3cbf7b7e6c1d24eef1f513613402e
     Name: Port
     TransformComponent:
       Translation: [2.14540195, -0.370000005, 1.85338163]
       Rotation: [0, 1.44523287, 0]
       Scale: [1, 0.774765253, 1]
       Parent:
-        guid: df24490ded1f143d88aa75c17aca9522e4d5a014016d05a450cd8b362a3fc67d
+        guid: a6344aec2533af6c72dc8ab06d0aecdefc1795ab3a8454708b914a04681571ae
     Components:
       - ComponentName: PortComponent
-        guid: ddaf40ea5354b866b4bf88f1d91d78660f612e703242fae5ebc8db7fad660d07
+        guid: 267ba9c04009bf462830ff83608e27bfc810adcafaa6e18fd3eacd6c9607747d
         custom_name: ""
         lights:
-          - guid: dc2d07f52d8ccb683d6bf61d299657275628ed805b806befb1ddddc92098bc98
-          - guid: 938bf75ffdd9ffd595207c712846ce805e578f2e4f1737a5f6b55f68c7121bf1
-          - guid: 5f3f28fa90686e14b459d748e44e9189a729669ee5137870ab2c073c7086e739
-          - guid: 0f30337a82cf61b483398cc1b94b526a326e9110f66643b872dd830659c07b58
+          - guid: ffff166c3e8e7d9921fbe609e14a65c4393938ec981d9acd8db0da6baa29404b
+          - guid: a27f3e8ab2f4f6780b03372a9e172250be0b3117345a48a72faf7c390dbe90f5
+          - guid: 312b0a4385bbd0bb869b536567715fe5ba0579e0fce89c4970ab421a48e235f2
+          - guid: 37968c099dbead9b7af0e20d4be087301b7d22dd97fba3d5a2784ef1856e3c9f
       - ComponentName: Collider2DComponent
-        guid: 20110af898863153e2e379ef8c6bca5ff4731c6a6095c4ad7491e2ca32133ca0
+        guid: de923a6733971244fd1ca32fc5a012a618485f25dac89443d690aba928c68a69
         custom_name: ""
         offset: [0, 0]
         is_trigger: true
@@ -262,17 +263,17 @@ Entities:
         drag: 0.00999999978
         velocity: [0, 0]
   - Entity: LightUL
-    guid: dc2d07f52d8ccb683d6bf61d299657275628ed805b806befb1ddddc92098bc98
+    guid: ffff166c3e8e7d9921fbe609e14a65c4393938ec981d9acd8db0da6baa29404b
     Name: LightUL
     TransformComponent:
       Translation: [-1, 0.5, -1.25]
       Rotation: [1.33734989, 0, 13.2793512]
       Scale: [1, 1, 1]
       Parent:
-        guid: 2d05fc6115c6acc1f877e33cf23763df5cfb5f0e8fc222e5470225817883d3b5
+        guid: 90155a9d1cb83a9e2b839d8e18d7dd79c6a3cbf7b7e6c1d24eef1f513613402e
     Components:
       - ComponentName: ModelComponent
-        guid: 64940f912e4fb54dcb153fbd6185b2bc5190f6ab4b529ea7704d73bf4daf0503
+        guid: a25de4ba89232ab8dc2f22d2bcf562a50dbb44c1eec2a9e81e3a56dbf8a5b0e0
         custom_name: ""
         model_path: ./res/models\buoy\light_buoy.gltf
         material:
@@ -286,7 +287,7 @@ Entities:
           CastsShadows: true
           IsBillboard: false
       - ComponentName: FloaterComponent
-        guid: b3d1ae8788ded552a99390c63c90ffb742f1fca904654b3d5249b39be3943863
+        guid: 4b15819847f0533ab909b854911ca1dad4e1619aa1857e1b5b14d0b2aaed96a3
         custom_name: ""
         sink: 0.00999999978
         side_floaters_offset: 0.100000001
@@ -294,9 +295,9 @@ Entities:
         forward_rotation_strength: 15
         forward_floaters_offest: 0.100000001
         water:
-          guid: 2661990f4639801e607161668b7af5262d8185a1e19142c7bd71ad1ed3ff58dd
+          guid: 754e9f6360e523e191989f013d8b0c99c7fcde6932458d39ec2a7730c946684e
       - ComponentName: PointLightComponent
-        guid: 6e929c019c508d072856e932a28253c80ede8fa45a744f6d5819adc447c23f47
+        guid: f53648d7c3ed3d08eacadfccbe046f857dad900854707bcde3944069f0d56550
         custom_name: ""
         constant: 1
         linear: 10
@@ -311,17 +312,17 @@ Entities:
         m_light_world_size: 0.5
         m_light_frustum_width: 30
   - Entity: Child
-    guid: 3ff955baf48a687ed94255b11ac03b0995198cdc844c066a2841f674170e54d5
+    guid: b3e38bb73527c81e791cbbad7ef793c634a6389f45d1a18b1e363cc736431b5d
     Name: Child
     TransformComponent:
       Translation: [0, 0.487125933, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: dc2d07f52d8ccb683d6bf61d299657275628ed805b806befb1ddddc92098bc98
+        guid: ffff166c3e8e7d9921fbe609e14a65c4393938ec981d9acd8db0da6baa29404b
     Components:
       - ComponentName: PointLightComponent
-        guid: 98cca8d4c7395be51a5c861313a5f3ad9355da5bc567b698388762fd1550cbe4
+        guid: c728af686725b55902f6371015468db99b23cf07406fe718cb6151733022811c
         custom_name: ""
         constant: 1
         linear: 1.77499998
@@ -336,17 +337,17 @@ Entities:
         m_light_world_size: 0.5
         m_light_frustum_width: 30
   - Entity: LightUR
-    guid: 938bf75ffdd9ffd595207c712846ce805e578f2e4f1737a5f6b55f68c7121bf1
+    guid: a27f3e8ab2f4f6780b03372a9e172250be0b3117345a48a72faf7c390dbe90f5
     Name: LightUR
     TransformComponent:
       Translation: [1, 0.5, -1.25]
       Rotation: [1.33734989, 0, 13.2793512]
       Scale: [1, 1, 1]
       Parent:
-        guid: 2d05fc6115c6acc1f877e33cf23763df5cfb5f0e8fc222e5470225817883d3b5
+        guid: 90155a9d1cb83a9e2b839d8e18d7dd79c6a3cbf7b7e6c1d24eef1f513613402e
     Components:
       - ComponentName: ModelComponent
-        guid: a5d4a2bec1335646c6ea4ebd7810cb3d1f3f5db85988e3fd57986521de77af77
+        guid: 9ea8b66b165838e55d7ec958dabfffdc980b4d0d7a3719d62622c11ca34edc72
         custom_name: ""
         model_path: ./res/models\buoy\light_buoy.gltf
         material:
@@ -360,7 +361,7 @@ Entities:
           CastsShadows: true
           IsBillboard: false
       - ComponentName: FloaterComponent
-        guid: feda94449f5674ebdcf2acb1f00914254e0bde87e57316e6e3ca7484054d0bac
+        guid: 2c2c7a09083185f190c72f177b2acf07745bebecbbfdd7d4b097d0f2be0db699
         custom_name: ""
         sink: 0.00999999978
         side_floaters_offset: 0.100000001
@@ -368,9 +369,9 @@ Entities:
         forward_rotation_strength: 15
         forward_floaters_offest: 0.100000001
         water:
-          guid: 2661990f4639801e607161668b7af5262d8185a1e19142c7bd71ad1ed3ff58dd
+          guid: 754e9f6360e523e191989f013d8b0c99c7fcde6932458d39ec2a7730c946684e
       - ComponentName: PointLightComponent
-        guid: 182132f7955c84ce19482c6eaec46386f0569b38c9c05bd4b191906f85a0f7b8
+        guid: 48c5e29651a4b8b036d69336245cb0df1ad971159aad7e245435312678cf11e5
         custom_name: ""
         constant: 1
         linear: 10
@@ -385,17 +386,17 @@ Entities:
         m_light_world_size: 0.5
         m_light_frustum_width: 30
   - Entity: Child
-    guid: 6f893a4b85b5ec7a56f6b0a333f5267c9af4edf6b6efe69e2700085833941629
+    guid: 3c0c5e30f04119295d3061f2dd5b7d009a22a8cffb32120c95b1ba9a2d125e6a
     Name: Child
     TransformComponent:
       Translation: [0, 0.487125933, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: 938bf75ffdd9ffd595207c712846ce805e578f2e4f1737a5f6b55f68c7121bf1
+        guid: a27f3e8ab2f4f6780b03372a9e172250be0b3117345a48a72faf7c390dbe90f5
     Components:
       - ComponentName: PointLightComponent
-        guid: 41969a91f1c891ccdc725f00cb6d571c30e8dfdad61d5c3d7aeb00dfcd3a1569
+        guid: 68282fe49c0fadc6764c07966b831c9af0afcb60ee49a55fe40a1b8e87da4001
         custom_name: ""
         constant: 1
         linear: 1.77499998
@@ -410,17 +411,17 @@ Entities:
         m_light_world_size: 0.5
         m_light_frustum_width: 30
   - Entity: LightBL
-    guid: 5f3f28fa90686e14b459d748e44e9189a729669ee5137870ab2c073c7086e739
+    guid: 312b0a4385bbd0bb869b536567715fe5ba0579e0fce89c4970ab421a48e235f2
     Name: LightBL
     TransformComponent:
       Translation: [-1, 0.5, 1.25]
       Rotation: [1.33734989, 0, 13.2793512]
       Scale: [1, 1, 1]
       Parent:
-        guid: 2d05fc6115c6acc1f877e33cf23763df5cfb5f0e8fc222e5470225817883d3b5
+        guid: 90155a9d1cb83a9e2b839d8e18d7dd79c6a3cbf7b7e6c1d24eef1f513613402e
     Components:
       - ComponentName: ModelComponent
-        guid: aa14bcb58d8d99656e075af70c444997bd843d5ebb7ac618791bf809dc0aa5f5
+        guid: cbdfbfe3c6f0b8f8cbab78a76eab8f7f3c26f17778cc4e2ac9b9f22a091df610
         custom_name: ""
         model_path: ./res/models\buoy\light_buoy.gltf
         material:
@@ -434,7 +435,7 @@ Entities:
           CastsShadows: true
           IsBillboard: false
       - ComponentName: FloaterComponent
-        guid: d57a20911c31fc0ba1aac0b8921e7fbf3e3af97d512b77fdaae7f418934727df
+        guid: 9a1557092943913bfb6d153b0096f16075faa7463204acf0bb3405ebd1f7cb8b
         custom_name: ""
         sink: 0.00999999978
         side_floaters_offset: 0.100000001
@@ -442,9 +443,9 @@ Entities:
         forward_rotation_strength: 15
         forward_floaters_offest: 0.100000001
         water:
-          guid: 2661990f4639801e607161668b7af5262d8185a1e19142c7bd71ad1ed3ff58dd
+          guid: 754e9f6360e523e191989f013d8b0c99c7fcde6932458d39ec2a7730c946684e
       - ComponentName: PointLightComponent
-        guid: 0e438a621f90f379eeb0348d0e54c898339c128a4ce0abed540adb895f6b597a
+        guid: 481b9f23220e685ea4a7c2f96397a6e3fdc54a3823d29ecd01a2a982fcb21274
         custom_name: ""
         constant: 1
         linear: 10
@@ -459,17 +460,17 @@ Entities:
         m_light_world_size: 0.5
         m_light_frustum_width: 30
   - Entity: Child
-    guid: 6904f7d465870879debb079ac456dae703d24ad1c10d8784d396f180bc980ff9
+    guid: 8178e162b0318119fd4a5f538262bdb38543bc85f9e3fdbc592151dd020d7478
     Name: Child
     TransformComponent:
       Translation: [0, 0.487125933, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: 5f3f28fa90686e14b459d748e44e9189a729669ee5137870ab2c073c7086e739
+        guid: 312b0a4385bbd0bb869b536567715fe5ba0579e0fce89c4970ab421a48e235f2
     Components:
       - ComponentName: PointLightComponent
-        guid: bf1ecdf5557baaf50a5101feb1472721a101ace48a1fb54de3f76d5df2e326a3
+        guid: 236e27259aa0b19f117287592d4b800309c893bd00a33e0988a7fc7f65c06c5b
         custom_name: ""
         constant: 1
         linear: 1.77499998
@@ -484,17 +485,17 @@ Entities:
         m_light_world_size: 0.5
         m_light_frustum_width: 30
   - Entity: LightBR
-    guid: 0f30337a82cf61b483398cc1b94b526a326e9110f66643b872dd830659c07b58
+    guid: 37968c099dbead9b7af0e20d4be087301b7d22dd97fba3d5a2784ef1856e3c9f
     Name: LightBR
     TransformComponent:
       Translation: [1, 0.5, 1.25]
       Rotation: [1.33734989, 0, 13.2793512]
       Scale: [1, 1, 1]
       Parent:
-        guid: 2d05fc6115c6acc1f877e33cf23763df5cfb5f0e8fc222e5470225817883d3b5
+        guid: 90155a9d1cb83a9e2b839d8e18d7dd79c6a3cbf7b7e6c1d24eef1f513613402e
     Components:
       - ComponentName: ModelComponent
-        guid: d8c16ef5fff659b578cbf6d641bd7fa85388e254a8e10147a00ab7e6ef52ab68
+        guid: 6b800d0d219784bf30eae19f818036926bfd2bd6b8393e645c114cc6a509502d
         custom_name: ""
         model_path: ./res/models\buoy\light_buoy.gltf
         material:
@@ -508,7 +509,7 @@ Entities:
           CastsShadows: true
           IsBillboard: false
       - ComponentName: FloaterComponent
-        guid: f0ce6f43ece747996d14f9723a2977dcf90d8b47d61029deced8329a4c94a669
+        guid: 948eec3249529f6b564146d308e51e97e3c5a9ee24277676765d75e141553657
         custom_name: ""
         sink: 0.00999999978
         side_floaters_offset: 0.100000001
@@ -516,9 +517,9 @@ Entities:
         forward_rotation_strength: 15
         forward_floaters_offest: 0.100000001
         water:
-          guid: 2661990f4639801e607161668b7af5262d8185a1e19142c7bd71ad1ed3ff58dd
+          guid: 754e9f6360e523e191989f013d8b0c99c7fcde6932458d39ec2a7730c946684e
       - ComponentName: PointLightComponent
-        guid: 3e1b3de36c3e18f9c9f62b8a3deba9ae8456bb56a0e06fa0f3ad74e6dd772b49
+        guid: f5c3d6822df189452efe9e330fa27028c66d7bfec14be137c0f05b1010d6e0df
         custom_name: ""
         constant: 1
         linear: 10
@@ -533,17 +534,17 @@ Entities:
         m_light_world_size: 0.5
         m_light_frustum_width: 30
   - Entity: Child
-    guid: 47798d7e59da333ce0e35c54628ca6c1c5dd8e1caa3458ba996996f17ec06444
+    guid: 22bdd15ee9995aefee9e33b2cc55a560f1b0f7d1cad6e7314c79cf1e5e482990
     Name: Child
     TransformComponent:
       Translation: [0, 0.487125933, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: 0f30337a82cf61b483398cc1b94b526a326e9110f66643b872dd830659c07b58
+        guid: 37968c099dbead9b7af0e20d4be087301b7d22dd97fba3d5a2784ef1856e3c9f
     Components:
       - ComponentName: PointLightComponent
-        guid: 6e635ab4d6b791fffa086bacc4c48585374aeccbde702163611a2586b2039db6
+        guid: 4c88410444f5dc7eab91bf5a4fa3067565633187ab4f2d56a53f4ff32bb33e54
         custom_name: ""
         constant: 1
         linear: 1.77499998
@@ -558,31 +559,31 @@ Entities:
         m_light_world_size: 0.5
         m_light_frustum_width: 30
   - Entity: Ice
-    guid: 70531fa77f3700e2041a776231e8e7b97d010d68b0bd98ed7fe37f33021aedb9
+    guid: 516a65b465faac7d20fe9e2860f460e12cc77265873f9f77869b53e6a955eb66
     Name: Ice
     TransformComponent:
       Translation: [0, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: df24490ded1f143d88aa75c17aca9522e4d5a014016d05a450cd8b362a3fc67d
+        guid: a6344aec2533af6c72dc8ab06d0aecdefc1795ab3a8454708b914a04681571ae
     Components:
       []
   - Entity: Floe
-    guid: 16613480d9363d81921ca03c87f0d26b51b794bc1812bdf9609c3d9868a15201
+    guid: df37199ccf1aaa988fa20bdab54578ad8c5602496b13b934f21e32d226015d97
     Name: Floe
     TransformComponent:
       Translation: [-5.85377741, 0, -6.18707657]
       Rotation: [0, 8.41541481, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: 70531fa77f3700e2041a776231e8e7b97d010d68b0bd98ed7fe37f33021aedb9
+        guid: 516a65b465faac7d20fe9e2860f460e12cc77265873f9f77869b53e6a955eb66
     Components:
       - ComponentName: IceBoundComponent
-        guid: 24882b8000ce127e813a8de3b9d011a9e3bbff64864f2f36e03ba5958e38238c
+        guid: 9a97a6e937809538829ea031e74c713e049a876aafd43feab4306b7f3cac26f4
         custom_name: ""
       - ComponentName: Collider2DComponent
-        guid: e9f0b7f808331c9fb03c4e1725b3d7284f7ccff9aea0563aa9e500dac06c6769
+        guid: 3b709371a3bfba6e69dba6bcbd9ea44cfd537958baf69c4b3f04d554177c9a0a
         custom_name: ""
         offset: [0, 0]
         is_trigger: true
@@ -594,7 +595,7 @@ Entities:
         drag: 0.00999999978
         velocity: [0, 0]
       - ComponentName: ModelComponent
-        guid: 5cfefc43b3c87c89b3f096d51e326ff8e42afa897ba2cf809e48e3cfb1aaacd1
+        guid: 663327c9d2bf6a040e419c04fbcd0a11411ac703b2bb12be500f81231a064371
         custom_name: ""
         model_path: ./res/models/iceIslands/s_4.gltf
         material:
@@ -608,20 +609,20 @@ Entities:
           CastsShadows: true
           IsBillboard: false
   - Entity: Floe
-    guid: 3f8d2d2cc6723c6861f964192f10fe6494119a3cd29950e7a01f70902dd912c1
+    guid: 3b5377db5ecaa5b8a4e18e2fd9af747388d443cf262ed0a305239072643d748b
     Name: Floe
     TransformComponent:
       Translation: [-6.81148958, -0.000182827964, 3.54673409]
       Rotation: [0, -27.7898045, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: 70531fa77f3700e2041a776231e8e7b97d010d68b0bd98ed7fe37f33021aedb9
+        guid: 516a65b465faac7d20fe9e2860f460e12cc77265873f9f77869b53e6a955eb66
     Components:
       - ComponentName: IceBoundComponent
-        guid: 46acfdfbddf11b9ce382f2188dd23c66228d19de59f8f6f9e26f3403cdd41026
+        guid: 5a3a5867cb181196d43d2754f7f3f20862f0d4149a8dfb61b2b11fbab09386b3
         custom_name: ""
       - ComponentName: Collider2DComponent
-        guid: a42d92b85be09c160b36bd5860d69ef5bb24a30b05015c348d3367a228a88cf1
+        guid: f55b7109ad5a2558731c7beb579daf53ba09b5032e1184f0b4b886d810c0806b
         custom_name: ""
         offset: [-0.200000003, 0.300000012]
         is_trigger: true
@@ -633,7 +634,7 @@ Entities:
         drag: 0.00999999978
         velocity: [0, 0]
       - ComponentName: ModelComponent
-        guid: 41b8da7f349fa4ce931517e7c5fd8be9ffbeb950fa2810cd33935dcd5534d091
+        guid: 4e31081027d828a903cf49bc4f846eda7a4139d78f4de4fcb06b9056bb8752b4
         custom_name: ""
         model_path: ./res/models/iceIslands/s_3.gltf
         material:
@@ -647,20 +648,20 @@ Entities:
           CastsShadows: true
           IsBillboard: false
   - Entity: Floe
-    guid: d3dc1db6c51b218b3301e85fc7a437b9ccec60302d356e667436bfdc1b6e1a65
+    guid: 2cfeafef52c31d0458aafd9d7a76329ef5b538a7ebd6fb6dc20c653115ca47c4
     Name: Floe
     TransformComponent:
       Translation: [1.989434, -6.10351562e-05, -8.04767895]
       Rotation: [0, 43.7936707, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: 70531fa77f3700e2041a776231e8e7b97d010d68b0bd98ed7fe37f33021aedb9
+        guid: 516a65b465faac7d20fe9e2860f460e12cc77265873f9f77869b53e6a955eb66
     Components:
       - ComponentName: IceBoundComponent
-        guid: 9e04e5f49ea622440c34f55e4784957c6b2f83faff575a2d4370952923a46a47
+        guid: ce605b2cef886e295a562c15768ad83ed14ecf84ceaebd6c16d7dfcbf258c1ec
         custom_name: ""
       - ComponentName: Collider2DComponent
-        guid: b034081d1e43f68ba22e836fd51e7c0649d4d1c05a64917b23581e0c682d77a1
+        guid: fdade9b000d76c4f0893d504df840d323ca87d6f9ec392c099532d64cbbcd824
         custom_name: ""
         offset: [0, 0.100000001]
         is_trigger: true
@@ -672,7 +673,7 @@ Entities:
         drag: 0.00999999978
         velocity: [0, 0]
       - ComponentName: ModelComponent
-        guid: c41fbf6206563e928f6473d4eb3903b4b3c46e376930a52e69d7b07b77b4cec2
+        guid: 765406925277bec41dd67bb1628401933c336f1bddbf98d625f2853cbcccbe66
         custom_name: ""
         model_path: ./res/models/iceIslands/c_7.gltf
         material:
@@ -686,20 +687,20 @@ Entities:
           CastsShadows: true
           IsBillboard: false
   - Entity: Floe
-    guid: 12e0e1853e2346cfa971e1b1ba2def3f9691fe8e9e60ebe04d17bf19a4d0390a
+    guid: c04411e70222eb520e60742ff3a984bf8505294ef5b6e5b37f94271fd4316691
     Name: Floe
     TransformComponent:
       Translation: [9.63052559, -6.10351562e-05, -3.30742741]
       Rotation: [0, 43.7936707, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: 70531fa77f3700e2041a776231e8e7b97d010d68b0bd98ed7fe37f33021aedb9
+        guid: 516a65b465faac7d20fe9e2860f460e12cc77265873f9f77869b53e6a955eb66
     Components:
       - ComponentName: IceBoundComponent
-        guid: 74c9b804223f6c85e22aff43be062ab7222e99e571e4e65801b4c38f6fe0e2f0
+        guid: 79769140125af262caa171f0741a7cd824a12d9d7c2d2b1b50215563f1881248
         custom_name: ""
       - ComponentName: Collider2DComponent
-        guid: b786c6a2bf202d5903f5c206007455f81a8a35648c6f7897f5d87cede16510a3
+        guid: d2b066a123a0e85ef8120fc880e54a2f31922988bb3df48c0367b70ca6afcb4d
         custom_name: ""
         offset: [0, 0.100000001]
         is_trigger: true
@@ -711,7 +712,7 @@ Entities:
         drag: 0.00999999978
         velocity: [0, 0]
       - ComponentName: ModelComponent
-        guid: e921866e8455cb00c065a4108894816678ce59d35910ee034de099f3fa0c2617
+        guid: fb92e1877f24a2d700ba863b91851218a7bf428d3bcd4441669edafacbc31db1
         custom_name: ""
         model_path: ./res/models/iceIslands/c_7.gltf
         material:
@@ -725,20 +726,20 @@ Entities:
           CastsShadows: true
           IsBillboard: false
   - Entity: Floe
-    guid: f9fb8cfc3526aeadf7b76f8bb9efdad8c1d149e46868eae5a9760d9bc686150c
+    guid: eb4a234a7ecde6aee87c6b89f3766f19633d993d17c71f0117f91249f5286295
     Name: Floe
     TransformComponent:
       Translation: [6.40254259, -6.17630867e-05, -1.26640236]
       Rotation: [0, 26.3695679, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: 70531fa77f3700e2041a776231e8e7b97d010d68b0bd98ed7fe37f33021aedb9
+        guid: 516a65b465faac7d20fe9e2860f460e12cc77265873f9f77869b53e6a955eb66
     Components:
       - ComponentName: IceBoundComponent
-        guid: 9609175a60a70779520990b863473eb37f81647039487b4d64833b76c7bbaf30
+        guid: 7bcc2e3ed98975804e19b3bcfb8ed682103578175bfdb91b5fddc4a0c7ef7f2b
         custom_name: ""
       - ComponentName: Collider2DComponent
-        guid: ac025bc6ea8283b2f87cd66a2fcd88077d3b672ac04554f2d094677815d7f911
+        guid: c0b157cdcc87f2d79dee7748a910bf65f3f27194fa7893556c40b6edfdc1e805
         custom_name: ""
         offset: [-0.100000001, 0.140000001]
         is_trigger: true
@@ -750,7 +751,7 @@ Entities:
         drag: 0.00999999978
         velocity: [0, 0]
       - ComponentName: ModelComponent
-        guid: 302f3410568fb7f5e3ae16c79aac3e9fc9c9e0a78954f80c68bb02446c7239bd
+        guid: a9109f4a2241b981d0e3a66fe8928740e68744d03b0d217ac8add8dda3bd8ac6
         custom_name: ""
         model_path: ./res/models/iceIslands/s_3.gltf
         material:
@@ -764,20 +765,20 @@ Entities:
           CastsShadows: true
           IsBillboard: false
   - Entity: Floe
-    guid: fac3281badf674d9da22206c6c04fa93e6fc9b01470d1f727baedbe8ebec1a1d
+    guid: 03829f1e9003908a8b3c308f5cd18a27b7a8e83b5a82130708d44c6116e7025f
     Name: Floe
     TransformComponent:
       Translation: [-0.694358945, -6.18528429e-05, -5.52384806]
       Rotation: [0, 39.2073898, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: 70531fa77f3700e2041a776231e8e7b97d010d68b0bd98ed7fe37f33021aedb9
+        guid: 516a65b465faac7d20fe9e2860f460e12cc77265873f9f77869b53e6a955eb66
     Components:
       - ComponentName: IceBoundComponent
-        guid: b8d8ab3a15b98c63cf85c4b8f1617990a280908e6664136fdb7422f33a37ce95
+        guid: c1e88f1fe0dcfeb4977d9894e7944c6fb7198626ea371e7d8919e247c34d3c75
         custom_name: ""
       - ComponentName: Collider2DComponent
-        guid: 8ebb0a6733c8de617c39b5f387783c3762b5d381141038f8b4c915f88616874b
+        guid: a744ba35495fff4267b22f06520992d6dacc62d4814d8df5fc6108b084c0ab45
         custom_name: ""
         offset: [-0.100000001, 0.140000001]
         is_trigger: true
@@ -789,7 +790,7 @@ Entities:
         drag: 0.00999999978
         velocity: [0, 0]
       - ComponentName: ModelComponent
-        guid: 4d52b798340e94d00403209522376c563896213e3496b0b09750e44b63dc5e36
+        guid: 70767d8cf7604229738601de9cf3e8ac697249f66d2ce6a820c1868e0501ce62
         custom_name: ""
         model_path: ./res/models/iceIslands/s_3.gltf
         material:
@@ -803,20 +804,20 @@ Entities:
           CastsShadows: true
           IsBillboard: false
   - Entity: Floe
-    guid: 7188595fbcce764f133dcfd390a0fd4527d86c2bb7400499d14d2c6328977d4a
+    guid: 6f9f713ccfb65a96750f7dedd663af7ed312290cca269e76d29097993e2dc82a
     Name: Floe
     TransformComponent:
       Translation: [-1.14217138, -6.17963015e-05, -2.85800123]
       Rotation: [0, 65.7564468, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: 70531fa77f3700e2041a776231e8e7b97d010d68b0bd98ed7fe37f33021aedb9
+        guid: 516a65b465faac7d20fe9e2860f460e12cc77265873f9f77869b53e6a955eb66
     Components:
       - ComponentName: IceBoundComponent
-        guid: 1c977a2d543eb7caf3a307b0668a780df0945e4fc4485ec53dafef45470f547c
+        guid: cb0ef0d301f9ee6d5539590416431ab6dd1a0abc8b8990d33fad15892a293fea
         custom_name: ""
       - ComponentName: Collider2DComponent
-        guid: 1a3ce2fc46326ff332e4dcf9cc3c0d1fc57d3677de6a0eef2ce7cd2923afdda9
+        guid: 651acadf6bde8c7367a38e5d07deaff9a343f561361d8686affb1bcd50fa15db
         custom_name: ""
         offset: [0, 0]
         is_trigger: true
@@ -828,7 +829,7 @@ Entities:
         drag: 0.00999999978
         velocity: [0, 0]
       - ComponentName: ModelComponent
-        guid: ab07e257881e2d0d7dfe7e9995b4e7f57b76f9b37ba60d356272f375d40b5fbc
+        guid: 8532669380ef1a8fd70dc1c6b30f047f32aa745eba62ec66845ba83efa2012c3
         custom_name: ""
         model_path: ./res/models/iceIslands/s_1.gltf
         material:
@@ -842,20 +843,20 @@ Entities:
           CastsShadows: true
           IsBillboard: false
   - Entity: Floe
-    guid: ee6712c019b44343a16eb7d66ca4c8ec846a6e505b6a68a4d9b708092a0d6a4d
+    guid: 918b925097f70ed7670b8585c95ef9906618300fae41f5aefa8d620333f2bc3a
     Name: Floe
     TransformComponent:
       Translation: [6.75243235, 6.10351562e-05, 2.68649817]
       Rotation: [0, 8.41541481, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: 70531fa77f3700e2041a776231e8e7b97d010d68b0bd98ed7fe37f33021aedb9
+        guid: 516a65b465faac7d20fe9e2860f460e12cc77265873f9f77869b53e6a955eb66
     Components:
       - ComponentName: IceBoundComponent
-        guid: ef6b0b1c926ef826027b9bbe8c5421c030ce2ba5520f9802157b6d54312c8397
+        guid: e6f5af9cd2c4050b2dd40734d347ceb76ef428d8f2fec4b9f2ae66341ee34c6c
         custom_name: ""
       - ComponentName: Collider2DComponent
-        guid: 2e6022894eb306d61f4ed4658ee254dca9fe2f0419c8a2c5bc5ea6cc362acc79
+        guid: 3080be9f6120134a096a0bcb6c90e03952b0b731d8a06cd5e4205e668b9b2ed2
         custom_name: ""
         offset: [0, 0.100000001]
         is_trigger: true
@@ -867,7 +868,7 @@ Entities:
         drag: 0.00999999978
         velocity: [0, 0]
       - ComponentName: ModelComponent
-        guid: 38565286e1e8cbe1b52bb9666a91e12f43bc293159e5e37c707ea6b357685ad1
+        guid: c6687ea52bc7fcadc0ef84d74c9fde4ea11bc31b3042441d2e368355b5055f07
         custom_name: ""
         model_path: ./res/models/iceIslands/c_7.gltf
         material:
@@ -881,20 +882,20 @@ Entities:
           CastsShadows: true
           IsBillboard: false
   - Entity: Floe
-    guid: 23373d921832b8e4a3ad89c240b0702ad808b039b0b13826fefd5620899f7385
+    guid: f2cf1ebfaeb766c01ec78db5806e21dde55b5a94afc423965cd0693a0ecf807c
     Name: Floe
     TransformComponent:
       Translation: [-2.82122421, 6.10351562e-05, -3.52952337]
       Rotation: [0, 19.4206543, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: 70531fa77f3700e2041a776231e8e7b97d010d68b0bd98ed7fe37f33021aedb9
+        guid: 516a65b465faac7d20fe9e2860f460e12cc77265873f9f77869b53e6a955eb66
     Components:
       - ComponentName: IceBoundComponent
-        guid: 3f5ae8b4103916e26a479651db4c2b1848d71e79e8fe35204616d469e5336af0
+        guid: d5c5b5607821bbb0236b21cae2d5487d4aea729320bc40217de92297b2422dea
         custom_name: ""
       - ComponentName: Collider2DComponent
-        guid: 5ca0692b64582f6d80bc6c5d0f938d20b9a30218053958f6cbcc257254377a82
+        guid: 00c56c681c2420da42b8f6384910a22675fab47fd8904b58fc41b96941e5cf4a
         custom_name: ""
         offset: [0, 0]
         is_trigger: true
@@ -906,7 +907,7 @@ Entities:
         drag: 0.00999999978
         velocity: [0, 0]
       - ComponentName: ModelComponent
-        guid: 8c20493ed5a3197d4d747bf148a8db08592dfdfb4b5d2fb8e6a684b50ed7a3f7
+        guid: 8c162f694a0562485733af6e79499f331311ab6e0271782d50e41591228f2ab7
         custom_name: ""
         model_path: ./res/models/iceIslands/s_2.gltf
         material:
@@ -920,20 +921,20 @@ Entities:
           CastsShadows: true
           IsBillboard: false
   - Entity: Floe
-    guid: b19bb7c0d6a96a16ba309f7eae98e4f9cf7ea53189261812ee20c019b1d5ccbe
+    guid: 64e3fe6a77add717cc58a77488868f2c4971af8bda90148abb65b71d1e929fc9
     Name: Floe
     TransformComponent:
       Translation: [-4.26210737, 6.10351562e-05, -3.80755377]
       Rotation: [0, 19.4206562, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: 70531fa77f3700e2041a776231e8e7b97d010d68b0bd98ed7fe37f33021aedb9
+        guid: 516a65b465faac7d20fe9e2860f460e12cc77265873f9f77869b53e6a955eb66
     Components:
       - ComponentName: IceBoundComponent
-        guid: f8ddccbbed716e49bb48428ba7876b1b6c558dfe67f0af78a831ccfcdf1c7589
+        guid: 40056d367f7c600865ca830535a24d5385b6febc7e2a62480947568c017f6ec1
         custom_name: ""
       - ComponentName: Collider2DComponent
-        guid: 8417ad4e6689912ff056c37326972c1bd87781b430574b72b3e446ae70438941
+        guid: 84011e5462f5978c9edf3ae6e6168339a1baf9c7878d556796d287f5c459a413
         custom_name: ""
         offset: [0, 0]
         is_trigger: true
@@ -945,7 +946,7 @@ Entities:
         drag: 0.00999999978
         velocity: [0, 0]
       - ComponentName: ModelComponent
-        guid: 74e0a0c73df35a60af53656da9496d42e8132796e34bc842611ac8bc84387abd
+        guid: af1b8527b051339384ee5442f3c3fb027cc1d681ac30650de3f62c127b26d346
         custom_name: ""
         model_path: ./res/models/iceIslands/c_2.gltf
         material:
@@ -959,20 +960,20 @@ Entities:
           CastsShadows: true
           IsBillboard: false
   - Entity: Floe
-    guid: 61b09cb9b94449482cf82c3feb7d54dbe829ba869316536ce09345073fa03764
+    guid: 52d6cb87df484fd44927aa5749e51a46bd86b7890547f612ca71c4ca3f71c8a8
     Name: Floe
     TransformComponent:
       Translation: [-3.0970149, 6.10351562e-05, -5.05965614]
       Rotation: [0, 19.4206581, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: 70531fa77f3700e2041a776231e8e7b97d010d68b0bd98ed7fe37f33021aedb9
+        guid: 516a65b465faac7d20fe9e2860f460e12cc77265873f9f77869b53e6a955eb66
     Components:
       - ComponentName: IceBoundComponent
-        guid: 2d71a2333e78fd7b9b3021c8302034fa7d57be48af262d00d68870f4831ef5d7
+        guid: 79470edcfde3e30e083e40f4662caf17041b7cf6c72f7a9eaad83e635731ccb5
         custom_name: ""
       - ComponentName: Collider2DComponent
-        guid: 6dec7167ce9dca3161f3dd167879ce2919285b61f4fcddd11e9b3ae782a2e5d2
+        guid: a9420252c2bf0f51d0253e5e4b2b2f4e7211236c4cd6c164c0ae6d64dafb00b3
         custom_name: ""
         offset: [0, 0]
         is_trigger: true
@@ -984,7 +985,7 @@ Entities:
         drag: 0.00999999978
         velocity: [0, 0]
       - ComponentName: ModelComponent
-        guid: e66233704325782f4769529e83b88dbb3c40bac83e70f70096a4d00a95ebbd6a
+        guid: 6a820c317c0499caf8ae5b16d97b69cf54a24bbdef2e026316d121bffbed4773
         custom_name: ""
         model_path: ./res/models/iceIslands/c_1.gltf
         material:
@@ -998,20 +999,20 @@ Entities:
           CastsShadows: true
           IsBillboard: false
   - Entity: Floe
-    guid: 5abc0f398c30aa6697f7fb26deffd101e7418c43c80088add4bc7fa56297dad4
+    guid: 0db34a34aca3e310fc67c78cb55b72dbacc431110d74fc66d2a76e738908dd6e
     Name: Floe
     TransformComponent:
       Translation: [-4.73282862, 0.000122070312, 3.60173106]
       Rotation: [0, 19.42066, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: 70531fa77f3700e2041a776231e8e7b97d010d68b0bd98ed7fe37f33021aedb9
+        guid: 516a65b465faac7d20fe9e2860f460e12cc77265873f9f77869b53e6a955eb66
     Components:
       - ComponentName: IceBoundComponent
-        guid: dc28051025ab235f8e5ad8dfac8e3608aeef3fb6c93d4c30b1d08636be34dfb8
+        guid: 6adb9b1504519d059d9b2fd1c293d2a7bcf4798a514eacca125912b89780c7b4
         custom_name: ""
       - ComponentName: Collider2DComponent
-        guid: 0d72bb38ac5f466d30a95c9f7f09d540e777578530b9eb8845dfe2d4978fab08
+        guid: 7cc0df244b4984f63535b1c8f73d1b74fb56140a566b0f95c1503e5e60d2e662
         custom_name: ""
         offset: [0, 0]
         is_trigger: true
@@ -1023,7 +1024,7 @@ Entities:
         drag: 0.00999999978
         velocity: [0, 0]
       - ComponentName: ModelComponent
-        guid: a332018f856abb62e1d6889aed83be807b4e7eabbd57a56d27f68e76d4044d4b
+        guid: 999e24eec677aecff82e15b790c3f31480ca70d380efa815af8f246fce813cbe
         custom_name: ""
         model_path: ./res/models/iceIslands/c_1.gltf
         material:
@@ -1037,20 +1038,20 @@ Entities:
           CastsShadows: true
           IsBillboard: false
   - Entity: Floe
-    guid: ff935ef02629c6711a5a6830bfa3c7ec737a3183ac5c33636f20790ebb45715f
+    guid: bb6de6b5b4f8902ee000e4be18d6bd0ffd4bb565ba761072e3064e332f510ae0
     Name: Floe
     TransformComponent:
       Translation: [-3.60559273, 0.000122070312, 4.12223291]
       Rotation: [0, 19.420681, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: 70531fa77f3700e2041a776231e8e7b97d010d68b0bd98ed7fe37f33021aedb9
+        guid: 516a65b465faac7d20fe9e2860f460e12cc77265873f9f77869b53e6a955eb66
     Components:
       - ComponentName: IceBoundComponent
-        guid: 70e95fcd4c207e93e8e629cf5196fb0d5c11cb84d8466c6d9c508c1b3c014019
+        guid: 81d33cf993d5d503b2543ddeeb01bc28d4eb3e7006622fb389167ee6e30b44eb
         custom_name: ""
       - ComponentName: Collider2DComponent
-        guid: 49f91ada7db29945470c5cee24247d962db2e753140e49dfc3cbc5787a73ac24
+        guid: 37ea73a19f7e8a2f5867778143b96be8c17e744ff17af75336c3a0bf34b63808
         custom_name: ""
         offset: [0, 0]
         is_trigger: true
@@ -1062,7 +1063,7 @@ Entities:
         drag: 0.00999999978
         velocity: [0, 0]
       - ComponentName: ModelComponent
-        guid: fcbad83beaa6217001029acdcd184da39f87c1b7ff36cff2bfffdc59715c4cbf
+        guid: 169833dc7b9a163f4ebe535519242efe95549267f5897318275f0319b25f6d80
         custom_name: ""
         model_path: ./res/models/iceIslands/c_4.gltf
         material:
@@ -1076,20 +1077,20 @@ Entities:
           CastsShadows: true
           IsBillboard: false
   - Entity: Floe
-    guid: 1d5fdb2bea22c397d66984a63e852d82b37a5439b62b4b38fdacea3610560c3b
+    guid: 77720abc4e8bc8d0be10ee99db5ca42f5d1c4b46d2cb2be299fd62c260697470
     Name: Floe
     TransformComponent:
       Translation: [0.0514633954, -6.10351562e-05, 5.32339811]
       Rotation: [0, 8.88852596, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: 70531fa77f3700e2041a776231e8e7b97d010d68b0bd98ed7fe37f33021aedb9
+        guid: 516a65b465faac7d20fe9e2860f460e12cc77265873f9f77869b53e6a955eb66
     Components:
       - ComponentName: IceBoundComponent
-        guid: d6144fe4b4b6469a7acaab21ce63caffb031f581892193423e2a02f679b56f34
+        guid: 8525abe77c134cd311bb6f7ef81c2a04272c54d71418cf725a1b3f6217788e7a
         custom_name: ""
       - ComponentName: Collider2DComponent
-        guid: a9aa24b47bc255a08196064fd954adde5ba88a1dc19a79dc6d71a78c2485e885
+        guid: 4e9cd210787e7f551fb386fb30466e3cf286e878f99ebd39fe4a2d46ea4bb933
         custom_name: ""
         offset: [-0.100000001, 0]
         is_trigger: true
@@ -1101,7 +1102,7 @@ Entities:
         drag: 0.00999999978
         velocity: [0, 0]
       - ComponentName: ModelComponent
-        guid: 123c259094deb9b5ec64f9803575e3adae69dbb34ea90ac205e10c9c978c6229
+        guid: 7f966334d624b195adc561436505eabb1dcb3037b27b1050240bfecb459e56df
         custom_name: ""
         model_path: ./res/models/iceIslands/s_4.gltf
         material:
@@ -1115,20 +1116,20 @@ Entities:
           CastsShadows: true
           IsBillboard: false
   - Entity: Floe
-    guid: 23abd5a4d804fa81a2493cdc5e178719e18c6776751c33a3587dc29fc5e7a6e0
+    guid: 2326ed92b0d5420ba8a7b56b352b149d22b1f6f45409431ac104cc99843550e5
     Name: Floe
     TransformComponent:
       Translation: [-2.20592284, -6.10351562e-05, 3.84301686]
       Rotation: [0, 8.88852596, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: 70531fa77f3700e2041a776231e8e7b97d010d68b0bd98ed7fe37f33021aedb9
+        guid: 516a65b465faac7d20fe9e2860f460e12cc77265873f9f77869b53e6a955eb66
     Components:
       - ComponentName: IceBoundComponent
-        guid: 9700aa7d8c0c184e0672a807e728256a287f5fbd281c3635d1e4cc9f208c4d60
+        guid: 7e183b809d6a209778476ab59924318836b2edd2f943e5062b1a58d1ef75c5e6
         custom_name: ""
       - ComponentName: Collider2DComponent
-        guid: 7f5fa018f19a775533b9d541cebacb755c36cb8dde268a4aace18a6788d1b003
+        guid: cce3a626fddd621b1ecec1f6d81869134629d1f6010a91074b74d67d86f6697f
         custom_name: ""
         offset: [0, 0]
         is_trigger: true
@@ -1140,7 +1141,7 @@ Entities:
         drag: 0.00999999978
         velocity: [0, 0]
       - ComponentName: ModelComponent
-        guid: e8014e1549712be1a48443be8d1c10d1cafbdbdede6cddec6daa4eecb29d8a3c
+        guid: b0d49a7c1534c84f27f3af975e5e16686f0dba6b79a9c9f29307472221526f3c
         custom_name: ""
         model_path: ./res/models/iceIslands/s_1.gltf
         material:
@@ -1154,20 +1155,20 @@ Entities:
           CastsShadows: true
           IsBillboard: false
   - Entity: Floe
-    guid: d07011f6ef3e82c89c8175065adfeea63f6abf42f62de93b0b442a3f3f4edac2
+    guid: 135f1cd1ec1db3238bf4ebcee326fcf8bcf64716f30c4e399de89fa1c25792a6
     Name: Floe
     TransformComponent:
       Translation: [4.17990351, -6.17563637e-05, -0.962743282]
       Rotation: [0, 65.7564468, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: 70531fa77f3700e2041a776231e8e7b97d010d68b0bd98ed7fe37f33021aedb9
+        guid: 516a65b465faac7d20fe9e2860f460e12cc77265873f9f77869b53e6a955eb66
     Components:
       - ComponentName: IceBoundComponent
-        guid: 1753bd4618e2d94e14c7eeaf85baf20f152f6d92fde60fdae72897e4a5ede387
+        guid: c5e9c87da81d952961e109e676cb3b6e6d9ff1f6f62f99afee6b111371cadb21
         custom_name: ""
       - ComponentName: Collider2DComponent
-        guid: b8f2d9e157abb64e2e88bf094215d2001a5758be45087f0525442d72d5f2584f
+        guid: 685b42da0be57130741dac9471b44e8d12bacaf69a893dae64898c852af9b490
         custom_name: ""
         offset: [0, 0]
         is_trigger: true
@@ -1179,7 +1180,7 @@ Entities:
         drag: 0.00999999978
         velocity: [0, 0]
       - ComponentName: ModelComponent
-        guid: 0b1ec7e8600221d1c1e171bd977b5bd13e5c3b00a7ced75504bee62565bbb512
+        guid: ea34acb4a832f270def0ac96baba0ba44d2f9b0bc6adf93a3024a4adeadfe87f
         custom_name: ""
         model_path: ./res/models/iceIslands/c_1.gltf
         material:
@@ -1193,20 +1194,20 @@ Entities:
           CastsShadows: true
           IsBillboard: false
   - Entity: Floe
-    guid: bd270c1a189c96a101c039b9b0b47de5f05d13c7fc3065bffdbe41ba0a3eac05
+    guid: 005b17bff75208b647df8dff328a8bdabbcca3080792b24b84e4542c21f73681
     Name: Floe
     TransformComponent:
       Translation: [4.84982109, -6.17156693e-05, 0.968249798]
       Rotation: [0, 65.7564468, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: 70531fa77f3700e2041a776231e8e7b97d010d68b0bd98ed7fe37f33021aedb9
+        guid: 516a65b465faac7d20fe9e2860f460e12cc77265873f9f77869b53e6a955eb66
     Components:
       - ComponentName: IceBoundComponent
-        guid: f82f4c41f004ab896bfbf0d2484b5f398cb965d0846934069c413def83746a13
+        guid: d869b8934fe8ffdbac0e9af54f3315e9b4a8fd9f4f3eb40ea36494915c1deb8c
         custom_name: ""
       - ComponentName: Collider2DComponent
-        guid: 01a5998bbc6db9638af553bc8404a4b087b49109bd597179ca0ff9272eae6c6a
+        guid: d0c99bd3cbb6a719255f33fb1404a0839799bd8364687e991a83d48afb1ab0d9
         custom_name: ""
         offset: [0, 0]
         is_trigger: true
@@ -1218,7 +1219,7 @@ Entities:
         drag: 0.00999999978
         velocity: [0, 0]
       - ComponentName: ModelComponent
-        guid: 7f6d2652fccf183b65bc6b0030ab4014534e7d92243b420dfaa57994cd14b95d
+        guid: 3f8da7153a15e178964bb4da0c7463d5e9897804cd322bc477556e8e4200b545
         custom_name: ""
         model_path: ./res/models/iceIslands/c_2.gltf
         material:
@@ -1232,20 +1233,20 @@ Entities:
           CastsShadows: true
           IsBillboard: false
   - Entity: Floe
-    guid: ae2f6b683b41cd9068684381b023c9ef47c5cb4d829830b822e9b21ef2e053ab
+    guid: 47ccf6475b837c190bbe5e37ef671b24bea7e6f5ff1eeb763337c106f0ef0c18
     Name: Floe
     TransformComponent:
       Translation: [-10.2082977, -6.10351562e-05, -5.57322168]
       Rotation: [0, 81.0479279, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: 70531fa77f3700e2041a776231e8e7b97d010d68b0bd98ed7fe37f33021aedb9
+        guid: 516a65b465faac7d20fe9e2860f460e12cc77265873f9f77869b53e6a955eb66
     Components:
       - ComponentName: IceBoundComponent
-        guid: 4f81e5e7293b7c1e5c849ed458179976abe7822d443951dd6ddb9167ed395acb
+        guid: 8d93e5f5098909e0733ba7aeddcb29ced79de138b9a041ebc7303ab9b8f82cce
         custom_name: ""
       - ComponentName: Collider2DComponent
-        guid: 5828459b6db8d35d9fc071005b439875b8f9fa2cf97803f148f46853c3084384
+        guid: 243554a780896de8d53d8f44d5a1f3c2b1a8b1f4f7cd08204ad48c9b644067e3
         custom_name: ""
         offset: [0, 0]
         is_trigger: true
@@ -1257,7 +1258,7 @@ Entities:
         drag: 0.00999999978
         velocity: [0, 0]
       - ComponentName: ModelComponent
-        guid: 914e371aa05765aa0ecc3ea9baae27348e4f8a73c3666ec90f9c791a6bf2ae62
+        guid: dce7c7f2020869ce8842eceb22051da85099a1c3050d5ba9b88bb4fbd2a316b9
         custom_name: ""
         model_path: ./res/models/iceIslands/s_4.gltf
         material:
@@ -1271,27 +1272,27 @@ Entities:
           CastsShadows: true
           IsBillboard: false
   - Entity: Generator
-    guid: 24fd9063d2e3165ab4fb588b7a29cbc7c2ac681d13669593b6b84cb9056d0b0b
+    guid: b00c237877676173b1614f52d7e643a546738d427740e567882fa9ffb54d462a
     Name: Generator
     TransformComponent:
       Translation: [6.19026613, 0.100124434, 2.76402235]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: df24490ded1f143d88aa75c17aca9522e4d5a014016d05a450cd8b362a3fc67d
+        guid: a6344aec2533af6c72dc8ab06d0aecdefc1795ab3a8454708b914a04681571ae
     Components:
       - ComponentName: FactoryComponent
-        guid: 54fb88e05b12578bd66f9eb67f05fc28e81f81949bac112497eb8c8e4002561a
+        guid: 8b4e6c57a0ef6ada3d050ea96a1e6cbde09f4291ab29789ba48a46fb5a87a554
         custom_name: ""
         type: 0
         lights:
-          - guid: f9f5899265acd1a680aa7161fdc48b77fcd1fbc86202f493eb11e36027fcbf26
-          - guid: f7fa4e04fe49e6688b2c6134c7a9efd7c9994c205bc1aec9e8914bc1ead6806a
-          - guid: 408962d14703a3103dc98bece132d1411ae5b2e9a9ee19e2d3ddb713b6745ec7
+          - guid: 7cc75272966c7ae82fb67bfbb87975f4801b46e9c57cd663c5309a3945caa39e
+          - guid: bd1e93df62c417d1cd00201b29f5997f082c70465039a4c904e1cd1025cd5148
+          - guid: 6bd1445d40b230a246507b5f8e17764e02f571cbb3570d771fee2d465aee797f
         factory_light:
           guid: nullptr
       - ComponentName: ModelComponent
-        guid: f1ef242f869fb8a6f928c0066b221f74ea7ffe56ec99ff4a0a59420aa753de2c
+        guid: 29372c70aad92b7be63ac31605f7ba1117a242da2753822e737d719ac589a0a2
         custom_name: ""
         model_path: ./res/models\generator\generator.gltf
         material:
@@ -1305,7 +1306,7 @@ Entities:
           CastsShadows: true
           IsBillboard: false
       - ComponentName: Collider2DComponent
-        guid: c1891ba60183caa61a17910efcab82d351b8068f4983320716293f5031f06133
+        guid: c04311cba182485687820963637db6e57216a42b177229e551686f5a1f3dc5d1
         custom_name: ""
         offset: [0, 0]
         is_trigger: false
@@ -1317,17 +1318,17 @@ Entities:
         drag: 0.00999999978
         velocity: [0, 0]
   - Entity: Light1
-    guid: dfccd57b73662876a6610c00cbd61d4b3271b4ba496ef79ffb2359d289b463c8
+    guid: 369c7cb4348c4701e9ba09adabc611650449e5e4096efeefa01be8fbf116fe5d
     Name: Light1
     TransformComponent:
       Translation: [-0.0707216263, 0.428870887, -0.0539073944]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: 24fd9063d2e3165ab4fb588b7a29cbc7c2ac681d13669593b6b84cb9056d0b0b
+        guid: b00c237877676173b1614f52d7e643a546738d427740e567882fa9ffb54d462a
     Components:
       - ComponentName: PointLightComponent
-        guid: f9f5899265acd1a680aa7161fdc48b77fcd1fbc86202f493eb11e36027fcbf26
+        guid: 7cc75272966c7ae82fb67bfbb87975f4801b46e9c57cd663c5309a3945caa39e
         custom_name: ""
         constant: 1
         linear: 10
@@ -1342,17 +1343,17 @@ Entities:
         m_light_world_size: 0.5
         m_light_frustum_width: 30
   - Entity: Light2
-    guid: cb265dcad7e4e4b6fb9fa2a253372e92a49b37c9afafd534ec336bbf94a9c69b
+    guid: 44c1c35318e05d96e08d75864521efa36f132a525c4df514a2eef1e817ccca54
     Name: Light2
     TransformComponent:
       Translation: [0.053319931, 0.428870887, -0.0539073944]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: 24fd9063d2e3165ab4fb588b7a29cbc7c2ac681d13669593b6b84cb9056d0b0b
+        guid: b00c237877676173b1614f52d7e643a546738d427740e567882fa9ffb54d462a
     Components:
       - ComponentName: PointLightComponent
-        guid: f7fa4e04fe49e6688b2c6134c7a9efd7c9994c205bc1aec9e8914bc1ead6806a
+        guid: bd1e93df62c417d1cd00201b29f5997f082c70465039a4c904e1cd1025cd5148
         custom_name: ""
         constant: 1
         linear: 10
@@ -1367,17 +1368,17 @@ Entities:
         m_light_world_size: 0.5
         m_light_frustum_width: 30
   - Entity: Light3
-    guid: faacd582300f85d57ec783dad7934d907a4a9bf920944c6b45eb957c57d8a616
+    guid: c393593321a1e1581f6d5d7c6b87d38c6d27d968051b2fed41937cda3c3b9457
     Name: Light3
     TransformComponent:
       Translation: [0.178658962, 0.428870887, -0.0539073944]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: 24fd9063d2e3165ab4fb588b7a29cbc7c2ac681d13669593b6b84cb9056d0b0b
+        guid: b00c237877676173b1614f52d7e643a546738d427740e567882fa9ffb54d462a
     Components:
       - ComponentName: PointLightComponent
-        guid: 408962d14703a3103dc98bece132d1411ae5b2e9a9ee19e2d3ddb713b6745ec7
+        guid: 6bd1445d40b230a246507b5f8e17764e02f571cbb3570d771fee2d465aee797f
         custom_name: ""
         constant: 1
         linear: 10
@@ -1392,23 +1393,23 @@ Entities:
         m_light_world_size: 0.5
         m_light_frustum_width: 30
   - Entity: Lighthouse Light
-    guid: 2cce1d0e7d400cbc04abf24e0d3a6d0cd514dfe5c9a5efe658946af0586b5703
+    guid: 63a40033fc4f6e960d31d7340fd5808e025722420014d431e83804abf9bb5d03
     Name: Lighthouse Light
     TransformComponent:
       Translation: [-4.97725964, 0, -7.00909042]
       Rotation: [0, 0, 0]
       Scale: [0.25, 0.25, 0.25]
       Parent:
-        guid: df24490ded1f143d88aa75c17aca9522e4d5a014016d05a450cd8b362a3fc67d
+        guid: a6344aec2533af6c72dc8ab06d0aecdefc1795ab3a8454708b914a04681571ae
     Components:
       - ComponentName: LighthouseLightComponent
-        guid: e4bbf92e013c2e56ebdf85750403a3e522f7b703215753e4d3341f53c9c5c229
+        guid: f76fbaf2e0da823794fdb6799026f924bce44280d2490e7be59493023e560175
         custom_name: ""
         spotlight:
-          guid: 865bd34b4a804f6e21e4c0d0cc7a71d15b06a8fe312ddbfe1201e3c0a4e329bd
+          guid: 427f00c4184079e4847b9b74743fa3ece861c0f98431c357b427c8981ff5994b
         spotlight_beam_width: 0.150000006
       - ComponentName: SphereComponent
-        guid: c9c1afaca021d74b26169213f22c941983fd4d11095615ca352ada9b247217fc
+        guid: eb2c7d6b8e77e3f8c4219fc8608d0143903708a8ede1abb95d58346a189725d0
         custom_name: ""
         sector_count: 12
         stack_count: 12
@@ -1426,25 +1427,25 @@ Entities:
           CastsShadows: true
           IsBillboard: false
   - Entity: Workshop
-    guid: 189ac3f4c1f4440631d512fc09c69fae679b4a0bde8f92967394df8899abfa19
+    guid: 65b9b9117256dad1c24854e0b68b5956a1a331c14611efb67618b631791f5675
     Name: Workshop
     TransformComponent:
       Translation: [-2.85447288, 0.0700767189, -3.49764872]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: df24490ded1f143d88aa75c17aca9522e4d5a014016d05a450cd8b362a3fc67d
+        guid: a6344aec2533af6c72dc8ab06d0aecdefc1795ab3a8454708b914a04681571ae
     Components:
       - ComponentName: FactoryComponent
-        guid: dc9b54b9dc7a496a6d440287690f3dfbe2406d7d15fb41bbf356faaa55ef54a6
+        guid: 2818b7a5e3ad13b72b3399df02cce5ae7c2136c7ed66823de4e69be19761d2be
         custom_name: ""
         type: 1
         lights:
           []
         factory_light:
-          guid: e4263a2574e13a59775c1123c0d09f6d10603ecf164fb38ffff8f95294042cd7
+          guid: 176f6872b779a26dbd1b61b4d3e01cc009c04b3ff5715c577c45830c6561c7f0
       - ComponentName: ModelComponent
-        guid: 16294c1ce5643da3c8067d1e9e05bb2cbecbf5f373ee694494604133def147e4
+        guid: 91c137429adff173ca411907be941689622ae2adb519642ec08796db798cae8f
         custom_name: ""
         model_path: ./res/models\workshop\workshop.gltf
         material:
@@ -1458,7 +1459,7 @@ Entities:
           CastsShadows: true
           IsBillboard: false
       - ComponentName: Collider2DComponent
-        guid: d3bede5319a1ff5a0495f39eae95c706ef72c877c219485c1958dd7610223a5c
+        guid: 9c61df4507e90d8fe6e14c8a72c5f0c2e4ece7e96312050f4b3801f0388b67d0
         custom_name: ""
         offset: [0, 0]
         is_trigger: false
@@ -1470,17 +1471,17 @@ Entities:
         drag: 0.00999999978
         velocity: [0, 0]
   - Entity: Light
-    guid: 7a7883535085397120a2dd046d298d2e57360ae4760c8ae6e0e12cce731ecc33
+    guid: 42f24a6d95a2badd7e2aae502d39693fbcafcce2cc581307f0e29ba5cbc3317f
     Name: Light
     TransformComponent:
       Translation: [-0.186295986, 0.526062191, -0.114551306]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: 189ac3f4c1f4440631d512fc09c69fae679b4a0bde8f92967394df8899abfa19
+        guid: 65b9b9117256dad1c24854e0b68b5956a1a331c14611efb67618b631791f5675
     Components:
       - ComponentName: PointLightComponent
-        guid: e4263a2574e13a59775c1123c0d09f6d10603ecf164fb38ffff8f95294042cd7
+        guid: 176f6872b779a26dbd1b61b4d3e01cc009c04b3ff5715c577c45830c6561c7f0
         custom_name: ""
         constant: 1
         linear: 10
@@ -1495,27 +1496,27 @@ Entities:
         m_light_world_size: 0.5
         m_light_frustum_width: 30
   - Entity: CustomerManager
-    guid: ae9f908c70110e4d98d25abb295e1576b71cb9b71dec55ba0bc1e802cf7e6ffe
+    guid: f8ae91cedb64d8c85ed8a2af22624d54a852588b48dc291c015228f9e3fbc442
     Name: CustomerManager
     TransformComponent:
       Translation: [-5.74360132, 0.100006014, -6.2690649]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: df24490ded1f143d88aa75c17aca9522e4d5a014016d05a450cd8b362a3fc67d
+        guid: a6344aec2533af6c72dc8ab06d0aecdefc1795ab3a8454708b914a04681571ae
     Components:
       - ComponentName: CustomerManagerComponent
-        guid: 004b30f2694cce78095c21d32dd7840740a695f8a3cd414d2de6bf72f39bc28c
+        guid: 3c40abe24cd6a72d66126ee83cbc202a05e12b8d82d647af89bdfd34a1a295f0
         custom_name: ""
         destinations_after_feeding:
-          - guid: 1d895f8727d6700f3e76a9fead3fc5013eac4b91148aaa581e746e36715c1b4c
-          - guid: a72534ac5bc98ddbfe7346010d735b656a3323021ae906efc0af1504e93ec6c9
-          - guid: cbc75884fd395cde9820d60d16aca1d2616c0edb60447da058e7523f62b426f5
+          - guid: 5db21949caf4b6de51fe57997cbe3c836f4a5c656cd27f386efa9c6a20a266a1
+          - guid: 2eb2fb4fd5835ff337008ab838c9303d3da54771fc938257000c80cb44ecc75b
+          - guid: 9f3dacf2b2a3d5fe033c1ea1885fd592489713f98e8bb7b362230c15fdc5a319
         destination_curve:
-          guid: 3d1f56f555326c934a0f2643b94537f892a3ac7ed82429f191494f43bb5499a2
+          guid: 2d4a8501e25528fa18b196585e38790e41143a7d50c159b7a2688c1c8fdd1765
         customer_prefab: Customer
       - ComponentName: PathComponent
-        guid: 3d1f56f555326c934a0f2643b94537f892a3ac7ed82429f191494f43bb5499a2
+        guid: 2d4a8501e25528fa18b196585e38790e41143a7d50c159b7a2688c1c8fdd1765
         custom_name: ""
         points:
           - [0.0154705849, 0.0317622945]
@@ -1524,72 +1525,72 @@ Entities:
           - [0.564705908, 1.19344258]
           - [-0.141176477, 1.53442621]
   - Entity: Destination
-    guid: 1d895f8727d6700f3e76a9fead3fc5013eac4b91148aaa581e746e36715c1b4c
+    guid: 5db21949caf4b6de51fe57997cbe3c836f4a5c656cd27f386efa9c6a20a266a1
     Name: Destination
     TransformComponent:
       Translation: [1.84500003, 6.04167581e-05, 2.05200005]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: ae9f908c70110e4d98d25abb295e1576b71cb9b71dec55ba0bc1e802cf7e6ffe
+        guid: f8ae91cedb64d8c85ed8a2af22624d54a852588b48dc291c015228f9e3fbc442
     Components:
       []
   - Entity: Destination2
-    guid: a72534ac5bc98ddbfe7346010d735b656a3323021ae906efc0af1504e93ec6c9
+    guid: 2eb2fb4fd5835ff337008ab838c9303d3da54771fc938257000c80cb44ecc75b
     Name: Destination2
     TransformComponent:
       Translation: [0.800000012, 3.78489494e-06, 2.47000003]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: ae9f908c70110e4d98d25abb295e1576b71cb9b71dec55ba0bc1e802cf7e6ffe
+        guid: f8ae91cedb64d8c85ed8a2af22624d54a852588b48dc291c015228f9e3fbc442
     Components:
       []
   - Entity: Destination3
-    guid: cbc75884fd395cde9820d60d16aca1d2616c0edb60447da058e7523f62b426f5
+    guid: 9f3dacf2b2a3d5fe033c1ea1885fd592489713f98e8bb7b362230c15fdc5a319
     Name: Destination3
     TransformComponent:
       Translation: [-1.54200006, -3.2313168e-05, 2.45900011]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: ae9f908c70110e4d98d25abb295e1576b71cb9b71dec55ba0bc1e802cf7e6ffe
+        guid: f8ae91cedb64d8c85ed8a2af22624d54a852588b48dc291c015228f9e3fbc442
     Components:
       []
   - Entity: HarborBig
-    guid: 2cb4250a595d2bd299294c5bae30e3f63c8086715d749653512ab2ffc040da6f
+    guid: 5975a4071c7c837a82a5be1f818de4e41e4d863f774faf8efa782ee81a161a08
     Name: HarborBig
     TransformComponent:
       Translation: [3.67879462, 0, 4.35882139]
       Rotation: [180, 89.1502762, 180]
       Scale: [1, 1, 1]
       Parent:
-        guid: df24490ded1f143d88aa75c17aca9522e4d5a014016d05a450cd8b362a3fc67d
+        guid: a6344aec2533af6c72dc8ab06d0aecdefc1795ab3a8454708b914a04681571ae
     Components:
       []
   - Entity: Ice
-    guid: 507b0ec091825c8a3cce5b1d4e6d82a719cd5f8a1fcab22af6fe2b620cc03954
+    guid: 60c76ae7f9c3f5c0c2a2a9b6c8aa5775b7113d3c39eb664263aa854669bafb7a
     Name: Ice
     TransformComponent:
       Translation: [0, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: 2cb4250a595d2bd299294c5bae30e3f63c8086715d749653512ab2ffc040da6f
+        guid: 5975a4071c7c837a82a5be1f818de4e41e4d863f774faf8efa782ee81a161a08
     Components:
       []
   - Entity: cl
-    guid: 9e6f44241b70819621919f0d524f6276bcf1192e972c8f5bdd53e91a7b6665e6
+    guid: 66016089d4ab91c5af2de852fc0986a27b24aca79cb843dfc0458dfb0d6b19cc
     Name: cl
     TransformComponent:
       Translation: [0.800000191, 0, 0.399999857]
       Rotation: [0, 10.0000095, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: 507b0ec091825c8a3cce5b1d4e6d82a719cd5f8a1fcab22af6fe2b620cc03954
+        guid: 60c76ae7f9c3f5c0c2a2a9b6c8aa5775b7113d3c39eb664263aa854669bafb7a
     Components:
       - ComponentName: ModelComponent
-        guid: 20a2ab1afe93517fc5bde7c855cc38767c358e0a7e6b6a4abd01b7032b154e6c
+        guid: 1b20d02169721ef99e28b9bdb0231ca4306ed0bdfcbd383af51bdc101b56b8bc
         custom_name: ""
         model_path: ./res/models\harborIslands\corner_big_l.gltf
         material:
@@ -1603,17 +1604,17 @@ Entities:
           CastsShadows: true
           IsBillboard: false
   - Entity: b
-    guid: 85b4db8aff31e9b1888526e3eef8e7da29beb0b7d9f94f97b803fc42db745808
+    guid: 1bcb24fd674b3db9e89aa59dda2c043fa0ef80833df43210a02c36962d356f07
     Name: b
     TransformComponent:
       Translation: [2.79999995, 0, 0.0999999046]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: 507b0ec091825c8a3cce5b1d4e6d82a719cd5f8a1fcab22af6fe2b620cc03954
+        guid: 60c76ae7f9c3f5c0c2a2a9b6c8aa5775b7113d3c39eb664263aa854669bafb7a
     Components:
       - ComponentName: ModelComponent
-        guid: 474a7357cd85c89f0c696b1581b0e93d6eab6350b2be10fb788a44f916387aa7
+        guid: 30e4411df7920b594ebfa73f64c8ecf419f10cc61a7d6c757cd79f8d4d6f0271
         custom_name: ""
         model_path: ./res/models\harborIslands\bottom_big.gltf
         material:
@@ -1627,17 +1628,17 @@ Entities:
           CastsShadows: true
           IsBillboard: false
   - Entity: rl
-    guid: b3773890e8202b95c22b2fa65307fdb8a5696e0baa933b35c13a8adf7fabce8f
+    guid: 9a0db354cf0ae271a98b3c9e9dcb1fd0929e5e2f643961257a540fd82d2e82f0
     Name: rl
     TransformComponent:
       Translation: [4.91235018, 0, -0.389643908]
       Rotation: [0, 26.5599098, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: 507b0ec091825c8a3cce5b1d4e6d82a719cd5f8a1fcab22af6fe2b620cc03954
+        guid: 60c76ae7f9c3f5c0c2a2a9b6c8aa5775b7113d3c39eb664263aa854669bafb7a
     Components:
       - ComponentName: ModelComponent
-        guid: 4569b3792e74d3cd28a2a562eca57fd014ebdff8b1751707659e460175ef70ff
+        guid: e49a0b1934392da78766c0497bd63ce85ba1524f8b4346a050fd6b238cac3b41
         custom_name: ""
         model_path: ./res/models\harborIslands\corner_big_r.gltf
         material:
@@ -1651,17 +1652,17 @@ Entities:
           CastsShadows: true
           IsBillboard: false
   - Entity: el
-    guid: 6f4dd42b3ec1835e22258816dfa81fcbe4a76a86a6ee5939b238493b1f96c59b
+    guid: ba1236f95ae14ef29c3a3ec4ec0712ebd063b95909c346d48c597f7210eb5e7e
     Name: el
     TransformComponent:
       Translation: [0.600000381, 0, -1.30000007]
       Rotation: [0, 5.00001812, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: 507b0ec091825c8a3cce5b1d4e6d82a719cd5f8a1fcab22af6fe2b620cc03954
+        guid: 60c76ae7f9c3f5c0c2a2a9b6c8aa5775b7113d3c39eb664263aa854669bafb7a
     Components:
       - ComponentName: ModelComponent
-        guid: 3013124fe8d0ac713fb5c4b90cf84845b3fe9dd69b8bec1760a9a9a240144993
+        guid: b5ccdb405dd0160b3be15de7b95cc69b95fec57cc8d6eebbf76dc1ca37e97c1b
         custom_name: ""
         model_path: ./res/models\harborIslands\end_big_l.gltf
         material:
@@ -1675,17 +1676,17 @@ Entities:
           CastsShadows: true
           IsBillboard: false
   - Entity: er
-    guid: bedd027e787f40ddab23b776e6dc67135c0cfca4c5f172b5c44147702a216d09
+    guid: e805cadf1bba986251ec5b7c38847e47d16b2f6d3bd2be6898149d3285284bc5
     Name: er
     TransformComponent:
       Translation: [4.26107931, 0, -2.16230154]
       Rotation: [0, -21.1193027, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: 507b0ec091825c8a3cce5b1d4e6d82a719cd5f8a1fcab22af6fe2b620cc03954
+        guid: 60c76ae7f9c3f5c0c2a2a9b6c8aa5775b7113d3c39eb664263aa854669bafb7a
     Components:
       - ComponentName: ModelComponent
-        guid: 988b4325a4caf116c1c2c5f5159e483eabe3e49b10ae9cbb59a31a8fb88597ed
+        guid: ddab3086d7be451d5173670b9dc7c5425c4c89a21620ba35aa9b200e826cd071
         custom_name: ""
         model_path: ./res/models\harborIslands\end_big_r.gltf
         material:
@@ -1699,28 +1700,28 @@ Entities:
           CastsShadows: true
           IsBillboard: false
   - Entity: Bounds
-    guid: d8b22ac55e8c2f6e7a90ced9b376f5e4162faee5cc95553777229de0eb49e9af
+    guid: 5164ccc112885ab1c4debbe438af15a06e881c46d95e6d11d6bc62c012aab5c8
     Name: Bounds
     TransformComponent:
       Translation: [0, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: 2cb4250a595d2bd299294c5bae30e3f63c8086715d749653512ab2ffc040da6f
+        guid: 5975a4071c7c837a82a5be1f818de4e41e4d863f774faf8efa782ee81a161a08
     Components:
       []
   - Entity: Bound
-    guid: f889b90c6796693b9b95385f1c7f21fd176d27764a3bc6ce180b08311a682fb5
+    guid: 4963e340a7548beb483b537bc505cf4fe53c937c7cae89d391f011c151b4a11b
     Name: Bound
     TransformComponent:
       Translation: [0.595983744, 0, -0.652643204]
       Rotation: [0, 5.61841154, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: d8b22ac55e8c2f6e7a90ced9b376f5e4162faee5cc95553777229de0eb49e9af
+        guid: 5164ccc112885ab1c4debbe438af15a06e881c46d95e6d11d6bc62c012aab5c8
     Components:
       - ComponentName: Collider2DComponent
-        guid: f10728c513c30f9982a13b32bafd24eccef6043315f92d1ffd460824640a58fe
+        guid: 06ae3f53e50bfc6251d389a9f3753e3a319a326fd1250af42edb679b2f0965c7
         custom_name: ""
         offset: [0, 0]
         is_trigger: true
@@ -1732,20 +1733,20 @@ Entities:
         drag: 0.00999999978
         velocity: [0, 0]
       - ComponentName: IceBoundComponent
-        guid: 07b0c82023727abb8812666e50293534171fcfef9b80c7ec0afd47171940a376
+        guid: 6f9d1eaffb5636c32aa840a13c19dfeebc9fb88b33a2d9c49e8d8bbf31fa0f00
         custom_name: ""
   - Entity: Bound
-    guid: 44f9b5da06b4a94da6ed5310be17fb2311bbbac2a0f91e1623a79812efb5943d
+    guid: 0841c5aaf9c7b589dd88a4b3b7bbef2f137d3836736bc04e329494228149f6c2
     Name: Bound
     TransformComponent:
       Translation: [4.50512552, 0, -0.744436979]
       Rotation: [0, 19.7067699, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: d8b22ac55e8c2f6e7a90ced9b376f5e4162faee5cc95553777229de0eb49e9af
+        guid: 5164ccc112885ab1c4debbe438af15a06e881c46d95e6d11d6bc62c012aab5c8
     Components:
       - ComponentName: Collider2DComponent
-        guid: 894aa3892e38add8918cefe6c222a6ffd1fa7401be9ab86e26b03700228af524
+        guid: 48cb6e7b6f8f77f5d8ec9fdf534b1158970b09ae9d16df696ff5f607a27eac74
         custom_name: ""
         offset: [0, 0]
         is_trigger: true
@@ -1757,20 +1758,20 @@ Entities:
         drag: 0.00999999978
         velocity: [0, 0]
       - ComponentName: IceBoundComponent
-        guid: ac2ff36cfc94c1e83d856b5d95a1d91a589b79e83d986d93100db7f351d6c958
+        guid: a65bba1780b8379ccf2ba605ed807b272e3751d52436a9b0837b976df0b838db
         custom_name: ""
   - Entity: Bound
-    guid: e4e8e6f5c60502a70a0b40ee0c749ab9e0692732589faf97300b4046a42e3334
+    guid: 132734ca4553a06827b5bfa1007312ea41d8efe50f355c8ebf6c2a2bf6edf951
     Name: Bound
     TransformComponent:
       Translation: [2.25180674, 0, 0.441128492]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: d8b22ac55e8c2f6e7a90ced9b376f5e4162faee5cc95553777229de0eb49e9af
+        guid: 5164ccc112885ab1c4debbe438af15a06e881c46d95e6d11d6bc62c012aab5c8
     Components:
       - ComponentName: Collider2DComponent
-        guid: 55505c09e050022bcadbea144831b8ef48d88b9dc42a4daf083688da27fda198
+        guid: 1b497fa3a281d5013eee8670a7ed707a253f3de816012ca98e5bb0d912d28f76
         custom_name: ""
         offset: [0, 0]
         is_trigger: true
@@ -1782,20 +1783,20 @@ Entities:
         drag: 0.00999999978
         velocity: [0, 0]
       - ComponentName: IceBoundComponent
-        guid: 84c3daf942a04e36fbfd95f60335d33b1bab2ea0dcfdaf51059245a578db5772
+        guid: e6930e9527b74547f77bd6e3654158d31e8ed9455996ba97d7c1ccba3e945b8a
         custom_name: ""
   - Entity: Bound
-    guid: 9d594cc9932205db837b64824982e7f33bbf455d12fa2dc9e77bfe194b2ad9a6
+    guid: f55d3dc3daf3ea1dcffd6f94ed919e4f62e4b1a005428479976d5ecc6d132416
     Name: Bound
     TransformComponent:
       Translation: [4.21676588, 0, -2.10378957]
       Rotation: [0, 67.9949188, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: d8b22ac55e8c2f6e7a90ced9b376f5e4162faee5cc95553777229de0eb49e9af
+        guid: 5164ccc112885ab1c4debbe438af15a06e881c46d95e6d11d6bc62c012aab5c8
     Components:
       - ComponentName: Collider2DComponent
-        guid: e320ede2e116eafd6ea5a07e2f6ef92ad6b1b43872948f5a27942460f9c40090
+        guid: 1ffbec2a5946748a16096db073e6da29d67fc03bead277e0a8ddde005ca17fbc
         custom_name: ""
         offset: [0, 0]
         is_trigger: true
@@ -1807,31 +1808,31 @@ Entities:
         drag: 0.00999999978
         velocity: [0, 0]
       - ComponentName: IceBoundComponent
-        guid: 046d15a6228d78111f789d1bd49e50623cfa34d7b08188dfcfa931393f1b6c55
+        guid: 770399a306a4a2ad2c15995433bf337136685d7b8903c0038ca3205387b15023
         custom_name: ""
   - Entity: Floor
-    guid: d232b2259b6b2abdf18570027599a67d2331f59e5dc1f04268bd311974ed0433
+    guid: 30eef870dc61a68179f64cc7beb6d238cd8e7187ef2bf97fae0037fe6b36fbf7
     Name: Floor
     TransformComponent:
       Translation: [0, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: df24490ded1f143d88aa75c17aca9522e4d5a014016d05a450cd8b362a3fc67d
+        guid: a6344aec2533af6c72dc8ab06d0aecdefc1795ab3a8454708b914a04681571ae
     Components:
       []
   - Entity: Entity
-    guid: f994ff55a4497a8f320280e9b650d418393e8defde87f56d89555ca6c7aa4593
+    guid: ae7cde91e7477fafba07e9c5e274eccc7af9dec39051ceaf02696aeaf18112df
     Name: Entity
     TransformComponent:
       Translation: [-7.38162041, -0.707861185, 0]
       Rotation: [0, 0, 0]
       Scale: [1.84564555, 1, 1]
       Parent:
-        guid: d232b2259b6b2abdf18570027599a67d2331f59e5dc1f04268bd311974ed0433
+        guid: 30eef870dc61a68179f64cc7beb6d238cd8e7187ef2bf97fae0037fe6b36fbf7
     Components:
       - ComponentName: ModelComponent
-        guid: ec13ca4e2834987ca43a64f5ff12c9b09bdcde553773d7b4f5b6d46397b39759
+        guid: 79a6eb0fc6b3e58a793fc4cc3152de2edd6e6eac48a3ffcc85dfc3acf2e9eb5e
         custom_name: ""
         model_path: ./res/models\iceIslands\c_6.gltf
         material:
@@ -1845,17 +1846,17 @@ Entities:
           CastsShadows: true
           IsBillboard: false
   - Entity: Entity
-    guid: 2739a995853a9792f2a9e913a66454d9bd8ba5921ea2b0d67b386649890e21f6
+    guid: a03dc5c312000e2b5daf76611eb802db4a1bae9ce7686c40e7af47e191d02820
     Name: Entity
     TransformComponent:
       Translation: [-9.45634747, -0.707861364, -2.03695035]
       Rotation: [0, 35.7537537, 0]
       Scale: [1.8456465, 1, 0.999995828]
       Parent:
-        guid: d232b2259b6b2abdf18570027599a67d2331f59e5dc1f04268bd311974ed0433
+        guid: 30eef870dc61a68179f64cc7beb6d238cd8e7187ef2bf97fae0037fe6b36fbf7
     Components:
       - ComponentName: ModelComponent
-        guid: cd06ca3a7b60ffcdc1278ae128ee9fc47089ea570274b24b56214b54fa2480e9
+        guid: 284f955a6597de6696777fcac736695d475a46ca22a20ef40679e34b17b0241a
         custom_name: ""
         model_path: ./res/models\iceIslands\c_6.gltf
         material:
@@ -1869,17 +1870,17 @@ Entities:
           CastsShadows: true
           IsBillboard: false
   - Entity: Entity
-    guid: f0936d8bd29c4247222a7d66e935d79c565f03fdedf3b918f7615a96a8d65374
+    guid: 69c320400ec6aa620242a686c322b6f3ed80f20c86f1699cbbc04ad8816d8909
     Name: Entity
     TransformComponent:
       Translation: [-5.19662523, -0.707861364, -2.46305251]
       Rotation: [0, -32.3675766, 0]
       Scale: [1.84564734, 1, 0.999994695]
       Parent:
-        guid: d232b2259b6b2abdf18570027599a67d2331f59e5dc1f04268bd311974ed0433
+        guid: 30eef870dc61a68179f64cc7beb6d238cd8e7187ef2bf97fae0037fe6b36fbf7
     Components:
       - ComponentName: ModelComponent
-        guid: 5df7a28c58015b4c6ac346bd7858968021dcec16b2f8712f8fd48a0bc44c2229
+        guid: 4d30e6b9049a268f57ea5b6d28fac28dab34864dedf772b4062a5ffbb53ffd73
         custom_name: ""
         model_path: ./res/models\iceIslands\c_6.gltf
         material:
@@ -1893,17 +1894,17 @@ Entities:
           CastsShadows: true
           IsBillboard: false
   - Entity: Entity
-    guid: 154c89749d81ba0a533ba3cd6c816559f5eddaf87a257eb0f351ab2622a00e92
+    guid: 883a6a765a4ca93461d118f289cc3c503338103fa74b2b0723202c4ed441062f
     Name: Entity
     TransformComponent:
       Translation: [-4.10323763, -0.707861364, 1.82717347]
       Rotation: [180, -74.3116989, 180]
       Scale: [1.84564853, 1, 0.999993861]
       Parent:
-        guid: d232b2259b6b2abdf18570027599a67d2331f59e5dc1f04268bd311974ed0433
+        guid: 30eef870dc61a68179f64cc7beb6d238cd8e7187ef2bf97fae0037fe6b36fbf7
     Components:
       - ComponentName: ModelComponent
-        guid: 027ebdf3e7f047898f95f4e03f8b3f37622c59f01c8e5f8426e088f7b9401a4a
+        guid: 64a5e633967e134e702465a30486ca07f283f4080656fc9e3a2434cd430528c5
         custom_name: ""
         model_path: ./res/models\iceIslands\c_6.gltf
         material:
@@ -1917,17 +1918,17 @@ Entities:
           CastsShadows: true
           IsBillboard: false
   - Entity: Entity
-    guid: b781a42da2da83c67c65e4e2ca113af4509a4da15dd772ae6322f82e50d7193a
+    guid: acf35f14c22e1434b0968d292f66d45635f8f9884ee0a41fbe8bda97461af902
     Name: Entity
     TransformComponent:
       Translation: [-1.65808821, -0.707861364, 0.196785152]
       Rotation: [0, 35.753727, 0]
       Scale: [0.860762835, 1, 0.999995708]
       Parent:
-        guid: d232b2259b6b2abdf18570027599a67d2331f59e5dc1f04268bd311974ed0433
+        guid: 30eef870dc61a68179f64cc7beb6d238cd8e7187ef2bf97fae0037fe6b36fbf7
     Components:
       - ComponentName: ModelComponent
-        guid: 5effa3dce0733071f468197a0d4f4b64295c51c6a45bf9a5276464aa5dbb0341
+        guid: c72e457ad252c3299f69a56393d6686fc750859845eedb13cf2a2301dc957b3a
         custom_name: ""
         model_path: ./res/models\iceIslands\c_6.gltf
         material:
@@ -1941,17 +1942,17 @@ Entities:
           CastsShadows: true
           IsBillboard: false
   - Entity: Entity
-    guid: d63a17cc36efc60d75ac8ac23f2ac27a9665342400bb567947d4960c1d260052
+    guid: e71ea013d4c2e32f64134c66e2a97b2ae968b17f48f10bfedbff0bccc1460fd9
     Name: Entity
     TransformComponent:
       Translation: [-1.39649606, -0.707861781, -3.47418213]
       Rotation: [0, 35.7537308, 0]
       Scale: [1.35724485, 1, 1.75172615]
       Parent:
-        guid: d232b2259b6b2abdf18570027599a67d2331f59e5dc1f04268bd311974ed0433
+        guid: 30eef870dc61a68179f64cc7beb6d238cd8e7187ef2bf97fae0037fe6b36fbf7
     Components:
       - ComponentName: ModelComponent
-        guid: d9e1677df2bd178ee6618789813e436d5fe9a8bad7999b4dda55b706da843668
+        guid: f7d37242471ad34b9f295fabfc6931161c3ba5cfe4813ab7d61eace4cafe4bb4
         custom_name: ""
         model_path: ./res/models\iceIslands\c_6.gltf
         material:
@@ -1965,17 +1966,17 @@ Entities:
           CastsShadows: true
           IsBillboard: false
   - Entity: Entity
-    guid: 8d44da1038ab296a941701825c99d1a9e0135e726d653cfc2ab5a163cdb81df0
+    guid: 413268f2187758e07f5f247e19e3a0424f1439674b82b3d44d9759b786626448
     Name: Entity
     TransformComponent:
       Translation: [1.121135, -0.707861662, 0.31987074]
       Rotation: [0, 35.7537308, 0]
       Scale: [0.860762894, 1, 1.4555167]
       Parent:
-        guid: d232b2259b6b2abdf18570027599a67d2331f59e5dc1f04268bd311974ed0433
+        guid: 30eef870dc61a68179f64cc7beb6d238cd8e7187ef2bf97fae0037fe6b36fbf7
     Components:
       - ComponentName: ModelComponent
-        guid: 20310d99218347b715eb76e96661230011229bbcab0a7a2b546b7008c05acf58
+        guid: 9c2361b1842a128b121bba4670d93e8494d5bef7aaaa0f144522c2f9e047b87e
         custom_name: ""
         model_path: ./res/models\iceIslands\c_6.gltf
         material:
@@ -1989,17 +1990,17 @@ Entities:
           CastsShadows: true
           IsBillboard: false
   - Entity: Entity
-    guid: a437bcef24ac1793a1ee63e434d82ccbb819d013a8f9c0acc68615ba0d157e0c
+    guid: 0d523449359b21c9faba3c8626f16a5ad4aea2b027562263ff6417682a2dff4b
     Name: Entity
     TransformComponent:
       Translation: [2.34638071, -0.70785898, -2.7834065]
       Rotation: [0, 35.753727, 0]
       Scale: [1.34752429, 1, 0.999995768]
       Parent:
-        guid: d232b2259b6b2abdf18570027599a67d2331f59e5dc1f04268bd311974ed0433
+        guid: 30eef870dc61a68179f64cc7beb6d238cd8e7187ef2bf97fae0037fe6b36fbf7
     Components:
       - ComponentName: ModelComponent
-        guid: ffaab72c431cbcdaefe58c5ab08a865cfb4ee0c67d728998a0c4d3f0dff1400e
+        guid: 611a21b65cabf0164b835a752b9dc59b7b2ee58135a07b415f1c1707e027b1cc
         custom_name: ""
         model_path: ./res/models\iceIslands\c_6.gltf
         material:
@@ -2013,17 +2014,17 @@ Entities:
           CastsShadows: true
           IsBillboard: false
   - Entity: Entity
-    guid: 87dfb47ad57b22b72dfc1aab2c5458ffaf9b4768a8c1a44a16acd5f4c0fc1e08
+    guid: 504bcf3cbaf7172c52dda6aeba4d6d1e136d300656ff08bebfc93f0803da5a6e
     Name: Entity
     TransformComponent:
       Translation: [4.1604085, -0.707861125, -0.553329468]
       Rotation: [0, 35.7537308, 0]
       Scale: [1.43549585, 1, 0.999995768]
       Parent:
-        guid: d232b2259b6b2abdf18570027599a67d2331f59e5dc1f04268bd311974ed0433
+        guid: 30eef870dc61a68179f64cc7beb6d238cd8e7187ef2bf97fae0037fe6b36fbf7
     Components:
       - ComponentName: ModelComponent
-        guid: 067b20ac3c1617ae90a82c95952508acce2451645e2512d9bbe79c585c08c629
+        guid: 6281838be4830f8d24e6666a1bfc13829282b0c66afbd00127bcfc5e6e009dd1
         custom_name: ""
         model_path: ./res/models\iceIslands\c_6.gltf
         material:
@@ -2037,17 +2038,17 @@ Entities:
           CastsShadows: true
           IsBillboard: false
   - Entity: Entity
-    guid: 924fe18b103ae9e42d38dede2acac401b17cdb87ffdb9eb942ce2319c641e050
+    guid: 68f563be1efa46c7d85629e9e48633538b84f5ca0f6f5c3b6b517964545c2c94
     Name: Entity
     TransformComponent:
       Translation: [7.04382277, -0.707861364, 0.196785152]
       Rotation: [0, -25.8163624, 0]
       Scale: [0.860763252, 1, 3.48515368]
       Parent:
-        guid: d232b2259b6b2abdf18570027599a67d2331f59e5dc1f04268bd311974ed0433
+        guid: 30eef870dc61a68179f64cc7beb6d238cd8e7187ef2bf97fae0037fe6b36fbf7
     Components:
       - ComponentName: ModelComponent
-        guid: 9a430c36d85db0e1ed106d740377e7e90a62f37448cdbba8114fbc2f825dce2b
+        guid: 7433f9c9fff5658d1a705308bb876fa290aae036d2ff9ca1ea2230747d66a9c7
         custom_name: ""
         model_path: ./res/models\iceIslands\c_6.gltf
         material:
@@ -2061,17 +2062,17 @@ Entities:
           CastsShadows: true
           IsBillboard: false
   - Entity: Entity
-    guid: 4b8193ee9afd5bc322ba2c64ff1eafcc38430eef089d7225b1256b3e4d7f7767
+    guid: c3cba6556b9e2deb740f20a309031e5ac52dcbde8cd86f7d5f3d5c8e5e2cf9b7
     Name: Entity
     TransformComponent:
       Translation: [6.12928772, -0.707861364, -3.11792374]
       Rotation: [0, 35.753727, 0]
       Scale: [0.860762835, 1, 0.999995708]
       Parent:
-        guid: d232b2259b6b2abdf18570027599a67d2331f59e5dc1f04268bd311974ed0433
+        guid: 30eef870dc61a68179f64cc7beb6d238cd8e7187ef2bf97fae0037fe6b36fbf7
     Components:
       - ComponentName: ModelComponent
-        guid: c702d6f2d2d09c982243cc435cb71075c81d7d42ee234e4d9170c9348db02343
+        guid: cadff2f2a24d6d0075ac651387d9b6f75d54ffbcc892084748a0e66f7d63db4b
         custom_name: ""
         model_path: ./res/models\iceIslands\c_6.gltf
         material:
@@ -2085,17 +2086,17 @@ Entities:
           CastsShadows: true
           IsBillboard: false
   - Entity: Background
-    guid: 82889209a9cc6ecdb5a14a9f2fa867ef5347c62ff267486938ac8a2c6db8ea24
+    guid: 3a51e4b6aaa33ec1cdf79d30e260068b46c063e3611aad157c0b038eb42ea14f
     Name: Background
     TransformComponent:
       Translation: [-1.72662067, -0.768457711, -0.905444741]
       Rotation: [0, 0, 0]
       Scale: [14.5582962, 1, 5.6600585]
       Parent:
-        guid: d232b2259b6b2abdf18570027599a67d2331f59e5dc1f04268bd311974ed0433
+        guid: 30eef870dc61a68179f64cc7beb6d238cd8e7187ef2bf97fae0037fe6b36fbf7
     Components:
       - ComponentName: ModelComponent
-        guid: efae2e6f2e606bb592101060a191b387bbe58d92186605c75a5df4981e2c0786
+        guid: dde62f41db3619a8aec89532d7e8b3b1c9d7a17a54c078f2b0bdafff5de9d537
         custom_name: ""
         model_path: ./res/models\ground\ground.gltf
         material:
@@ -2109,17 +2110,17 @@ Entities:
           CastsShadows: true
           IsBillboard: false
   - Entity: FloatersManager
-    guid: fa776ed3a9ff686d01af065dd6a040c8996a7b9ef3afe3945d45966718d10b40
+    guid: a8f2948301f4b7bca7db3a610d7bdb3ab0ee5d2efae6de89da63115194e1592b
     Name: FloatersManager
     TransformComponent:
       Translation: [0, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: df24490ded1f143d88aa75c17aca9522e4d5a014016d05a450cd8b362a3fc67d
+        guid: a6344aec2533af6c72dc8ab06d0aecdefc1795ab3a8454708b914a04681571ae
     Components:
       - ComponentName: FloatersManagerComponent
-        guid: 8c1746a2befb934c9e98e7d91d7663e1efdf576269843f9bf5f43ce98cc877bb
+        guid: f8091790cbc1210d6bdb5b6f3fbf4d8f2477b5e768e2592396c0d4fd0a00e383
         custom_name: ""
         big_boat_settings: [0.0199999996, 5, 5, 0.100000001, 0.100000001]
         small_boat_settings: [0.0199999996, 5, 5, 0.100000001, 0.100000001]
@@ -2127,19 +2128,19 @@ Entities:
         tool_boat_settings: [0.0199999996, 5, 5, 0.100000001, 0.100000001]
         pirate_boat_settings: [0.0199999996, 5, 5, 0.100000001, 0.100000001]
         water:
-          guid: 2661990f4639801e607161668b7af5262d8185a1e19142c7bd71ad1ed3ff58dd
+          guid: 754e9f6360e523e191989f013d8b0c99c7fcde6932458d39ec2a7730c946684e
   - Entity: A_WODA
-    guid: ef15534e251b6586f84adfb69586d51f85a1338fc8b272ce10beedd73d91b0de
+    guid: 9cd02ce6ddd088d7f43df1539a06c2d8455f52533a5712fda5b58938ca49fabf
     Name: A_WODA
     TransformComponent:
       Translation: [0, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 0.750043929]
       Parent:
-        guid: df24490ded1f143d88aa75c17aca9522e4d5a014016d05a450cd8b362a3fc67d
+        guid: a6344aec2533af6c72dc8ab06d0aecdefc1795ab3a8454708b914a04681571ae
     Components:
       - ComponentName: WaterComponent
-        guid: 2661990f4639801e607161668b7af5262d8185a1e19142c7bd71ad1ed3ff58dd
+        guid: 754e9f6360e523e191989f013d8b0c99c7fcde6932458d39ec2a7730c946684e
         custom_name: ""
         waves:
           - [[1, -0.514999986], [0, 0], 1, 0, 0.5, 0.0149999997]
@@ -2160,28 +2161,28 @@ Entities:
           CastsShadows: false
           IsBillboard: false
   - Entity: Decor
-    guid: e50699ede2c6109fa5e650a8247c17df63178df4807f1716583723e96df61c4d
+    guid: 87448c93178454a5d8cb33765f68025055bd935df7d5768d8833c024a34250c2
     Name: Decor
     TransformComponent:
       Translation: [0, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: df24490ded1f143d88aa75c17aca9522e4d5a014016d05a450cd8b362a3fc67d
+        guid: a6344aec2533af6c72dc8ab06d0aecdefc1795ab3a8454708b914a04681571ae
     Components:
       []
   - Entity: Wood
-    guid: 7f3a6821f61804a740f54c97b4c9c327d4674cbc6957f2fbf324b6e2e396d5e5
+    guid: d4b9900ac9caf6ea05608ac554bc27763180b29111a4aed255e0209c742224bd
     Name: Wood
     TransformComponent:
       Translation: [-0.387287199, -6.10351562e-05, -4.34500647]
       Rotation: [3.19086734e-15, -4.60776711, 1.12421128e-06]
       Scale: [1, 1, 1]
       Parent:
-        guid: e50699ede2c6109fa5e650a8247c17df63178df4807f1716583723e96df61c4d
+        guid: 87448c93178454a5d8cb33765f68025055bd935df7d5768d8833c024a34250c2
     Components:
       - ComponentName: ModelComponent
-        guid: 734e34bf99f49c0fd5751e5a983d0b520dfc4fa4c241efa9d7cec361c1ba009f
+        guid: eb62836ebb7e3926a5cf20113b60f33ea4c83a5a55baa58a39fdf86ad483bf9b
         custom_name: ""
         model_path: ./res/models\wood\wood2.gltf
         material:
@@ -2195,17 +2196,17 @@ Entities:
           CastsShadows: true
           IsBillboard: false
   - Entity: Wood
-    guid: faff876f54f8337b2c6199cd2c4e0116b313c3179d66dce3862325fb8457794c
+    guid: d8afb6b5e2068c0743494e57e7a7358713df39c384a09b3e8697168a55e064b6
     Name: Wood
     TransformComponent:
       Translation: [7.31101704, -6.10351562e-05, -0.569202662]
       Rotation: [4.97775324e-13, -4.60776758, 1.12421128e-06]
       Scale: [1, 1, 1]
       Parent:
-        guid: e50699ede2c6109fa5e650a8247c17df63178df4807f1716583723e96df61c4d
+        guid: 87448c93178454a5d8cb33765f68025055bd935df7d5768d8833c024a34250c2
     Components:
       - ComponentName: ModelComponent
-        guid: 6a2f2b7ccd2d1f1e863d43e6ce1756b19294725be89602f785b5fae4433c069c
+        guid: d34a47fe2f7a4df595759830c0f6b49a5e9a7e563b7b564b4c408f9b8ad7eb1e
         custom_name: ""
         model_path: ./res/models\wood\wood1.gltf
         material:
