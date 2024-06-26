@@ -99,8 +99,14 @@ void Customer::update()
     {
         m_velocity_y = m_max_jump_velocity;
 
-        auto squeal = Sound::play_sound_at_location("./res/audio/penguin/neutral/pneutral" + std::to_string(std::rand() % 7 + 1) + ".wav",
-                                                    entity->transform->get_position(), Camera::get_main_camera()->get_position());
+        // 10% chance to squel on jump
+        if (std::rand() % 10 == 0)
+        {
+            auto squeal =
+                Sound::play_sound_at_location("./res/audio/penguin/neutral/pneutral" + std::to_string(std::rand() % 7 + 1) + ".wav",
+                                              entity->transform->get_position(), Camera::get_main_camera()->get_position());
+        }
+
         m_is_jumping = true;
 
         auto const particle = SceneSerializer::load_prefab("PenguinJump");
@@ -120,7 +126,7 @@ void Customer::update()
                 auto splash =
                     Sound::play_sound_at_location("./res/audio/penguin/jump/wodnyskok" + std::to_string(std::rand() % 4 + 1) + ".wav",
                                                   entity->transform->get_position(), Camera::get_main_camera()->get_position());
-                splash->set_volume(20.0f);
+                splash->set_volume(8.0f);
                 m_has_splashed = true;
             }
             if (entity->transform->get_position().y <= desired_height - 5.0f)
