@@ -435,9 +435,9 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
                 entity->get_component<ShipSpawner>()->set_enabled(false);
                 if (is_tutorial_dialogs_enabled)
                 {
-                    factories[1].lock()->set_glowing(true);
                     GameController::get_instance()->dialog_manager.lock()->play_content(6);
                 }
+                factories[1].lock()->set_glowing(true);
                 progress_tutorial();
             }
             break;
@@ -451,10 +451,10 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
                 is_tutorial_dialogs_enabled = true;
                 if (is_tutorial_dialogs_enabled)
                 {
-                    factories[1].lock()->set_glowing(false);
                     GameController::get_instance()->dialog_manager.lock()->end_content();
                     GameController::get_instance()->dialog_manager.lock()->play_content(7);
                 }
+                factories[1].lock()->set_glowing(false);
                 progress_tutorial();
             }
             break;
