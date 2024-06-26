@@ -544,7 +544,14 @@ void Ship::destroy(std::shared_ptr<Entity> const& other_entity_collider)
         return;
 
     is_destroyed = true;
-    m_destroyed_counter = m_destroy_time;
+    if (m_is_in_port)
+    {
+        m_destroyed_counter = m_destroy_time_in_port;
+    }
+    else
+    {
+        m_destroyed_counter = m_destroy_time;
+    }
     m_scale_down_counter = m_scale_down_time;
     m_collision_rotation_counter = m_collision_rotation_time;
 
