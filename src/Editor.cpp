@@ -42,6 +42,7 @@
 #include "Game/EndScreen.h"
 #include "Game/Factory.h"
 #include "Game/GameController.h"
+#include "Game/HovercraftWithoutKeeper.h"
 #include "Game/IceBound.h"
 #include "Game/LevelController.h"
 #include "Game/Lighthouse.h"

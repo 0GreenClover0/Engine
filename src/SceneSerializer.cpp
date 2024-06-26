@@ -34,6 +34,7 @@
 #include "Game/EndScreen.h"
 #include "Game/Factory.h"
 #include "Game/GameController.h"
+#include "Game/HovercraftWithoutKeeper.h"
 #include "Game/IceBound.h"
 #include "Game/LevelController.h"
 #include "Game/Lighthouse.h"
@@ -514,6 +515,15 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "dialog_manager" << YAML::Value << gamecontroller->dialog_manager;
         out << YAML::EndMap;
     }
+    else if (auto const hovercraftwithoutkeeper = std::dynamic_pointer_cast<class HovercraftWithoutKeeper>(component);
+             hovercraftwithoutkeeper != nullptr)
+    {
+        out << YAML::BeginMap;
+        out << YAML::Key << "ComponentName" << YAML::Value << "HovercraftWithoutKeeperComponent";
+        out << YAML::Key << "guid" << YAML::Value << hovercraftwithoutkeeper->guid;
+        out << YAML::Key << "custom_name" << YAML::Value << hovercraftwithoutkeeper->custom_name;
+        out << YAML::EndMap;
+    }
     else if (auto const icebound = std::dynamic_pointer_cast<class IceBound>(component); icebound != nullptr)
     {
         out << YAML::BeginMap;
@@ -561,7 +571,6 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "light" << YAML::Value << lighthouse->light;
         out << YAML::Key << "water" << YAML::Value << lighthouse->water;
         out << YAML::Key << "spawn_position" << YAML::Value << lighthouse->spawn_position;
-        out << YAML::Key << "keeper" << YAML::Value << lighthouse->keeper;
         out << YAML::EndMap;
     }
     else if (auto const lighthousekeeper = std::dynamic_pointer_cast<class LighthouseKeeper>(component); lighthousekeeper != nullptr)
@@ -1914,6 +1923,23 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             deserialized_component->reprepare();
         }
     }
+    else if (component_name == "HovercraftWithoutKeeperComponent")
+    {
+        if (first_pass)
+        {
+            auto const deserialized_component = HovercraftWithoutKeeper::create();
+            deserialized_component->guid = component["guid"].as<std::string>();
+            deserialized_component->custom_name = component["custom_name"].as<std::string>();
+            deserialized_pool.emplace_back(deserialized_component);
+        }
+        else
+        {
+            auto const deserialized_component =
+                std::dynamic_pointer_cast<class HovercraftWithoutKeeper>(get_from_pool(component["guid"].as<std::string>()));
+            deserialized_entity->add_component(deserialized_component);
+            deserialized_component->reprepare();
+        }
+    }
     else if (component_name == "IceBoundComponent")
     {
         if (first_pass)
@@ -2060,10 +2086,6 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             if (component["spawn_position"].IsDefined())
             {
                 deserialized_component->spawn_position = component["spawn_position"].as<std::weak_ptr<Entity>>();
-            }
-            if (component["keeper"].IsDefined())
-            {
-                deserialized_component->keeper = component["keeper"].as<std::shared_ptr<Entity>>();
             }
             deserialized_entity->add_component(deserialized_component);
             deserialized_component->reprepare();
