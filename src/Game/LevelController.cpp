@@ -297,6 +297,12 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
             if (action == TutorialProgressAction::ShipEnteredControl)
             {
                 progress_tutorial();
+                break;
+            }
+            if (action == TutorialProgressAction::ShipDestroyed)
+            {
+                progress_tutorial();
+                break;
             }
             break;
         case 3:
@@ -392,6 +398,12 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
             if (action == TutorialProgressAction::ShipEnteredControl)
             {
                 progress_tutorial();
+                break;
+            }
+            if (action == TutorialProgressAction::ShipDestroyed)
+            {
+                progress_tutorial();
+                break;
             }
             break;
         case 3:
