@@ -957,6 +957,28 @@ void ShipSpawner::reset_event()
     m_main_spawn = backup_spawn;
 }
 
+bool ShipSpawner::is_last_chance_activated() const
+{
+    return m_is_last_chance_activated;
+}
+
+u32 ShipSpawner::get_number_of_food_ships() const
+{
+    u32 number_of_food_ships = 0;
+
+    for (auto ship : m_ships)
+    {
+        auto const ship_locked = ship.lock();
+
+        if (ship_locked->type == ShipType::FoodSmall || ship_locked->type == ShipType::FoodMedium || ship_locked->type == ShipType::FoodBig)
+        {
+            number_of_food_ships += 1;
+        }
+    }
+
+    return number_of_food_ships;
+}
+
 bool ShipSpawner::is_spawn_possible()
 {
     i32 number_of_ships = 0;

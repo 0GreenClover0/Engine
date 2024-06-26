@@ -115,10 +115,25 @@ void LevelController::update()
                     time -= delta_time;
                 }
             }
+
+            if (!is_tutorial && GameController::get_instance()->get_level_number() != 0)
+            {
+                if (Player::get_instance()->food >= LevelController::get_instance()->map_food)
+                {
+                    end_level();
+                    return;
+                }
+
+                if (entity->get_component<ShipSpawner>()->is_last_chance_activated()
+                    && entity->get_component<ShipSpawner>()->get_number_of_food_ships() == 0)
+                {
+                    end_level();
+                    return;
+                }
+            }
         }
         else
         {
-            is_ended = true;
             end_level();
             return;
         }
@@ -641,6 +656,7 @@ void LevelController::destroy_mouse_prompt()
 
 void LevelController::end_level()
 {
+    is_ended = true;
     auto end_screen = SceneSerializer::load_prefab("EndScreen");
     if (Player::get_instance()->food < map_food)
     {
