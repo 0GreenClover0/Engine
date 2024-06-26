@@ -208,6 +208,7 @@ void LighthouseKeeper::on_destroyed()
     hide_interaction_prompt(WorldPromptType::Factory);
     hide_interaction_prompt(WorldPromptType::Port);
     hide_interaction_prompt(WorldPromptType::Lighthouse);
+    engine_sound->stop_with_fade(300);
 }
 
 bool LighthouseKeeper::is_inside_port() const
