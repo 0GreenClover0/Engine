@@ -320,7 +320,8 @@ void LighthouseKeeper::handle_input()
                     {
                         auto const generator_sound = Sound::play_sound_at_location(
                             "./res/audio/generator.wav", entity->transform->get_position(), Camera::get_main_camera()->get_position());
-                        generator_sound->set_volume(25.0f);
+                        generator_sound->set_volume(50.0f);
+                        generator_sound->stop_with_fade(1500);
                     }
                     return;
                 }
