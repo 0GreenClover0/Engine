@@ -110,7 +110,7 @@ void LevelController::update()
         {
             if (AK::Math::are_nearly_equal(Player::get_instance()->flash_counter, 0.0f))
             {
-                if (!is_tutorial)
+                if (!is_tutorial && GameController::get_instance()->get_level_number() != 0)
                 {
                     time -= delta_time;
                 }
