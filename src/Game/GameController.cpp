@@ -264,6 +264,8 @@ void GameController::reset_level()
 
 void GameController::restart_level()
 {
+    m_level_number--;
+
     std::string scene_name = current_scene.lock()->name;
     current_scene.lock()->destroy_immediate();
     current_scene = SceneSerializer::load_prefab(scene_name);
@@ -277,4 +279,6 @@ void GameController::restart_level()
     LevelController::get_instance()->set_exiting_lighthouse(false);
     LevelController::get_instance()->lighthouse.lock()->turn_light(false);
     LevelController::get_instance()->check_tutorial_progress(TutorialProgressAction::LevelStarted);
+
+    m_level_number++;
 }
