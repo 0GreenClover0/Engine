@@ -2,6 +2,7 @@
 
 #include "AK/Math.h"
 #include "Clock.h"
+#include "DebugInputController.h"
 #include "Entity.h"
 #include "Globals.h"
 #include "Input.h"
@@ -54,6 +55,12 @@ void GameController::uninitialize()
 
 void GameController::awake()
 {
+    if (!SceneSerializer::load_prefab("DEBUGINPUTCONTROLLER"))
+    {
+        auto const entity = Entity::create("DEBUGINPUTCONTROLLER");
+        entity->add_component<DebugInputController>(DebugInputController::create());
+    }
+
     std::ranges::reverse(m_levels_order);
 
     m_levels_backup = m_levels_order;
