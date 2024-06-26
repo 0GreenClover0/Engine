@@ -2,6 +2,7 @@
 
 #include "AK/AK.h"
 #include "AK/Math.h"
+#include "Camera.h"
 #include "Collider2D.h"
 #include "Entity.h"
 #include "Floater.h"
@@ -154,7 +155,9 @@ bool Ship::destroyed_state_change()
     if (is_destroyed)
     {
         behavioral_state = BehavioralState::Destroyed;
-
+        auto const crash_sound = Sound::play_sound_at_location("./res/audio/crash.wav", entity->transform->get_position(),
+                                                               Camera::get_main_camera()->get_position(), false);
+        crash_sound->set_volume(0.3f);
         LevelController::get_instance()->check_tutorial_progress(TutorialProgressAction::ShipDestroyed);
 
         if (type == ShipType::Pirates)
