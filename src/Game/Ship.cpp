@@ -707,3 +707,9 @@ bool Ship::is_out_of_room() const
 
     return false;
 }
+
+void Ship::set_glowing(bool const is_glowing) const
+{
+    auto const drawable = entity->get_component<Drawable>();
+    drawable->set_glowing(is_glowing);
+}
