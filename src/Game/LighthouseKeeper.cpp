@@ -152,6 +152,8 @@ void LighthouseKeeper::draw_editor()
     ImGuiEx::InputFloat("Maximum speed", &maximum_speed);
 
     ImGuiEx::draw_ptr("Lighthouse", lighthouse);
+    ImGuiEx::draw_ptr("Keeper dust", keeper_dust);
+    ImGuiEx::draw_ptr("Keeper splash", keeper_splash);
 }
 #endif
 
@@ -162,6 +164,17 @@ void LighthouseKeeper::on_trigger_enter(std::shared_ptr<Collider2D> const& other
         entity->get_component<Floater>()->set_enabled(false);
         auto const position = entity->transform->get_position();
         entity->transform->set_position(glm::vec3(position.x, 0.07f, position.z));
+
+        if (!keeper_dust.expired())
+        {
+            keeper_dust.lock()->max_spawn_count = 15;
+            keeper_dust.lock()->min_spawn_count = 15;
+        }
+        if (!keeper_splash.expired())
+        {
+            keeper_splash.lock()->min_spawn_count = 0;
+            keeper_splash.lock()->max_spawn_count = 0;
+        }
     }
 }
 void LighthouseKeeper::on_trigger_exit(std::shared_ptr<Collider2D> const& other)
@@ -169,6 +182,18 @@ void LighthouseKeeper::on_trigger_exit(std::shared_ptr<Collider2D> const& other)
     if (other->entity->get_component<IceBound>())
     {
         entity->get_component<Floater>()->set_enabled(true);
+
+        if (!keeper_dust.expired())
+        {
+            keeper_dust.lock()->min_spawn_count = 0;
+            keeper_dust.lock()->max_spawn_count = 0;
+        }
+
+        if (!keeper_splash.expired())
+        {
+            keeper_splash.lock()->max_spawn_count = 15;
+            keeper_splash.lock()->min_spawn_count = 15;
+        }
     }
 }
 

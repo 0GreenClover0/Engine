@@ -585,6 +585,8 @@ void SceneSerializer::auto_serialize_component(YAML::Emitter& out, std::shared_p
         out << YAML::Key << "deceleration" << YAML::Value << lighthousekeeper->deceleration;
         out << YAML::Key << "lighthouse" << YAML::Value << lighthousekeeper->lighthouse;
         out << YAML::Key << "port" << YAML::Value << lighthousekeeper->port;
+        out << YAML::Key << "keeper_dust" << YAML::Value << lighthousekeeper->keeper_dust;
+        out << YAML::Key << "keeper_splash" << YAML::Value << lighthousekeeper->keeper_splash;
         out << YAML::Key << "packages" << YAML::Value << lighthousekeeper->packages;
         out << YAML::EndMap;
     }
@@ -2128,6 +2130,14 @@ void SceneSerializer::auto_deserialize_component(YAML::Node const& component, st
             if (component["port"].IsDefined())
             {
                 deserialized_component->port = component["port"].as<std::weak_ptr<Port>>();
+            }
+            if (component["keeper_dust"].IsDefined())
+            {
+                deserialized_component->keeper_dust = component["keeper_dust"].as<std::weak_ptr<ParticleSystem>>();
+            }
+            if (component["keeper_splash"].IsDefined())
+            {
+                deserialized_component->keeper_splash = component["keeper_splash"].as<std::weak_ptr<ParticleSystem>>();
             }
             if (component["packages"].IsDefined())
             {
