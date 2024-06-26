@@ -103,6 +103,8 @@ void GameController::update()
     if (Input::input->get_key_down(GLFW_KEY_F4))
     {
         SceneSerializer::load_prefab("ThanksScreen");
+        auto const thank_you_sound = Sound::play_sound("./res/audio/keeper_messages/voteforus.wav", false);
+        thank_you_sound->set_volume(0.65f);
     }
 
     if (Input::input->get_key_down(GLFW_KEY_F6))
