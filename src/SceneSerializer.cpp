@@ -2791,6 +2791,15 @@ bool SceneSerializer::deserialize(std::string const& file_path)
     return true;
 }
 
+void SceneSerializer::save_prefab(std::shared_ptr<Entity> const& entity, std::string const& prefab_name)
+{
+    auto const scene_serializer = std::make_shared<SceneSerializer>(MainScene::get_instance());
+    scene_serializer->set_instance(scene_serializer);
+    ScopeGuard unset_instance = [&] { scene_serializer->set_instance(nullptr); };
+
+    scene_serializer->serialize_this_entity(entity, m_prefab_path + prefab_name + ".txt");
+}
+
 // FIXME: We should probably cache entities that are prefabs and are referenced in the scene, just like Unity.
 //        So we won't need to read the .txt files here.
 std::shared_ptr<Entity> SceneSerializer::load_prefab(std::string const& prefab_name)
