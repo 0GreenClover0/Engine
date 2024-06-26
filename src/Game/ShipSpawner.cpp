@@ -134,6 +134,15 @@ void ShipSpawner::update()
     {
         prepare_for_spawn();
     }
+
+    if (bell_sound != nullptr)
+    {
+        if (bell_sound->has_finished() && last_chance_sound == nullptr)
+        {
+            last_chance_sound = Sound::play_sound("./res/audio/keeper_messages/last_chance.wav");
+            last_chance_sound->set_volume(0.65f);
+        }
+    }
 }
 
 #if EDITOR
@@ -488,8 +497,10 @@ bool ShipSpawner::is_time_for_last_chance()
     m_main_spawn.emplace_back(last_chance_event);
 
     m_is_last_chance_activated = true;
-    Debug::log("LAST CHANCE!");
 
+    Debug::log("LAST CHANCE!");
+    bell_sound = Sound::play_sound("./res/audio/keeper_messages/dzwon.wav");
+    bell_sound->set_volume(0.45f);
     return true;
 }
 
