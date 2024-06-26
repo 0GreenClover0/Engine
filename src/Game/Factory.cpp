@@ -5,6 +5,7 @@
 #include "Model.h"
 #include "Player.h"
 #include "ResourceManager.h"
+#include "SceneSerializer.h"
 
 #if EDITOR
 #include "imgui_extensions.h"
@@ -39,6 +40,8 @@ bool Factory::interact()
         Player::get_instance()->flash += 1;
         update_lights();
         LevelController::get_instance()->check_tutorial_progress(TutorialProgressAction::GeneratorFueled);
+        auto const particle = SceneSerializer::load_prefab("GeneratorUpgrade");
+        particle->transform->set_position(entity->transform->get_position());
     }
     else if (type == FactoryType::Workshop)
     {
@@ -46,6 +49,8 @@ bool Factory::interact()
         {
             factory_light.lock()->set_flash(true);
             Player::get_instance()->upgrade_lighthouse();
+            auto const particle = SceneSerializer::load_prefab("WorkshopUpgrade");
+            particle->transform->set_position(entity->transform->get_position());
         }
         LevelController::get_instance()->check_tutorial_progress(TutorialProgressAction::WorkshopUpgraded);
     }
