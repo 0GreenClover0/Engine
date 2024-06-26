@@ -2,6 +2,7 @@
 
 #include "AK/AK.h"
 #include "AK/Math.h"
+#include "Clock.h"
 #include "Entity.h"
 #include "GameController.h"
 #include "Globals.h"
@@ -43,6 +44,7 @@ void EndScreen::awake()
     update_background();
 
     LevelController::get_instance()->lighthouse.lock()->is_entering_lighthouse_allowed = false;
+    Clock::get_instance()->update_visibility(true);
 
     set_can_tick(true);
 }

@@ -8,6 +8,8 @@
 #include "Input.h"
 #include "LevelController.h"
 
+#include "Clock.h"
+
 #include <GLFW/glfw3.h>
 #include <glm/gtc/random.hpp>
 #include <glm/gtx/vector_angle.hpp>
@@ -33,6 +35,7 @@ void Popup::awake()
 {
     LevelController::get_instance()->lighthouse.lock()->turn_light(false);
     glfwSetInputMode(Engine::window->get_glfw_window(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    Clock::get_instance()->update_visibility(true);
 
     set_can_tick(true);
 }

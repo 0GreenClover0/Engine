@@ -4,6 +4,7 @@
 #include "Entity.h"
 #include "GameController.h"
 #include "Globals.h"
+#include "LevelController.h"
 
 #include <glm/gtc/random.hpp>
 #include <glm/vec2.hpp>
@@ -58,11 +59,11 @@ void Clock::draw_editor()
 }
 #endif
 
-void Clock::update_visibility() const
+void Clock::update_visibility(bool const hide) const
 {
     glm::vec3 position = entity->transform->get_local_position();
 
-    if (GameController::get_instance()->get_level_number() == 0)
+    if (GameController::get_instance()->get_level_number() == 0 || hide)
     {
         entity->transform->set_local_position({position.x, -5.0f, position.z});
     }
