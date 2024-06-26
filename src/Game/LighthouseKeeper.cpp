@@ -42,11 +42,18 @@ void LighthouseKeeper::awake()
     set_can_tick(true);
     m_engine_sound = Sound::play_sound_at_location("./res/audio/poduszkowiec.wav", entity->transform->get_position(),
                                                    Camera::get_main_camera()->get_position(), true);
-    m_engine_sound->set_volume(50.0f);
+    m_engine_sound->set_volume(80.0f);
 }
 
 void LighthouseKeeper::update()
 {
+    if (m_engine_sound->has_finished())
+    {
+        m_engine_sound = Sound::play_sound_at_location("./res/audio/poduszkowiec.wav", entity->transform->get_position(),
+                                                       Camera::get_main_camera()->get_position(), true);
+        m_engine_sound->set_volume(80.0f);
+    }
+
     m_engine_sound->set_position(entity->transform->get_position());
     i32 horizontal = 0;
     i32 vertical = 0;
@@ -208,7 +215,7 @@ void LighthouseKeeper::on_destroyed()
     hide_interaction_prompt(WorldPromptType::Factory);
     hide_interaction_prompt(WorldPromptType::Port);
     hide_interaction_prompt(WorldPromptType::Lighthouse);
-    engine_sound->stop_with_fade(300);
+    m_engine_sound->stop_with_fade(300);
 }
 
 bool LighthouseKeeper::is_inside_port() const
