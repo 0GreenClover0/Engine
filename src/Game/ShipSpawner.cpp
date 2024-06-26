@@ -132,6 +132,15 @@ void ShipSpawner::update()
 {
     if (LevelController::get_instance()->is_started)
     {
+        // FIXME: In level 3 spawn works differently, and destroying pirate ships
+        //        decreases the limit by 1. In theory this should not happen, but sometimes it does.
+        if (LevelController::get_instance()->tutorial_level == 3)
+        {
+            if (LevelController::get_instance()->ships_limit == 0)
+            {
+                LevelController::get_instance()->ships_limit = 1;
+            }
+        }
         prepare_for_spawn();
     }
 }
