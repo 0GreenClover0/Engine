@@ -84,18 +84,24 @@ bool Port::interact()
     switch (ship->type)
     {
     case ShipType::FoodSmall:
+        Player::get_instance()->trigger_bar_lerp(static_cast<float>(Player::get_instance()->food),
+                                                 static_cast<float>(Player::get_instance()->food + 1));
         Player::get_instance()->food += 1;
         fish = SceneSerializer::load_prefab("Fish1");
         fish->transform->set_position(ship->entity->transform->get_position());
         break;
 
     case ShipType::FoodMedium:
+        Player::get_instance()->trigger_bar_lerp(static_cast<float>(Player::get_instance()->food),
+                                                 static_cast<float>(Player::get_instance()->food + 3));
         Player::get_instance()->food += 3;
         fish = SceneSerializer::load_prefab("Fish3");
         fish->transform->set_position(ship->entity->transform->get_position());
         break;
 
     case ShipType::FoodBig:
+        Player::get_instance()->trigger_bar_lerp(static_cast<float>(Player::get_instance()->food),
+                                                 static_cast<float>(Player::get_instance()->food + 5));
         Player::get_instance()->food += 5;
         fish = SceneSerializer::load_prefab("Fish5");
         fish->transform->set_position(ship->entity->transform->get_position());

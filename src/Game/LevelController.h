@@ -57,7 +57,7 @@ public:
 
     void spawn_mouse_prompt_if_needed();
     void destroy_mouse_prompt();
-    
+
     void end_level();
 
     NON_SERIALIZED
