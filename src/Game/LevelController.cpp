@@ -294,20 +294,20 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
         // NOTE: This is happening before level number is increased, so the actual levels are +1.
         if (GameController::get_instance()->get_level_number() == 3)
         {
-            entity->get_component<ShipSpawner>()->spawn_ship_at_position(ShipType::Tool, {-2.5f, 2.0f}, 90.0f);
-            entity->get_component<ShipSpawner>()->spawn_ship_at_position(ShipType::Tool, {-3.5f, 2.0f}, 90.0f);
+            entity->get_component<ShipSpawner>()->spawn_ship_at_position(ShipType::Tool, {-2.5f, 2.0f}, 90.0f, true);
+            entity->get_component<ShipSpawner>()->spawn_ship_at_position(ShipType::Tool, {-3.5f, 2.0f}, 90.0f, true);
         }
 
         if (GameController::get_instance()->get_level_number() == 4)
         {
-            entity->get_component<ShipSpawner>()->spawn_ship_at_position(ShipType::Tool, {2.0f, 1.1f}, 0.0f);
-            entity->get_component<ShipSpawner>()->spawn_ship_at_position(ShipType::Tool, {2.0f, 2.1f}, 0.0f);
+            entity->get_component<ShipSpawner>()->spawn_ship_at_position(ShipType::Tool, {2.0f, 1.1f}, 0.0f, true);
+            entity->get_component<ShipSpawner>()->spawn_ship_at_position(ShipType::Tool, {2.0f, 2.1f}, 0.0f, true);
         }
 
         if (GameController::get_instance()->get_level_number() == 5)
         {
-            entity->get_component<ShipSpawner>()->spawn_ship_at_position(ShipType::Tool, {-3.8f, -4.3f}, 230.0f);
-            entity->get_component<ShipSpawner>()->spawn_ship_at_position(ShipType::Tool, {-5.0f, -3.0f}, 230.0f);
+            entity->get_component<ShipSpawner>()->spawn_ship_at_position(ShipType::Tool, {-3.8f, -4.3f}, 230.0f, true);
+            entity->get_component<ShipSpawner>()->spawn_ship_at_position(ShipType::Tool, {-5.0f, -3.0f}, 230.0f, true);
         }
     }
 

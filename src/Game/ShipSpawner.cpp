@@ -890,7 +890,7 @@ void ShipSpawner::spawn_ship(SpawnEvent const* being_spawn)
     m_ships.emplace_back(ship->get_component<Ship>());
 }
 
-void ShipSpawner::spawn_ship_at_position(ShipType const type, glm::vec2 position, float const direction)
+void ShipSpawner::spawn_ship_at_position(ShipType const type, glm::vec2 position, float const direction, bool glowing)
 {
     std::shared_ptr<Entity> ship;
 
@@ -945,6 +945,8 @@ void ShipSpawner::spawn_ship_at_position(ShipType const type, glm::vec2 position
     ship_comp->set_start_direction();
     ship_comp->behavioral_state = BehavioralState::Stop;
     ship_comp->set_direction(direction);
+
+    ship_comp->set_glowing(glowing);
 
     m_ships.emplace_back(ship->get_component<Ship>());
 }

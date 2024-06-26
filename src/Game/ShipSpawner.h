@@ -56,7 +56,7 @@ public:
     std::vector<SpawnEvent> backup_spawn = {};
 
     void burn_out_all_ships(bool const value) const;
-    void spawn_ship_at_position(ShipType const type, glm::vec2 position, float const direction);
+    void spawn_ship_at_position(ShipType const type, glm::vec2 position, float const direction, bool glowing = false);
     void pop_event();
     void reset_event();
     bool is_last_chance_activated() const;
