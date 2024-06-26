@@ -79,19 +79,26 @@ bool Port::interact()
     }
 
     auto const& ship = chosen_ship;
+    std::shared_ptr<Entity> fish = nullptr;
 
     switch (ship->type)
     {
     case ShipType::FoodSmall:
         Player::get_instance()->food += 1;
+        fish = SceneSerializer::load_prefab("Fish1");
+        fish->transform->set_position(ship->entity->transform->get_position());
         break;
 
     case ShipType::FoodMedium:
         Player::get_instance()->food += 3;
+        fish = SceneSerializer::load_prefab("Fish3");
+        fish->transform->set_position(ship->entity->transform->get_position());
         break;
 
     case ShipType::FoodBig:
         Player::get_instance()->food += 5;
+        fish = SceneSerializer::load_prefab("Fish5");
+        fish->transform->set_position(ship->entity->transform->get_position());
         break;
 
     case ShipType::Tool:

@@ -39,7 +39,7 @@ void ParticleSystem::draw_editor()
     Component::draw_editor();
 
     // Dropdown list
-    std::array const particle_types = {"Default", "Prompt", "Snow"};
+    std::array const particle_types = {"Default", "Prompt", "Snow", "Fish"};
     i32 current_item_index = static_cast<i32>(particle_type);
     if (ImGui::Combo("Particle type", &current_item_index, particle_types.data(), particle_types.size()))
     {
@@ -118,7 +118,7 @@ void ParticleSystem::update_system()
             m_random_spawn_count -= 1;
         }
 
-        if (play_once)
+        if (play_once && m_spawn_data_vector.empty())
             entity->destroy_immediate();
     }
     m_time_counter += delta_time;

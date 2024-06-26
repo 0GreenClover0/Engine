@@ -3,6 +3,7 @@
 #include "AK/AK.h"
 #include "Customer.h"
 #include "Entity.h"
+#include "GameController.h"
 #include "LevelController.h"
 #include "Player.h"
 #include "SceneSerializer.h"
@@ -24,6 +25,8 @@ CustomerManager::CustomerManager(AK::Badge<CustomerManager>)
 void CustomerManager::awake()
 {
     set_can_tick(true);
+
+    GameController::get_instance()->register_customer_manager_entity(entity);
 
     if (destination_curve.expired())
     {

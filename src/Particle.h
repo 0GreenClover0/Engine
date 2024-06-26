@@ -53,6 +53,7 @@ private:
     ID3D11Buffer* m_constant_buffer_particle = nullptr;
 
     glm::vec3 m_original_position = {};
+    glm::vec3 m_fish_offset = {};
 
     float m_current_lifetime = 0.0f;
     glm::vec4 m_color = {1.0f, 1.0f, 1.0f, 1.0f};
@@ -64,6 +65,8 @@ private:
     float m_rotation_direction = 1.0f;
     float m_lifetime = 5.0f;
     float m_random_seed = 0.0f;
+
+    glm::vec3 m_customer_group_position = {};
 
     std::shared_ptr<Mesh> m_mesh = {};
 };
