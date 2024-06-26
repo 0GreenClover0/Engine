@@ -83,6 +83,8 @@ void GameController::awake()
     reset_level();
 
     Sound::play_sound("./res/audio/ost_loop.wav", true);
+    auto const wind_sound = Sound::play_sound("./res/audio/wind.mp3", true);
+    wind_sound->set_volume(0.5f);
 
     Clock::get_instance()->update_visibility();
 
