@@ -237,6 +237,7 @@ void LighthouseKeeper::show_interaction_prompt(glm::vec3 const& position, WorldP
         {
             m_factory_prompt = SceneSerializer::load_prefab("SpacePrompt");
             m_factory_prompt.lock()->transform->set_position({position.x, 2.0f, position.z});
+            m_factory_prompt.lock()->transform->set_parent(LevelController::get_instance()->entity->transform);
         }
         break;
 
@@ -245,6 +246,7 @@ void LighthouseKeeper::show_interaction_prompt(glm::vec3 const& position, WorldP
         {
             m_lighthouse_prompt = SceneSerializer::load_prefab("SpacePrompt");
             m_lighthouse_prompt.lock()->transform->set_position({position.x, 2.0f, position.z});
+            m_lighthouse_prompt.lock()->transform->set_parent(LevelController::get_instance()->entity->transform);
         }
         break;
 
@@ -253,6 +255,7 @@ void LighthouseKeeper::show_interaction_prompt(glm::vec3 const& position, WorldP
         {
             m_port_prompt = SceneSerializer::load_prefab("SpacePrompt");
             m_port_prompt.lock()->transform->set_position({position.x, 1.0f, position.z});
+            m_port_prompt.lock()->transform->set_parent(LevelController::get_instance()->entity->transform);
         }
         break;
     }

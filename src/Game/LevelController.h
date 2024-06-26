@@ -55,9 +55,11 @@ public:
 
     void progress_tutorial(i32 step = 1);
 
-    void spawn_mouse_prompt_if_needed();
+    void spawn_prompt(std::string const& prefab_name, glm::vec3 const& position, std::weak_ptr<Entity>& optional_ref);
+
+    void spawn_mouse_prompt_on_new_level();
     void destroy_mouse_prompt();
-    
+
     void end_level();
 
     NON_SERIALIZED

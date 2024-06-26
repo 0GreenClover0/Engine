@@ -26,6 +26,7 @@ void NowPromptTrigger::on_trigger_enter(std::shared_ptr<Collider2D> const& other
         {
             m_story_now_prompt = SceneSerializer::load_prefab("NowPrompt");
             m_story_now_prompt.lock()->transform->set_position(m_now_prompt_pos);
+            m_story_now_prompt.lock()->transform->set_parent(entity->transform);
             m_time_of_showing_prompt = 0.0f;
             m_entered_triger = true;
         }

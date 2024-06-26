@@ -178,7 +178,7 @@ void LevelController::update()
         }
         else
         {
-            spawn_mouse_prompt_if_needed();
+            spawn_mouse_prompt_on_new_level();
             if (Input::input->get_key_down(GLFW_MOUSE_BUTTON_LEFT))
             {
                 if (!is_tutorial)
@@ -362,7 +362,9 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
                 GameController::get_instance()->dialog_manager.lock()->play_content(2);
                 m_story_space_prompt = SceneSerializer::load_prefab("SpacePrompt");
                 m_story_space_prompt.lock()->transform->set_position(m_space_prompt_pos);
+                m_story_space_prompt.lock()->transform->set_parent(entity->transform);
                 entity->get_component<ShipSpawner>()->set_glow_to_last_ship();
+                spawn_prompt("SpacePrompt", m_space_prompt_pos, m_story_space_prompt);
                 set_exiting_lighthouse(true);
                 progress_tutorial(2);
             }
@@ -373,6 +375,7 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
                 GameController::get_instance()->dialog_manager.lock()->play_content(2);
                 m_story_space_prompt = SceneSerializer::load_prefab("SpacePrompt");
                 m_story_space_prompt.lock()->transform->set_position(m_space_prompt_pos);
+                m_story_space_prompt.lock()->transform->set_parent(entity->transform);
                 set_exiting_lighthouse(true);
                 progress_tutorial();
             }
@@ -387,6 +390,7 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
 
                 m_story_wasd_prompt = SceneSerializer::load_prefab("WASDPrompt");
                 m_story_wasd_prompt.lock()->transform->set_position(m_wasd_prompt_pos);
+                m_story_wasd_prompt.lock()->transform->set_parent(entity->transform);
 
                 progress_tutorial();
             }
@@ -464,6 +468,7 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
                     {
                         m_story_second_space_prompt = SceneSerializer::load_prefab("SpacePrompt");
                         m_story_second_space_prompt.lock()->transform->set_position(m_second_space_prompt_pos);
+                        m_story_second_space_prompt.lock()->transform->set_parent(entity->transform);
                     }
                 }
                 progress_tutorial();
@@ -660,7 +665,14 @@ void LevelController::progress_tutorial(i32 step)
     tutorial_progress += step;
 }
 
-void LevelController::spawn_mouse_prompt_if_needed()
+void LevelController::spawn_prompt(std::string const& prefab_name, glm::vec3 const& position, std::weak_ptr<Entity>& optional_ref)
+{
+    optional_ref = SceneSerializer::load_prefab(prefab_name);
+    optional_ref.lock()->transform->set_position(position);
+    optional_ref.lock()->transform->set_parent(entity->transform);
+}
+
+void LevelController::spawn_mouse_prompt_on_new_level()
 {
     if (!m_story_mouse_prompt.expired())
         return;
@@ -670,6 +682,7 @@ void LevelController::spawn_mouse_prompt_if_needed()
         m_story_mouse_prompt = SceneSerializer::load_prefab("MousePrompt");
         m_mouse_prompt_pos = lighthouse.lock()->entity->transform->get_position() + glm::vec3(0.0f, 1.3f, -0.75f);
         m_story_mouse_prompt.lock()->transform->set_position(m_mouse_prompt_pos);
+        m_story_mouse_prompt.lock()->transform->set_parent(entity->transform);
     }
 }
 
