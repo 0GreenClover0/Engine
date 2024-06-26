@@ -59,6 +59,7 @@ public:
     void spawn_ship_at_position(ShipType const type, glm::vec2 position, float const direction, bool glowing = false);
     void pop_event();
     void reset_event();
+    void set_glow_to_last_ship();
     bool is_last_chance_activated() const;
     u32 get_number_of_food_ships() const;
 

@@ -962,6 +962,14 @@ void ShipSpawner::reset_event()
     m_main_spawn = backup_spawn;
 }
 
+void ShipSpawner::set_glow_to_last_ship()
+{
+    if (m_ships.size() != 0)
+    {
+        m_ships.back().lock()->entity->get_component<Ship>()->set_glowing(true);
+    }
+}
+
 bool ShipSpawner::is_last_chance_activated() const
 {
     return m_is_last_chance_activated;
