@@ -49,13 +49,14 @@ bool Factory::interact()
         {
             factory_light.lock()->set_flash(true);
             Player::get_instance()->upgrade_lighthouse();
+            LevelController::get_instance()->check_tutorial_progress(TutorialProgressAction::WorkshopUpgraded);
+
             auto const particle = SceneSerializer::load_prefab("WorkshopUpgrade");
             particle->transform->set_position(entity->transform->get_position());
-        }
-        LevelController::get_instance()->check_tutorial_progress(TutorialProgressAction::WorkshopUpgraded);
-    }
 
-    Player::get_instance()->packages -= 1;
+            Player::get_instance()->packages -= 1;
+        }
+    }
 
     return true;
 }
