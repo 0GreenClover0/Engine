@@ -427,8 +427,24 @@ void ShipSpawner::add_warning()
     auto const warning = SceneSerializer::load_prefab("Exclamation"); //Entity::create("Warning");
     warning->transform->set_parent(GameController::get_instance()->current_scene.lock()->transform);
 
-    warning->transform->set_local_position({m_spawn_position[0].x - glm::sign(m_spawn_position[0].x) * 1.5f, 1.0f,
-                                            m_spawn_position[0].y - glm::sign(m_spawn_position[0].y) * 1.5f});
+    float x = fabs(m_spawn_position[0].x);
+    float y = fabs(m_spawn_position[0].y);
+
+    float horizontal_distance =
+        fabs(x - (LevelController::get_instance()->playfield_width + LevelController::get_instance()->playfield_additional_width * 2.0f));
+
+    float vertical_distance =
+        fabs(y - LevelController::get_instance()->playfield_height + LevelController::get_instance()->playfield_y_shift + 1.0f);
+
+    if (horizontal_distance < vertical_distance)
+    {
+        warning->transform->set_local_position(
+            {m_spawn_position[0].x - glm::sign(m_spawn_position[0].x) * 1.5f, 1.0f, m_spawn_position[0].y});
+    }
+    else
+    {
+        warning->transform->set_local_position({m_spawn_position[0].x, 1.0f, m_spawn_position[0].y - glm::sign(m_spawn_position[0].y)});
+    }
 
     if (m_spawn_type == SpawnType::Rapid)
     {
