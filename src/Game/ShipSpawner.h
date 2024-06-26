@@ -4,6 +4,7 @@
 #include "FloatersManager.h"
 #include "Path.h"
 #include "Ship.h"
+#include "Sound.h"
 
 enum class SpawnType
 {
@@ -80,6 +81,8 @@ private:
     std::vector<glm::vec2> m_spawn_position = {};
 
     std::vector<std::weak_ptr<Ship>> m_ships = {};
+    std::shared_ptr<Sound> last_chance_sound = {};
+    std::shared_ptr<Sound> bell_sound = {};
 
     bool m_is_test_spawn_enable = false;
     bool m_is_half_rapid_done = false;
