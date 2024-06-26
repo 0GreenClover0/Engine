@@ -42,7 +42,7 @@ void LighthouseKeeper::awake()
     set_can_tick(true);
     m_engine_sound = Sound::play_sound_at_location("./res/audio/poduszkowiec.wav", entity->transform->get_position(),
                                                    Camera::get_main_camera()->get_position(), false);
-    m_engine_sound->set_volume(8.0f);
+    m_engine_sound->set_volume(2.0f);
 }
 
 void LighthouseKeeper::update()
@@ -51,7 +51,7 @@ void LighthouseKeeper::update()
     {
         m_engine_sound = Sound::play_sound_at_location("./res/audio/poduszkowiec.wav", entity->transform->get_position(),
                                                        Camera::get_main_camera()->get_position(), false);
-        m_engine_sound->set_volume(8.0f);
+        m_engine_sound->set_volume(2.0f);
     }
     m_engine_sound->entity->transform->set_position(entity->transform->get_position());
     i32 horizontal = 0;
