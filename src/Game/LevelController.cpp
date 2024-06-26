@@ -152,6 +152,12 @@ void LevelController::update()
             lighthouse.lock()->turn_light(true);
             is_started = true;
             set_exiting_lighthouse(true);
+
+            if (GameController::get_instance()->get_level_number() == 0) // We're in menu
+            {
+                Player::get_instance()->lighthouse_level = LevelController::get_instance()->maximum_lighthouse_level;
+                LevelController::get_instance()->on_lighthouse_upgraded();
+            }
         }
         else // TODO: Change RMB to LMB in final game
         {
@@ -210,6 +216,7 @@ void LevelController::draw_editor()
 
     ImGui::Text("Map Food");
     ImGui::InputScalar("Food: ", ImGuiDataType_U32, &map_food);
+    ImGui::InputScalar("Maximum lighthouse level: ", ImGuiDataType_U32, &maximum_lighthouse_level);
 
     ImGui::Text(("Food: " + std::to_string(Player::get_instance()->food) + " / " + std::to_string(map_food)).c_str());
 
