@@ -106,7 +106,7 @@ void Player::update()
     if (!level_text.expired() && LevelController::get_instance() != nullptr)
     {
         std::string const content =
-            std::to_string(lighthouse_level) + "/" + std::to_string(LevelController::get_instance()->maximum_lighthouse_level);
+            std::to_string(lighthouse_level) + "/" + std::to_string(LevelController::get_instance()->maximum_lighthouse_level - 1);
 
         level_text.lock()->color = 0xfff4ecf8;
         level_text.lock()->set_text(content);
