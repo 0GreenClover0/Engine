@@ -704,4 +704,18 @@ void LevelController::end_level()
             }
         }
     }
+
+    if (!is_tutorial)
+    {
+        if (end_screen->get_component<EndScreen>()->is_failed)
+        {
+            auto const sound = Sound::play_sound("./res/audio/keeper_messages/lose/" + std::to_string(std::rand() % 3 + 1) + ".wav");
+            sound->set_volume(0.65f);
+        }
+        else
+        {
+            auto const sound = Sound::play_sound("./res/audio/keeper_messages/win/" + std::to_string(std::rand() % 3 + 1) + ".wav");
+            sound->set_volume(0.65f);
+        }
+    }
 }
