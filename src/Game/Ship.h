@@ -169,6 +169,7 @@ public:
     virtual void on_trigger_exit(std::shared_ptr<Collider2D> const& other) override;
 
     void set_start_direction();
+    void set_glowing(bool const is_glowing) const;
     void destroy(std::shared_ptr<Entity> const& other_entity_collider);
     void stop();
     bool is_in_port() const;
