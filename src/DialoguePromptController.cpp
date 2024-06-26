@@ -274,6 +274,11 @@ void DialoguePromptController::end_content()
 
 void DialoguePromptController::flip(bool value)
 {
+    if (m_is_flipped == value)
+    {
+        return;
+    }
+
     m_is_flipped = value;
 
     glm::vec3 position = keeper_sprite.lock()->transform->get_local_position();
