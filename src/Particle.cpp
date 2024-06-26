@@ -4,6 +4,8 @@
 #include "AK/Math.h"
 #include "Camera.h"
 #include "Entity.h"
+#include "Game/CustomerManager.h"
+#include "Game/GameController.h"
 #include "Globals.h"
 #include "RendererDX11.h"
 #include "ResourceManager.h"
@@ -94,7 +96,23 @@ void Particle::awake()
 
     m_random_seed = AK::random_float(-1.0f, 1.0f);
 
-    m_original_position = entity->transform->get_position();
+    if (!entity->transform->parent.expired())
+    {
+        m_original_position = entity->transform->parent.lock()->get_position();
+    }
+    else
+    {
+        m_original_position = entity->transform->get_position();
+    }
+
+    if (GameController::get_instance() != nullptr && !GameController::get_instance()->get_customer_manager_entity().expired())
+    {
+        m_customer_group_position =
+            GameController::get_instance()->get_customer_manager_entity().lock()->transform->get_position() + glm::vec3(0.0f, 1.0f, 0.0f);
+
+        m_fish_offset = {AK::random_float(-m_velocity.y, m_velocity.y), AK::random_float(-m_velocity.y, m_velocity.y),
+                         AK::random_float(-m_velocity.y, m_velocity.y)};
+    }
 }
 
 void Particle::draw() const
@@ -209,6 +227,18 @@ void Particle::move() const
         // Ensure the y-component decreases over time for downward motion
         change.y = -static_cast<float>(delta_time) * 6.5f;
         new_position = p + change;
+        break;
+    }
+    case ParticleType::Fish:
+    {
+        float t = m_current_lifetime / m_lifetime;
+
+        new_position = glm::mix(entity->transform->parent.lock()->get_position(), m_customer_group_position, t) + m_fish_offset;
+
+        auto const rot = entity->transform->get_euler_angles();
+        glm::vec3 const d_rot = {0.0f, 0.0f, delta_time * m_velocity.y * 850.0f};
+        entity->transform->set_euler_angles(rot + d_rot * m_rotation_direction);
+
         break;
     }
     default:

@@ -3,6 +3,7 @@
 #include "AK/Badge.h"
 #include "AK/Types.h"
 #include "Component.h"
+#include "CustomerManager.h"
 #include "DialoguePromptController.h"
 
 #include <glm/vec2.hpp>
@@ -27,6 +28,9 @@ public:
 
     bool is_moving_to_next_scene() const;
     void move_to_next_scene();
+
+    void register_customer_manager_entity(std::shared_ptr<Entity> const& customer_manager_entity);
+    std::weak_ptr<Entity> get_customer_manager_entity() const;
 
     void reset_level();
     void restart_level();
@@ -53,4 +57,6 @@ private:
     std::vector<std::string> m_levels_order = {"Level_0", "Level_1", "Level_2", "Level_3", "Level_4", "Level_5", "Level_6"};
     std::vector<std::string> m_levels_backup = {};
     std::vector<glm::vec2> m_points_backup = {};
+
+    std::weak_ptr<Entity> m_customer_manager_entity = {};
 };

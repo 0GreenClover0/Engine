@@ -11,7 +11,8 @@ enum class ParticleType
 {
     Default,
     Prompt,
-    Snow
+    Snow,
+    Fish
 };
 
 struct ParticleSpawnData

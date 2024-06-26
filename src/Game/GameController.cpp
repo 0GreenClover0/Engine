@@ -239,6 +239,16 @@ void GameController::move_to_next_scene()
     update_scenes_position();
 }
 
+void GameController::register_customer_manager_entity(std::shared_ptr<Entity> const& customer_manager_entity)
+{
+    m_customer_manager_entity = customer_manager_entity;
+}
+
+std::weak_ptr<Entity> GameController::get_customer_manager_entity() const
+{
+    return m_customer_manager_entity;
+}
+
 void GameController::reset_level()
 {
     Player::get_instance()->reset_player();
