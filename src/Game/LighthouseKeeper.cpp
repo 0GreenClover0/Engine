@@ -340,10 +340,17 @@ void LighthouseKeeper::handle_input()
             if (has_interacted)
             {
                 hide_interaction_prompt(WorldPromptType::Port);
+
+                auto const pickup_sound =
+                    Sound::play_sound_at_location("./res/audio/pickup/paczka" + std::to_string(std::rand() % 3 + 1) + ".wav",
+                                                  entity->transform->get_position(), Camera::get_main_camera()->get_position());
+                pickup_sound->set_volume(15.0f);
+
                 if (packages.size() < Player::get_instance()->packages)
                 {
                     add_package();
                 }
+
                 return;
             }
         }
