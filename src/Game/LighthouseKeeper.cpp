@@ -323,6 +323,13 @@ void LighthouseKeeper::handle_input()
                         generator_sound->set_volume(50.0f);
                         generator_sound->stop_with_fade(1500);
                     }
+                    else if (closest_factory->type == FactoryType::Workshop)
+                    {
+                        auto const workshop_sound = Sound::play_sound_at_location(
+                            "./res/audio/warsztat.wav", entity->transform->get_position(), Camera::get_main_camera()->get_position());
+                        workshop_sound->set_volume(30.0f);
+                        workshop_sound->stop_with_fade(1500);
+                    }
                     return;
                 }
             }
