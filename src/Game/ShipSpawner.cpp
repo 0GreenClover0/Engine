@@ -642,8 +642,11 @@ void ShipSpawner::prepare_for_spawn()
                 }
             }
 
-            m_warning_lights.back().lock()->destroy_immediate();
-            m_warning_lights.pop_back();
+            if (!m_warning_lights.back().expired())
+            {
+                m_warning_lights.back().lock()->destroy_immediate();
+                m_warning_lights.pop_back();
+            }
 
             spawn_ship(being_spawn);
 
