@@ -1,5 +1,6 @@
 #include "Lighthouse.h"
 
+#include "Camera.h"
 #include "Collider2D.h"
 #include "Entity.h"
 #include "Floater.h"
@@ -93,6 +94,10 @@ void Lighthouse::enter()
     light.lock()->entity->get_component<Sphere>()->set_enabled(true);
 
     LevelController::get_instance()->check_tutorial_progress(TutorialProgressAction::KeeperEnteredLighthouse);
+
+    auto const enter_sound = Sound::play_sound_at_location("./res/audio/pickup/enter_latarnia.wav", entity->transform->get_position(),
+                                                           Camera::get_main_camera()->get_position());
+    enter_sound->set_volume(15.0f);
 }
 
 void Lighthouse::exit()
@@ -129,6 +134,10 @@ void Lighthouse::exit()
     m_keeper = keeper;
 
     LevelController::get_instance()->check_tutorial_progress(TutorialProgressAction::KeeperLeftLighthouse);
+
+    auto const exit_sound = Sound::play_sound_at_location("./res/audio/pickup/enter_latarnia.wav", entity->transform->get_position(),
+                                                          Camera::get_main_camera()->get_position());
+    exit_sound->set_volume(15.0f);
 }
 
 void Lighthouse::spawn_hovercraft()
