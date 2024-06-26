@@ -356,7 +356,7 @@ void LighthouseKeeper::handle_input()
 
         if (Input::input->get_key_down(GLFW_KEY_SPACE))
         {
-            bool const has_interacted = port_locked->interact();
+            bool const has_interacted = port_locked->interact(entity);
 
             if (has_interacted)
             {

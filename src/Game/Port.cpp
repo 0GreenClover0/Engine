@@ -49,12 +49,15 @@ std::vector<std::weak_ptr<Ship>> const& Port::get_ships_inside() const
     return m_ships_inside;
 }
 
-bool Port::interact()
+bool Port::interact(std::shared_ptr<Entity> const& keeper_entity)
 {
     if (m_ships_inside.size() <= 0)
         return false;
 
     std::shared_ptr<Ship> chosen_ship = nullptr;
+
+    float closest_distance = std::numeric_limits<float>::max();
+    glm::vec3 const keeper_position = keeper_entity->transform->get_position();
 
     for (auto const& ship : m_ships_inside)
     {
@@ -66,10 +69,18 @@ bool Port::interact()
             continue;
         }
 
-        if (ship.lock()->type != ShipType::Pirates)
+        auto const ship_locked = ship.lock();
+
+        if (ship_locked->type == ShipType::Pirates)
         {
-            chosen_ship = ship.lock();
-            break;
+            continue;
+        }
+
+        float const distance = glm::distance(keeper_position, ship_locked->entity->transform->get_position());
+        if (distance < closest_distance)
+        {
+            chosen_ship = ship_locked;
+            closest_distance = distance;
         }
     }
 

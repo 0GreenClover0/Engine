@@ -22,7 +22,7 @@ public:
 
     std::vector<std::weak_ptr<Ship>> const& get_ships_inside() const;
 
-    [[nodiscard]] bool interact();
+    [[nodiscard]] bool interact(std::shared_ptr<Entity> const& keeper_entity);
 
     float get_interactable_distance() const;
 
