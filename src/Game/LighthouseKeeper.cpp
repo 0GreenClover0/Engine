@@ -316,6 +316,12 @@ void LighthouseKeeper::handle_input()
                 if (closest_factory->interact())
                 {
                     remove_package();
+                    if (closest_factory->type == FactoryType::Generator)
+                    {
+                        auto const generator_sound = Sound::play_sound_at_location(
+                            "./res/audio/generator.wav", entity->transform->get_position(), Camera::get_main_camera()->get_position());
+                        generator_sound->set_volume(25.0f);
+                    }
                     return;
                 }
             }
