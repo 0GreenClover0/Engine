@@ -142,6 +142,14 @@ void EndScreen::update()
             }
         }
     }
+
+    if (Input::input->get_key_down(GLFW_KEY_F4))
+    {
+        hide();
+
+        // Thanks for playing screen is presented, we don't want to disable the cursor
+        glfwSetInputMode(Engine::window->get_glfw_window(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    }
 }
 
 #if EDITOR
