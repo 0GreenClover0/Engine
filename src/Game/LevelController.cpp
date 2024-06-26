@@ -174,10 +174,10 @@ void LevelController::update()
                 LevelController::get_instance()->on_lighthouse_upgraded();
             }
         }
-        else // TODO: Change RMB to LMB in final game
+        else 
         {
             spawn_mouse_prompt_if_needed();
-            if (Input::input->get_key_down(GLFW_MOUSE_BUTTON_RIGHT))
+            if (Input::input->get_key_down(GLFW_MOUSE_BUTTON_LEFT))
             {
                 if (!is_tutorial)
                 {

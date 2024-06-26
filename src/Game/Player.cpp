@@ -116,7 +116,7 @@ void Player::update()
         Debug::log("LEVELS ScreenText is not attached. UI is not working properly.", DebugType::Error);
     }
 
-    if (Input::input->get_key_down(GLFW_MOUSE_BUTTON_RIGHT))
+    if (Input::input->get_key_down(GLFW_MOUSE_BUTTON_LEFT))
     {
         if (flash > 0 && glm::epsilonEqual(flash_counter, 0.0f, 0.0001f))
         {
