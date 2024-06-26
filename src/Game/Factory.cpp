@@ -45,7 +45,7 @@ bool Factory::interact()
     }
     else if (type == FactoryType::Workshop)
     {
-        if (Player::get_instance()->lighthouse_level < LevelController::get_instance()->maximum_lighthouse_level)
+        if (Player::get_instance()->lighthouse_level < LevelController::get_instance()->maximum_lighthouse_level - 1)
         {
             factory_light.lock()->set_flash(true);
             Player::get_instance()->upgrade_lighthouse();
@@ -55,6 +55,10 @@ bool Factory::interact()
             particle->transform->set_position(entity->transform->get_position());
 
             Player::get_instance()->packages -= 1;
+        }
+        else
+        {
+            return false;
         }
     }
 
