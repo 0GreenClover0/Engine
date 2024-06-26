@@ -7,6 +7,7 @@
 #include "GameController.h"
 #include "Globals.h"
 #include "LighthouseKeeper.h"
+#include "SceneSerializer.h"
 
 #include <glm/gtc/random.hpp>
 
@@ -97,6 +98,9 @@ void Customer::update()
     {
         m_velocity_y = m_max_jump_velocity;
         m_is_jumping = true;
+
+        auto const particle = SceneSerializer::load_prefab("PenguinJump");
+        particle->transform->set_position(entity->transform->get_position() + glm::vec3(0.0f, 0.1f, 0.0f));
     }
     else if (m_is_jumping)
     {
