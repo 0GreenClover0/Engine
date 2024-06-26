@@ -243,6 +243,7 @@ void GameController::reset_level()
 {
     Player::get_instance()->reset_player();
     Player::get_instance()->packages = LevelController::get_instance()->starting_packages;
+    Player::get_instance()->trigger_bar_lerp(static_cast<float>(Player::get_instance()->food), 0.0f);
 
     LevelController::get_instance()->entity->get_component<ShipSpawner>()->get_spawn_paths();
     LevelController::get_instance()->on_lighthouse_upgraded();
@@ -257,6 +258,7 @@ void GameController::restart_level()
     std::string scene_name = current_scene.lock()->name;
     current_scene.lock()->destroy_immediate();
     current_scene = SceneSerializer::load_prefab(scene_name);
+    Player::get_instance()->trigger_bar_lerp(static_cast<float>(Player::get_instance()->food), 0.0f);
 
     Player::get_instance()->reset_player();
     Player::get_instance()->packages = LevelController::get_instance()->starting_packages;

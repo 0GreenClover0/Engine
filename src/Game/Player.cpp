@@ -55,6 +55,38 @@ void Player::upgrade_lighthouse()
     LevelController::get_instance()->on_lighthouse_upgraded();
 }
 
+void Player::lerp_bar()
+{
+    if (!m_is_bar_lerping || m_map_food_helper_variable == 0)
+        return;
+
+    m_bar_counter += static_cast<float>(delta_time);
+
+    float const t = m_bar_counter / m_bar_lerp_duration;
+    m_bar_value = std::lerp(m_lerp_initial_value, m_lerp_target_value, t) / static_cast<float>(m_map_food_helper_variable);
+
+    if (t >= 1.0f)
+        m_is_bar_lerping = false;
+
+    if (!progress_bar.expired())
+    {
+        auto const pb = progress_bar.lock();
+        pb->transform->set_local_scale({std::clamp(m_bar_value, 0.0f, 1.0f), 1.0f, 1.0f});
+    }
+    else
+    {
+        Debug::log("PROGRESS BAR Entity is not attached. UI is not working properly.", DebugType::Error);
+    }
+}
+
+void Player::trigger_bar_lerp(float current_value, float desired_value)
+{
+    m_bar_counter = 0.0f;
+    m_lerp_initial_value = current_value;
+    m_lerp_target_value = desired_value;
+    m_is_bar_lerping = true;
+}
+
 std::shared_ptr<Player> Player::get_instance()
 {
     return m_instance;
@@ -73,8 +105,6 @@ void Player::update()
 {
     if (LevelController::get_instance() != nullptr)
         m_map_food_helper_variable = LevelController::get_instance()->map_food;
-
-    Debug::log(std::to_string(food) + "/" + std::to_string(m_map_food_helper_variable));
 
     if (LevelController::get_instance() != nullptr
         && LevelController::get_instance()->entity->get_component<ShipSpawner>()->should_decal_be_drawn())
@@ -121,20 +151,6 @@ void Player::update()
         Debug::log("LEVELS ScreenText is not attached. UI is not working properly.", DebugType::Error);
     }
 
-    if (!progress_bar.expired())
-    {
-        auto const pb = progress_bar.lock();
-        if (m_map_food_helper_variable == 0)
-            pb->transform->set_local_scale({1.0f, 1.0f, 1.0f});
-        else
-            pb->transform->set_local_scale(
-                {std::clamp(static_cast<float>(food) / static_cast<float>(m_map_food_helper_variable), 0.0f, 1.0f), 1.0f, 1.0f});
-    }
-    else
-    {
-        Debug::log("PROGRESS BAR Entity is not attached. UI is not working properly.", DebugType::Error);
-    }
-
     // TODO: CHANGE TO RMB!
     if (Input::input->get_key_down(GLFW_MOUSE_BUTTON_RIGHT))
     {
@@ -164,6 +180,8 @@ void Player::update()
         flash_counter = 0.0f;
         LevelController::get_instance()->entity->get_component<ShipSpawner>()->burn_out_all_ships(false);
     }
+
+    lerp_bar();
 }
 
 #if EDITOR

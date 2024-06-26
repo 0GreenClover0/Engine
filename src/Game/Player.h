@@ -24,6 +24,8 @@ public:
 
     void upgrade_lighthouse();
 
+    void trigger_bar_lerp(float current_value, float desired_value);
+
     std::weak_ptr<ScreenText> packages_text = {};
     std::weak_ptr<ScreenText> flashes_text = {};
     std::weak_ptr<ScreenText> level_text = {};
@@ -53,9 +55,17 @@ public:
     float pirates_in_control = 0.0f;
 
 private:
+    void lerp_bar();
+
     inline static std::shared_ptr<Player> m_instance;
 
-    float progress_bar_value = 0.0f;
     u32 m_map_food_helper_variable = 0;
     float const m_flash_time = 8.3f;
+
+    float m_bar_value = 0.0f;
+    float m_bar_counter = 0.0f;
+    float m_bar_lerp_duration = 0.7f;
+    float m_lerp_initial_value = 0.0f;
+    float m_lerp_target_value = 1.0f;
+    bool m_is_bar_lerping = false;
 };

@@ -83,14 +83,20 @@ bool Port::interact()
     switch (ship->type)
     {
     case ShipType::FoodSmall:
+        Player::get_instance()->trigger_bar_lerp(static_cast<float>(Player::get_instance()->food),
+                                                 static_cast<float>(Player::get_instance()->food + 1));
         Player::get_instance()->food += 1;
         break;
 
     case ShipType::FoodMedium:
+        Player::get_instance()->trigger_bar_lerp(static_cast<float>(Player::get_instance()->food),
+                                                 static_cast<float>(Player::get_instance()->food + 3));
         Player::get_instance()->food += 3;
         break;
 
     case ShipType::FoodBig:
+        Player::get_instance()->trigger_bar_lerp(static_cast<float>(Player::get_instance()->food),
+                                                 static_cast<float>(Player::get_instance()->food + 5));
         Player::get_instance()->food += 5;
         break;
 
