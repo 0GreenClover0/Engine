@@ -51,6 +51,9 @@ public:
     float deceleration = 0.1f;
 
     NON_SERIALIZED
+    float max_outside_port_ship_interact_distance = 1.5f;
+
+    NON_SERIALIZED
     float interact_with_factory_distance = 1.0f;
 
     std::weak_ptr<Lighthouse> lighthouse = {};

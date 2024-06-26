@@ -15,6 +15,7 @@
 #include "Port.h"
 #include "ResourceManager.h"
 #include "SceneSerializer.h"
+#include "Ship.h"
 
 #include <GLFW/glfw3.h>
 #include <glm/gtc/random.hpp>
@@ -347,7 +348,26 @@ void LighthouseKeeper::handle_input()
         }
     }
 
-    if (!port.expired() && is_inside_port() && !port.lock()->get_ships_inside().empty())
+    bool is_outside_port_but_can_interact_with_ship = false;
+    if (!port.expired() && !port.lock()->get_ships_inside().empty() && !is_inside_port())
+    {
+        for (auto const& ship : port.lock()->get_ships_inside())
+        {
+            if (ship.expired())
+                continue;
+
+            auto const ship_locked = ship.lock();
+
+            if (glm::distance(ship_locked->entity->transform->get_position(), entity->transform->get_position())
+                < max_outside_port_ship_interact_distance)
+            {
+                is_outside_port_but_can_interact_with_ship = true;
+                break;
+            }
+        }
+    }
+
+    if (!port.expired() && (is_inside_port() || is_outside_port_but_can_interact_with_ship) && !port.lock()->get_ships_inside().empty())
     {
         auto const port_locked = port.lock();
         auto const port_transform = port_locked->entity->transform;
