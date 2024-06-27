@@ -360,11 +360,8 @@ void LevelController::check_tutorial_progress(TutorialProgressAction action)
             if (action == TutorialProgressAction::ShipEnteredPort)
             {
                 GameController::get_instance()->dialog_manager.lock()->play_content(2);
-                m_story_space_prompt = SceneSerializer::load_prefab("SpacePrompt");
-                m_story_space_prompt.lock()->transform->set_position(m_space_prompt_pos);
-                m_story_space_prompt.lock()->transform->set_parent(entity->transform);
-                entity->get_component<ShipSpawner>()->set_glow_to_last_ship();
                 spawn_prompt("SpacePrompt", m_space_prompt_pos, m_story_space_prompt);
+                entity->get_component<ShipSpawner>()->set_glow_to_last_ship();
                 set_exiting_lighthouse(true);
                 progress_tutorial(2);
             }
