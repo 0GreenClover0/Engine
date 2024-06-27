@@ -142,3 +142,8 @@ void Factory::set_glowing(bool const is_glowing) const
     auto const drawable = entity->get_component<Drawable>();
     drawable->set_glowing(is_glowing);
 }
+
+i32 Factory::get_max_flash_count() const
+{
+    return m_max_flash_count;
+}

@@ -320,6 +320,18 @@ void LighthouseKeeper::handle_input()
 
         if (closest_distance < interact_with_factory_distance && Player::get_instance()->packages > 0)
         {
+            // Stupid hardcoding but getting proper variable didn't work
+            if (Player::get_instance()->lighthouse_level == 5 && closest_factory->type == FactoryType::Workshop)
+            {
+                hide_interaction_prompt(WorldPromptType::Factory);
+                return;
+            }
+            if (Player::get_instance()->flash >= closest_factory->get_max_flash_count() && closest_factory->type == FactoryType::Generator)
+            {
+                hide_interaction_prompt(WorldPromptType::Factory);
+                return;
+            }
+
             show_interaction_prompt(closest_factory->entity->transform->get_position(), WorldPromptType::Factory);
 
             if (Input::input->get_key_down(GLFW_KEY_SPACE))
