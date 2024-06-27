@@ -190,7 +190,14 @@ void EndScreen::update_background()
     }
     else
     {
-        entity->get_component<Panel>()->background_path = m_win_background_path;
+        if (LevelController::get_instance()->is_tutorial)
+        {
+            entity->get_component<Panel>()->background_path = m_win_background_tutorial_path;
+        }
+        else
+        {
+            entity->get_component<Panel>()->background_path = m_win_background_path;
+        }
     }
 
     entity->get_component<Panel>()->reprepare();

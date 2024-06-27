@@ -46,4 +46,5 @@ private:
 
     std::string m_failed_background_path = "./res/textures/UI/end_screen_try_again.png";
     std::string m_win_background_path = "./res/textures/UI/end_screen_level_completed.png";
+    std::string m_win_background_tutorial_path = "./res/textures/UI/end_screen_level_completed_tutorial.png";
 };
