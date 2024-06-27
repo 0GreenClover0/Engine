@@ -1,7 +1,7 @@
 Scene: Untitled
 Entities:
   - Entity: ShipMedium
-    guid: 3384095cae78c86c25a19213a57d5902d55fad67f2c210d81d595b8a605a35d2
+    guid: 1f8a77eda57984818cc705314903448cfece2a4b3166694072ce34573a4af36c
     Name: ShipMedium
     TransformComponent:
       Translation: [0, 0, 0]
@@ -11,7 +11,7 @@ Entities:
         guid: ""
     Components:
       - ComponentName: ShipComponent
-        guid: 08051771fe326321aa36779c0a1d8aac0acc33ec591ea6a568cd6e62c3df696f
+        guid: 13a06786b1cfd4de847c0a97a92a3f49d965ca13666b99ab41b8cb288adc68e0
         custom_name: ""
         type: 1
         light:
@@ -19,11 +19,11 @@ Entities:
         spawner:
           guid: nullptr
         eyes:
-          guid: 931b2d80033326a14c6b1db9563d97af3782bdfce706c2002221d436bc09bc92
+          guid: 3428860372729cb9dd584c0e74a7f0963e831aa9fe99cc6a23383224fe36cff4
         my_light:
-          guid: 276c52883659799ecf6b41dda196183a1942300f86e39004e2f80195d89f0de0
+          guid: 14b11508f4610f8c2aa3e75b20973fbf6f1a0b15bc0ce8c26055f351e6ef91ef
       - ComponentName: Collider2DComponent
-        guid: 85df235a42daa449acd23f7712184220eb1da2cd7c95214bab5b2e6015d2f6d4
+        guid: 2f18d669c8e7ff87be5d7e919b1cf6109c80c01e304a71a8b5e21b8fe20af105
         custom_name: ""
         offset: [0, 0]
         is_trigger: true
@@ -35,7 +35,7 @@ Entities:
         drag: 0.00999999978
         velocity: [0, 0]
       - ComponentName: ModelComponent
-        guid: 8a2ec1fd0cd501bc0fb4005a33798ee2e1407b6ba77de5ed37176925b7725542
+        guid: 3a8b526ac01dcae49fa6b2e691497009c676a5e9c6e01c51d38d327650c6f003
         custom_name: ""
         model_path: ./res/models/shipMedium/shipMedium.gltf
         material:
@@ -47,21 +47,22 @@ Entities:
           RenderOrder: 0
           NeedsForward: false
           CastsShadows: true
+          IsBillboard: false
   - Entity: Eyes
-    guid: a2350b0b62a9f81e76640edd7850956af689337bbbeb3d10db95990e09937108
+    guid: 4ef77b72b867bf8493550ef389319e8bcdd4501d4440ebbe623c6da7cbadb958
     Name: Eyes
     TransformComponent:
       Translation: [0, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: 3384095cae78c86c25a19213a57d5902d55fad67f2c210d81d595b8a605a35d2
+        guid: 1f8a77eda57984818cc705314903448cfece2a4b3166694072ce34573a4af36c
     Components:
       - ComponentName: ShipEyesComponent
-        guid: 931b2d80033326a14c6b1db9563d97af3782bdfce706c2002221d436bc09bc92
+        guid: 3428860372729cb9dd584c0e74a7f0963e831aa9fe99cc6a23383224fe36cff4
         custom_name: ""
       - ComponentName: Collider2DComponent
-        guid: e476128beb5629ac9cc1cc81bcdcca6111070b47a166f0eea2ab28304819c2bd
+        guid: 0b2a5d4bf76ae97bb7bfd691596537778adb2e5cce1050a123c4557b4e0b1d5c
         custom_name: ""
         offset: [0, -0.800000012]
         is_trigger: true
@@ -73,23 +74,27 @@ Entities:
         drag: 0.00999999978
         velocity: [0, 0]
   - Entity: Light
-    guid: 1a991d2f66bad9fc3572afe5d6bc04be691cd79e4c68b5c642b13f842cfc7a78
+    guid: 30ad59ff9d385571d1b4b9ffedea4170badaa78b56c37ca505b68a9efa24452c
     Name: Light
     TransformComponent:
       Translation: [0, 0.732893944, 0.402055264]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
       Parent:
-        guid: 3384095cae78c86c25a19213a57d5902d55fad67f2c210d81d595b8a605a35d2
+        guid: 1f8a77eda57984818cc705314903448cfece2a4b3166694072ce34573a4af36c
     Components:
       - ComponentName: PointLightComponent
-        guid: 276c52883659799ecf6b41dda196183a1942300f86e39004e2f80195d89f0de0
+        guid: 14b11508f4610f8c2aa3e75b20973fbf6f1a0b15bc0ce8c26055f351e6ef91ef
         custom_name: ""
         constant: 1
-        linear: 10
+        linear: 5
         quadratic: 2.5
         ambient: [0.200000003, 0.200000003, 0.200000003]
-        diffuse: [0, 1, 0]
+        diffuse: [0, 0.564705908, 1]
         specular: [1, 1, 1]
         m_near_plane: 0.5
         m_far_plane: 25
+        m_blocker_search_num_samples: 16
+        m_pcf_num_samples: 16
+        m_light_world_size: 0.5
+        m_light_frustum_width: 30
