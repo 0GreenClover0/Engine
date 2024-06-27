@@ -681,6 +681,8 @@ void LevelController::destroy_mouse_prompt()
 
 void LevelController::end_level()
 {
+    Debug::log(std::to_string(Player::get_instance()->destroyed_ships));
+
     is_ended = true;
     auto end_screen = SceneSerializer::load_prefab("EndScreen");
     if (Player::get_instance()->food < map_food)
@@ -692,40 +694,28 @@ void LevelController::end_level()
     {
         if (is_tutorial)
         {
-            if (Player::get_instance()->destroyed_ships <= 0)
+            end_screen->get_component<EndScreen>()->number_of_stars = 1;
+
+            if (Player::get_instance()->destroyed_ships <= 2)
             {
                 end_screen->get_component<EndScreen>()->number_of_stars = 3;
             }
-            else if (Player::get_instance()->destroyed_ships <= 1)
+            else if (Player::get_instance()->destroyed_ships <= 3)
             {
                 end_screen->get_component<EndScreen>()->number_of_stars = 2;
-            }
-            else if (Player::get_instance()->destroyed_ships <= 2)
-            {
-                end_screen->get_component<EndScreen>()->number_of_stars = 1;
-            }
-            else
-            {
-                end_screen->get_component<EndScreen>()->number_of_stars = 0;
             }
         }
         else
         {
-            if (Player::get_instance()->destroyed_ships <= 5)
+            end_screen->get_component<EndScreen>()->number_of_stars = 1;
+
+            if (Player::get_instance()->destroyed_ships <= 10)
             {
                 end_screen->get_component<EndScreen>()->number_of_stars = 3;
             }
-            else if (Player::get_instance()->destroyed_ships <= 10)
-            {
-                end_screen->get_component<EndScreen>()->number_of_stars = 2;
-            }
             else if (Player::get_instance()->destroyed_ships <= 15)
             {
-                end_screen->get_component<EndScreen>()->number_of_stars = 1;
-            }
-            else
-            {
-                end_screen->get_component<EndScreen>()->number_of_stars = 0;
+                end_screen->get_component<EndScreen>()->number_of_stars = 2;
             }
         }
     }
