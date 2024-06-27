@@ -425,6 +425,11 @@ void Renderer::switch_rendering_to_texture()
     m_render_to_texture = !m_render_to_texture;
 }
 
+void Renderer::set_rendering_to_texture(bool const render_to_texture)
+{
+    m_render_to_texture = render_to_texture;
+}
+
 void Renderer::reload_shaders() const
 {
     float const time = glfwGetTime();
