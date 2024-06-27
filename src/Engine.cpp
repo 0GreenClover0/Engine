@@ -128,7 +128,9 @@ void Engine::create_game()
         return;
     }
 
-    Renderer::get_instance()->switch_rendering_to_texture();
+    scene_serializer->set_instance(nullptr);
+
+    Renderer::get_instance()->set_rendering_to_texture(false);
 
     glfwSetInputMode(Engine::window->get_glfw_window(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     GLFWvidmode const* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());

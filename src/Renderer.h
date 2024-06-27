@@ -56,6 +56,7 @@ public:
     void virtual present() const;
 
     void switch_rendering_to_texture();
+    void set_rendering_to_texture(bool const render_to_texture);
     void reload_shaders() const;
 
     void set_vsync(bool const enabled);
