@@ -118,7 +118,7 @@ private:
 
     glm::vec3 m_mouse_prompt_pos = {3.863f, 2.0f, 1.168f};
     glm::vec3 m_space_prompt_pos = {3.741f, 2.0f, 1.826f};
-    glm::vec3 m_second_space_prompt_pos = {2.244f, 2.0f, -2.885f};
+    glm::vec3 m_second_space_prompt_pos = {2.244f, 2.0f, -3.885f};
     glm::vec3 m_wasd_prompt_pos = {2.436f, 2.0f, 1.152f};
 
     bool m_is_exiting_lighthouse_enabled = true;
