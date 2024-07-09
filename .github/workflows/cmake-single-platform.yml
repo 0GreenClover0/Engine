@@ -38,6 +38,11 @@ jobs:
        xcopy /s "${{github.workspace}}\build\src\Release\" "${{github.workspace}}\result\"
        xcopy /s "${{github.workspace}}\build\src\res\" "${{github.workspace}}\result\res\"
        xcopy /s "${{github.workspace}}\build\thirdparty\Release\" "${{github.workspace}}\result\"
+       xcopy /s "${{github.workspace}}\build\_deps\glm-build\glm\Release\glm.lib" "${{github.workspace}}\result\"
+       xcopy /s "${{github.workspace}}\build\_deps\yaml-cpp-build\Release\yaml-cpp.lib" "${{github.workspace}}\result\"
+       xcopy /s "${{github.workspace}}\build\_deps\assimp-build\lib\Release\assimp-vc143-mt.lib" "${{github.workspace}}\result\"
+       xcopy /s "${{github.workspace}}\build\_deps\glfw-build\src\Release\glfw3.lib" "${{github.workspace}}\result\"
+       xcopy /s "${{github.workspace}}\build\_deps\assimp-build\contrib\zlib\Release\zlibstatic.lib" "${{github.workspace}}\result\"
        xcopy /s "${{github.workspace}}\.editor\" "${{github.workspace}}\result\"
 
     - name: Upload a Build Artifact
