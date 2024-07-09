@@ -82,3 +82,5 @@ if(MSVC)
     target_compile_definitions(${PROJECT_NAME} PUBLIC NOMINMAX)
     target_compile_options(${PROJECT_NAME} PRIVATE "/MP")
 endif()
+
+add_definitions(-D GLM_ENABLE_EXPERIMENTAL)
