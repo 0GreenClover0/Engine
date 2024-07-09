@@ -77,6 +77,20 @@ void ScreenText::initialize()
 
 void ScreenText::awake()
 {
+    if (font_name.empty())
+    {
+        if (!Renderer::loaded_fonts.empty())
+        {
+            font_name = Renderer::loaded_fonts.front().family_name;
+            bold = Renderer::loaded_fonts.front().bold;
+        }
+    }
+
+    m_viewport = get_viewport();
+
+    refresh_font_settings();
+    refresh_layout();
+
     set_can_tick(true);
 }
 
