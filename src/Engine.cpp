@@ -2,8 +2,6 @@
 
 #include <utility>
 
-#include <spdlog/spdlog.h>
-
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
@@ -355,10 +353,11 @@ i32 Engine::setup_glad()
     // Initialize OpenGL loader
     if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)))
     {
-        spdlog::error("Failed to initialize OpenGL loader!");
+        std::cout << "Failed to initialize OpenGL loader!\n";
         return 1;
     }
-    spdlog::info("Successfully initialized OpenGL loader!");
+
+    std::cout << "Successfully initialized OpenGL loader!\n";
 
     return 0;
 }
