@@ -71,6 +71,8 @@ i32 Engine::initialize()
     m_editor = Editor::Editor::create();
 #endif
 
+    Renderer::get_instance()->initialize();
+
     return 0;
 }
 
@@ -140,8 +142,6 @@ void Engine::create_game()
 
 void Engine::run()
 {
-    Renderer::get_instance()->initialize();
-
     double last_frame = 0.0; // Time of last frame
 
     // Main loop
