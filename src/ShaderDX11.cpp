@@ -74,8 +74,12 @@ void ShaderDX11::load_shader()
 
         std::string const hash =
             std::to_string(AK::murmur_hash(static_cast<u8*>(vs_blob->GetBufferPointer()), vs_blob->GetBufferSize(), 0));
-
+#ifdef _DEBUG
         if (!read_file_to_blob(m_vertex_path + hash + "vs_main", &vs_blob))
+#else
+        if (!read_file_to_blob(m_vertex_path + "vs_main", &vs_blob))
+#endif
+
         {
             hr = D3DCompile(vs_blob->GetBufferPointer(), vs_blob->GetBufferSize(), nullptr, nullptr, nullptr, "vs_main", "vs_5_0", 0, 0,
                             &vs_blob, &shader_compile_errors_blob);
@@ -86,10 +90,12 @@ void ShaderDX11::load_shader()
                 std::cout << error_string << "\n";
                 return;
             }
-
+#ifdef _DEBUG
             save_compiled_shader(m_vertex_path + hash + "vs_main", vs_blob);
+#else
+            save_compiled_shader(m_vertex_path + "vs_main", vs_blob);
+#endif
         }
-
         hr = RendererDX11::get_instance_dx11()->get_device()->CreateVertexShader(vs_blob->GetBufferPointer(), vs_blob->GetBufferSize(),
                                                                                  nullptr, &m_vertex_shader);
         if (FAILED(hr))
@@ -134,8 +140,11 @@ void ShaderDX11::load_shader()
 
         std::string const hash =
             std::to_string(AK::murmur_hash(static_cast<u8*>(ps_blob->GetBufferPointer()), ps_blob->GetBufferSize(), 0));
-
+#if _DEBUG
         if (!read_file_to_blob(m_fragment_path + hash + "ps_main", &ps_blob))
+#else
+        if (!read_file_to_blob(m_fragment_path + "ps_main", &ps_blob))
+#endif
         {
             hr = D3DCompile(ps_blob->GetBufferPointer(), ps_blob->GetBufferSize(), nullptr, nullptr, nullptr, "ps_main", "ps_5_0", 0, 0,
                             &ps_blob, &shader_compile_errors_blob);
@@ -146,8 +155,11 @@ void ShaderDX11::load_shader()
                 std::cout << error_string << "\n";
                 return;
             }
-
+#if _DEBUG
             save_compiled_shader(m_vertex_path + hash + "ps_main", ps_blob);
+#else
+            save_compiled_shader(m_vertex_path + "ps_main", ps_blob);
+#endif
         }
 
         hr = RendererDX11::get_instance_dx11()->get_device()->CreatePixelShader(ps_blob->GetBufferPointer(), ps_blob->GetBufferSize(),
