@@ -31,6 +31,15 @@ else()
     message(WARNING "clang-format not found, formatting auto-generated C++ code DISABLED.")
 endif()
 
+# Search for Python
+find_program(PYTHON "py")
+
+if(PYTHON)
+    message(STATUS, "Python found, EngineHeaderTool ENABLED")
+else()
+    message(WARNING, "Python not found, EngineHeaderTool DISABLED")
+endif()
+
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
                                                   ${glad_SOURCE_DIR}
                                                   ${stb_image_SOURCE_DIR}
@@ -69,7 +78,7 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
 )
 
 if(NOT DEFINED ENV{IS_CI})
-    if(CLANG_FORMAT)
+    if(CLANG_FORMAT AND PYTHON)
         add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD
             COMMAND py
                 "${EHT_DIR}/EngineHeaderTool.py -d \"${PARENT_DIR}\""
@@ -81,7 +90,7 @@ if(NOT DEFINED ENV{IS_CI})
             COMMAND clang-format -i -style=file "${PARENT_DIR}/src/Editor.cpp"
             COMMENT "Auto formatting Editor.cpp"
         )
-    else()
+    elseif(PYTHON)
         add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD
             COMMAND py
                 "${EHT_DIR}/EngineHeaderTool.py -d \"${PARENT_DIR}\""
