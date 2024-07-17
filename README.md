@@ -1,7 +1,7 @@
 <h1 align="center"><b>Guiding Light</b></h3>
 
 <p align="center">
-  <img src="readme_files/game.gif" />
+  <img src="readme_files/game.webp" />
 </p>
 
 ## What is it?
