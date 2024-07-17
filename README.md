@@ -13,6 +13,18 @@ You're a lighthouse keeper and a courier… at once. In "Guiding Light", a casua
 ## How to play?
 Go to: https://oelj.itch.io/guiding-light
 
+## How do I build and run this?
+Run the following command to generate the build system:
+```
+cmake -B build
+```
+or use the `build.bat` which does the same.
+
+To compile and run, C++ compiler with C++23 support is required. MSVC 14.40 has been tested.
+
+`.sln` file is located in the generated `/build` directory.
+You can open it in Visual Studio, choose the desired build configuration (`Debug` is the default), and simply run it.
+
 ## Engine
 Our Engine is written in modern C++23; its architecture is based on **Object-Component model used by Unity**. We use **DirectX 11** as our graphics API (initially it was OpenGL, but we decided to port it). Some notable systems:
 - 2D physics engine (collision detection and resolution)
