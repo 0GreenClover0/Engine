@@ -22,6 +22,15 @@ set(FW1_SOURCE_DIR ${FW1_DIR} CACHE INTERNAL "")
 # Set EHT directory
 set(EHT_DIR "${PARENT_DIR}/EngineHeaderTool")
 
+# Search for clang-format
+find_program(CLANG_FORMAT "clang-format")
+
+if(CLANG_FORMAT)
+    message(STATUS "clang-format found, formatting auto-generated C++ code ENABLED.")
+else()
+    message(WARNING "clang-format not found, formatting auto-generated C++ code DISABLED.")
+endif()
+
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
                                                   ${glad_SOURCE_DIR}
                                                   ${stb_image_SOURCE_DIR}
@@ -60,17 +69,25 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
 )
 
 if(NOT DEFINED ENV{IS_CI})
-    add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD
-        COMMAND py
-            "${EHT_DIR}/EngineHeaderTool.py -d \"${PARENT_DIR}\""
-        COMMENT "Running EngineHeaderTool"
-        COMMAND clang-format -i -style=file "${PARENT_DIR}/src/SceneSerializer.cpp"
-        COMMENT "Auto formatting SceneSerializer.cpp"
-        COMMAND clang-format -i -style=file "${PARENT_DIR}/src/ComponentList.h"
-        COMMENT "Auto formatting ComponentList.h"
-        COMMAND clang-format -i -style=file "${PARENT_DIR}/src/Editor.cpp"
-        COMMENT "Auto formatting Editor.cpp"
-    )
+    if(CLANG_FORMAT)
+        add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD
+            COMMAND py
+                "${EHT_DIR}/EngineHeaderTool.py -d \"${PARENT_DIR}\""
+            COMMENT "Running EngineHeaderTool"
+            COMMAND clang-format -i -style=file "${PARENT_DIR}/src/SceneSerializer.cpp"
+            COMMENT "Auto formatting SceneSerializer.cpp"
+            COMMAND clang-format -i -style=file "${PARENT_DIR}/src/ComponentList.h"
+            COMMENT "Auto formatting ComponentList.h"
+            COMMAND clang-format -i -style=file "${PARENT_DIR}/src/Editor.cpp"
+            COMMENT "Auto formatting Editor.cpp"
+        )
+    else()
+        add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD
+            COMMAND py
+                "${EHT_DIR}/EngineHeaderTool.py -d \"${PARENT_DIR}\""
+            COMMENT "Running EngineHeaderTool"
+        )
+    endif()
 endif()
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
