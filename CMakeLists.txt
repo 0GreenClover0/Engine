@@ -19,3 +19,5 @@ add_subdirectory(thirdparty)
 
 # ---- Main project's files ----
 add_subdirectory(src)
+
+set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME})
