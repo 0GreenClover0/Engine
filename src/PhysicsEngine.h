@@ -31,7 +31,7 @@ public:
     void operator=(PhysicsEngine const&) = delete;
 
     void initialize();
-    void update_physics() const; // TODO: All physics calculations should be in some kind of FixedUpdate
+    void run_updates();
 
     static void on_collision_enter(std::shared_ptr<Collider2D> const& collider, std::shared_ptr<Collider2D> const& other);
     static void on_collision_exit(std::shared_ptr<Collider2D> const& collider, std::shared_ptr<Collider2D> const& other);
@@ -46,6 +46,7 @@ public:
     static bool compute_penetration(std::shared_ptr<Collider2D> const& collider, std::shared_ptr<Collider2D> const& other, glm::vec2& mtv);
 
 private:
+    void update_physics() const;
     void solve_collisions() const;
 
     static bool test_collision_rectangle_rectangle(Collider2D const& obb1, Collider2D const& obb2, glm::vec2& mtv);
@@ -58,5 +59,8 @@ private:
     static bool is_point_inside_obb(glm::vec2 const& point, std::array<glm::vec2, 4> const& rectangle_corners);
 
     std::vector<std::shared_ptr<Collider2D>> colliders = {};
+
+    double m_accumulated_delta = 0.0;
+
     inline static std::shared_ptr<PhysicsEngine> m_instance;
 };

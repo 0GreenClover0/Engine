@@ -148,3 +148,15 @@ void Scene::run_frame()
         component->update();
     }
 }
+
+void Scene::run_physics_frame() const
+{
+    auto const components_copy = tickable_components;
+    for (auto const& component : components_copy)
+    {
+        if (component == nullptr || component->entity == nullptr || !component->enabled())
+            continue;
+
+        component->fixed_update();
+    }
+}

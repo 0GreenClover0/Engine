@@ -26,6 +26,7 @@ public:
     [[nodiscard]] std::shared_ptr<Component> get_component_by_guid(std::string const& guid) const;
 
     void run_frame();
+    void run_physics_frame() const;
 
     bool is_running = false;
 

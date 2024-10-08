@@ -5,6 +5,7 @@
 #include "Debug.h"
 #include "Engine.h"
 #include "Entity.h"
+#include "Globals.h"
 
 void PhysicsEngine::initialize()
 {
@@ -12,8 +13,25 @@ void PhysicsEngine::initialize()
     set_instance(physics_engine);
 }
 
+// https://gamedevfaqs.com/managing-consistent-game-physics-the-case-for-fixed-time-steps/
+void PhysicsEngine::run_updates()
+{
+    m_accumulated_delta += delta_time;
+
+    i32 const iterations = static_cast<i32>(m_accumulated_delta / fixed_delta_time);
+
+    m_accumulated_delta -= fixed_delta_time * iterations;
+
+    for (i32 i = iterations; i > 0; i--)
+    {
+        update_physics();
+    }
+}
+
 void PhysicsEngine::update_physics() const
 {
+    MainScene::get_instance()->run_physics_frame();
+
     for (auto const& collider : colliders)
     {
         collider->physics_update();
