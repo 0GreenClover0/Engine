@@ -37,6 +37,10 @@ void Component::update()
 {
 }
 
+void Component::fixed_update()
+{
+}
+
 void Component::on_enabled()
 {
 }

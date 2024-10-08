@@ -9,6 +9,7 @@
 #include "Vertex.h"
 
 inline double delta_time;
+inline double constexpr fixed_delta_time = 0.008333;
 
 inline i32 SKYBOX_RENDER_ORDER = 100;
 

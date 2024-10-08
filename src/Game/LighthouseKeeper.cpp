@@ -11,6 +11,7 @@
 #include "IceBound.h"
 #include "LevelController.h"
 #include "Lighthouse.h"
+#include "PhysicsEngine.h"
 #include "Player.h"
 #include "Port.h"
 #include "ResourceManager.h"
@@ -54,6 +55,10 @@ void LighthouseKeeper::update()
                                                        Camera::get_main_camera()->get_position(), false);
         m_engine_sound->set_volume(2.0f);
     }
+}
+
+void LighthouseKeeper::fixed_update()
+{
     m_engine_sound->entity->transform->set_position(entity->transform->get_position());
     i32 horizontal = 0;
     i32 vertical = 0;
@@ -104,7 +109,7 @@ void LighthouseKeeper::update()
     }
 
     glm::vec3 speed_vector = glm::vec3(m_speed.x, 0.0f, m_speed.y);
-    speed_vector *= delta_time;
+    speed_vector *= fixed_delta_time;
 
     entity->transform->set_local_position(entity->transform->get_local_position() + speed_vector);
 

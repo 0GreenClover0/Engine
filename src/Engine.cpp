@@ -181,7 +181,7 @@ void Engine::run()
 
         if (m_is_game_running && !m_is_game_paused)
         {
-            PhysicsEngine::get_instance()->update_physics();
+            PhysicsEngine::get_instance()->run_updates();
             MainScene::get_instance()->run_frame();
         }
 

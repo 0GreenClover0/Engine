@@ -8,6 +8,7 @@
 #include "GameController.h"
 #include "Globals.h"
 #include "LighthouseKeeper.h"
+#include "PhysicsEngine.h"
 #include "SceneSerializer.h"
 
 #include <glm/gtc/random.hpp>
@@ -35,7 +36,7 @@ void Customer::awake()
     m_spreading_arms_timer = glm::linearRand(m_spread_arms_min, m_spread_arms_max);
 }
 
-void Customer::update()
+void Customer::fixed_update()
 {
     if (entity == nullptr || entity->transform == nullptr || left_hand.expired() || right_hand.expired())
     {
@@ -54,7 +55,7 @@ void Customer::update()
 
     float const y = entity->transform->get_position().y;
 
-    float const delta_time_f = static_cast<float>(delta_time);
+    float constexpr delta_time_f = fixed_delta_time;
 
     glm::vec3 const current_position = entity->transform->get_position();
     glm::vec2 const current_position_2d = AK::convert_3d_to_2d(current_position);

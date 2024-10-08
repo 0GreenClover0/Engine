@@ -354,7 +354,7 @@ void Collider2D::physics_update()
     if (glm::epsilonEqual(velocity, {0.0f, 0.0f}, 0.001f) != glm::bvec2(true, true))
     {
         entity->transform->set_position(entity->transform->get_position()
-                                        + AK::convert_2d_to_3d(velocity) * static_cast<float>(delta_time));
+                                        + AK::convert_2d_to_3d(velocity) * static_cast<float>(fixed_delta_time));
 
         velocity = AK::move_towards(velocity, {0.0f, 0.0f}, drag);
     }
