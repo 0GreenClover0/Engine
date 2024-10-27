@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.21 FATAL_ERROR)
+set(CMAKE_POLICY_DEFAULT_CMP0169 OLD)
 project(Engine VERSION 2.0)
-
+cmake_policy(SET CMP0169 OLD)
 IF (WIN32)
   message(NOTICE "\n")
   message(NOTICE "********************** IMPORTANT NOTICE ****************************\n")
