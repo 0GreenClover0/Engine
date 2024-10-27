@@ -1,3 +1,3 @@
 #pragma once
 
-#define EDITOR true
+#define EDITOR false
