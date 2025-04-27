@@ -135,6 +135,14 @@ void ParticleSystem::update_system()
 void ParticleSystem::spawn_calculations()
 {
     m_spawn_data_vector.clear();
+
+    if (min_spawn_count > max_spawn_count)
+    {
+        i32 temp = min_spawn_count;
+        min_spawn_count = max_spawn_count;
+        max_spawn_count = temp;
+    }
+
     m_random_spawn_count = AK::random_int(min_spawn_count, max_spawn_count);
 
     for (u32 i = 0; i < m_random_spawn_count; i++)
