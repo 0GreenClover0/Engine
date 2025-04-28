@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.21 FATAL_ERROR)
+set(CMAKE_VERBOSE_MAKEFILE ON)
 project(Engine VERSION 2.0)
 
 IF (WIN32)
