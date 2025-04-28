@@ -81,5 +81,5 @@ Editor's UI is made with **[ImGui](https://github.com/ocornut/imgui)** and it's 
 | Miłosz Kawczyński  | https://github.com/MiloszKawczynski | Design Lead |
 | Nadia Kowalska  | https://github.com/nadkow | 3D Art Lead |
 | Hubert Olejnik | https://github.com/umbc1ok | Rendering Lead |
-| Michał Świstak | | Sound Design |
+| Michał Świstak | https://soundcloud.com/michal_swistak | Sound Design |
 | Julian Rakowski |https://www.linkedin.com/in/julian-rakowski/ |  Voice Acting |
